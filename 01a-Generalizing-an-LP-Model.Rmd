@@ -1,0 +1,217 @@
+---
+title: "Generalizing an LP Model in R"
+author: "Tim Anderson"
+date: "9/25/2018"
+output:
+  pdf_document: default
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Type of LP Models
+
+In this chapter, we will examine a range of classic applications of linear programs.  These applications will give ideas for how to model a variety of situations.  In each case, try to follow along with the application. 
+
+## Generalizing Production
+
+### The Algebraic Model
+
+In the previous chapter, we examined products with a few products and a few resource constraints.  In general, most companies have many more products and we won't be wanting to name each product.  Instead, we use sets of products and resources.  
+
+We could also reframe the model more algebraically. Let's use subscripts to differentiate between products and resources. We can define that _i_ represents products.  Similarly, _j_ represents resources.   Now, let's move on to defining the data.  Let's define the amount to produce of each product, _i_, as $x_i$ and the resource consumed as $R_{i,j}$ as well as the available resource as $A_j$. The profit per product is then $P_i$. The LP can now be rewritten in more general terms as the following.
+
+$$
+ \begin{split}
+ \begin{aligned}
+    \text{Maximize  }   &  \sum_{i=1}^3 P_i x_i \\
+    \text{subject to } & \sum_{i=1}^3 R_{i,j}x_i \leq A_j  \; \forall \; j\\
+                       & x_i \geq 0  \; \forall \; i
+  \end{aligned}
+  \end{split}
+  (\#eq:Base-Algebraic)
+$$
+
+### Building the Generalized Model in R
+
+This concise, algebraic representation can be easily scaled to any number of products and resources. Let's write this as the following.  I'll expand the names of data slightly for making the R code more readable but this is meant to be consistent with the above formulation. 
+
+We will define the number of products as four and five resource constraints with a constant of NProd and NResources respectively.  This will allow us to easily extend the model later without needing to make changes other than the data.  This is a good practice to separate the size of the problem from the actual model by separating data and the model.
+
+```{r}
+NProd <- 4
+NResources <- 5
+
+ProdNames <- lapply(list(rep("Prod",NProd)),paste0,1:NProd) 
+                 # Product names: Prod1, Prod2, ... 
+
+ResNames<- lapply(list(rep("Res",NResources)),paste0,1:NResources) 
+                 # Resource names: Res1, Res2, ... 
+
+Profit <- matrix(c(20, 14, 3, 16), 
+              ncol=NProd,dimnames=c("Profit",ProdNames))
+
+Resources <- matrix(c( 6, 8, 6, 7 , 40, 2, 6, 4, 10, 25, 1, 1, 1, 2, 5, 4, 8, 25, 12, 16), 
+              ncol=NProd,dimnames=c(ResNames,ProdNames))
+
+Available <- matrix(c(1440, 1440, 2000, 1000, 9600), 
+              ncol=1,dimnames=c(ResNames,"Available"))
+```
+
+In in this previous code chunk, we also define a set of product names.  Let's focus on the function making Product names which is then assigned to _ProdNames_.  This handy little line of code may take a little examination to unpack.  Essentially it uses the text prefix "Prod" NProd times with the numbers from 1 up to _NProd_ (4) products.  This results in names of Prod1, Prod2, Prod3, and Prod4.  (Experimentation:  Try changing the product name to "Widget" or some other name.)  Defining names for Resources follows the same process.
+
+Now, let's look at the data and start with profit or (P from our earlier formulation) which will go in the object named _Profit_.  I'll define it as a matrix.  The _c_ function concatenates (or combines) the following items, in this case the profit of each of the four products. Next I tell it that the four numbers should be arranged with as many columns as _NProd_ (4).  Since there are only 4 elements and also 4 columns, that means that this matrix only has one row and is therefore a vector.  I could refer to an element of the vector in R as _Profit[2] or in the LP as $P_2$.  I tell it to use as a name for the one and only row, simply the word "Profit."  The columns have names drawn from _ProdNames_.  (Experimentation:  Try removing the dimnames to see what the matrix looks like.)  
+
+Let's now display the data.  This should match the data that we hard coded into the R linear programming model in the previous chapter.  Let's display the data.  (Recall from last chapter that the _pander_ library is helpful for making tables look better.)
+
+```{r}
+library(pander)
+pander(Profit, caption="Profit per Product")
+```
+
+The Resource usage matrix () is a little more complicated in that it has rows and columns.  Notice that I typed in the data downward for the first column and then started again from the top of the second column.  
+
+The amount of each resource available 
+Similarly, we can display the resources used by each product and the amount of each resource available.
+
+```{r}
+pander(Resources, caption="Resources used by each product")
+
+pander (Available, caption="Amount of each Resource Available")
+
+```
+
+Notice that we the resources available are listed as a column (vertical) vector rather than a row (flat) vector.  This differentiation will be important later.   
+
+Now we need to define variables.  
+
+Now, let's show how we can display the resources used and available in one table.  We will use the _cbind_ function to do a column binding of the data.  
+
+```{r}
+pander(cbind(Resources, Available), caption="Resources Used by Each Product and Available")
+
+```
+
+To ensure that we know how to access the data, if we want to see how the amount of the first resource used by the second product, you can enter _Resources[1,2]_ in R Studio's console which is `r Resources[1,2]`.
+
+Now, let's begin building our optimization model.
+
+First, we'll start by loading the packages that we are using.
+
+``` {r warning=FALSE}
+library (magrittr, quietly = TRUE) #Used for pipes/dplyr
+library (dplyr, quietly = TRUE)
+library (ROI, quietly = TRUE)
+library (ROI.plugin.glpk, quietly = TRUE)
+library (ompr, quietly = TRUE)
+library (ompr.roi, quietly = TRUE)
+```
+
+```{r}
+
+prodmodel <- MIPModel() %>%
+  add_variable (x[i], i=1:NProd, type="continuous", lb=0) %>%
+  set_objective (sum_expr(Profit[i] * x[i] , i=1:NProd ), "max") %>%
+  add_constraint (sum_expr(Resources[j,i]*x[i], i=1:NProd) # Left hand side of constraint
+                  <= Available[j],    # Inequality and Right side of constraint
+                  j=1:NResources) %>% # Repeat for each resource, j.  
+  solve_model(with_ROI(solver = "glpk"))
+  
+prodmodel
+
+```
+
+### Examining the Results
+
+Displaying the object of _prodmodel_ only shows a simple summary of the results of the analysis.  It indicates whether the model was solved to optimality (and it was!) and the objective function value (profit).  
+
+This is useful to know but we are really interested in how to generate this profit.  To do this, we need to extract the values of the variables.  
+
+```{r}
+results.products <- matrix (rep(-1.0,NProd), nrow = NProd, ncol=1,
+                            dimnames=c(ProdNames,c("x")))
+
+temp <- get_solution (prodmodel, x[i]) # Extracts optimal values of variables   
+results.products <- t(temp [,3] )      # Extracts third column
+
+results.products <- matrix (results.products, nrow = 1, ncol=NProd,
+                            dimnames=c(c("x"),ProdNames))  
+                                       # Resizes and renames 
+
+pander (results.products, caption = "Optimal Production Plan")
+
+```
+
+Let's examine how the resources are consumed.  To do this, we can multiply the amount of each product by the amount of each resource used for that product.  For the first product, this would be a term by term sum of each product resulting in ``r Resources[1,]%*%t(results.products)`` which is less than ``r Available[1]``.  We can do this manually for each product.  Another approach is to use the command, _Resources[1,]%*%t(results.products)_.  This command will take the first row of the Resources matrix and multiplies it by the vector of results.  
+
+Another thing to take note of in learning how to use RMarkdown is that results from r code can be shown by inserting an inline code chunk.  Inline code chunks can be inserted into text by using a single tick at the beginning and end of the chunk instead of the triple tick mark for regular code chunks.  Also, the inline r code chunk starts with the letter r to indicate that it is an r code code.  A common use for this might be to show the results of an earlier analysis.  
+
+One thing to note is that the first row of _Resources_ is by definition a row vector and _result.products_ is also a row vector.  What we want to do is do a row vector multiplied by a column vector.  In order to do this, we need to convert the row vector of results into a column vector.  This is done by doing a _transpose_ which changes the row to a column.  This is done often enough that that the operation is just one letter, _t_.  
+
+We can go one further step now and multiply the matrix of resources by the column vector of production.
+
+```{r}
+Results.Resources <- Resources[]%*%t(results.products)
+                  # Multiply matrix of resources by amount of products produced
+
+colnames(Results.Resources)<-c("Used")      
+                  # Change column name to reflect amount of resources used.
+
+pander(Results.Resources, caption="Resources Used")
+
+```
+
+This section covered a lot of concepts including defining the data, setting names, using indices in _ompr_, building a generalized _ompr_ model, extracting decision variable values, and calculating constraint right hand sides.  If you find this a little uncomfortable, try doing some experimenting with the model. It may take some experimenting to get familiar and comfortable with this.  
+
+### Changing the Model
+
+Let's modify the above model.  We can do this by simply changing the data that we pass into the model.
+
+Let's change the time required for painting a chair to 20.  Recall that this is the first product and the fourth resource.  This is how we can change the value.
+
+```{r}
+
+Resources[4,1] <- 20  # Set value of the 4th row, 1st column to 20
+        # In our example, this is the paint resource used by making a chair
+
+```
+
+Now we will rebuild the the optimization model.
+
+```{r}
+prodmodel <- MIPModel() %>%
+  add_variable (x[i], i=1:NProd, type="continuous", lb=0) %>%
+  set_objective (sum_expr(Profit[i] * x[i] , i=1:NProd ), "max") %>%
+  add_constraint (sum_expr(Resources[j,i]*x[i], i=1:NProd) # Left hand side of constraint
+                  <= Available[j],    # Inequality and Right side of constraint
+                  j=1:NResources) %>% # Repeat for each resource, j.  
+  solve_model(with_ROI(solver = "glpk"))
+  
+prodmodel
+
+```
+
+Note that the objective function has changed.  
+
+```{r}
+results.products <- matrix (rep(-1.0,NProd), nrow = NProd, ncol=1,
+                            dimnames=c(ProdNames,c("x")))
+
+temp <- get_solution (prodmodel, x[i]) # Extracts optimal values of variables   
+results.products <- t(temp [,3] )      # Extracts third column
+
+results.products <- matrix (results.products, nrow = 1, ncol=NProd,
+                            dimnames=c(c("x"),ProdNames))  
+                                       # Resizes and renames 
+
+pander (results.products, caption = "Revised Optimal Production Plan")
+```
+
+Note that the production plan has significantly changed.  
+
+At this point, we could discuss why this makes sense or not.  
+
+(Note: If you draw inspiration from this for the week 1 homework, be sure to change something other than what I changed and discuss the changes in greater detail.)
