@@ -1,0 +1,57 @@
+---
+title: "Introduction to Operations Research"
+author: "Tim Anderson"
+date: "11/23/2018"
+output: 
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction 
+
+## What is Operations Research
+
+Operations Research is the application of mathematics and scientific approaches to decision making.  It is a field deeply connected with applications.  
+
+The field of Operations Research had strong roots in World War II as nations and militaries urgently tried to best make use of their resources and capabilities.  Leaders asked people from various disciplines to help improve  a variety of problems such as submarine hunting, mining of resources, and production planning. Essentially, these tools are scientific approaches for making decisions for the design and operation of a system with limited resources. The tools that that they used came from combining applied math and scientific approaches resulting in tremendous improvements.  
+
+After the war, many of the same approaches were also then used for business applications.  Military groups most commonly used the term Operations Research while business groups often used the term Management Science.  
+
+Neither term, Operations Research nor Management Science is perfect. Operations Research is often confused with the strongly overlapping area of Operations Managment and also the word research implies to some that it is stricly theoretical.  Conversely, Management Science might imply that the rest of management is non-scientific or that it is just limited to business applications.  In this book, we will use the term Operations Research to mean both Operations Research and Management Science as well as often abbreviate it as OR.  
+
+## Purpose of this Book
+
+There are many comprehensive introductions to Operations Research available including classics from Hillier and Lieberman, Winston, and others. The goal of this book is to provide a timely introduciton to Operations Research using a powerful open source tool, R. It was written to support the ETM 540/640 Operations Research course at Portland State University which is taught on a quarter basis for people without a background in Operations Research or R. As such the current scope is limited to what can be readily accomplished in a 10 week quarter.  There are many other Operations Research tools available.  
+
+This book is meant to be a hybrid, both serving as an introduction to R and to Operations Research.  
+
+A quick getting started with R will be helpful.  I strongly recommend using RStudio.  A Modern Dive is a web book on using R and refreshing statistics that is very helpful.  I also like books such as R in a Nutshell or R in Action. 
+
+I usually find the best way for me to learn a new tool is to roll up my sleeves and jump right in.  Hence the book can be approached in that way and just be ready for a little more experimentation.  This book is available on Github and the R Markdown files are availale for use.  Code fragments are shown quite liberally for demonstrating how things work.  While this may be a bit verbose and at times repetititious, it is meant to help people jump in at various points of the book.  
+
+While code fragments can be copied from the R markdown files for this book, it is often best to phyiscally retype many of the code fragments shown as that gives time to reflect on what each statement is doing.  
+
+## Range of Operations Research Techinques
+
+Operations Research covers many different techniques.  They can be classified in a wide range of ways.  Some of the more common approaches are:
+
+* Optimization
+* Simulation
+* Queuing Theory
+* Markov Chains
+* Inventory Control
+* Forecasting
+* Game Theory
+* Decision Theory
+
+Each of these topics can require a full graduate level class or more to cover. In particular, Optimization and Simulation can be further subdivided into separate sub areas that represent entire specialities of their own. In this book, we currently limit ourselves to the field of Optimization for this current book.  The interested reader is welcome to explore each area further.  
+
+One way of conceptualizing the relationship between different techniques by whether they generally serve a descriptive role or prescriptive role.  A descriptive technique would be one that describes the current state of the system.  A prescriptive technique is one that would prescribe a certain course of action to achieve a desired outcome.  For example, weather forecasting is a very sophisticated descriptive discipline since we don't generally have control over short term weather.  On the other hand, if we were to look at intervention approaches such as cloud seeding we might try to come up a prescriptive application.  Prescriptive applications are abundant and can often be whereever decisions need to be made.
+
+## Relationship between Operations Research and Analytics
+
+The field of Operations Research significantly predates that of the term analytics but they are closely linked.  This is strongly demonstrated by the leading professional organization for operations research, INFORMS (The Institute for Operations Research and Management Science), developing a professional certification for analytics.  This certification process had leadership from industry representing the diverse users of Operations Research techniques.  
+

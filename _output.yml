@@ -1,0 +1,21 @@
+bookdown::gitbook:
+  css: style.css
+  split_by: chapter
+  config:
+    toc:
+      collapse: subsection
+      before: |
+        <li><a href="./">Operations Research  Using R</a></li>
+      after: |
+        <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+bookdown::pdf_book:
+  includes:
+    in_header: preamble.tex
+  latex_engine: pdflatex
+  citation_package: natbib
+bookdown::epub_book:
+  stylesheet: style.css
+bookdown::tufte_html_book:
+    toc: yes
+bookdown::tufte_book2:
+    toc: yes

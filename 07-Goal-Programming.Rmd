@@ -64,7 +64,7 @@ BaseModelCDT <- MIPModel() %>%
   add_constraint(8*Chairs + 6*Desks + 4*Tables <= 2000) %>% #assembly
   add_constraint(6*Chairs + 4*Desks + 8*Tables <= 1441) %>% #machining
   add_constraint(40*Chairs + 25*Desks + 25*Tables <= 9600) %>% #wood
-  add_constraint(Tables <= 200) %>% #
+  add_constraint(Tables <= 200) %>% 
   solve_model(with_ROI(solver = "glpk"))
 
   obj_val <- objective_value(BaseModelCDT)

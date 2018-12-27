@@ -1,0 +1,10 @@
+---
+title: "Operations Research Using R<br />"
+author: "Timothy R. Anderson"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+---
+# Preface {-}
+
+This book covers using R for doing Operations Research. The current focus is on optimization. In the future it may grow to include a broader range of Operations Research methods.

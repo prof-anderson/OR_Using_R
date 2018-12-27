@@ -2,7 +2,8 @@
 title: "A First Linear Program"
 author: "Tim Anderson"
 date: "11/23/2018"
-output: pdf_document
+output: 
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -23,7 +24,7 @@ The goal of the furniture manufacturer in this case is to find the best product 
 
 ### Base Data
 
-This exercise is based on material from week 1 class notes. Making a piece of furniture requires time in fabrication, assembly, and machining as a certain amount of wood.  For example, a chair requires 6 hours of fabrication time, 8 hours of assembly, and 6 hours of machining. It uses 40 square feet of wood but the net profit is $20.  The characteristics of desks are similar but different and shown in the following table. Also, the table lists the available amount of each limited resource. 
+Making a piece of furniture requires time in fabrication, assembly, and machining as a certain amount of wood.For example, a chair requires 6 hours of fabrication time, 8 hours of assembly, and 6 hours of machining. It uses 40 square feet of wood but the net profit is $20.  The characteristics of desks are similar but different and shown in the following table. Also, the table lists the available amount of each limited resource. 
   
 | Characteristic | Chairs | Desks |  Available| 
 |---------------:|:-----:|:------:|:----------:|
@@ -50,9 +51,10 @@ The decision variables are then combined in some way to reflect the performance 
 Lastly, what is limiting the organization from even better performance?  There are typically many limits such as the number of customers, personnel, supplier capacity, etc.  In this case, we simplify it to have a set of resource limits based on staffing in different centers and raw material (wood).  Since these limitations constrain the possible values of decision variables, they are called constraints.  
 
 Every optimization model can be thought of a collection of:
-* An objective function  (goal)
-* Decision variable(s) (decisions)
-* Constraint(s)  (limitations)
+
+* an objective function  (goal)
+* decision variable(s) (decisions)
+* constraint(s)  (limitations)
 
 ### Base Case Formulation
 
@@ -77,13 +79,12 @@ $$
                        & 8*Chairs+6*Desks \leq 2000 \\
                        & 6*Chairs+4*Desks \leq 1440 \\
                        & 40*Chairs+25*Desks \leq 9600 \\
-                       & Chairs, Desks \geq 0  
-  \end{aligned}
-  \end{split}
-  (\#eq:BaseModel2var)
+                       & Chairs, Desks \geq 0    
+  \end{aligned} (\#eq:BaseModel2var)
+  \end{split} 
 $$
 
-Note that since the objective function and each constraint is a simple linear function of the decision variables, this is what we call a *linear* programming model or LP for short. It would not be linear if any nonlinear function is made of the decision variables.  For example, squaring a decision variable, using conditional logic based on the variable value, or multipying two variables.  These and other issues would then require using nonlinear programming or NLP.  NLP is also widely used but has limitations.  
+Note that since the objective function and each constraint is a simple linear function of the decision variables, this is what we call a *linear* programming model or LP for short. It would not be linear if any nonlinear function is made of the decision variables. For example, squaring a decision variable, using conditional logic based on the variable value, or multiplying two variables.  These and other issues would then require using nonlinear programming or NLP. NLP is also widely used but has limitations.
 
 ### Base Case Implementation
 
@@ -139,7 +140,6 @@ print(solver_status(result0))
 
 Furthermore, we can do the same thing to extract the objective function value.  
 
-
 ```{r base_objecfunc_2var}
 print(objective_value(result0))
 ```
@@ -173,30 +173,9 @@ There is an additional constraint that the number of Tables made (sold) could no
 
 A simple LP now is to find the production plan or amount of each of the  products that results in the most profit.  This will require a new decision variable, Tables, to be added to the model.
 
-In order to do so, we need to define certain key items:
-
-* the goal(s)
-* the decisions
-* the limitations
-
-Let's start with the goal(s).  In this case, the production manager is simply trying to make as much profit as possible.  While cost cutting is also a goal for many organizations, in this case and many applications profit maximization is appropriate. Maximizing profit is the referred to as the *objective* of the model.
-
-People new to linear programming will often think of the decisions as the amount of each resource to use.  Instead, the decisions in this case would be how much to make of each particular product.  This drives the resource usage and the resource usage is a byproduct of these decisions.  These decisions can take on a range of values and are therefore called *decision variables*.  
-
-The decision variables are then combined in some way to reflect the performance with respect to the organization's objective. The equation combining the decision variables to reflect this is then the *objective function*.  In general we will assume that there is a single objective function for now.  There is a field of multiple-objective linear programming where multiple objectives or goals can be accommodated.  
-
-Lastly, what is limiting the organization from even better performance?  There are typically many limits such as the number of customers, personnel, supplier capacity, etc.  In this case, we simplify it to have a set of resource limits based on staffing in different centers and raw material (wood).  Since these limitations constrain the possible values of decision variables, they are called constraints.  
-
-Every optimization model can be thought of a collection of:
-* An objective function  (goal)
-* Decision variable(s) (decisions)
-* Constraint(s)  (limitations)
-
 ### Three Variable Case Formulation
 
-Let's put things together in the context of this application.  
-
-In the base case, our objective function is to Maximize Profit. We can't express it though until we precisely define our decision variables.
+Let's extend our previous model.  
 
 It is good practice to very clearly and precise define our decision variables.  In this case it is straightforward but they can get much more complicated as we move into richer and larger models.
 
@@ -220,12 +199,12 @@ $$
                        & Chairs, Desks, Tables \geq 0  
   \end{aligned}
   \end{split}
-  (\#eq:Base_Model_Ex4)
+  (\#eq:BaseModelEx4)
 $$
 
-Note that since the objective function and each constraint is a simple linear function of the decision variables, this is what we call a *linear* programming model. It would not be linear if any nonlinear function is made of the decision variables.  For example, squaring a decision variable, using conditional logic based on the variable value, or multipying two variables.  These and other issues would then require using nonlinear programming or NLP.  NLP is also widely used but has limitations.  
+Note that since the objective function and each constraint is a simple linear function of the decision variables, this is what we call a *linear* programming model. It would not be linear if any nonlinear function is made of the decision variables.  For example, squaring a decision variable, using conditional logic based on the variable value, or multiplying two variables.  These and other issues would then require using nonlinear programming or NLP.  NLP is also widely used but has limitations.  
 
-It is amazing the number of situations that can be modeled well using linear programming.  Keeping to the world of linear programming allows for in general finding the very best solution to very big problems in a short amount of time.  It is not uncommon for practitioners to be anlayzing problems with hundreds of thousands of decision variables and constraints.  
+It is impressive the number of situations that can be modeled well using linear programming.  Keeping to the world of linear programming in general allows for finding the very best solution to very big problems in a short amount of time. For example, it is common for practitioners to be analyzing real-world problems with hundreds of thousands of decision variables and constraints.  
 
 ### Three Variable Case Implementation
 
@@ -513,7 +492,7 @@ get_solution(result3, Desks)
 get_solution(result3, Tables)
 ```
 
-This constraint was a redundant constraint because the other constraints would keep us from ever having 1500 pieces of furniture or therfore needing 1500 gallons of paint.  In other words, there is no way that this constraint could ever be binding at any solution regardless of what the objective function is.  More precisely, elimination of a redundant constraint does not change the size of the feasible region at all.
+This constraint was a redundant constraint because the other constraints would keep us from ever having 1500 pieces of furniture or therefore needing 1500 gallons of paint.  In other words, there is no way that this constraint could ever be binding at any solution regardless of what the objective function is.  More precisely, elimination of a redundant constraint does not change the size of the feasible region at all.
 
 Note that not all non-binding constraints at an optimal solution are redundant.  Deleting a non-binding constraint and resolving won't change the optimal objective function value.  On the other hand, for a different objective function, that non-binding constraint might become binding and therefore different solutions would be found if it were deleted. 
 
@@ -614,7 +593,7 @@ Similarly, the resources:  Fabrication, Assembly, Machining, and Wood resources 
 * Installing LaTeX allows knitting to PDF which may be good for readability and turning in but please be sure to also turn in the .rmd file.
 * The R markdown documents (*.rmd files) may cause problems with the previews in the D2L learning management system.  
 * Using R markdown documents allows you to mix both analysis and interpretation cleanly.
-* Look over this .rmd file for information and try knitting it to HTML and PDF on your computer.  If you have everything installed correctly, it should work fine including the mathematical notation. If it doesn't worky, you may need to do a little extra free software installation.
+* Look over this .rmd file for information and try knitting it to HTML and PDF on your computer.  If you have everything installed correctly, it should work fine including the mathematical notation. If it doesn't work, you may need to do a little extra free software installation.
   
 In particular, you might want to look over this document with respect to:
 
@@ -625,8 +604,9 @@ In particular, you might want to look over this document with respect to:
 * Organizing information in Desks for display is helpful. Raw output can be verbose.  I hard coded a table at the beginning that works for simple data in explicit LPs.  For richer data models and nicer Desks, see Chapter 2 again.  The pander package makes it easy to display matrices and data Desks nicely in HTML and PDF outputs.
 * Use of section and subsection headings to organize your writeups.
 
-## Exercise
+## Exercises
 
+```{exercise, name="Adding Frames"}
 Your company has extended production to allow for producing picture frames and is now including a finishing department that primes and paints (or stains) the furniture.
 
 | Characteristic | Chairs | Desks | Frames | Tables | Available  | 
@@ -643,5 +623,7 @@ b) Extend the R Markdown to show your LP Model.  Be sure to define models.
 c) Solve the model in R
 d) Interpret and discuss the model in R Markdown.
 e) Discuss how one parameter would need to change in order to result in a different production plan.  Demonstrate how this affects the results.
+
+```
 
 Hint:  Knit your RMarkdown as a PDF or open the HTML version in your browser and print to PDF.

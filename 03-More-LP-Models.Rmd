@@ -4,12 +4,13 @@ author: "Tim Anderson"
 date: "10/4/2018"
 output:
   pdf_document: default
-  html_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+# More Linear Programming Models
 
 ## Types of LP Models
 
@@ -485,15 +486,15 @@ A generalization of the transportation model is that of transipment where some n
 
 ### Standard Form
 
-Any linear program in inequality constraints can be converted into what is referred to as standard form.  First, all strictly numerical terms are collected or moved to the right hand side and all variables are on the left hand side.  
+Any linear program in inequality constraints can be converted into what is referred to as standard form.  First, all strictly numerical terms are collected or moved to the right hand side and all variables are on the left hand side.
 
 It makes little difference as to whether the objective function is a _min_ or a _max_ function since a min objective function can be converted to a max objective function by multipling everything a negative one.  The converse is also true.  
 
 Lastly is a step where all of the inequalities are replaced by strict equality relations.  The conversion of inequalities to equalities warrants a little further explanation.  This is done by introducing a new, non-negative "slack" variable for each inequality.  
 
-## Homework
+## Exercises
 
-### Ex1:Transportation Problem
+```{exercise, name="Transportation"}
 
 Four manufacturing plants are supplying material for distributors in four regions.  The four supply plants are located in Chicago, Beaverton, Eugene, and Dallas.  The four distributors are in PDX (Portland), SEA (Seattle), MSP(Minneapolis), and ATL (Atlanta).  Each manufacturing plant has a maximum amount that they can produce.  For example, Chicago can produce at most 500.  Similarly, the PDX region can handle at most 700 units.  The cost to transport from Dallas to MSP is three times as high as the cost from Dallas to Atlanta.
 
@@ -505,43 +506,44 @@ Four manufacturing plants are supplying material for distributors in four region
 |  Dallas     |   16  |   26  |  15   |  5    |   **600**  |
 |**Capacity** |**700**|**500**|**500**|**600**|            |
 
-### Ex2: Formulate an Explict Transportation Model
 Formulate an explicit model for the above application that solves this transporation problem to find the lowest cost way of transporting as much as product as we can to distributors.  Hint:  You might choose to define variables based on the first letter of source and destination so XCP is the amount to ship from Chicago to PDX.  
 
 Implement and solve the model using ompr.  Be sure to discuss the solution as to why it makes it sense.  
 
-## Practice Problems
+```
 
-### Formulate a Generalized Transportation Model 
+```{exercise, name="Explicit Transportation"}
 Formulate a generalized model for the above application that solves this transporation problem to find the lowest cost way of transporting as much as product as we can to distributors.  Implement and solve the model using ompr.  Be sure to discuss the solution as to why it makes it sense.
+```
 
-### Converting a 3 Variable Model to Standard Form
-
+```{exercise, name="Convert LP to Standard Form"}
 Convert the following three variable LP into standard form.
-The new LP is shown in the following formulation.
+
 $$
  \begin{split}
  \begin{aligned}
     \text{Max  }   & Profit \\
     \text{subject to } & Profit=20*Chairs+10*Desks+16*Tables \\
-                       & 6*Chairs+3*Desks+4*Tables +Slack_1 = 2000 \\
-                       & 8*Chairs+4*Desks+4*Tables +Slack_2 = 2000 \\
-                       & 6*Chairs+3*Desks+8*Tables+Slack_3 = 1440 \\
-                       & 40*Chairs+20*Desks+25*Tables  +Slack_4 = 9600 \\
-                       & Tables +Slack_5 = 200 \\
-                       & Chairs, Desks, Tables, Slack_1, ..., Slack_5 \geq 0  
+                       & 6*Chairs+3*Desks+4*Tables \leq 2000 \\
+                       & 8*Chairs+4*Desks+4*Tables \leq 2000 \\
+                       & 6*Chairs+3*Desks+8*Tables \leq 1440 \\
+                       & 40*Chairs+20*Desks+25*Tables \leq 9600 \\
+                       & Tables  \leq 200 \\
+                       & Chairs, Desks, Tables \geq 0  
   \end{aligned}
   \end{split}
   (\#eq:Base_Model_Ex4)
 $$
+```
 
-### Implementing a 3 Variable Standard Form LP
+```{exercise, name="Convert LP to Standard Form"}
 
 Implement and solve the standard form of the LP using R.  Be sure to interpret the solution and discuss how it compares to the solution from the original model. 
+```
 
-### Converting an Algebraic Model to Standard Form
+```{exercise, name="Convert Generalized LP to Standard Form"}
 
-Convert our generalized production planning LP into standard form.  Hint,  To do so, define a use variable, $s_j$ to reflect these changes and add it to the following formulation.   
+Convert our generalized production planning LP into standard form.  Hint,  To do so, define a variable, $s_j$ to reflect these changes and add it to the following formulation.   
 
 $$
  \begin{split}
@@ -553,4 +555,4 @@ $$
   \end{split}
   (\#eq:Base-Algebraic)
 $$
-
+```
