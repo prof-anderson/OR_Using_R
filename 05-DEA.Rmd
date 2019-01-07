@@ -3,8 +3,8 @@ title: "Introduction to Data Envelopment Analysis"
 author: "Tim Anderson"
 date: "9/25/2018"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, warning=FALSE, include=FALSE}
@@ -36,7 +36,10 @@ output:
 
 Introduction
 -----------------------------
-Data envelopment analysis or DEA is a powerful tool for conducting studies of efficiency and has been used in thousands of publications since its inception in the 1970s.  
+
+Data envelopment analysis or DEA is a powerful tool for conducting studies of efficiency and has been used in thousands of publications since its inception in the 1970s.[^Source]
+
+[^Source]: This chapter is drawn from an introduction chapter in the book, DEA Using R by the same author.  More details on DEA are available from that book.
 
 While tools exist for conducting the evaluations, it is important to understand how the tools work. Many DEA studies have been conducted and published by authors with only a superficial understanding of the technique.  This is equivalent to having a house built by carpenters that only (barely?) understand how to use a hammer.  The purpose of this document is to show how DEA works, what it means, and how to use R for getting started with DEA.  In order to keep things simple, this first step only looks at the input-oriented envelopment model with constant returns to scale.  We will consider other models soon.  
 
@@ -138,9 +141,9 @@ In this chapter, we will focus on satisfying the second constraint while trying 
 
 Let's define the proportion of the studied unit's input needed by the target as $\theta$. A value of $\theta=1$ then means no input reduction can be found in order to produce that unit's level of output. Similarly, $x_j$ is the amount of input used by unit _j_ and $y_j$ is the amount of output produced by unit _j_.  
 
-In fact, we will go one step further and say that we want to find the maximum input possible reduction in k's input or conversely, the minimum amount of the input that could be used by the target while still producing the same or more output.  We do this by adding a new variable, $\theta$, which is the radial reduction in the amount of DMU k's input.  We want to find how low we can drive this by _minimizing_ $\theta$.  This gives us the following linear program, often abbreviated as LP.[^LaTeX] 
+In fact, we will go one step further and say that we want to find the maximum input possible reduction in k's input or conversely, the minimum amount of the input that could be used by the target while still producing the same or more output.  We do this by adding a new variable, $\theta$, which is the radial reduction in the amount of DMU k's input.  We want to find how low we can drive this by _minimizing_ $\theta$.  This gives us the following linear program, often abbreviated as an LP.[^LaTeX] 
 
-[^LaTeX]: The mathematics in this book is was written using LaTeX embedded within the rmarkdown document.  Another benefit of using rmarkdown is that it is possible embed LaTeX without requiring using a full LaTeX document.  
+[^LaTeX]: The mathematics in this book is  written using LaTeX embedded within the rmarkdown document. Another benefit of using rmarkdown is that it is possible embed LaTeX without requiring using a full LaTeX document.
 
 $$
  \begin{split}
@@ -741,25 +744,43 @@ The rightmost columns, denoted by "L_" are the resulting lambda values.
 ## Further Reading
 
   This section covers the second chapter of the book and introduces DEA and R working through a model and looping through a series of analyses.  The interested reader is referred to the book *DEA Using R* for more information on DEA.  In particular, chapters covers topics such as:
-  * a matrix-oriented implementation of DEA,
-  * output-orientation (maximizing the production of outputs)
-  * multiplier model (weighting inputs and weighting models)
-  * an easy to understand application applied to over 100 years of data
-  * examples of previously published applications applied to R&D project evaluation.
+  
+* a matrix-oriented implementation of DEA,
+* output-orientation (maximizing the production of outputs)
+* multiplier model (weighting inputs and weighting models)
+* an easy to understand application applied to over 100 years of data
+* examples of previously published applications applied to R&D project evaluation.
 
 ## Exercises
 
 If you have followed along this far - you deserve a medal!  If you work your way through by cutting and pasting code fragments, you should be able to reproduce my exact results.  At this point you are ready for a few challenges:
 
-1. Add a fifth unit, E, to the first example that produces 400 units output using 30 units of input.  Graphically evaluate all five units for their efficiency scores and lambda values.  
-2. Interpret the solution in terms of who is doing well, who is doing poorly, and who should be learning from whom.  _Difficulty: Cup of coffee_
-3. Examine the new unit, E, using  R.   _Difficulty: Decaf cup of coffee_
-4. Interpret the solution in terms of who is doing well, who is doing poorly, and who should be learning from whom.  _Difficulty: Cup of coffee_
-5. Wrap a for loop around the model to examine every unit.  Discuss results.  _Difficulty: Cup of coffee_
-6. Use a bigger data set and conduct an analysis & interpretation (more inputs, outputs, and units.)  _Difficulty: Cup of coffee_
-7. Validate results against a DEA package (ex. DEAMultiplier, TFDEA, Benchmarking, nonparaeff) _Difficulty: Pot of coffee_
-8. Construct an example where Phase 2 increases positive slacks from Phase 1.  _Difficulty: Pot of coffee_
-9. Create "cool" graphs or plots of results.  _Difficulty: It depends..._
+```{exercise, name="Adding DMU E-Graphically"}
+Add a fifth unit, E, to the first example that produces 400 units output using 30 units of input.  Graphically evaluate all five units for their efficiency scores and lambda values. Interpret the solution in terms of who is doing well, who is doing poorly, and who should be learning from whom.  _Difficulty: Cup of coffee_
+```
+
+```{exercise, name="Adding DMU E-Using R"}
+Examine the new unit, E, using  R. Interpret the solution in terms of who is doing well, who is doing poorly, and who should be learning from whom. _Difficulty: Decaf cup of coffee_
+```
+
+```{exercise, name="Looping"}
+Wrap a for loop around the model to examine every unit.  Discuss results.
+```
+```{exercise, name="Bigger Data"}
+Use a bigger data set and conduct an analysis & interpretation (more inputs, outputs, and units.)  _Difficulty: Cup of coffee_
+```
+
+```{exercise, name="Test Results"}
+Check results against a DEA package (ex. DEAMultiplier, TFDEA, Benchmarking, nonparaeff) _Difficulty: Pot of coffee_
+```
+
+```{exercise, name="Slacking"}
+Construct an example where Phase 2 increases positive slacks from Phase 1.  _Difficulty: Pot of coffee_
+```
+
+```{exercise, name="Graphics"}
+Create "cool" graphs or plots of results.  _Difficulty: It depends..._
+```
 
 To pass the challenges, work on extending my RMarkdown file or using a similar script.  You can use my *.rmd file as a starting point. Others might prefer to create a well documented R script instead of using RMarkdown.  Others might even prefer using LaTeX. If you use RMarkdown or LaTeX, please use section headings to indicate each challenge solved.  
 

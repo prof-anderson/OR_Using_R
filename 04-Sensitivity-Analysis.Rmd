@@ -18,7 +18,7 @@ library (ompr.roi, quietly = TRUE)
 library (pander, quietly = TRUE)
 ```
 
-# Linear Programming Sensitivity Results
+# Linear Programming Sensitivity Analysis
 
 We can get a lot more than just the objective function value and the decision variable from a solved linear program.  In particular, we can potentially explore the impact of changes in constrained resources, changes in the objective function, forced changes in decision variables, and the introduction of additional decision variables.  
 
@@ -66,10 +66,16 @@ Base3VarModel <- MIPModel() %>%
   xdesks  <- get_solution (Base3VarModel, Desks)
   xtables <- get_solution (Base3VarModel, Tables)
 
-base_case_res           <- cbind(xchairs,xdesks,xtables,obj_val)
-rownames(base_case_res) <- ""
+base_case_res <- cbind(objective_value(Base3VarModel),
+                     get_solution (Base3VarModel, Chairs),
+                     get_solution (Base3VarModel, Desks),
+                     get_solution (Base3VarModel, Tables))
+colnames(base_case_res)<-list("Profit", "Chairs", "Desks", "Tables")
+rownames(base_case_res)<-list("Base Case")
+
 pander(base_case_res,
-       caption="Production Plan for Base Case")
+       caption="Base Case Production Plan")
+  
 ```
 
 In the base case, we are producing chairs and desks but not tables to generate a total profit of $\$4880$.  
@@ -83,22 +89,22 @@ Let's begin by examining the row duals, also known as shadow prices.
 ```{r rduals_3var}
 #rduals1 <-as.matrix(get_row_duals(result1), ncol=5)
 rduals1 <-as.matrix(get_row_duals(Base3VarModel))
-dimnames(rduals1)<-list(c("fabrication", "assembly", "machining", "wood", "demand"), c("Row Duals"))
+dimnames(rduals1)<-list(c("fabrication", "assembly", "machining", "wood", "demand"), 
+                        c("Row Duals"))
 pander(rduals1,caption="Shadow Prices of Constrained Resources")
 ```
 
-This means that the marginal value of one additional hour of fabrication labor time is 0.  The company is not using all of the 2000 fabrication department's time available.  
+The row duals or shadow prices for fabrication is zero.  This means that the marginal value of one additional hour of fabrication labor time is $\$0$. This makes sense if you examine the amount of fabrication time used and realize that the company is not using all of the 2000 fabrication department's time available.  Therefore adding for fabrication hours certainly can't help improve the production plan.    
 
-The shadow price of an hour of assembly time is $1.0$.  This means that for every hour of additional assembly time within certain limits, the objective function will increase by $\$1.0$ also.  
+On the other hand, all of the assembly time (resource) is used in the optimal solution.  The shadow price of an hour of assembly time is $\$1.0$.  This means that for every hour of additional assembly time within certain limits, the objective function will increase by $\$1.0$ also.
 
-The shadow price in the machining center is more interesting.  All of the 1440 hours of labor available in the machining center are consumed by the optimal production plan.  Increasing the hours available may allow the company to change the production plan and increase the profit.  While you could rerun the model with increased machining hours to determine the new  optimal production plan but if only want to know the change in the optimal objective function value, you can determine that from the shadow price of the machining constraint.  Each additional hour (within a certain range) will increase the profit by $\$2.0$.  
+All of the 1440 hours of labor available in the machining center are consumed by the optimal production plan.  Increasing the hours available may allow the company to change the production plan and increase the profit.  While you could rerun the model with increased machining hours to determine the new  optimal production plan but if only want to know the change in the optimal objective function value, you can determine that from the shadow price of the machining constraint.  Each additional hour (within a certain range) will increase the profit by $\$2.0$.  
 
-This potential for increased profit can't be achieved by simply increasing the resource - it requires a modified production to utilize this increased resource.  To find the production plan that creates this increased profit, let's solve a modified linea program.  
+This potential for increased profit can't be achieved by simply increasing the resource - it requires a modified production to utilize this increased resource.  To find the production plan that creates this increased profit, let's solve a modified linear program.  
 
 ### Testing Adding Labor to Machining
 
-Let's test the theory by adding an hour of labor to the machining center.  The resulting LP is shown below.
-
+Let's test the numerical results from the Shadow Price table by adding an hour of labor to the machining center.  The resulting LP is shown below.
 
 $$
  \begin{split}
@@ -131,20 +137,24 @@ IncMachiningHrs <- MIPModel() %>%
   add_constraint(Tables <= 200) %>% #
   solve_model(with_ROI(solver = "glpk"))
 
-  obj_val <- objective_value(IncMachiningHrs)
-  xchairs <- get_solution (IncMachiningHrs, Chairs)
-  xdesks  <- get_solution (IncMachiningHrs, Desks)
-  xtables <- get_solution (IncMachiningHrs, Tables)
+inc_mc_res  <- cbind(objective_value(IncMachiningHrs),
+                     get_solution (IncMachiningHrs, Chairs),
+                     get_solution (IncMachiningHrs, Desks),
+                     get_solution (IncMachiningHrs, Tables))
+colnames(inc_mc_res)<-list("Profit", "Chairs", "Desks", "Tables")
+rownames(inc_mc_res)<-list("Increased M/C Hrs")
 
-inc_mc_res  <- cbind(xchairs,xdesks,xtables,obj_val)
-rownames(inc_mc_res) <- ""
-pander(inc_mc_res,
+pander(rbind(base_case_res, inc_mc_res),
        caption="Production Plan with One Additional Machining Hour")
 ```
 
+These results confirmed that adding one hour of machining time results in a _new_ production plan that generates a profit of two more dollars, exactly as expected.  
+
+The Shadow Prices can be very helpful in larger problems where questions might come up of trying to evaluate or prioritize limited resources.  
+
 ### Shadow Price of Underutilzed Resources
 
-The shadow price on wood is zero.  This means that even a large increase in wood would not affect the maximum profit or the optimal production plan.  Essentially there is plenty of wood, having more would not allow enable a better profit plan to be possible.  Let's confirm this as well with a numerical example by adding _10,000_ more square feet of wood.  
+The shadow price on wood is zero (as was also the case for assembly hours).  This means that even a large increase in wood would not affect the maximum profit or the optimal production plan.  Essentially there is plenty of wood, having more would not allow enable a better profit plan to be possible.  Let's confirm this as well with a numerical example by adding _10,000_ more square feet of wood.  
 
 
 $$
@@ -178,14 +188,14 @@ IncWood<- MIPModel() %>%
   add_constraint(Tables <= 200) %>% #
   solve_model(with_ROI(solver = "glpk"))
 
-  obj_val <- objective_value(IncWood)
-  xchairs <- get_solution (IncWood, Chairs)
-  xdesks  <- get_solution (IncWood, Desks)
-  xtables <- get_solution (IncWood, Tables)
+inc_wd_res  <- cbind(objective_value(IncWood),
+                     get_solution (IncWood, Chairs),
+                     get_solution (IncWood, Desks),
+                     get_solution (IncWood, Tables))
+colnames(inc_wd_res)<-list("Profit", "Chairs", "Desks", "Tables")
+rownames(inc_wd_res)<-list("Increased Wood")
 
-inc_wd_res  <- cbind(xchairs,xdesks,xtables,obj_val)
-rownames(inc_wd_res) <- ""
-pander(inc_wd_res,
+pander(rbind(base_case_res, inc_mc_res, inc_wd_res),
        caption="Production Plan with 10,000 Additional Square Feet of Wood")
 ```
 
@@ -197,8 +207,6 @@ Next, we move on to the *reduced costs* of variables. This concept often require
 
 Let's start by examining the Chairs.  The reduced cost for Chairs is the per unit marginal profit minus the per unit value (in terms of shadow prices) of the resources used by a unit in production.  
 
-Recall that each desk has a profit of $ \$20$.  Each desk requires  6, 8, and 6 hours of Fabrication, Assembly, and Machining respectively along with 40 square feet of wood. The shadow prices were zero for the first two resources so a marginal impact of producing one more or less desk in terms of fabrication and assembly time is also zero.  On the other hand making one more desk means using the crucial constrained resources of A machining and wood.  The value of the machining hours used by producing one more desk is 6*1.2 or $7.2. Similarly, 
-
 Next, let's discuss the column duals which are often referred to as reduced costs of variables.  Let's extract these from the results just as we did for the shadow prices.
 
 ```{r cduals_3var}
@@ -207,14 +215,12 @@ Next, let's discuss the column duals which are often referred to as reduced cost
 cduals1 <-as.matrix(get_column_duals(Base3VarModel) )
 
 dimnames(cduals1)<-list(c("Chairs", "Desks", "Tables"), c("Column Duals"))
-pander(cduals1,caption="Incorrect Reduced Costs of Variables")
+pander(cduals1,caption="Reduced Costs of Variables")
 ```
 
-These results are interesting.  The reduced costs of variables that are between upper and lower bounds will be zero.  The reduced cost of a variable can be thought as the difference between the value of the  resources consumed by the resources and the value of the variable in the objective function.
+These results are interesting.  The reduced costs of variables that are between simple upper and lower bounds will be zero. The reduced cost of a variable can be thought as the difference between the value of the  resources consumed by the resources and the value of the variable in the objective function.  All of our variables have simple lower bounds of zero and no upper bounds.  The first two (Chairs and Desks) have a zero reduced cost and the last one (Tables) is negative.  Let's explore what this means.  
 
-In the case of Chairs, the value of the resources used in producing a chair equals that of the profit of a chair.  The reduced cost for a chair is the difference between these two or zero.  Let's calculate the value of the resources used by making one chair in terms of Shadow Prices.  
-
-Value of Resources 
+Let's start by examining the Shadow Prices of the resources along with the number of each resource used in the production of a single chair.  
 
 ```{r}
 chair_res_used<-cbind(rduals1,c(2,8,6,40,0))
@@ -222,9 +228,9 @@ colnames(chair_res_used)<-c("Row Duals", "Resources Used")
 pander(chair_res_used, caption="Resources Used by a Chair and their Shadow Prices")
 ```
 
-Simply multiplying across and adding the value, we can see that the shadow cost of the resources used in making a chair is simply $\$1*8+\$2*6=\$20$ which is the same as the profit per chair.
+Taking the product in each row and adding them up will give the marginal value of the resources consumed by an incremental change in production of chairs. In this case, the marginal value is $0+1*8+2*6+0+0=20$.  Since the profit per chair (from the objective function coefficient on Chairs) is also $\$ 20$, they are in balance and the difference between them is zero which is why the reduced cost for Chairs is zero. This can be thought of saying that there is marginal benefit of cost to a very small forced change in the value of the Chairs variable.  The value of the resources used in producing a chair equals that of the profit of a chair.  
 
-The same is true of Desks.  
+We can repeat the same process and calculations for Desks.  
 
 ```{r}
 desk_res_used<-cbind(rduals1,c(2,6,4,25,0))
@@ -232,11 +238,13 @@ colnames(desk_res_used)<-c("Row Duals", "Resources Used")
 pander(desk_res_used, caption="Resources Used by a Desk and their Shadow Prices")
 ```
 
+In this case, the marginal value is $0+1*6+2*4+0+0=14$.  Since the profit per desk (from the objective function coefficient on Desks) is also $\$ 14$, they are in balance and the difference between them is zero which is why the reduced cost for the _Desks_ variable is also zero.
+
 ### Reduced Price of Tables 
 
-The situation is more interesting for Tables.  The production plan does not call for producing any tables.  A reduced cost of -4 means that the opportunity cost of resources used in producing a table is $\$4$ more than   the profit of producing a single table.  In other words, we would expect that if we force the production of a single table, the over all production plan's profit will go down by $\$4$.
+The situation is more interesting for Tables. The production plan does not call for producing any tables. This means that it is sitting right at the lower bound of zero Tables.  This hints that perhaps we would like to make even less than zero Tables if we could and that being _forced_ to make even one table would be costly. A reduced cost of -4 means that the opportunity cost of resources used in producing a table is $\$4$ more than the profit of producing a single table.  In other words, we would expect that if we force the production of a single table, the over all production plan's profit will go down by $\$4$.
 
-Let's go ahead and test this.  
+Let's go ahead and test this. interpretation by again looking at the value of the resources consumed and the number used.  
 
 ```{r}
 table_res_used<-cbind(rduals1,c(4,4,8,25,0))
@@ -244,7 +252,7 @@ colnames(table_res_used)<-c("Row Duals", "Resources Used")
 pander(table_res_used, caption="Resources Used by a Table and their Shadow Prices")
 ```
 
-Notice that the values based on shadow prices of the resources used by a table are $\$1*4+\$2*8=\$20$. Alas, the profit for each table is just $\$16$ means that forcing the production of a single table will decrease the production plan's profit by $\$4$. In other words, the impact on the objective function is   $\$-4$ which is the same as the reduced price entry of Tables.  
+Notice that the values based on shadow prices of the resources used by a table are $\$1*4+\$2*8=\$20$. Alas, the profit for each table is just $\$16$ which means that forcing the production of a single table will decrease the production plan's profit by $\$4$. In other words, the impact on the objective function is   $\$-4$ which is the same as the reduced price entry of Tables.  
 
 Okay, now let's put both side by side in a table to show the results.
 
@@ -305,10 +313,29 @@ Even without adding it to the model, we can check to see if it is worthwhile to 
 
 We could interpret this as a simple hard stop on the decision to produce bookcases but we could go one step further by setting a target for redesigning the product or its production.  If the mchining time could be reduced by 4.5 hours to 11.5 hours, then the value of the resouces consumed would be equal to the profit and we would be indifferent to producing some bookcases.  
 
-### To-Do In Reduced Costs Subsection
+##Exercises##
 
-* Fix labeling of cduals0 object.
-* Check values for correctness.
-* Combine optimal decision variables in another column of results in table alongside reduced costs.
-* Run example with increased resource
-* Calculate reduced cost of product's resources used
+```{exercise, name="Adding Frames"}
+Your company has extended production to allow for producing picture frames and is now including a finishing department that primes and paints (or stains) the furniture.
+
+| Characteristic | Chairs | Desks | Frames | Tables | Available  | 
+|---------------:|:-----:|:-----:|:------:|:---------:|:----------:|
+|  Profit        |  $20  |  $14  |    $3  |  $16      |            |
+|  Fabrication   |   6   |   2   |     1  |    4      |   1440     |
+|  Assembly      |   8   |   6   |     1  |    8      |   1440     |
+|  Machining     |   6   |   4   |     1  |   25      |   2000     |
+|  Painting      |   7   |  10   |     2  |   12      |   1000     |
+|  Wood          |  40   |  25   |     5  |   16      |   9600     |
+
+a) Use R Markdown to create your own description of the model.
+b) Extend the R Markdown to show your LP Model.  Be sure to define models.
+c) Solve the model in R.
+d) Interpret and discuss the model in R Markdown.
+e) Examine and reflect upon the reduced costs and shadow prices from the context of which products to produce and not produce.
+f) Using the results from e), (i.e. reduced cost and shadow prices) make one change to the base model's **objective function** that will change the production plan.  Rerun and discuss the new results.
+g) Using the results from e), (i.e. reduced cost and shadow prices) make one change to the base model's **resource usage values** that will change the production plan. Rerun and discuss the new results.
+h) Using the results from e), (i.e. reduced cost and shadow prices) make one change to the base model's **available resource values** that will change the production plan. Rerun and discuss the new results.
+i) Combine the results of the base case e), as well as the variations f) through h) into a single table and discuss the results.  
+
+```
+

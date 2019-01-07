@@ -3,6 +3,9 @@ chapter_name: "Chapter "
 # repo: https://github.com/seankross/bookdown-start
 output_dir: docs
 #rmd_files: ["index.Rmd", "01-Introduction.Rmd", "02-Diving-In.Rmd"]
-#clean: [packages.bib, bookdown.bbl]
+#clean: [Master4Bookdowns.bib]
 #clean: [packages.bib, Z5_R_Resources.bib, bookdown.bbl]
 new_session: yes
+bibliography: ["Master4Bookdowns.bib", "another.bib"]
+biblio-style: "apalike"
+link-citations: true

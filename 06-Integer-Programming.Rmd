@@ -18,10 +18,21 @@ library (ompr.roi, quietly = TRUE)
 library (pander, quietly = TRUE)
 ```
 
-# Changing Variables from Continuous to Integer
+# Getting Started with Integer Variables
+
+Up until this point, we have always assumed that variables could take on fractional (or non-integer) values.  In other words, they were continuous variables.  Sometimes the values conveniently turned out to be integer-valued, in other cases, we would brush off the non-integer values of the results.
+
+Allowing for integer values opens up many more important areas of applications as we will see.  
+
+## Examples of Integrality
+
+Let's look at two numerical examples.  The first shows a case where integrality makes little difference, the second where it has a major impact.
+
+Unfortunately, there is no such thing as a free lunch-adding integrality can make problems much more computationally demanding. We will go through an example of how many optimization routines do integer optimization to demonstrate why it can be more difficult algorithmically even if looks trivially easy from the perspective of the change in the ompr function.
+
+### Example of Integrality having Little Impact
 
 Let's revisit the earlier example of producting chairs, desks, and tables.  Where we aded one extra hour of labor to the machining center.  The resulting LP is shown below.
-
 
 $$
  \begin{split}
@@ -119,17 +130,7 @@ pander(IntModelCDTres,
 
 Notice that in this case, there was a small adjustment to the production plan and a small decrease to the optimal objective function value.  This is not always the case, sometimes the result can be unchanged.  In other cases, it may be changed in a very large way.  In others, the problem may in fact even become infeasible.
 
-## The Branch and Bound Algorithm
-
-The simplicity of making the change in the model from continuos to integer variables hides or understates the complexity of what needs to be done to computationally to solve the optimization problem.  This small change can have major impacts on the computational effort needed to solve a problem.  Solving linear programs with tens of thousands of continuous variables is very quick and easy computationally.  Changing those same variables to general integers can make it *very* difficult. Why is this the case?
-
-At its core, the basic problem is that the simplex method and linear programming solves a system of equations and unknowns (or variables).  It is trivial to solve one equation with one unknown such as $5x=7$.  It is only slighly harder to solve a system of two equations and two unknowns.  Doing three equations and three unknowns requires some careful algebra but is not too hard. In general, solving *n* equations and *n* unknowns is readily solveable.  On the other hand, none of this algebraic work will of solving for unknown variables can require that the variables take on integer values.  Even with only one equation and one unknown, *x* will only be integer for certain combinations of numbers in the above equation.  Specifically when the number on the right is a multiple of the number in front of *x*.  It gets even less likely to have an all integer solution as the number of equations and unknowns increase.  
-
-Another way to visualize why integer solutions for general systems of inequalities is to think of the two equation and two unknown case.  Finding a solution is the same as finding where lines intersect in two dimensional space.  The odds of getting lucky and having the two lines intersect at an integer solution is small.  Even if we limit ourselves to a two dimeionsal space of the intersection occurs for x and y both being between 0 and 10, this means that there $11^2=121$ possible integer valued points in this space such as (0,0), (0,3), and (10,10).  In contrast, the set of all points, including non-integers, in this region includes all of the above points as well as (0,0.34) and (4.71, 7.89) among infinitely more.  The result is that if you think of this as a target shooting, the probability of finding an integer solution by blind luck is  $\frac{121}{\infty}\approx 0$. Certain structures for optimization problems will result in 
-
-What we need to do is create an algorithm around the simplex method to accomplish this.  
-
-A basic and common and approach often used for solving integer variable linear programming problems is called branch and bound.  We start with a solution that has presumably continuous valued variables.  We then branch (create subproblems) from here and add bounds (additional constraints) to rule out the possible fraction values.
+### Example of Integality having a Large Impact
 
 Acme makes two products, let's refer to them as product 1 and 2.  Product 1 generates a profit of $2000 per product, requires one liter of surfactant for cleaning, 2.5 kilograms of high grade steel.
 
@@ -152,8 +153,65 @@ $$
   (\#eq:ILP)
 $$
 
-
 The last constraint cannot be solved directly strictly using linear programming.  It is instead referred to as an integer linear program or ILP.  
+
+Again, we could try solving it with and without the imposition of the integrality constraint.
+
+
+```{r SolveLPRelaxation0}
+
+LPRelax <- MIPModel() %>%
+  add_variable(xx1, type = "continuous", lb = 0) %>%
+  add_variable(xx2, type = "continuous",lb = 0) %>%
+  set_objective(2*xx1 + 3*xx2, "max") %>%
+  add_constraint(1.0*xx1 + 3.0*xx2 <= 8.25) %>% #Surfactant
+  add_constraint(2.5*xx1 + 1.0*xx2  <= 8.75) %>% #Steel
+  solve_model(with_ROI(solver = "glpk"))
+
+  obj_val <- objective_value(LPRelax)
+  x1 <- get_solution (LPRelax, 'xx1')
+  x2  <- get_solution (LPRelax, 'xx2')
+
+acme_res_lp  <- cbind(x1,x2,obj_val)
+colnames(acme_res_lp) <- list("x1", "x2", "Profit")
+rownames(acme_res_lp) <- "LP Solution"
+```
+
+```{r SolveIP0}
+
+IPSoln <- MIPModel() %>%
+  add_variable(xx1, type = "integer", lb = 0) %>%
+  add_variable(xx2, type = "integer",lb = 0) %>%
+  set_objective(2*xx1 + 3*xx2, "max") %>%
+  add_constraint(1.0*xx1 + 3.0*xx2 <= 8.25) %>% #Surfactant
+  add_constraint(2.5*xx1 + 1.0*xx2  <= 8.75) %>% #Steel
+  solve_model(with_ROI(solver = "glpk"))
+
+  obj_val <- objective_value(IPSoln)
+  x1 <- get_solution (IPSoln, 'xx1')
+  x2  <- get_solution (IPSoln, 'xx2')
+
+acme_res_ip  <- cbind(x1,x2,obj_val)
+colnames(acme_res_ip) <- list("x1", "x2", "Profit")
+rownames(acme_res_ip) <- "IP Solution"
+pander(rbind(acme_res_lp,acme_res_ip),
+       caption="Acme's Production Plan - Continuous vs. Integer")
+```
+
+Simply rounding down did not yield an optimal solution.
+Notice that production of product 1 went down while product 2 went up.  The net impact was a profit reduction of almost _10%_.
+
+## The Branch and Bound Algorithm
+
+The simplicity of making the change in the model from continuous to integer variables hides or understates the complexity of what needs to be done to computationally to solve the optimization problem.  This small change can have major impacts on the computational effort needed to solve a problem.  Solving linear programs with tens of thousands of continuous variables is very quick and easy computationally.  Changing those same variables to general integers can make it *very* difficult. Why is this the case?
+
+At its core, the basic problem is that the simplex method and linear programming solves a system of equations and unknowns (or variables).  It is trivial to solve one equation with one unknown such as $5x=7$.  It is only slighly harder to solve a system of two equations and two unknowns.  Doing three equations and three unknowns requires some careful algebra but is not too hard. In general, solving *n* equations and *n* unknowns is readily solveable.  On the other hand, none of this algebraic work will of solving for unknown variables can require that the variables take on integer values.  Even with only one equation and one unknown, *x* will only be integer for certain combinations of numbers in the above equation.  Specifically when the number on the right is a multiple of the number in front of *x*.  It gets even less likely to have an all integer solution as the number of equations and unknowns increase.  
+
+Another way to visualize why integer solutions for general systems of inequalities is to think of the two equation and two unknown case.  Finding a solution is the same as finding where lines intersect in two dimensional space.  The odds of getting lucky and having the two lines intersect at an integer solution is small.  Even if we limit ourselves to a two dimeionsal space of the intersection occurs for x and y both being between 0 and 10, this means that there $11^2=121$ possible integer valued points in this space such as (0,0), (0,3), and (10,10).  In contrast, the set of all points, including non-integers, in this region includes all of the above points as well as (0,0.34) and (4.71, 7.89) among infinitely more.  The result is that if you think of this as a target shooting, the probability of finding an integer solution by blind luck is  $\frac{121}{\infty}\approx 0$. Certain structures for optimization problems will result in 
+
+What we need to do is create an algorithm around the simplex method to accomplish this.  
+
+A basic and common and approach often used for solving integer variable linear programming problems is called branch and bound.  We start with a solution that has presumably continuous valued variables.  We then branch (create subproblems) from here and add bounds (additional constraints) to rule out the possible fraction values.
 
 ### The LP Relaxation
 
@@ -171,34 +229,20 @@ $$
   (\#eq:LPRelaxation)
 $$
 
-This is a problem that we **can** solve using linear programming so let's go ahead do it!
+This is a problem that we **can** solve using linear programming so let's go ahead do it!  Well, we already did so let's just review the results for what is now called the LP Relaxation because we are _relaxing_ the integrality requirements.
 
 ```{r SolveLPRelaxation}
 
-LPRelax <- MIPModel() %>%
-  add_variable(xx1, type = "continuous", lb = 0) %>%
-  add_variable(xx2, type = "continuous",lb = 0) %>%
-  set_objective(2*xx1 + 3*xx2, "max") %>%
-  add_constraint(1.0*xx1 + 3.0*xx2 <= 8.25) %>% #Surfactant
-  add_constraint(2.5*xx1 + 1.0*xx2  <= 8.75) %>% #Steel
-  solve_model(with_ROI(solver = "glpk"))
-
-  obj_val <- objective_value(LPRelax)
-  x1 <- get_solution (LPRelax, 'xx1')
-  x2  <- get_solution (LPRelax, 'xx2')
-
-inc_mc_res  <- cbind(x1,x2,obj_val)
-rownames(inc_mc_res) <- ""
-pander(inc_mc_res,
+pander(acme_res_lp,
        caption="Acme's Production Plan based on the LP Relaxation")
 ```
 
 ### Subproblem I
-Alas, this production plan from the LP Relaxation is not feasible from the perspective of the original integer problem and requirement because it produces _2.769_ of  product 1 and _1.827_ of product 2.  If it had been all integer, we could have declared victory and been satisfied that we had easily found the optimal solution to integer programming problem so quickly.
+Alas, this production plan from the LP Relaxation is not feasible from the perspective of the original integer problem and requirement because it produces _2.769_ of  product 1 and _1.827_ of product 2.  If both variables had been integer we could have declared victory and been satisfied that we had easily found the optimal solution to integer programming problem so quickly.
 
-Instead, we will need to proceed with the branch and bound process.  Since both of the variables in the LP relaxation have fractional values, we need to start by choosing which variable to branch off of.  Algorithmic researchers would focus on how to best pick a branch but for our purposes, it doesn't really matter so let's branch on $x_1$.  
+Instead, we will need to proceed with the branch and bound process.  Since both of the variables in the LP relaxation have fractional values, we need to start by choosing which variable to branch off of.  Algorithmic researchers would focus on how to best pick a branch but for our purposes, it doesn't really matter so let's arbitrarily choose to branch on $x_1$.  
 
-For the branch and bound algorithm, we want to include two subproblems that exclude the illegal value of $x_1=2.769$ as well as everything else between 2 and 3.  We then say that we are _branching_ on $x_1$ to create two subproblems.  The first subproblem (I) has an added constraint of $x_1\le 2.0$ and the other subproblem (II) has an added constraint of $x_1\ge 3.0$.  
+For the branch and bound algorithm, we want to include two subproblems that exclude the illegal value of $x_1=2.769$ as well as everything else between 2 and 3.  We  say that we are _branching_ on $x_1$ to create two subproblems.  The first subproblem (I) has an added constraint of $x_1\le 2.0$ and the other subproblem (II) has an added constraint of $x_1\ge 3.0$.  
 
 $$
  \begin{split}
@@ -329,7 +373,7 @@ pander(LPSubII_res,
 
 At this point, our first reaction is to breathe deeply and do the same branch and bound off of $x_2$.  If we step back and take note that the objective function value of 9.75, while optimal for this subproblem, it is less than what we found from a feasible solution to sub problem III. Given that adding countraints can't improve an objective function value, we can cleverly trim all branches below subproblem II.  
 
-Given that we now no longer have any brances to explore, we can declare that we have found the optimal solution.  The optimal soution can now be declared to be what we found from Subproblem III.  
+Given that we now no longer have any brances to explore, we can declare that we have found the optimal solution.  The optimal solution can now be declared to be what we found from Subproblem III.  
 
 ```{r}
 pander(LPSubIII_res,
@@ -337,6 +381,21 @@ pander(LPSubIII_res,
 ```
 
 Before this, we could only say that it was feasible solution and candidate to be optimal since no better integer feasible solution had been found.
+
+Let's put together the sequence of LPs solved.
+
+
+```{r}
+LPSubIII_res <- c("-", "-", "Infeasible")
+BandB <- rbind(format(round(acme_res_lp,  3), nsmall = 3), 
+               format(round(LPSubI_res,   3), nsmall = 3),
+               LPSubIII_res, 
+               format(round(LPSubIV_res,  3), nsmall = 3),
+               format(round(LPSubII_res,  3), nsmall = 3))
+rownames(BandB) <- list("LP Relaxtion", "LP Subproblem I", "LP Subproblem III",
+                        "LP Subproblem IV", "LP Subproblem II")
+pander(BandB, caption="Sequence of LPs followed by Branch and Bound")
+```
 
 ### Computational Complexity of Integer Programming
 
@@ -428,7 +487,7 @@ Solve for the base case and then show the results of just each constraint at onc
 
 When projects can be neither partially funded nor repeated, how many candidate solutions would there be by full enumeration?  Can you list them out?  
 
-## Homework for Week 5
+## Exercise
 
 Take a look at Dirk Schumacher's vignette for "Course Planning".  https://dirkschumacher.github.io/ompr/articles/problem-course-assignment.html 
 
@@ -470,5 +529,3 @@ What we can see is that we are producing some of xxxx and yyy but we don't have 
 What we need to do is connect the decision variables of how much of a product to make and whether we make any of that product.  
 
 We do that by connecting the two decision variables for each of the products.  We will leave that as a challenge to be talked about more next week.  
-
-

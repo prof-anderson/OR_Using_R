@@ -22,22 +22,22 @@ In this chapter, we will examine a range of classic applications of linear progr
 
 #### The Algebraic Model
 
-In the previous chapter, we examined products with a few products and a few resource constraints.  In general, most companies have many more products and we won't be wanting to name each product.  Instead, we use sets of products and resources.  
+In the previous chapter, we examined situations with only a few products and constraints.  In general, most companies have many more products and we won't be wanting to name each product.  Instead, we use sets of products and resources.  
 
-We could also reframe the model more algebraically. Let's use subscripts to differentiate between products and resources. We can define that i=1 represents Chairs, i=2 represents Desks, and i=3 represents Tables.  Similarly, j=1 represents fabrication, j=2, represents assembly, etc.   Now, let's move on to defining the data.  Let's define the amount to produce of each product, i, as $x_i$ and resource consumed as $R_{i,j}$ as well as the available resource as $A_j$. The profit per product is then $P_i$. The LP can now be rewritten in more general terms as the following.
+We could also reframe the model more algebraically. Let's use subscripts to differentiate between products and resources. We can define that _i=1_ represents Chairs, _i=2_ represents Desks, and _i=3_ represents Tables.  Similarly, _j=1_ represents fabrication, _j=2_, represents assembly, etc.   Now, let's move on to defining the data.  Let's define the amount to produce of each product, _i_, as $x_i$ and resource _j_ consumed by product _i_ as $R_{i,j}$.  The available resource _j_ is then $A_j$. The profit per product _i_ is then $P_i$. The LP can now be rewritten in more general terms as the following if there are three products and four constraints.
 
 $$
  \begin{split}
  \begin{aligned}
     \text{Maximize  }   &  \sum_{i=1}^3 P_i x_i \\
-    \text{subject to } & \sum_{i=1}^3 R_{i,j}x_i \leq A_j \;\forall \; j\\
-                       & x_i \geq 0  \; \forall \; i
+    \text{subject to } & \sum_{i=1}^3 R_{i,j}x_i \leq A_j \;, \; j=1, 2, 3, 4\\
+                       & x_1,x_2,x_3 \geq 0  \; 
   \end{aligned}
   \end{split}
   (\#eq:Base-Algebraic1)
 $$
 
-We could further generalize this by instead of hard coding the number of products, defining the number of products and resources as NProd and NResources respectively.  We can then rewrite the above formulation as the following
+We could further generalize this by instead of hard coding the number of products and resource constraints, we instead define the number of products and resources as NProd and NResources respectively.  We can then rewrite the above formulation as the following
 
 $$
  \begin{split}
@@ -49,6 +49,16 @@ $$
   \end{split}
   (\#eq:Base-Algebraic2)
 $$
+
+#### Tips and Conventions for Algebraic Models
+
+The symbol, $\forall$, is read as "for all" and can be interpreted to mean "repeat this line substituting in a value for this subscript **for all** possible values of this subscript."  In other words, given that i is used consistently for the three products, then $x_i \geq 0  \; \forall \; i$ is equivalent to $x_i \geq 0  \;,i=1,2,3$ or even $x_1 \geq 0, \; x_2 \geq 0, \; x_3 \geq 0$.  The result is that the $\forall$ symbol can simplify the description of complex models when index ranges are clear.
+
+Also, another good practice is to use mnemonic to help suggest the meaning of data.  That is why I chose "R" for Resource, "P" for Profit, and "A" for Available resources. 
+
+Another trick is to use the capital letters for data and lower case letters for variables.  (Some people will swap this around and use capital letters for variables and lower case letters for data - it doesn't really matter as long as a model is consistent.)
+
+Another convention that might be used for more complex model is to use a superscript.  For example, perhaps labor cost for each worker, _w_, could have different values for both normal and overtime rates.  Rather than separate data terms for such closely related concepts, we might denote regular hourly labor cost for worker _w_ as $C^R_w$ and for overtime as $C^O_w$.  Again, it is very important to clearly define all the data and varaibles used in the model.
 
 #### Building the Generalized Model in R
 
@@ -153,11 +163,11 @@ pander (results.products, caption = "Optimal Production Plan")
 
 ```
 
-Let's examine how the resources are consumed.  To do this, we can multiply the amount of each product by the amount of each resource used for that product.  For the first product, this would be a term by term sum of each product resulting in ``r Resources[1,]%*%t(results.products)`` which is less than ``r Available[1]``.  We can do this manually for each product.  Another approach is to use the command, _Resources[1,]%*%t(results.products)_.  This command will take the first row of the Resources matrix and multiplies it by the vector of results.  
+Let's examine how the resources are consumed.  To do this, we can multiply the amount of each product by the amount of each resource used for that product. For the first product, this would be a term by term sum of each product resulting in ``r Resources[1,]%*%t(results.products)`` which is less than ``r Available[1]``. We can do this manually for each product. Another approach is to use the command, `Resources[1,]%*%t(results.products)`. This command will take the first row of the Resources matrix and multiplies it by the vector of results.  
 
-Another thing to take note of in learning how to use RMarkdown is that results from r code can be shown by inserting an inline code chunk.  Inline code chunks can be inserted into text by using a single tick at the beginning and end of the chunk instead of the triple tick mark for regular code chunks.  Also, the inline r code chunk starts with the letter r to indicate that it is an r code code.  A common use for this might be to show the results of an earlier analysis.  
+Another thing to take note of in learning how to use RMarkdown is that results from r code can be shown by inserting an inline code chunk.  Inline code chunks can be inserted into text by using a single tick at the beginning and end of the chunk instead of the triple tick mark for regular code chunks.  Also, the inline r code chunk starts with the letter r to indicate that it is an r code code.  A common use for this might be to show the results of an earlier analysis.
 
-One thing to note is that the first row of _Resources_ is by definition a row vector and _result.products_ is also a row vector.  What we want to do is do a row vector multiplied by a column vector.  In order to do this, we need to convert the row vector of results into a column vector.  This is done by doing a _transpose_ which changes the row to a column.  This is done often enough that that the operation is just one letter, _t_.  
+One thing to note is that the first row of `Resources` is by definition a row vector and `result.products` is also a row vector.  What we want to do is do a row vector multiplied by a column vector.  In order to do this, we need to convert the row vector of results into a column vector.  This is done by doing a _transpose_ which changes the row to a column.  This is done often enough that that the operation is just one letter, `t`.  
 
 We can go one further step now and multiply the matrix of resources by the column vector of production.
 
@@ -506,7 +516,7 @@ Four manufacturing plants are supplying material for distributors in four region
 |  Dallas     |   16  |   26  |  15   |  5    |   **600**  |
 |**Capacity** |**700**|**500**|**500**|**600**|            |
 
-Formulate an explicit model for the above application that solves this transporation problem to find the lowest cost way of transporting as much as product as we can to distributors.  Hint:  You might choose to define variables based on the first letter of source and destination so XCP is the amount to ship from Chicago to PDX.  
+Formulate an explicit model for the above application that solves this transporation problem to find the lowest cost way of transporting as much as product as we can to distributors.  Hint:  You might choose to define variables based on the first letter of source and destination so *XCP* is the amount to ship from Chicago to PDX.  
 
 Implement and solve the model using ompr.  Be sure to discuss the solution as to why it makes it sense.  
 
