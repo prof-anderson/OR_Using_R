@@ -20,19 +20,19 @@ The field of Operations Research had strong roots in World War II as nations and
 
 After the war, many of the same approaches were also then used for business applications.  Military groups most commonly used the term Operations Research while business groups often used the term Management Science.  
 
-Neither term, Operations Research nor Management Science is perfect. Operations Research is often confused with the strongly overlapping area of Operations Managment and also the word research implies to some that it is stricly theoretical.  Conversely, Management Science might imply that the rest of management is non-scientific or that it is just limited to business applications.  In this book, we will use the term Operations Research to mean both Operations Research and Management Science as well as often abbreviate it as OR.  
+Neither term, Operations Research nor Management Science is perfect. Operations Research is often confused with the strongly overlapping area of Operations Management and also the word research implies to some that it is strictly theoretical.  Conversely, Management Science might imply that the rest of management is non-scientific or that it is just limited to business applications.  In this book, we will use the term Operations Research to mean both Operations Research and Management Science as well as often abbreviate it as OR.  
 
 ## Purpose of this Book
 
-There are many comprehensive introductions to Operations Research available including classics from Hillier and Lieberman, Winston, and others. The goal of this book is to provide a timely introduciton to Operations Research using a powerful open source tool, R. It was written to support the ETM 540/640 Operations Research course at Portland State University which is taught on a quarter basis for people without a background in Operations Research or R. As such the current scope is limited to what can be readily accomplished in a 10 week quarter.  There are many other Operations Research tools available.  
+There are many comprehensive introductions to Operations Research available including classics from Hillier and Lieberman, Winston, and others. The goal of this book is to provide a timely introduction to Operations Research using a powerful open source tool, R. It was written to support the ETM 540/640 Operations Research course at Portland State University which is taught on a quarter basis for people without a background in Operations Research or R. As such the current scope is limited to what can be readily accomplished in a 10 week quarter.  There are many other Operations Research tools available.  
 
 This book is meant to be a hybrid, both serving as an introduction to R and to Operations Research.  
 
 A quick getting started with R will be helpful.  I strongly recommend using RStudio.  _A Modern Dive_ is a web book on using R and refreshing statistics that is very helpful [@IsmayIntroductionStatisticalData].  I also like books such as R in a Nutshell [@AdlerNutshell2012] or R in Action [@KabacoffActionDataAnalysis2011].
 
-I usually find the best way for me to learn a new tool is to roll up my sleeves and jump right in.  Hence the book can be approached in that way and just be ready for a little more experimentation.  This book is available on Github and the R Markdown files are availale for use.  Code fragments are shown quite liberally for demonstrating how things work.  While this may be a bit verbose and at times repetititious, it is meant to help people jump in at various points of the book.  
+I usually find the best way for me to learn a new tool is to roll up my sleeves and jump right in.  Hence the book can be approached in that way and just be ready for a little more experimentation.  This book is available on Github and the R Markdown files are available for use.  Code fragments are shown quite liberally for demonstrating how things work.  While this may be a bit verbose and at times repetitious, it is meant to help people jump in at various points of the book.  
 
-While code fragments can be copied from the R markdown files for this book, it is often best to phyiscally retype many of the code fragments shown as that gives time to reflect on what each statement is doing.  
+While code fragments can be copied from the R markdown files for this book, it is often best to physically retype many of the code fragments shown as that gives time to reflect on what each statement is doing.  
 
 ## Range of Operations Research Techinques
 
@@ -47,9 +47,9 @@ Operations Research covers many different techniques.  They can be classified in
 * Game Theory
 * Decision Theory
 
-Each of these topics can require a full graduate level class or more to cover. In particular, Optimization and Simulation can be further subdivided into separate sub areas that represent entire specialities of their own. In this book, we currently limit ourselves to the field of Optimization for this current book.  The interested reader is welcome to explore each area further.  
+Each of these topics can require a full graduate level class or more to cover. In particular, Optimization and Simulation can be further subdivided into separate sub areas that represent entire specialties of their own. In this book, we currently limit ourselves to the field of Optimization for this current book.  The interested reader is welcome to explore each area further.  
 
-One way of conceptualizing the relationship between different techniques by whether they generally serve a descriptive role or prescriptive role.  A descriptive technique would be one that describes the current state of the system.  A prescriptive technique is one that would prescribe a certain course of action to achieve a desired outcome.  For example, weather forecasting is a very sophisticated descriptive discipline since we don't generally have control over short term weather.  On the other hand, if we were to look at intervention approaches such as cloud seeding we might try to come up a prescriptive application.  Prescriptive applications are abundant and can often be whereever decisions need to be made.
+One way of conceptualizing the relationship between different techniques by whether they generally serve a descriptive role or prescriptive role.  A descriptive technique would be one that describes the current state of the system.  A prescriptive technique is one that would prescribe a certain course of action to achieve a desired outcome.  For example, weather forecasting is a very sophisticated descriptive discipline since we don't generally have control over short term weather.  On the other hand, if we were to look at intervention approaches such as cloud seeding we might try to come up a prescriptive application.  Prescriptive applications are abundant and can often be wherever decisions need to be made.
 
 ## Relationship between Operations Research and Analytics
 
@@ -59,15 +59,15 @@ The field of Operations Research significantly predates that of the term analyti
 
 This book adopts the platform of R for doing operations research and analytics. R is a popular, open source programming language developed by statisticians, originally as an open source alternative to the statistics language S.  As such, it has very strong numerical methods implementations.  Given the open source nature, it has been popular for researchers and many of these researchers have written their own packages to extend the functionality of R. These packages cover a tremendously broad range of topics and well over 10,000 are available from CRAN (the Comprehensive R Archive Network).  
 
-In about 2012, my Extreme Technology Analytics Research Group was facing a decision.  We had been using propreitary analytics tools for years but had problems with software licensing and the limited reach of specialized languages.  We wanted a single platform that could do both statistics and optimization, was freely available with no ongoing license renewal, and was readily extensible. 
+In about 2012, my Extreme Technology Analytics Research Group was facing a decision.  We had been using proprietary analytics tools for years but had problems with software licensing and the limited reach of specialized languages.  We wanted a single platform that could do both statistics and optimization, was freely available with no ongoing license renewal, and was readily extensible. 
 
 In the end, we debated between Python and R. While R grew out from statisticians to encompass broader areas, Python grew from a general purpose programming language to add features to address a broad range of different application areas including statistics. While they both have deep roots with over 20 years of active development, this also means that aspects of their original designs are somewhat dated and carry forward the burden of legacies of past decisions when computers were more limited and the meaning of a big dataset would have been much smaller.  
 
 Python had some advantages from the optimization side while R had advantages from the statistical side. In the end, we chose R because Python's numerical methods were not quite as rich. Since that time, both R and Python have significantly matured. 
 
-As time has gone by, R has developed robust toolsets such as RStudio to making R more powerful and easier to use. R's extensive package community has become so diverse and powerful that in fact propreitary statistics software such as SPSS and JMP now promote that they can use R packages. The result is that R is still a great choice for analysts and code developed for R should be useable for a long time.  
+As time has gone by, R has developed robust toolsets such as RStudio to making R more powerful and easier to use. R's extensive package community has become so diverse and powerful that in fact proprietary statistics software such as SPSS and JMP now promote that they can use R packages. The result is that R is still a great choice for analysts and code developed for R should be usable for a long time.  
 
-As should be expected, new tools continue to arise. In particular, Julia is a new, modern language developed around numerical analysis. Industry adoption of Julia is far behind R and Python given their headstart of multiple decades. Even if Julia or some other environment does someday become more popular, skills developed using R will be readily transferrable and provide an excellent foundation for learning new languages. 
+As should be expected, new tools continue to arise. In particular, Julia is a new, modern language developed around numerical analysis. Industry adoption of Julia is far behind R and Python given their head start of multiple decades. Even if Julia or some other environment does someday become more popular, skills developed using R will be readily transferable and provide an excellent foundation for learning new languages. 
 
 ## Conventions Used in this Book
 
@@ -78,7 +78,7 @@ I've adopted the following conventions in this book.
 * Tables of information and code fragments are provided liberally and at times erring on the side of repetitious to assist in interpretation and reproducing analyses.
 * There may be more efficient ways of performing operations but the focus is on readability.  
 
-This book is continuing to be updated. Comments, suggestions, and corretions are welcome.
+This book is continuing to be updated. Comments, suggestions, and corrections are welcome.
 
 ## Getting Started with R
 
@@ -102,7 +102,7 @@ This command assigns the value of 7 to the variable _a_. It is standard in R to 
 6*a
 ```
 
-Yes, not suprisingly, _6*7_ is _42_.  Notice that if we don't assign that result to something, it gives an immediate result to the screen.  
+Yes, not surprisingly, _6*7_ is _42_.  Notice that if we don't assign that result to something, it gives an immediate result to the screen.  
 
 We will often be using or defining data that has more than one element.  In fact, R is designed around more complex data structures.  Let's go ahead and define a matrix of data.  
 
@@ -145,7 +145,7 @@ Let's confirm that it works.
 b
 ```
 
-This table is still not that "nice" looking.  Let's use a package that does a nicer job of formatting tables.  To do this, we will use an extra package.  Up to this point, everything that we have done just simply uses standard builtin functions of R. The package that we will use is `pander` but there are plenty of others available such as `kable`,`xtable`, and `huxtable`.  Let's start by loading the package.
+This table is still not that "nice" looking.  Let's use a package that does a nicer job of formatting tables.  To do this, we will use an extra package.  Up to this point, everything that we have done just simply uses standard built in functions of R. The package that we will use is `pander` but there are plenty of others available such as `kable`,`xtable`, and `huxtable`.  Let's start by loading the package.
 
 ```{r}
 # install.packages("pander") # Use this command if pander is not installed.

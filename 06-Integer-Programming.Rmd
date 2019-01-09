@@ -32,7 +32,7 @@ Unfortunately, there is no such thing as a free lunch-adding integrality can mak
 
 ### Example of Integrality having Little Impact
 
-Let's revisit the earlier example of producting chairs, desks, and tables.  Where we aded one extra hour of labor to the machining center.  The resulting LP is shown below.
+Let's revisit the earlier example of producing chairs, desks, and tables.  Where we add one extra hour of labor to the machining center.  The resulting LP is shown below.
 
 $$
  \begin{split}
@@ -136,7 +136,7 @@ Acme makes two products, let's refer to them as product 1 and 2.  Product 1 gene
 
 In contrast, each unit of Product 2 produced generates a higher profit of $3000 per product, requires 3.0 liters of surfactant, and 1.0 kilograms of high grade steel.  Acme has 8.25 liters of surfactant and 8.75 kilograms of high grade steel.  
 
-Only completed producs are sellable, what should be Acme's production plan?
+Only completed products are sellable, what should be Acme's production plan?
 
 Formulating the optimization problem is similar to our earliest production planning problems.  Let's define $x_1$ to be the amount of product 1 to produce and $x_2$ to be the amount of product 2 to produce. 
 
@@ -205,9 +205,9 @@ Notice that production of product 1 went down while product 2 went up.  The net 
 
 The simplicity of making the change in the model from continuous to integer variables hides or understates the complexity of what needs to be done to computationally to solve the optimization problem.  This small change can have major impacts on the computational effort needed to solve a problem.  Solving linear programs with tens of thousands of continuous variables is very quick and easy computationally.  Changing those same variables to general integers can make it *very* difficult. Why is this the case?
 
-At its core, the basic problem is that the simplex method and linear programming solves a system of equations and unknowns (or variables).  It is trivial to solve one equation with one unknown such as $5x=7$.  It is only slighly harder to solve a system of two equations and two unknowns.  Doing three equations and three unknowns requires some careful algebra but is not too hard. In general, solving *n* equations and *n* unknowns is readily solveable.  On the other hand, none of this algebraic work will of solving for unknown variables can require that the variables take on integer values.  Even with only one equation and one unknown, *x* will only be integer for certain combinations of numbers in the above equation.  Specifically when the number on the right is a multiple of the number in front of *x*.  It gets even less likely to have an all integer solution as the number of equations and unknowns increase.  
+At its core, the basic problem is that the simplex method and linear programming solves a system of equations and unknowns (or variables).  It is trivial to solve one equation with one unknown such as $5x=7$.  It is only slightly harder to solve a system of two equations and two unknowns.  Doing three equations and three unknowns requires some careful algebra but is not too hard. In general, solving *n* equations and *n* unknowns is readily solvable.  On the other hand, none of this algebraic work will of solving for unknown variables can require that the variables take on integer values.  Even with only one equation and one unknown, *x* will only be integer for certain combinations of numbers in the above equation.  Specifically when the number on the right is a multiple of the number in front of *x*.  It gets even less likely to have an all integer solution as the number of equations and unknowns increase.  
 
-Another way to visualize why integer solutions for general systems of inequalities is to think of the two equation and two unknown case.  Finding a solution is the same as finding where lines intersect in two dimensional space.  The odds of getting lucky and having the two lines intersect at an integer solution is small.  Even if we limit ourselves to a two dimeionsal space of the intersection occurs for x and y both being between 0 and 10, this means that there $11^2=121$ possible integer valued points in this space such as (0,0), (0,3), and (10,10).  In contrast, the set of all points, including non-integers, in this region includes all of the above points as well as (0,0.34) and (4.71, 7.89) among infinitely more.  The result is that if you think of this as a target shooting, the probability of finding an integer solution by blind luck is  $\frac{121}{\infty}\approx 0$. Certain structures for optimization problems will result in 
+Another way to visualize why integer solutions for general systems of inequalities is to think of the two equation and two unknown case.  Finding a solution is the same as finding where lines intersect in two dimensional space.  The odds of getting lucky and having the two lines intersect at an integer solution is small.  Even if we limit ourselves to a two dimensional space of the intersection occurs for x and y both being between 0 and 10, this means that there $11^2=121$ possible integer valued points in this space such as (0,0), (0,3), and (10,10).  In contrast, the set of all points, including non-integers, in this region includes all of the above points as well as (0,0.34) and (4.71, 7.89) among infinitely more.  The result is that if you think of this as a target shooting, the probability of finding an integer solution by blind luck is  $\frac{121}{\infty}\approx 0$. Certain structures for optimization problems will result in 
 
 What we need to do is create an algorithm around the simplex method to accomplish this.  
 
@@ -342,7 +342,7 @@ We should check the status of the solver before examining the result.
 LPSubIV
 ```
 
-The returned status value of this solved LP indicates that this tell us that subproblem IV is infeasible.  It still returned values that were used when it determined that the problem was infeasible which is why it gave the results in the previous table.  From here on out, it is good to check the status.  Note that it can be used as inline evaluated expression to simplay say was it feasbile or not?  Yes, it was `r LPSubIV$status`.  
+The returned status value of this solved LP indicates that this tell us that subproblem IV is infeasible.  It still returned values that were used when it determined that the problem was infeasible which is why it gave the results in the previous table.  From here on out, it is good to check the status.  Note that it can be used as inline evaluated expression to simply say was it feasible or not?  Yes, it was `r LPSubIV$status`.  
 
 ### Subproblem II 
 
@@ -371,9 +371,9 @@ pander(LPSubII_res,
        caption="Acme's Production Plan based on the LP Subproblem II")
 ```
 
-At this point, our first reaction is to breathe deeply and do the same branch and bound off of $x_2$.  If we step back and take note that the objective function value of 9.75, while optimal for this subproblem, it is less than what we found from a feasible solution to sub problem III. Given that adding countraints can't improve an objective function value, we can cleverly trim all branches below subproblem II.  
+At this point, our first reaction is to breathe deeply and do the same branch and bound off of $x_2$.  If we step back and take note that the objective function value of 9.75, while optimal for this subproblem, it is less than what we found from a feasible solution to sub problem III. Given that adding constraints can't improve an objective function value, we can cleverly trim all branches below subproblem II.  
 
-Given that we now no longer have any brances to explore, we can declare that we have found the optimal solution.  The optimal solution can now be declared to be what we found from Subproblem III.  
+Given that we now no longer have any braces to explore, we can declare that we have found the optimal solution.  The optimal solution can now be declared to be what we found from Subproblem III.  
 
 ```{r}
 pander(LPSubIII_res,
@@ -399,14 +399,14 @@ pander(BandB, caption="Sequence of LPs followed by Branch and Bound")
 
 ### Computational Complexity of Integer Programming
 
-As for computational complexity, this was a small problem with only two integer variables but it still required solving the LP Relaxation and four separate LP subproblems for a total of five linear programs in all.  As the number of variables and constraints increases, so do the number of LPs needed to typically finde a solution using branch and bound.  Small and medium size problems can generally be solved quickly but worst case scenarios have a combinatorial explosion.  
+As for computational complexity, this was a small problem with only two integer variables but it still required solving the LP Relaxation and four separate LP subproblems for a total of five linear programs in all.  As the number of variables and constraints increases, so do the number of LPs needed to typically find a solution using branch and bound.  Small and medium size problems can generally be solved quickly but worst case scenarios have a combinatorial explosion.  
 
 ### Full Enumeration
-Another approach to integer programming is full enumberation which means listing out all posible solutions and then determining if that solution is feasible and if so, what the objective function value is. Alas, this can result in a combinatorial explosion. For example, if a problem has 1000 non-negative integer variables each of which has an upper bound of 10, full enumeration would require listing $10^{1000}$ possible solutions.  Written out, the number of LPs would then be a 1 followed by a thousand zeros. This is far larger than the number of grains of sand on Earth (~$10^{19}$) or the number of stars in the universe (~$10^{19}$).  In fact this is much larger than the number of atoms in the universe (~$10^{80}$).  Needless to say explicit enumeration for large problems is not an option.  
+Another approach to integer programming is full enumeration which means listing out all possible solutions and then determining if that solution is feasible and if so, what the objective function value is. Alas, this can result in a combinatorial explosion. For example, if a problem has 1000 non-negative integer variables each of which has an upper bound of 10, full enumeration would require listing $10^{1000}$ possible solutions.  Written out, the number of LPs would then be a 1 followed by a thousand zeros. This is far larger than the number of grains of sand on Earth (~$10^{19}$) or the number of stars in the universe (~$10^{19}$).  In fact this is much larger than the number of atoms in the universe (~$10^{80}$).  Needless to say explicit enumeration for large problems is not an option.  
 
 ### Branch and Bound in Practice
 
-Worst case scenarios for Branch and Bound may approach that of full enumeration but in practice performs much better.  A variety of sophisticated alrogithmic extensions have been added by researchers over the years but solving largescale integer programming problems can still be quite difficult.
+Worst case scenarios for Branch and Bound may approach that of full enumeration but in practice performs much better.  A variety of sophisticated algorithmic extensions have been added by researchers over the years but solving large scale integer programming problems can still be quite difficult.
 
 The Branch and Bound algorithm has the benefit that it will find the optimal solution.  Sometimes it will find it quickly, other times it may take a very long time.  
 
@@ -418,11 +418,11 @@ In practice, even small suboptimality tolerance factors like 1% can allow big pr
 
 ### Binary Variables and Logical Relations
 
-Binary variables are a special case of general integer variables. Rather than variables taking on the value such as 46 and 973, acceptable values are limited to just 0 and 1.  This greatly reduces the possible search space for branch and bound since you know that in any branch, you will never branch on a single variable more than once.  On the other hand, with a large numbe of variables, the search space can still be very large.  If the previous case with 1000 variables were binary, a full enumeration list would rely on a list of $2^{1000}$ or one followed by about 300 zeros) possible solutions.  While better than the case of integers, it is still vastly more than the number of  atoms in the universe.
+Binary variables are a special case of general integer variables. Rather than variables taking on the value such as 46 and 973, acceptable values are limited to just 0 and 1.  This greatly reduces the possible search space for branch and bound since you know that in any branch, you will never branch on a single variable more than once.  On the other hand, with a large number of variables, the search space can still be very large.  If the previous case with 1000 variables were binary, a full enumeration list would rely on a list of $2^{1000}$ or one followed by about 300 zeros) possible solutions.  While better than the case of integers, it is still vastly more than the number of  atoms in the universe.
 
 The important thing is is that binary variables give us a lot of rich opportunities to model complex, real world situations.
 
-Examples include assigning prople to projects, go-no go decisions on projects, and much more.  
+Examples include assigning people to projects, go-no go decisions on projects, and much more.  
 
 ### In Class Exercise
 
@@ -455,7 +455,7 @@ Formulate and solve a basic, naive model that allows project to repeated and par
 
 #### Implementing a constraint to ensure no project is repeated
 
-Now, let's explore one aspect of moving towards binary variables.  What constraint or constraints are needed to ensure no project is done more than once while allowing partial projects to stil be funded and incur both proportionate costs and benefits.  How does this solution compare to that of above?
+Now, let's explore one aspect of moving towards binary variables.  What constraint or constraints are needed to ensure no project is done more than once while allowing partial projects to still be funded and incur both proportionate costs and benefits.  How does this solution compare to that of above?
 
 #### Implementing a constraint to ensure no project is partially funded
 
@@ -477,7 +477,7 @@ Instead of the constraint on chip architects, let's consider the situation of th
 
 ##### Implementing a Logic Constraint for manufacturing (C & D)
 
-Outtel knows that staying aggressive in manufacturing is important in this competitive industry but that it is too risky to do too much at once from manufacturing perspective.  The result is that Outtel want to ensure that exactly one major manufactuing initiative (C or D) must be done.  In other words, project C or project D must be done but not both.  
+Outtel knows that staying aggressive in manufacturing is important in this competitive industry but that it is too risky to do too much at once from manufacturing perspective.  The result is that Outtel want to ensure that exactly one major manufacturing initiative (C or D) must be done.  In other words, project C or project D must be done but not both.  
 
 ##### Solve for each of the above logic cases and discuss how the solutions compare
 
@@ -493,7 +493,7 @@ Take a look at Dirk Schumacher's vignette for "Course Planning".  https://dirksc
 
 Dirk is the author of ompr and has a nice collection of vignettes.  
 
-Consider the application of senior design capstone projets where a class of 32 students is going to be divided up to work on 6 projects.  Outside sponsors pitch topics and then each student of the 32 students gives a score of 0 to 10 to indicate how interested they are in the topic.  Using the student project preferences, you want to assign students to the projects that they are most interested in.  
+Consider the application of senior design capstone projects where a class of 32 students is going to be divided up to work on 6 projects.  Outside sponsors pitch topics and then each student of the 32 students gives a score of 0 to 10 to indicate how interested they are in the topic.  Using the student project preferences, you want to assign students to the projects that they are most interested in.  
 
 You may use Dirk's vignette as a starting point to build your own model for assigning students to projects based on their preferences.   Projects can have no more than 6 people on a single capstone project and every student needs to be assigned to a project.
 

@@ -309,7 +309,7 @@ result1 <- MIPModel() %>%
 
 ```
 
-Note that the constraint on the minimum number of chairs could also be implmented by changing the lower bound on the chairs variable to be 300 instead of zero.  Also, the maximum limit on Tables could be set as an upper bound on the Tables variable.
+Note that the constraint on the minimum number of chairs could also be implemented by changing the lower bound on the chairs variable to be 300 instead of zero.  Also, the maximum limit on Tables could be set as an upper bound on the Tables variable.
 
 #### Results and Interpretation of Infeasibility
 
@@ -657,7 +657,7 @@ $$
 
 ### Create a data series to plot
 
-To graph a line in R you need to have a series of coordinates, you can't just input a formula and see it on a chart. Here are some steps to help turn your contraints into data serieses.
+To graph a line in R you need to have a series of coordinates, you can't just input a formula and see it on a chart. Here are some steps to help turn your constraints into data series.
 
 ### Reduce the constraints
 
@@ -705,7 +705,7 @@ x1 = seq(0,200)
 pander(head(as.matrix(x1)),caption="Beginning of Sequence x1")
 ```
 
-The next statement takes a little unpacking to fully understand and illustrates another strength of R.  Now, we would like to evaluate each of these 201 values for `x1` using the functions for the two constraints that we just defined.  We could use a `for-next loop` if we were using a language such as BASIC but R handles these operations more smoothly and efficiently.  We can pass the data frame for `x1` into the function and R is smart enough to return the results in the same size data frame, `y1`. Of course we do the same thing for the second function (constriant).  
+The next statement takes a little unpacking to fully understand and illustrates another strength of R.  Now, we would like to evaluate each of these 201 values for `x1` using the functions for the two constraints that we just defined.  We could use a `for-next loop` if we were using a language such as BASIC but R handles these operations more smoothly and efficiently.  We can pass the data frame for `x1` into the function and R is smart enough to return the results in the same size data frame, `y1`. Of course we do the same thing for the second function (constraint).  
 
 ```{r}
 
@@ -858,7 +858,7 @@ Note now our chart looks much different because we have combination of lesser th
 
 ### Next Steps
 
-Note that we only used 2 variables, so we were able to see this in a 2 dimentional space. If you add another variable to equation you will have to map this in a 3 dimentional chart which you may want to try a different charting library for like [plotly](https://plot.ly/r/). If you have more variables than that using the graphical method will become very hard!
+Note that we only used 2 variables, so we were able to see this in a 2 dimensional space. If you add another variable to equation you will have to map this in a 3 dimensional chart which you may want to try a different charting library for like [plotly](https://plot.ly/r/). If you have more variables than that using the graphical method will become very hard!
 
 This section on graphically exploring linear programming is a great first start and may be further refined in future versions of this book. Challenges for the future include:
 
