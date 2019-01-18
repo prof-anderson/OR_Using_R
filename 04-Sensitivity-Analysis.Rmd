@@ -313,9 +313,10 @@ Even without adding it to the model, we can check to see if it is worthwhile to 
 
 We could interpret this as a simple hard stop on the decision to produce bookcases but we could go one step further by setting a target for redesigning the product or its production.  If the mchining time could be reduced by 4.5 hours to 11.5 hours, then the value of the resouces consumed would be equal to the profit and we would be indifferent to producing some bookcases.  
 
-##Exercises##
+##Exercises
 
 ```{exercise, name="Adding Frames"}
+```
 Your company has extended production to allow for producing picture frames and is now including a finishing department that primes and paints (or stains) the furniture.
 
 | Characteristic | Chairs | Desks | Frames | Tables | Available  | 
@@ -337,5 +338,7 @@ g) Using the results from e), (i.e. reduced cost and shadow prices) make one cha
 h) Using the results from e), (i.e. reduced cost and shadow prices) make one change to the base model's **available resource values** that will change the production plan. Rerun and discuss the new results.
 i) Combine the results of the base case e), as well as the variations f) through h) into a single table and discuss the results.  
 
-```
 
+```{exercise, name="Revisiting Transportation"}
+```
+Using sensitivity analysis, revisit the transportation exercise from chapter 3.  If one more unit of supply was available, where would it be prioritized and why?  If demand could be increased by one unit, would it affect the result and at which destination node it be preferred and why?

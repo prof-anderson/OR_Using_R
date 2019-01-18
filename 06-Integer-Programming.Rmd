@@ -46,7 +46,7 @@ $$
                        & Chairs,  \; Desks, \; Tables \geq 0  
   \end{aligned}
   \end{split}
-  (\#eq:IncMachiningHrs)
+  (\#eq:ContinuousVars)
 $$
 
 We used the following implementation.  

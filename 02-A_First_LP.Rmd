@@ -2,9 +2,11 @@
 title: "A First Linear Program"
 author: "Tim Anderson"
 date: "11/23/2018"
-output: 
+output:
   pdf_document: default
+  word_document: default
 ---
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -99,15 +101,13 @@ First, let us load the required libraries.  Then we will move on to the actual i
 
 ``` {r warning = FALSE, message = FALSE}
 library (pander, quietly = TRUE)   # Used for nicely formatted tables
-library (magrittr, quietly = TRUE) # Used for pipes/dplyr
-library (dplyr, quietly = TRUE)    # Data management
 library (ROI, quietly = TRUE)      # R Optimization Interface
 library (ROI.plugin.glpk, quietly = TRUE) # Plugin for solving
 library (ompr, quietly = TRUE)     # Allows specifying model algebraically
 library (ompr.roi, quietly = TRUE) # Glue for ompr to solve with ROI
 ```
 
-Each of these packages plays a role.  As we discussed in the earlier chapter, pander makes for nicely formatted tables. The magrittr package gives us a piping function that simplifies model building.  The dplyr package is like a Swiss army knife for a providing a broad range of different data process tools.  
+Each of these packages plays a role. As we discussed in the earlier chapter, pander makes for nicely formatted tables.  
 
 This brings us to four packages that provide the optimization functions that we be relying on frequently. The ROI package is the R Optimization Interface for for connecting various optimization solvers to R.  The ROI.plugin.glpk provides a connection between the the glpk solver and R through ROI.  While this would be sufficient, we are going to make use of the ompr package by Dirk Schumacher to provide algebraic representations for linear programs. The ompr package also requires a connector to ROI, aptly named ompr.roi.  
 
@@ -115,7 +115,114 @@ As noted earlier, if these packages are not preinstalled, you may need to instal
 
 Now we move on to implement and solve the linear program.  
 
+This is how we would do it without a piping operation.
+
+```{r base_case_no_pipes}
+model0  <- MIPModel()     # Initialize an empty model!
+
+model0a <- add_variable(model0, Chairs, type = "continuous", lb = 0) 
+model0b <- add_variable(model0a, Desks, type = "continuous",lb = 0)
+
+model0c <- set_objective(model0b, 20*Chairs + 14*Desks, "max")
+
+model0d <- add_constraint(model0c, 6*Chairs + 2*Desks <= 2000) #fabrication
+model0e <- add_constraint(model0d, 8*Chairs + 6*Desks <= 2000)  #assembly
+model0f <- add_constraint(model0e, 6*Chairs + 4*Desks <= 1440)  #machining
+model0g <- add_constraint(model0f, 40*Chairs + 25*Desks <= 9600) #wood
+
+result0 <- solve_model(model0g, with_ROI(solver = "glpk"))
+
+```
+
+The first line initializes an empty model and stores it in `model0`.  We can see that the model is empty by simply displaying the model summary.
+
+```{r}
+model0
+```
+
+There are no constraints or variables.  The next line takes `model0` and adds a variable to it, creating an enhanced `model0a`.  Again, we can confirm that our model is gradually getting built up by displaying the new model.
+
+```{r}
+model0a
+```
+
+
+The first line initializes an emtpy model and the next three lines are adding variables.  These variables are continuous (as compared to integer or binary), and non-negative. The variables are made non-negative by setting a zero lowerbound (`lb=0`).  The lowerbound can be set to other values such as a minimum production level of ten.  Also upperbounds for variables can be set using `ub` as a parameter. 
+
+Next, we set the objective function as well declaring it to be a *max* rather than a *min* function.
+
+Then we define the constraints.  Notice that we do not need to include non-negativity constraints since they were in the earlier definition of the variables.
+
+Lastly, we tell it to solver our model.  We will select a particular solver engine, `glpk` but other options exist.
+
+This process built up the model line by line incrementally taking the previous model, adding a new element, and storing it in a new model.  Note that we could keep placing them into the original model if we had wished such as the following.
+
+```{r base_case_no_pipes_single_model}
+model0  <- MIPModel()     # Initialize an empty model!
+
+model0 <- add_variable(model0, Chairs, type = "continuous", lb = 0) 
+model0 <- add_variable(model0, Desks, type = "continuous",lb = 0)
+
+model0 <- set_objective(model0, 20*Chairs + 14*Desks, "max")
+
+model0 <- add_constraint(model0, 6*Chairs + 2*Desks <= 2000) #fabrication
+model0 <- add_constraint(model0, 8*Chairs + 6*Desks <= 2000)  #assembly
+model0 <- add_constraint(model0, 6*Chairs + 4*Desks <= 1440)  #machining
+model0 <- add_constraint(model0, 40*Chairs + 25*Desks <= 9600) #wood
+
+result0 <- solve_model(model0, with_ROI(solver = "glpk"))
+```
+
+In this case, we take the previous command's output, `model0`, add an element to it, and then store it back in the same object, `model0`.  We keep doing it for each element until we are done.
+
+This is equivalent to doing something such as the following where we assign the value of _2_ to _a_.  We then multiple _a_ by _3_ and assign the result again to _a_.    
+
+```{r basic_assignment}
+a <- 2
+a <- 3*a
+a
+```
+
+Note that this is part of why `<-` as an assignment operator is better than an equals sign, `=` which would make the reader think that if _a=3*a_ then _a_ must be zero. 
+
+It might be helpful to see what the model looks like before examining the results.  
+
+```{r summarize_model}
+model0
+```
+
+Furthermore, we can use the `extract_constraints` command to see what the actual constraints look like in the model.
+
+```{r extract_constraints}
+extract_constraints(model0)
+```
+
+This should look familiar.  Let's see if we can arrange to make it look more similar to what we had given the model.
+
+```{r construct_constraints_for_display}
+constr0<-extract_constraints(model0)    # Pass the constraints out of  model
+constr00<- (cbind(as.matrix(constr0$matrix), # Get the matrix of data
+                  as.matrix(constr0$sense),  # Get the inequality 
+                  as.matrix(constr0$rhs)))   # Get the Right Hand Side
+
+dimnames(constr00)<-c(list(c("Fabrication", "Assembly","Machining", "Wood")),
+                      list(c("Chairs", "Desks","Relationship","RHS")))
+
+pander(constr00, caption="Elements of the Constraints")
+```
+
+In the first version of the LP model implementation, we created many different  versions of the model along the way while we really just keep adding stuff to the same model.  This uses extra memory and will be slower.  The second implementation keeps reusing the same model object until the very end when solving is done and it places the results into an object.  This may be more memory efficient but is still likely slower and carries along a lot of extra notation.
+
+In each step, we are simply taking the output of the previous step and feeding it in as the first term of the following step.  It is almost like the output is a bucket that is then passed as a bucket into the next step.  Rather than carrying a bucket from one step into the next one, a plumber might suggest a pipe connecting one step to the next. This is done so often that we refer to it as piping and a pipe operator.
+
+The pipe symbol will let us do this more compactly and efficiently. It takes a little getting used to but is a better way to build the model.  
+
+Here is the equivalent process using a piping operator without all the intermediate partial models being built.  Notice how it is a lot more concise.  We will typically use this approach for model building but both approaches are functionally equivalent.  
+
 ```{r base_case}
+library (magrittr, quietly = TRUE) # Used for pipes/dplyr
+# library (dplyr, quietly = TRUE)    # Data management
+
 result0 <- MIPModel() %>%
   add_variable(Chairs, type = "continuous", lb = 0) %>%
   add_variable(Desks, type = "continuous",lb = 0) %>%
@@ -125,21 +232,14 @@ result0 <- MIPModel() %>%
   add_constraint(6*Chairs + 2*Desks <= 2000) %>% #fabrication
   add_constraint(8*Chairs + 6*Desks <= 2000) %>% #assembly
   add_constraint(6*Chairs + 4*Desks <= 1440) %>% #machining
-  add_constraint(40*Chairs + 25*Desks <= 9600) %>% #wood
-  
+  add_constraint(40*Chairs + 25*Desks <= 9600) %>%  #wood
   solve_model(with_ROI(solver = "glpk"))
-
+  
 ```
 
+Note that we load a pair of additional packages.  The magrittr package gives us a piping function that simplifies model building.  The dplyr package is like a Swiss army knife for a providing a broad range of different data process tools. 
+
 The first line creates the basic model.  The `%>%` serves as a pipe symbol at the end of each line.  It  basically means add the next item to the previous so we can build up the model quickly.  
-
-The next three lines are adding variables.  These variables are continuous (as compared to integer or binary), and non-negative. The variables are made non-negative by setting a zero lowerbound (`lb=0`).  The lowerbound can be set to other values such as a minimum production level of ten.  Also upperbounds for variables can be set using `ub` as a parameter. 
-
-Next, we set the objective function as well declaring it to be a *max* rather than a *min* function.
-
-Then we define the constraints.  Notice that we do not need to include non-negativity constraints since they were in the earlier definition of the variables.
-
-Lastly, we tell it to solver our model.  We will select a particular solver engine, `glpk` but other options exist.
 
 ### Base Case Results and Interpretation
 
@@ -204,7 +304,7 @@ $$
                        & Chairs, Desks, Tables \geq 0  
   \end{aligned}
   \end{split}
-  (\#eq:BaseModelEx4)
+  (\#eq:BaseModelEx4a)
 $$
 
 ### Three Variable Case Implementation
@@ -346,7 +446,7 @@ $$
                        & Chairs, Desks, Tables \geq 0  
   \end{aligned}
   \end{split}
-  (\#eq:BaseModelEx4)
+  (\#eq:BaseModelEx4b)
 $$
 
 #### Implementing a Model with Multiple Optima
@@ -354,22 +454,20 @@ $$
 The implementation is shown in the following. 
 
 ```{r}
-result2a <- MIPModel() %>%
+model2a <- MIPModel() %>%
   add_variable(Chairs, type = "continuous", lb = 0) %>%
   add_variable(Desks, type = "continuous",lb = 0) %>%
   add_variable(Tables, type = "continuous", lb = 0) %>%
-  add_variable(Profit, type = "continuous", lb = 0) %>%
-  
-  set_objective(Profit, "max") %>%
-  
-  add_constraint(Profit==20*Chairs + 10*Desks + 16*Tables) %>%
+
+  set_objective(20*Chairs - 10*Desks - 16*Tables, "max") %>%
   
   add_constraint(6*Chairs + 3*Desks + 4*Tables <= 2000) %>% #fabrication
   add_constraint(8*Chairs + 4*Desks + 4*Tables <= 2000) %>% #assembly
   add_constraint(6*Chairs + 3*Desks + 8*Tables <= 1440) %>% #machining
   add_constraint(40*Chairs + 20*Desks + 25*Tables <= 9600) %>% #wood
-  add_constraint(Tables <= 200) %>% #
-  solve_model(with_ROI(solver = "glpk"))
+  add_constraint(Tables <= 200) 
+
+result2a <-  solve_model(model2a, with_ROI(solver = "glpk"))
 
 ```
 
@@ -377,7 +475,7 @@ result2a <- MIPModel() %>%
 
 ```{r}
 print(solver_status(result2a))
-res2a <- cbind(get_solution(result2a, Profit),
+res2a <- cbind(objective_value (result2a),
                get_solution(result2a, Chairs),
                get_solution(result2a, Desks),
                get_solution(result2a, Tables))
@@ -396,11 +494,8 @@ result2b <- MIPModel() %>%
   add_variable(Chairs, type = "continuous", lb = 0) %>%
   add_variable(Desks, type = "continuous",lb = 0) %>%
   add_variable(Tables, type = "continuous", lb = 0) %>%
-  add_variable(Profit, type = "continuous", lb = 0) %>%
-  
-  set_objective(Profit, "max") %>%
 
-  add_constraint(Profit==20*Chairs + 10*Desks + 16*Tables ) %>% #profit calculation
+  set_objective(20*Chairs + 10*Desks + 16*Tables, "max") %>%
 
   add_constraint(6*Chairs + 3*Desks + 4*Tables <= 2000) %>% #fabrication
   add_constraint(8*Chairs + 4*Desks + 4*Tables <= 2000) %>% #assembly
@@ -411,7 +506,7 @@ result2b <- MIPModel() %>%
   solve_model(with_ROI(solver = "glpk"))
 
 print(solver_status(result2b))
-res2b <- cbind(get_solution(result2b, Profit),
+res2b <- cbind(objective_value(result2b),
                get_solution(result2b, Chairs),
                get_solution(result2b, Desks),
                get_solution(result2b, Tables))
@@ -627,6 +722,28 @@ d) Interpret and discuss the model in R Markdown.
 e) Discuss how one parameter would need to change in order to result in a different production plan.  Demonstrate how this affects the results.
 
 ```
+## Exercise 2.1
+This is a great and wonderful problem...  
+
+```{r}
+# this is really good.... this is really good.... this is really good.... this is really good.... this is really good.... this is really good.... this is really good.... this is really good.... this is really good.... this is really good.... this is really good....
+
+```
+
+
+
+```{r}
+# this is really good.... this is really good.... this is 
+#really good.... this is really good.... this is really 
+#good.... this is really good.... this is really good.... 
+#this is really good.... this is really good.... this is 
+#really good.... this is really good....
+
+```
+
+
+
+
 
 Hint:  Knit your RMarkdown as a PDF or open the HTML version in your browser and print to PDF.
 

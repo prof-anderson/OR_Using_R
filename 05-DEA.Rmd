@@ -785,3 +785,12 @@ Create "cool" graphs or plots of results.  _Difficulty: It depends..._
 To pass the challenges, work on extending my RMarkdown file or using a similar script.  You can use my *.rmd file as a starting point. Others might prefer to create a well documented R script instead of using RMarkdown.  Others might even prefer using LaTeX. If you use RMarkdown or LaTeX, please use section headings to indicate each challenge solved.  
 
 You can use other packages for graphics or data manipulation but don't use a DEA package.  (Don't worry, we'll get there later.)
+
+```{exercise, name="DEA Application"}
+```
+Conduct a DEA study for an application that you are personally familiar with.  (Pick one for which data is readily available but something that you are passionate about.  It can have scrubbed or anonymized data.  Examples might include your favorite sports league, team salaries, coaching salaries, wins, etc. or it can be USAF related.  )
+a)  Describe the application
+b)  Describe and justify the data including the inputs and outputs used as well as items explicitly not used.
+c)  Select an appropriate DEA model and conduct the analysis.
+d)  Discuss the results
+

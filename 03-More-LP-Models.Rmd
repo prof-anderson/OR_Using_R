@@ -492,7 +492,7 @@ Similarly, if we try to use equality constraints for both the supply and demand 
 
 ### Transhipment Models
 
-A generalization of the transportation model is that of transipment where some nodes are itermediate nodes that are neither pure sources or destinations but can have both inflow and outflow.  We will deal with this next week.
+A generalization of the transportation model is that of transhipment where some nodes are intermediate nodes that are neither pure sources or destinations but can have both inflow and outflow.  We will deal with this next week.
 
 ### Standard Form
 

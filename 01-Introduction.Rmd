@@ -135,9 +135,9 @@ b<-matrix(c(1,2,3,4,5,6,7,8), ncol=4,
                      list(c("Col1", "Col2","Col3","Col4"))))
 ```
 
-Okay, this command has a lot more going on.  The dimnames is a parameter that contain names for rows and columns.  One thing to note is that this line fills up more space than a single line so it rolls over to multiple line.  
+Okay, this command has a lot more going on.  The term `dimnames` is a parameter that contain names for rows and columns.  One thing to note is that this line fills up more space than a single line so it rolls over to multiple line.  
 
-The dimnames parameter will get get two concatenated (combined) lists. The first list is a combined list of two text strings "Row1" and "Row2". The next line does the same for columns.  
+The `dimnames` parameter will get get two concatenated (combined) lists. The first list is a combined list of two text strings "Row1" and "Row2". The next line does the same for columns.  
 
 Let's confirm that it works.
 
@@ -185,6 +185,15 @@ Now we have done some basic operations within R.  Try your hand at the following
 ```{exercise, name="Changing Row and Column Names"}
 Change the row and column names for the transposed matrix above.   
 ```
+
+here is my solution to that....
+
+```{r}
+c
+d
+```
+Oops..  Still not right.  Need to do some more...
+
 
 ```{exercise, name="Creating a Matrix of Weekly Demand"}
 Assume that your company's product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday.  Create a matrix where the column indicates that the day of the week and the row is the product name.  
