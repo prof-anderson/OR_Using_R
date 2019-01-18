@@ -25,6 +25,9 @@ I would like to thank many people for their contributions, collaborations, and a
 * Kevin van Blommestein
 * William (Ike) Eisenhauer
 * Dirk Schumacher
+* Andey Nunes
+* Christopher Davis
+* Thanh Thuy Nguyen
 
 In addition, several groups have been of tremendous help:
 

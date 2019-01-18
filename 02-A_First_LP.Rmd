@@ -215,9 +215,11 @@ In the first version of the LP model implementation, we created many different  
 
 In each step, we are simply taking the output of the previous step and feeding it in as the first term of the following step.  It is almost like the output is a bucket that is then passed as a bucket into the next step.  Rather than carrying a bucket from one step into the next one, a plumber might suggest a pipe connecting one step to the next. This is done so often that we refer to it as piping and a pipe operator.
 
-The pipe symbol will let us do this more compactly and efficiently. It takes a little getting used to but is a better way to build the model.  
+The pipe symbol, `%>%` will let us do this more compactly and efficiently. It takes a little getting used to but is a better way to build the model.  
 
-Here is the equivalent process using a piping operator without all the intermediate partial models being built.  Notice how it is a lot more concise.  We will typically use this approach for model building but both approaches are functionally equivalent.  
+### Implementing the Base Case with Piping
+
+Here is the equivalent process for building the base case implementation using a piping operator without all the intermediate partial models being built.  Notice how it is a lot more concise.  We will typically use this approach for model building but both approaches are functionally equivalent.  
 
 ```{r base_case}
 library (magrittr, quietly = TRUE) # Used for pipes/dplyr
@@ -237,9 +239,9 @@ result0 <- MIPModel() %>%
   
 ```
 
-Note that we load a pair of additional packages.  The magrittr package gives us a piping function that simplifies model building.  The dplyr package is like a Swiss army knife for a providing a broad range of different data process tools. 
+Note that we load a new package `magrittr` which gives us the piping function that simplifies model building.  
 
-The first line creates the basic model.  The `%>%` serves as a pipe symbol at the end of each line.  It  basically means add the next item to the previous so we can build up the model quickly.  
+The first line creates the basic model.  The `%>%` serves as a pipe symbol at the end of each line.  It  basically means take product of the previous command and feed it in as the first argument of the following command.  
 
 ### Base Case Results and Interpretation
 
@@ -299,7 +301,7 @@ $$
     \text{subject to } & 6*Chairs+2*Desks+4*Tables \leq 2000 \\
                        & 8*Chairs+6*Desks+4*Tables \leq 2000 \\
                        & 6*Chairs+4*Desks+8*Tables \leq 1440 \\
-                       & 40*Chairs+25*Desks+25*Tables \leq 9600 \\
+                       & 40*Chairs+25*Desks+16*Tables \leq 9600 \\
                        & Tables \leq 200 \\
                        & Chairs, Desks, Tables \geq 0  
   \end{aligned}
@@ -324,7 +326,7 @@ result1 <- MIPModel() %>%
   add_constraint(6*Chairs + 2*Desks + 4*Tables <= 2000) %>% #fabrication
   add_constraint(8*Chairs + 6*Desks + 4*Tables <= 2000) %>% #assembly
   add_constraint(6*Chairs + 4*Desks + 8*Tables <= 1440) %>% #machining
-  add_constraint(40*Chairs + 25*Desks + 25*Tables <= 9600) %>% #wood
+  add_constraint(40*Chairs + 25*Desks + 16*Tables <= 9600) %>% #wood
   add_constraint(Tables <= 200) %>% #
   
   solve_model(with_ROI(solver = "glpk"))
@@ -377,7 +379,7 @@ $$
     \text{subject to } & 6*Chairs+2*Desks+4*Tables \leq 2000 \\
                        & 8*Chairs+6*Desks+4*Tables \leq 2000 \\
                        & 6*Chairs+5*Desks+8*Tables \leq 1440 \\
-                       & 40*Chairs+25*Desks+25*Tables \leq 9600 \\
+                       & 40*Chairs+25*Desks+16*Tables \leq 9600 \\
                        & Tables \leq 200 \\
                        & Chairs \geq 300 \\
                        & Desks, Tables \geq 0  
@@ -401,7 +403,7 @@ result1 <- MIPModel() %>%
   add_constraint(6*Chairs + 2*Desks + 4*Tables <= 2000) %>% #fabrication
   add_constraint(8*Chairs + 6*Desks + 4*Tables <= 2000) %>% #assembly
   add_constraint(6*Chairs + 5*Desks + 8*Tables <= 1440) %>% #machining
-  add_constraint(40*Chairs + 25*Desks + 25*Tables <= 9600) %>% #wood
+  add_constraint(40*Chairs + 25*Desks + 16*Tables <= 9600) %>% #wood
   add_constraint(Tables <= 200) %>% #
   add_constraint(Chairs >= 300) %>% #THIS IS THE NEW CHANGE
   
@@ -441,7 +443,7 @@ $$
                        & 6*Chairs+3*Desks+4*Tables \leq 2000 \\
                        & 8*Chairs+4*Desks+4*Tables \leq 2000 \\
                        & 6*Chairs+3*Desks+8*Tables \leq 1440 \\
-                       & 40*Chairs+20*Desks+25*Tables \leq 9600 \\
+                       & 40*Chairs+20*Desks+16*Tables \leq 9600 \\
                        & Tables \leq 200 \\
                        & Chairs, Desks, Tables \geq 0  
   \end{aligned}
@@ -464,7 +466,7 @@ model2a <- MIPModel() %>%
   add_constraint(6*Chairs + 3*Desks + 4*Tables <= 2000) %>% #fabrication
   add_constraint(8*Chairs + 4*Desks + 4*Tables <= 2000) %>% #assembly
   add_constraint(6*Chairs + 3*Desks + 8*Tables <= 1440) %>% #machining
-  add_constraint(40*Chairs + 20*Desks + 25*Tables <= 9600) %>% #wood
+  add_constraint(40*Chairs + 20*Desks + 16*Tables <= 9600) %>% #wood
   add_constraint(Tables <= 200) 
 
 result2a <-  solve_model(model2a, with_ROI(solver = "glpk"))
@@ -500,7 +502,7 @@ result2b <- MIPModel() %>%
   add_constraint(6*Chairs + 3*Desks + 4*Tables <= 2000) %>% #fabrication
   add_constraint(8*Chairs + 4*Desks + 4*Tables <= 2000) %>% #assembly
   add_constraint(6*Chairs + 3*Desks + 8*Tables <= 1440) %>% #machining
-  add_constraint(40*Chairs + 20*Desks + 25*Tables <= 9600) %>% #wood
+  add_constraint(40*Chairs + 20*Desks + 16*Tables <= 9600) %>% #wood
   add_constraint(Tables <= 200) %>% # 
   add_constraint(Chairs <= 0) %>%   # FORCING LP TO FIND A DIFFERENT SOLUTION
   solve_model(with_ROI(solver = "glpk"))
@@ -543,7 +545,7 @@ $$
     \text{subject to } & 6*Chairs+2*Desks+4*Tables \leq 2000 \\
                        & 8*Chairs+6*Desks+4*Tables \leq 2000 \\
                        & 6*Chairs+5*Desks+8*Tables \leq 1440 \\
-                       & 40*Chairs+25*Desks+25*Tables \leq 9600 \\
+                       & 40*Chairs+25*Desks+16*Tables \leq 9600 \\
                        & Chairs+Desks+Tables \leq 1500 \\
                                              & Tables \leq 200 \\
                        & Chairs, Desks, Tables \geq 0  
@@ -567,7 +569,7 @@ result3 <- MIPModel() %>%
   add_constraint(6*Chairs + 2*Desks + 4*Tables <= 2000) %>% #fabrication
   add_constraint(8*Chairs + 6*Desks + 4*Tables <= 2000) %>% #assembly
   add_constraint(6*Chairs + 4*Desks + 8*Tables <= 1440) %>% #machining
-  add_constraint(40*Chairs + 25*Desks + 25*Tables <= 9600) %>% #wood
+  add_constraint(40*Chairs + 25*Desks + 16*Tables <= 9600) %>% #wood
   add_constraint(1*Chairs + 1*Desks + 1*Tables <= 1500) %>% # NEW CONSTRAINT-PAINT
   add_constraint(Tables <= 200) %>% 
   
@@ -605,7 +607,7 @@ $$
     \text{subject to } & 6*Chairs+2*Desks+4*Tables \geq 2000 \\
                        & 8*Chairs+6*Desks+4*Tables \geq 2000 \\
                        & 6*Chairs+5*Desks+8*Tables \geq 1440 \\
-                       & 40*Chairs+25*Desks+25*Tables \geq 9600 \\
+                       & 40*Chairs+25*Desks+16*Tables \geq 9600 \\
                        & Tables \geq 200 \\
                        & Chairs, Desks, Tables \geq 0  
   \end{aligned}
@@ -628,7 +630,7 @@ result4 <- MIPModel() %>%
   add_constraint(6*Chairs + 2*Desks + 4*Tables >= 2000) %>% #fabrication
   add_constraint(8*Chairs + 6*Desks + 4*Tables >= 2000) %>% #assembly
   add_constraint(6*Chairs + 4*Desks + 8*Tables >= 1440) %>% #machining
-  add_constraint(40*Chairs + 25*Desks + 25*Tables >= 9600) %>% #wood
+  add_constraint(40*Chairs + 25*Desks + 16*Tables >= 9600) %>% #wood
   
   add_constraint(Tables >= 200) %>% 
   
