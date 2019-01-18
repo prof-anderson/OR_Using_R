@@ -45,14 +45,14 @@ While tools exist for conducting the evaluations, it is important to understand 
 
 This chapter walks through how DEA works and then shows how to implement the model in R using two very different approaches.  Over the years, I have built DEA models in many languages and platforms:  Pascal, LINDO, LINGO, Excel Macros, Excel VBA, GAMS, AMPL, XPress-MOSEL, and GLPK among others. 
 
-Recently, my research group at PSU adopted the R platfom based on the following strengths:
+Recently, my research group at PSU adopted the R platform based on the following strengths:
 
 * Open-source so that people can dive as deep as they need and no risk of future vendor lock-in
 * Freely available so it does not strain research budgets
 * Extensive collection of numerical add-in packages (over 10000 at CRAN) to build upon
 * Robust distribution of add-in packages could help improve distribution of our own contributions
 * Multiple linear programming packages to choose from among
-* Widespread usage and acceptace in the research and analytics communities
+* Widespread usage and acceptance in the research and analytics communities
 * No arbitrary capacity limits
 * One platform that combines optimization and statistical analysis
 
@@ -116,7 +116,7 @@ The graphical approach is intuitive but accuracy is limited to that of drawing t
 
 A key way to begin the mathematical development of the envelopment model is to ask, can you find a combination of units that produces a target with at least as much output using less input? The blend of other units is described by a vector $\lambda$.  Another way to denote this is $\lambda_j$ is the specific amount of a unit _j_ used in setting the target for for performance for unit _k_.
 
-This can be easily expanded to the multiple input and multiple output case by defining $x_{i,j}$ to  be the amount of the _i_'th input used by unit _j_ and $y_{r,j}$ to be the amount of the _r_'th output produced by unit _j_.  For simplicity, this example will focus on the one input and one output case rather than the _m_ input and _s_ output case but the R code explicitly allows for $m,s>1$.  To make the code more readable, I will use a slightly different convention $N^X$ or NX instead of _m_ to refer to the number of inputs (x's) and $N^Y$ or NY to be the number of ouputs (y's) instead of _s_. Also, the normal mathematical convention is to use _n_ to denote the number of Decision Making Units (DMUs) so I will use $N^D$ or ND to indicate that in the R code.  
+This can be easily expanded to the multiple input and multiple output case by defining $x_{i,j}$ to  be the amount of the _i_'th input used by unit _j_ and $y_{r,j}$ to be the amount of the _r_'th output produced by unit _j_.  For simplicity, this example will focus on the one input and one output case rather than the _m_ input and _s_ output case but the R code explicitly allows for $m,s>1$.  To make the code more readable, I will use a slightly different convention $N^X$ or NX instead of _m_ to refer to the number of inputs (x's) and $N^Y$ or NY to be the number of outputs (y's) instead of _s_. Also, the normal mathematical convention is to use _n_ to denote the number of Decision Making Units (DMUs) so I will use $N^D$ or ND to indicate that in the R code.  
 
 Let's connect these ideas together now using these mathematical building blocks.  The core idea of the envelopment model of a DMU _k_ can be thought of as to find a target constructed of a mix of the DMU's described by a vector $\lambda$ that uses no more input to achieve the same or more every output as DMU _k_.  The amount of the _i'th_ input used by the target is then $\sum_{j=1}^{N^D} x_{i,j}\lambda_j$.  By the same token, the amount of the _r'th_ output produced by the target is $\sum_{j=1}^{N^D} y_{r,j}\lambda_j$.  
 
@@ -157,7 +157,7 @@ $$
   (\#eq:LPCCRIOE-NoSlack-Simple)
 $$
 
-Expressing the target on the left and the actual units's value and radial reduction on the right is conceptually straightforward to understand.   Unfortunately, optimization software typically requires collecting all the variables on the left and putting constants on the right hand side of the inequalities.  This is easily done.  
+Expressing the target on the left and the actual unit's value and radial reduction on the right is conceptually straightforward to understand.   Unfortunately, optimization software typically requires collecting all the variables on the left and putting constants on the right hand side of the inequalities.  This is easily done.  
 
 $$
 \begin{split}
@@ -657,7 +657,7 @@ $$
   (\#eq:LPCCRIOE-Slacks)
 $$
 
-Simply formulating the model with slacks is insufficient.  We want to maximize these slacks after having found the best possible radial contraction (minimum value of $\theta$.)  This is done by adding a term summing the slacks to the objective function.  Note that this sum of slacks is multiplied by $\epsilon$ which is a  non-Archimedean infinitesimal.   The value of $\epsilon$ should be considered to be so small as to ensure that minimizing theta takes priority or maximizing the sum of slacks.  Note also that  maximizing the sum of slacks is denoted by miniimizing the negative  sum of slacks.
+Simply formulating the model with slacks is insufficient.  We want to maximize these slacks after having found the best possible radial contraction (minimum value of $\theta$.)  This is done by adding a term summing the slacks to the objective function.  Note that this sum of slacks is multiplied by $\epsilon$ which is a  non-Archimedean infinitesimal.   The value of $\epsilon$ should be considered to be so small as to ensure that minimizing theta takes priority or maximizing the sum of slacks.  Note also that  maximizing the sum of slacks is denoted by minimizing the negative  sum of slacks.
 
 $$
 \begin{split}

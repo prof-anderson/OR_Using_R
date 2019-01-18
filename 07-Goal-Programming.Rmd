@@ -20,7 +20,7 @@ library (pander, quietly = TRUE)
 
 # Goal Programming and Multiple Objectives
 
-Up until this point, we assumed that there would be a single, clear objective function. Often we have more complex situations where there are multiple conflicting objectives.  In our earlier production planning case, we might have additional objectives besides maximizing profit such as minimizing environmental waste or longer term strategic positioning. In the case of our capital budgeting problem, we can envision a range of additional considerations beyond simple neexpected net present value maximization.  
+Up until this point, we assumed that there would be a single, clear objective function. Often we have more complex situations where there are multiple conflicting objectives.  In our earlier production planning case, we might have additional objectives besides maximizing profit such as minimizing environmental waste or longer term strategic positioning. In the case of our capital budgeting problem, we can envision a range of additional considerations beyond simple unexpected net present value maximization.  
 
 Let's look at another type of problem, staff scheduling.  The Information Technology Security Institute or ITSI needs to maintain 24x7 staffing to respond to crises in addition to regular workloads. The result is that there is a varying demand over time. For the sake of simplicity, let's treat the schedule as a series of 21 eight hour shifts.   
 
