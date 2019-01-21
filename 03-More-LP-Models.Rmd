@@ -22,7 +22,7 @@ In this chapter, we will examine a range of classic applications of linear progr
 
 #### The Algebraic Model
 
-In the previous chapter, we examined situations with only a few products and constraints.  In general, most companies have many more products and we won't be wanting to name each product.  Instead, we use sets of products and resources.  
+In the previous chapter, we examined situations with only a few products and constraints.  In general, most companies have many more products and we won't be wanting to name each product explicilty and uniquely.  Instead, we use sets of products and resources.  
 
 We could also reframe the model more algebraically. Let's use subscripts to differentiate between products and resources. We can define that _i=1_ represents Chairs, _i=2_ represents Desks, and _i=3_ represents Tables.  Similarly, _j=1_ represents fabrication, _j=2_, represents assembly, etc.   Now, let's move on to defining the data.  Let's define the amount to produce of each product, _i_, as $x_i$ and resource _j_ consumed by product _i_ as $R_{i,j}$.  The available resource _j_ is then $A_j$. The profit per product _i_ is then $P_i$. The LP can now be rewritten in more general terms as the following if there are three products and four constraints.
 
@@ -54,11 +54,11 @@ $$
 
 The symbol, $\forall$, is read as "for all" and can be interpreted to mean "repeat this line substituting in a value for this subscript **for all** possible values of this subscript."  In other words, given that i is used consistently for the three products, then $x_i \geq 0  \; \forall \; i$ is equivalent to $x_i \geq 0  \;,i=1,2,3$ or even $x_1 \geq 0, \; x_2 \geq 0, \; x_3 \geq 0$.  The result is that the $\forall$ symbol can simplify the description of complex models when index ranges are clear.
 
-Also, another good practice is to use mnemonic to help suggest the meaning of data.  That is why I chose "R" for Resource, "P" for Profit, and "A" for Available resources. 
+Also, another good practice is to use a mnemonic to help suggest the meaning of data. That is why I chose "R" for Resource, "P" for Profit, and "A" for Available resources. 
 
-Another trick is to use the capital letters for data and lower case letters for variables.  (Some people will swap this around and use capital letters for variables and lower case letters for data - it doesn't really matter as long as a model is consistent.)
+Another helpful convention is to use capital letters for data and lower case letters for variables.  (Some people will swap this around and use capital letters for variables and lower case letters for data - it doesn't really matter as long as a model is consistent.)
 
-Another convention that might be used for more complex model is to use a superscript.  For example, perhaps labor cost for each worker, _w_, could have different values for both normal and overtime rates.  Rather than separate data terms for such closely related concepts, we might denote regular hourly labor cost for worker _w_ as $C^R_w$ and for overtime as $C^O_w$.  Again, it is very important to clearly define all the data and variables used in the model.
+More complex models often run out of letters that make sense.  A common approach in these models is to use a superscript. For example, perhaps labor cost for each worker, _w_, could have different values for both normal and overtime rates.  Rather than separate data terms for such closely related concepts, we might denote regular hourly labor cost for worker _w_ as $C^R_w$ and for overtime as $C^O_w$.  Again, it is very important to clearly define all the data and variables used in the model.
 
 #### Building the Generalized Model in R
 
@@ -102,13 +102,14 @@ pander (Available, caption="Amount of each Resource Available")
 
 ```
 
-Notice that we the resources available are listed as a column (vertical) vector rather than a row (flat) vector.  This differentiation will be important later.   
+Notice that the resources available are listed as a column (vertical) vector rather than a row (flat) vector.  This differentiation will be important later.   
 
 Now we need to define variables.  
 
-Now, let's show how we can display the resources used and available in one table.  We will use the _cbind_ function to do a column binding of the data.  
+Let's show how we can display the resources used and available in one table.  We will use the _cbind_ function to do a column binding of the data.  
 
 ```{r}
+
 pander(cbind(Resources, Available), caption="Resources Used by Each Product and Available")
 
 ```
@@ -175,10 +176,11 @@ We can go one further step now and multiply the matrix of resources by the colum
 Results.Resources <- Resources[]%*%t(results.products)
                   # Multiply matrix of resources by amount of products produced
 
-colnames(Results.Resources)<-c("Used")      
-                  # Change column name to reflect amount of resources used.
+ResourceSlacks <- cbind (Results.Resources,Available,Available-Results.Resources)
 
-pander(Results.Resources, caption="Resources Used")
+colnames(ResourceSlacks)<-c("Used", "Available", "Slack")      
+
+pander(ResourceSlacks, caption="Resources Used")
 
 ```
 
@@ -266,28 +268,19 @@ Base3VarModel <- MIPModel() %>%
   add_constraint(8*Chairs + 6*Desks + 4*Tables <= 2000) %>% #assembly
   add_constraint(6*Chairs + 4*Desks + 8*Tables <= 1440) %>% #machining
   add_constraint(40*Chairs + 25*Desks + 16*Tables <= 9600) %>% #wood
-  add_constraint(Tables <= 200) %>% #
-#  add_constraint(0.4*Chairs -0.6*Desks - 0.6*Tables <= 0) %>% #Blending  
-  solve_model(with_ROI(solver = "glpk"))
+  add_constraint(Tables <= 200) #
 
-#xchairs <- get_solution (Blending, Chairs)
-#xdesks  <- get_solution (Blending, Desks)
-#xtables <- get_solution (Blending, Tables)
+res3base <- solve_model(Base3VarModel, with_ROI(solver = "glpk"))
 
-xchairs <- get_solution (Base3VarModel, Chairs)
-xdesks  <- get_solution (Base3VarModel, Desks)
-xtables <- get_solution (Base3VarModel, Tables)
-
-#rownames(base3res)<-"Base Case"
-#pander(base3res, 
-#       caption="Production Plan for Base Case")
+xchairs <- get_solution (res3base , Chairs)
+xdesks  <- get_solution (res3base , Desks)
+xtables <- get_solution (res3base , Tables)
 
 base_case_res           <- cbind(xchairs,xdesks,xtables)
 rownames(base_case_res) <- "Amount to Produce"
 pander(base_case_res,
        caption="Production Plan for Base Case")
 ```
-
 
 Let's add a constraint that chairs can't make up more than 40% of the total production.  Also, Desks can't be more than 50% of total production.  Lastly, let's say that Tables can't be more more than 40% of total production.  
 
@@ -322,41 +315,19 @@ $$
 $$
 
 ```{r Blending}
-Blending <- MIPModel() %>%
-  add_variable(Chairs, type = "continuous", lb = 0) %>%
-  add_variable(Desks, type = "continuous",lb = 0) %>%
-  add_variable(Tables, type = "continuous", lb = 0) %>%
-  
-  set_objective(20*Chairs + 14*Desks + 16*Tables, "max") %>%
-  
-  add_constraint(6*Chairs + 2*Desks + 4*Tables <= 2000) %>% #fabrication
-  add_constraint(8*Chairs + 6*Desks + 4*Tables <= 2000) %>% #assembly
-  add_constraint(6*Chairs + 4*Desks + 8*Tables <= 1440) %>% #machining
-  add_constraint(40*Chairs + 25*Desks + 16*Tables <= 9600) %>% #wood
-  add_constraint(Tables <= 200) %>% #
-  add_constraint(0.6*Chairs -0.4*Desks - 0.4*Tables <= 0) %>% #Blending  
-  solve_model(with_ROI(solver = "glpk"))
+
+ModelBlending <- add_constraint(Base3VarModel,
+                           0.6*Chairs -0.4*Desks - 0.4*Tables <= 0) 
+
+resBlending <- solve_model(ModelBlending, with_ROI(solver = "glpk"))
 
 ```
 
 
 ```{r}
-xchairs <- get_solution (Blending, Chairs)
-xdesks  <- get_solution (Blending, Desks)
-xtables <- get_solution (Blending, Tables)
-xchairs
-xdesks
-xtables
-
-```
-
-Okay, let's make these results look a little more polished.  We will take each of the decision variables and place them in row listing.  Then change the name of the row, and use pander to make a nicely formatted table.
-
-```{r}
-blendres<-cbind(xchairs,xdesks,xtables)
-rownames(blendres)<-"Amount to Produce"
-pander(blendres,
-       caption="Production Plan with Blend Constraint")
+blendres<-cbind(get_solution (resBlending, Chairs),
+                get_solution (resBlending, Desks),
+                get_solution (resBlending, Tables))
 
 ```
 
@@ -367,7 +338,8 @@ Okay, now let's put both side by side in a table to show the results.
 rownames(base_case_res)<-"Base Model Plan"
 
 rownames(blendres)<-"with Blend Constraint"
-
+blendingresults <- rbind(base_case_res,blendres)
+colnames (blendingresults) <- c( "Chairs", "Desks", "Tables")
 pander(rbind(base_case_res,blendres),
        caption="Changing Production Plan due to a Blending Constraint")
 
@@ -428,9 +400,9 @@ Cost <- matrix(c(20, 14, 3, 16),
               ncol=NProd,dimnames=c("Profit",MixNames))
 
 MixChar <- matrix(c( 6, 8, 6, 7, 
-                     40, 2, 6, 4, 
-                     10, 25, 1, 1, 
-                     1, 2, 5, 4), 
+                     2, 6, 4, 10, 
+                     1, 1, 1, 2,
+                     4, 8, 25, 12), 
               ncol=4, dimnames=c(CharNames,MixNames))
 
 CharMin <- matrix(c(1440, 1440, 2000, 1000), 
@@ -445,18 +417,23 @@ pander(cbind(MixChar,CharMin), caption="Data for Trevor Trail Mix Company")
 
 Now let's build our model.  
 
-```{r}
+```{r trailmix}
 trailmixmodel <- MIPModel() %>%
   add_variable (x[i], i=1:NMix, type="continuous", lb=0) %>%
   set_objective (sum_expr(Cost[i] * x[i] , i=1:NMix ), "min") %>%
   add_constraint (sum_expr(MixChar[j,i]*x[i], i=1:NProd) # Left hand side of constraint
                   >= CharMin[j],    # Inequality and Right side of constraint
-                  j=1:NCharacteristic) %>% # Repeat for each resource, j.  
-  solve_model(with_ROI(solver = "glpk"))
+                  j=1:NCharacteristic)  # Repeat for each resource, j.  
+
+results.trailmix <-    solve_model(trailmixmodel, with_ROI(solver = "glpk"))
   
-trailmixmodel
+results.trailmix
+
+xvalue <- t(get_solution(results.trailmix, x[i])[,3])
 
 ```
+
+We'll leave it to the reader to clean up the output of results. 
 
 Another classic example of a covering problem is a staff scheduling problem.  In this case, a manager is trying to assign workers to cover the required demands throughout the day, week, or month.  
 
@@ -490,9 +467,32 @@ In the balanced situation, either source or demand constraints can be equalities
 
 Similarly, if we try to use equality constraints for both the supply and demand nodes but the supply and demand are not balanced, the LP will not be feasible.  
 
+Hint:  In `ompr`, a double subscripted non-negative variable, $x_{i,j}$ can be defined easily as the following:
+`add_variable(x[i, j], type = "continuous", i = 1:10, j = 1:10, lb=0)` 
+
+Let's show how to set up a basic implementation of the tranportation problem in ompr.  This demonstrates the use of double subscripted variables. Note that I have not defined the data.  Also, you it should be customized for a particular application of being demand or supply constrained but it will give a good running head start.  
+
+```{r transportation, eval=FALSE}
+transportationmodel <- MIPModel() %>%
+  add_variable(x[i, j], type = "continuous", i = 1:NSupply, j = 1:NDest, lb=0) %>%
+  set_objective (sum_expr(Cost[i,j] * x[i,j] , i=1:3, j=1:NDest ), "min") %>%
+
+    add_constraint (sum_expr(x[i,j], i=1:NSupply) # Left hand side of Demand constraints
+                  >= D[j],    # Inequality and Right side of constraint
+                  j=1:NDest)  %>% # Repeat for each demand node j.  
+
+  add_constraint (sum_expr(x[i,j], j=1:NDest) # Left hand side of Supply constraints
+                  <= S[i],    # Inequality and Right side of constraints
+                  i=1:NSupply)  # Repeat for each supply node i.  
+
+results.transportation <- solve_model(transportationmodel, 
+                                      with_ROI(solver = "glpk"))
+  
+```
+
 ### Transhipment Models
 
-A generalization of the transportation model is that of transhipment where some nodes are intermediate nodes that are neither pure sources or destinations but can have both inflow and outflow.  We will deal with this next week.
+A generalization of the transportation model is that of transhipment where some nodes are intermediate nodes that are neither pure sources or destinations but can have both inflow and outflow.
 
 ### Standard Form
 
@@ -502,9 +502,12 @@ It makes little difference as to whether the objective function is a _min_ or a 
 
 Lastly is a step where all of the inequalities are replaced by strict equality relations.  The conversion of inequalities to equalities warrants a little further explanation.  This is done by introducing a new, non-negative "slack" variable for each inequality.  
 
+
+
 ## Exercises
 
 ```{exercise, name="Transportation"}
+```
 
 Four manufacturing plants are supplying material for distributors in four regions.  The four supply plants are located in Chicago, Beaverton, Eugene, and Dallas.  The four distributors are in PDX (Portland), SEA (Seattle), MSP(Minneapolis), and ATL (Atlanta).  Each manufacturing plant has a maximum amount that they can produce.  For example, Chicago can produce at most 500.  Similarly, the PDX region can handle at most 700 units.  The cost to transport from Dallas to MSP is three times as high as the cost from Dallas to Atlanta.
 
@@ -520,13 +523,16 @@ Formulate an explicit model for the above application that solves this transpora
 
 Implement and solve the model using ompr.  Be sure to discuss the solution as to why it makes it sense.  
 
-```
 
 ```{exercise, name="Explicit Transportation"}
-Formulate a generalized model for the above application that solves this transporation problem to find the lowest cost way of transporting as much as product as we can to distributors.  Implement and solve the model using ompr.  Be sure to discuss the solution as to why it makes it sense.
 ```
 
+Formulate a generalized model for the above application that solves this transporation problem to find the lowest cost way of transporting as much as product as we can to distributors. (Hint: Feel free to use my LaTeX formulation for the general transportation model and make change(s) to reflect your case.  
+Implement and solve the model using ompr.  Be sure to discuss the solution as to why it makes sense.
+
 ```{exercise, name="Convert LP to Standard Form"}
+```
+
 Convert the following three variable LP into standard form.
 
 $$
@@ -544,7 +550,6 @@ $$
   \end{split}
   (\#eq:Base_Model_Ex4)
 $$
-```
 
 ```{exercise, name="Convert LP to Standard Form"}
 
@@ -552,8 +557,9 @@ Implement and solve the standard form of the LP using R.  Be sure to interpret t
 ```
 
 ```{exercise, name="Convert Generalized LP to Standard Form"}
+```
 
-Convert our generalized production planning LP into standard form.  Hint,  To do so, define a variable, $s_j$ to reflect these changes and add it to the following formulation.   
+Convert our generalized production planning LP into standard form.  Hint: define a set of variables, $s_j$ to reflect these changes and add it to the following formulation.   
 
 $$
  \begin{split}
@@ -565,4 +571,3 @@ $$
   \end{split}
   (\#eq:Base-Algebraic)
 $$
-```

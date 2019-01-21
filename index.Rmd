@@ -12,6 +12,7 @@ This book covers using R for doing Operations Research. The current focus is on 
 
 I would like to thank many people for their contributions, collaborations, and assistance over the years. All errors are my fault though.  
 
+* Dirk Schumacher (author of `ompr`)
 * Dr. Dong-Joon Lim
 * Dr. Gerry Williams
 * Dr. Janice Forrester
@@ -25,7 +26,6 @@ I would like to thank many people for their contributions, collaborations, and a
 * Maoloud Dabab
 * Kevin van Blommestein
 * William (Ike) Eisenhauer
-* Dirk Schumacher
 * Andey Nunes
 * Christopher Davis
 * Thanh Thuy Nguyen

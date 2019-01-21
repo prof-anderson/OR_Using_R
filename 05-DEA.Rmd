@@ -32,7 +32,7 @@ output:
     fonttheme: structurebold
     theme: AnnArbor
 ---
-# Input-Oriented Envelopment Model
+# Data Envelopment Analysis
 
 Introduction
 -----------------------------
@@ -168,7 +168,8 @@ $$
                        & \lambda_j \geq 0  \; \forall \; j
   \end{aligned}
  \end{split}
-  (\#eq:LPCCRIOE-NoSlack)$$
+  (\#eq:LPCCRIOE-NoSlack)
+$$
 
 ## Creating the LP - The Algebraic Approach
 
