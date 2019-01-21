@@ -22,6 +22,7 @@ I would like to thank many people for their contributions, collaborations, and a
 * Tom Shott
 * Nina Chaichi
 * Auobindh Kalathil Kumar
+* Maoloud Dabab
 * Kevin van Blommestein
 * William (Ike) Eisenhauer
 * Dirk Schumacher

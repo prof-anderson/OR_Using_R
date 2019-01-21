@@ -113,17 +113,46 @@ This brings us to four packages that provide the optimization functions that we 
 
 As noted earlier, if these packages are not preinstalled, you may need to install them using the install.packages function or from the Packages tab in RStudio.
 
-Now we move on to implement and solve the linear program.  
+Now we move on to implement and solve the linear program. Let's go through it step by step.
 
-This is how we would do it without a piping operation.
+```{r base_case_no_pipes_step_1}
 
-```{r base_case_no_pipes}
 model0  <- MIPModel()     # Initialize an empty model!
+
+```
+
+The first line initializes an empty model and stores it in `model0`.  We can see that the model is empty by simply displaying the model summary.
+
+```{r display_empty_model}
+model0
+```
+
+There are no constraints or variables.  Next we will add variables.
+
+```{r base_case_no_pipes_step_2}
 
 model0a <- add_variable(model0, Chairs, type = "continuous", lb = 0) 
 model0b <- add_variable(model0a, Desks, type = "continuous",lb = 0)
 
+```
+
+The next line takes `model0` and adds the _Chairs_ variable to it, creating an enhanced `model0a`.  These variables are continuous (as compared to integer or binary), and non-negative. The variable is made non-negative by setting a zero lowerbound (`lb=0`). The lowerbound can be set to other values such as a minimum production level of ten.  Also upperbounds for variables can be set using `ub` as a parameter. Do the same thing to add the _Desks_ variable to `model0a` creating `model0b`. Let's check the new model.
+
+```{r}
+model0b
+```
+
+Next, we need to add the objective function. We set the objective function as well declaring it to be a *max* rather than a *min* function.
+
+```{r base_case_no_pipes_step_3}
+
 model0c <- set_objective(model0b, 20*Chairs + 14*Desks, "max")
+
+```
+
+Now we move on to adding constraints.  
+
+```{r base_case_no_pipes_step_4}
 
 model0d <- add_constraint(model0c, 6*Chairs + 2*Desks <= 2000) #fabrication
 model0e <- add_constraint(model0d, 8*Chairs + 6*Desks <= 2000)  #assembly
@@ -134,28 +163,21 @@ result0 <- solve_model(model0g, with_ROI(solver = "glpk"))
 
 ```
 
-The first line initializes an empty model and stores it in `model0`.  We can see that the model is empty by simply displaying the model summary.
+Notice that we do not need to include non-negativity constraints since they were in the earlier definition of the variables. Let's take a look at the summary of the model after all of the constraints have been added.
 
 ```{r}
-model0
+model0g
 ```
 
-There are no constraints or variables.  The next line takes `model0` and adds a variable to it, creating an enhanced `model0a`.  Again, we can confirm that our model is gradually getting built up by displaying the new model.
+Our model has variables, constraints, and an objective function.  Let's go ahead and solve it. The LP can be solved using different LP engines - we'll use `glpk` for now. We'll assign the result of the solved model to `result0`
 
-```{r}
-model0a
+```{r base_case_no_pipes_step_5}
+
+result0 <- solve_model(model0g, with_ROI(solver = "glpk"))
+
 ```
 
-
-The first line initializes an emtpy model and the next three lines are adding variables.  These variables are continuous (as compared to integer or binary), and non-negative. The variables are made non-negative by setting a zero lowerbound (`lb=0`).  The lowerbound can be set to other values such as a minimum production level of ten.  Also upperbounds for variables can be set using `ub` as a parameter. 
-
-Next, we set the objective function as well declaring it to be a *max* rather than a *min* function.
-
-Then we define the constraints.  Notice that we do not need to include non-negativity constraints since they were in the earlier definition of the variables.
-
-Lastly, we tell it to solver our model.  We will select a particular solver engine, `glpk` but other options exist.
-
-This process built up the model line by line incrementally taking the previous model, adding a new element, and storing it in a new model.  Note that we could keep placing them into the original model if we had wished such as the following.
+We built up the model line by line incrementally taking the previous model, adding a new element, and storing it in a new model. Note that we could keep placing them into the original model if we had wished such as the following.
 
 ```{r base_case_no_pipes_single_model}
 model0  <- MIPModel()     # Initialize an empty model!
@@ -175,7 +197,7 @@ result0 <- solve_model(model0, with_ROI(solver = "glpk"))
 
 In this case, we take the previous command's output, `model0`, add an element to it, and then store it back in the same object, `model0`.  We keep doing it for each element until we are done.
 
-This is equivalent to doing something such as the following where we assign the value of _2_ to _a_.  We then multiple _a_ by _3_ and assign the result again to _a_.    
+This is equivalent to assigning the value of _2_ to _a_.  We then multiple _a_ by _3_ and assign the result again to _a_.    
 
 ```{r basic_assignment}
 a <- 2
@@ -183,7 +205,7 @@ a <- 3*a
 a
 ```
 
-Note that this is part of why `<-` as an assignment operator is better than an equals sign, `=` which would make the reader think that if _a=3*a_ then _a_ must be zero. 
+Note that this is part of why `<-` as an assignment operator is better than an equals sign, `=` which would make the reader think that if _a=3a_ then _a_ must be zero. 
 
 It might be helpful to see what the model looks like before examining the results.  
 
@@ -213,11 +235,11 @@ pander(constr00, caption="Elements of the Constraints")
 
 In the first version of the LP model implementation, we created many different  versions of the model along the way while we really just keep adding stuff to the same model.  This uses extra memory and will be slower.  The second implementation keeps reusing the same model object until the very end when solving is done and it places the results into an object.  This may be more memory efficient but is still likely slower and carries along a lot of extra notation.
 
+### Implementing the Base Case with Piping
+
 In each step, we are simply taking the output of the previous step and feeding it in as the first term of the following step.  It is almost like the output is a bucket that is then passed as a bucket into the next step.  Rather than carrying a bucket from one step into the next one, a plumber might suggest a pipe connecting one step to the next. This is done so often that we refer to it as piping and a pipe operator.
 
 The pipe symbol, `%>%` will let us do this more compactly and efficiently. It takes a little getting used to but is a better way to build the model.  
-
-### Implementing the Base Case with Piping
 
 Here is the equivalent process for building the base case implementation using a piping operator without all the intermediate partial models being built.  Notice how it is a lot more concise.  We will typically use this approach for model building but both approaches are functionally equivalent.  
 
