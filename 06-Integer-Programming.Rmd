@@ -329,6 +329,7 @@ LPSubIV <- MIPModel() %>%
   x2  <- get_solution (LPSubIV , 'xx2')
 
 LPSubIV_res  <- cbind(x1,x2,obj_val)
+LPSubIV$status
 rownames(LPSubIV_res) <- ""
 pander(LPSubIV_res,
        caption="Acme's Production Plan based on the LP Subproblem IV?")
@@ -500,9 +501,9 @@ You may use Dirk's vignette as a starting point to build your own model for assi
 Student preferences can be loaded from the comma separated file as shown below or typed in.
 
 ```{r}
-studentpref<-read.csv(file="HW5data.csv")
+#studentpref<-read.csv(file="HW5data.csv")
 
-pander (studentpref, caption="Student to Project Preferences")
+#pander (studentpref, caption="Student to Project Preferences")
 ```
 
 Build and solve an appropriate model.  Be sure to describe your formulation and discuss the results.

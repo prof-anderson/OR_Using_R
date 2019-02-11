@@ -1,4 +1,4 @@
----
+b---
 title: "Introduction to Data Envelopment Analysis"
 author: "Tim Anderson"
 date: "9/25/2018"
@@ -93,6 +93,10 @@ Let's start by doing a simple plot of the data.  For now, I'm going to make use 
 
 ```{r}
 library(Benchmarking, quietly=TRUE)
+
+dea.plot(x, y, RTS="crs", ORIENTATION="in-out", txt=LETTERS[1:length(x)], 
+         add=FALSE, wx=NULL, wy=NULL, TRANSPOSE=FALSE, fex=1, GRID=TRUE,
+         RANGE=FALSE, param=NULL)
 
 dea.plot(x, y, RTS="vrs", ORIENTATION="in-out", txt=LETTERS[1:length(x)], 
          add=FALSE, wx=NULL, wy=NULL, TRANSPOSE=FALSE, fex=1, GRID=TRUE,

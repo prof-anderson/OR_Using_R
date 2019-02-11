@@ -1,0 +1,623 @@
+---
+title: "07-More Mixed Integer Models"
+author: "Tim Anderson"
+date: "2/9/2019"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# More Mixed Integer Models
+
+## Overview
+
+This chapter consists of a collection of rich MILP  models that can be used for inspiration on products.  Some of these cases are expansions of Dirk Schumacher's ompr vignettes.  These make for excellent resouces demonstrating a variety of features such as creation of simulated data and visualization of results.  I strongly recommend reading the original.  These vignettes can be viewed from the package documentation, Dirk's github web [site](https://dirkschumacher.github.io/ompr/articles/index.html),  or downloading his github repository.
+
+* All text from Dirk Schumacher's articles are set in block quotes.  
+* All code chunks are from Dirk Schumacher's articles unless stated otherwise.
+* The LaTeX formulations are based on Dirk Schumacher's LaTeX with some modifications to support LaTeX environments.
+
+## Revisiting the Warehouse Location Problem
+
+> In this article we will look at the [Warehouse Location Problem](https://en.wikipedia.org/wiki/Facility_location_problem). Given a set of customers and set of locations to build warehoses the task is to decide where to build warehouses and from what warehouses goods should be shipped to which customer. Dirk Schumacher notes that this basic version of the warehouse location problem is adapted from the [German Wikipedia page](https://de.wikipedia.org/wiki/Warehouse_Location_Problem) about the problem.
+
+> Thus there are two decisions that need to made at once: where and if to build warehouses and the assignment of customers to warehouses. This simple setting also implies that at least one warehouse must be built and that any warehouse is big enough to serve all customers.
+
+> As a practical example: you run the logistics for an NGO and want to regularly distribute goods to people in need. You identified a set of possible locations to set up your distribution hubs, but you are not sure where to build them. Then such a model might help. In practice however you might need to incorporate additional constraints into the model.
+
+### The mathematical model
+
+Let's start by defining the decision variables.  Each possible location of a warehouse, $j$ can have a warehouse be built or not be built.  We will use $y_j=1$ to indicate that warehouse $j$ is built.  Conversely, $y_j=0$ indicates that we are not building a warehouse at location $j$.  Since a warehous is either built or not built, a binary variable is appropriate for $y_j$.
+
+Similarly, the variable $x_{i,j}$ is the decision of assigning customer $i$ to warehouse $j$.  It also needs to be a binary variable since partial assignments are not allowed.  
+
+Now, let's move on to the consraints.  Each customer must be assigned to one and only one warehouse.  For illustration, this means that one of the variables $x_{1,j}$ must be set to one and the others are zero.  To enforce this constraint, we can simply add the $x$ variables for warehouse 1 for each of the warehouses.  We could do this with $x_{1,1}+x_{1,2}+ \ldots + x_{1,m}$ and requiring it to be one. We could rewrite this using a summation as $\sum\limits_{j=1}^{m} x_{1, j} = 1$. That constraint is limited to just customer 1 though.  We don't want to write this constraint out separately for each customer so we can generalize this by repeating it for all $n$ customers as $\sum\limits_{j=1}^{m} x_{i, j} = 1, \> i=1 ,\ldots, n$.  
+
+It would not work to assign a customer to an unused warehouse. For example, it would not work to have customer 23 assigned to warehouse 7 if warehouse 7 is not being operated.  In other words, if $x_{23,7}=1$ then $y_7=0$ is a problem and should not happen.  We need to connect the decision variable $x_{23,7}$ and $y_7$. One way to do that is creating a constraint, $x_{23,7} \leq y_7$ which explicitly blocks assigning customer 23 to warehouse 7 unless warehouse 7 is operating.   This can be generalized as $x_{i, j} \leq y_j, \> i=1 , \ldots, n, \> j=1 ,\ldots, m$.
+
+Our objective is to minimize cost.  We have a cost assumed for each customer to warehouse assigment.  This might be related to distance.  Let's refer to this cost as $\operatorname{transportcost}_{i,j}$.  The cost based on the transportation from warehouse to customer is then $\sum\limits_{i=1}^{n}\sum\limits_{j=1}^{m}\operatorname{transportcost}_{i,j} \cdot x_{i, j}$. Note that we could equally well abbreviate it as something like $C_{i,j}^T$.  In this case, using a capital _C_ to indicate cost and a superscript T to indicate transportation cost.  
+
+We also have a cost factor for each warehouse that we choose to build/operate.  Again, if we define $\operatorname{fixedcost}_{j}$ as the fixed cost for building warehouse $j$, the cost of our decisions is simply, $\sum\limits_{j=1}^{m}\operatorname{fixedcost}_{j} \cdot y_{j}$.  
+
+$$
+\begin{split}
+\begin{aligned}
+\text{min } \; & \displaystyle\sum\limits_{i=1}^{n}\sum\limits_{j=1}^{m}\operatorname{transportcost}_{i,j} \cdot x_{i, j} +  \sum\limits_{j=1}^{m}\operatorname{fixedcost}_{j} \cdot y_{j}& &\\
+\text{subject to } \; & \displaystyle\sum\limits_{j=1}^{m}   x_{i, j} = 1  & i=1 ,\ldots, n&\\
+                  & \displaystyle x_{i, j} \leq y_j,  & i=1 ,\ldots, n, \> & j=1 ,\ldots, m&\\
+                 &                                                x_{i,j} \in \{0,1\} \; &i=1 ,\ldots, n, \; & j=1 ,\ldots, m \\
+                 &                                                y_{j} \in \{0,1\} \; &j=1 ,\ldots, m 
+  \end{aligned}
+  \end{split}
+$$
+
+
+### The model in R
+
+Rather than typing in fixed data or loading it from data file, Dirk simply generated a collection of random data for testing purposes.  This highlights the advantage of R in that we have a rich collection of statistical tools available that we can leverage.  
+
+> The first thing we need is the data. In this article we will simply generate artificial data.
+
+> We assume the **customers** are located in a grid with euclidian distances.
+
+Let's explain the functions used for this data generation.  The first command sets the random number seed. In general, computers don't actually generate random numbers, they generate what is called pseudo random numbers according to a particular algorithm in a sequence.  The starting point will set a sequence that appears to be random and behaves in a relatively random way.  Much more can be said but this is setting as the first random number, 1234.  It could just as easily have been 4321 or any other integer.  
+
+The grid size is set to 1000.  You can think of this as 1000 kilometers for visualization purposes.  This would be equivalent to saying that we are randomly placing customers on a map, 1000 kilometers horizontally and vertically.
+
+Next we set the number of customers to be 100.  
+
+```{r Prepare-for-Data-Generation}
+set.seed(1234)      # Set random number seed
+grid_size <- 1000   # Horizontal and vertical axis ranges 
+
+n <- 100 ; m <- 20 # Set number of customers and warehouses
+#n <- 10 ; m <- 3   # Safer problem size for cloud services
+                   # Select  100 and 20 for local comuter runs
+                   # Text discussion is for the larger size
+
+customer_locations <- data.frame(      
+  id = 1:n,
+  x = round(runif(n) * grid_size),
+  y = round(runif(n) * grid_size)
+)
+```
+
+Next we create the customer data as a dataframe.  
+
+The runif function generates a uniform random number between 0.0 and 1.0 such as perhaps 0.327216. This would be multiplied by our grid size multipler resulting in 327.216.  This is then rounded to 327.  
+
+```{r Create-Customer-Data}
+customer_locations <- data.frame(      
+  id = 1:n,                         # Create column with ID numbers from 1 to 100
+  x = round(runif(n) * grid_size),  # Create 100 x-coordinate values in the next column
+  y = round(runif(n) * grid_size)   # Create 100 y-coordinate values in the last column
+)
+```
+
+> The **warehouses** are also randomly placed on the grid. The fixed cost for the warehouses are randomly generated as well with mean cost of 10,000.
+
+Notice that in this case, the fixedcost is generated using a normal random variable function, with a mean of 10 times the grid size or 10,000 and a standard deviation of 5000.
+
+```{r Create-Warehouse-Data}
+
+warehouse_locations <- data.frame(
+  id = 1:m,
+  x = round(runif(m) * grid_size),
+  y = round(runif(m) * grid_size)
+)
+fixedcost <- round(rnorm(m, mean = grid_size * 10, sd = grid_size * 5))
+```
+
+The fixed costs to set up a warehouse are the following:
+
+```{r Display-Fixed-Cost}
+library (pander)
+pander (fixedcost, caption="Fixed cost for building each warehouse")
+```
+
+Note that the distribution of fixed costs is pretty broad.  In fact, the least expensive warehouse, #17, to build is negative which means that the company makes money by building that warehouse.  We might anticipate that this warehouse is likely to be built!
+
+For transportation cost, we will assume that simple Euclidean distance is a good measure of cost.  Just a reminder, Euclidean distance between two points is $\sqrt{(X_1-X_2)^2+(Y_1-Y_2)^2}$.  Of course in terms of cost, we could scale it or add a startup cost to each trip but for the sake of this example, we don't need to worry about it.  
+
+Her we define a function to calculate the distance between customer _i_ and warehouse _j_.
+
+```{r}
+transportcost <- function(i, j) {
+  customer <- customer_locations[i, ]
+  warehouse <- warehouse_locations[j, ]
+  round(sqrt((customer$x - warehouse$x)^2 + (customer$y - warehouse$y)^2))
+}
+transportcost(1, 3)
+```
+
+> Now let's plot everything. Black dots are customers and red dots are possible warehouse locations.
+
+```{r}
+library(ggplot2)
+p <- ggplot(customer_locations, aes(x, y)) + 
+  geom_point() + 
+  geom_point(data = warehouse_locations, color = "red", alpha = 0.5, shape = 17) +
+  scale_x_continuous(limits = c(0, grid_size)) +
+  scale_y_continuous(limits = c(0, grid_size)) +
+  theme(axis.title = element_blank(), 
+        axis.ticks = element_blank(), 
+        axis.text = element_blank(), panel.grid = element_blank())
+p + ggtitle("Warehouse location problem", 
+          "Black dots are customers. Light red triangles show potential warehouse locations.")
+```
+
+> The model in `ompr` then looks like this:
+
+Note that I have modified the variables names for _x_ and _y_ to be `Vx` and `Vy` in the code chunk to remove confusion over x and y representing location or variables.  The prefix of `V` is meant to suggest that it is a variable.  
+
+```{r, message=FALSE}
+library(ompr)
+library(magrittr)
+model <- MIPModel() %>%
+  # 1 iff i gets assigned to warehouse j
+  add_variable(Vx[i, j], i = 1:n, j = 1:m, type = "binary") %>%
+  
+  # 1 iff warehouse j is built
+  add_variable(Vy[j], j = 1:m, type = "binary") %>%
+  
+  # maximize the preferences
+  set_objective(sum_expr(transportcost(i, j) * Vx[i, j], i = 1:n, j = 1:m) + 
+                  sum_expr(fixedcost[j] * Vy[j], j = 1:m), "min") %>%
+  
+  # every customer needs to be assigned to a warehouse
+  add_constraint(sum_expr(Vx[i, j], j = 1:m) == 1, i = 1:n) %>% 
+  
+  # if a customer is assigned to a warehouse, then this warehouse must be built
+  add_constraint(Vx[i,j] <= Vy[j], i = 1:n, j = 1:m)
+model
+```
+
+This is a non-trivial sized MIP problem. Since the number of _x_ (or `Vx`) variables is $m \cdot s$ or 2000 and and the number of _y_ (or `Vy`) variables is $m$ or 20, the total number of variables is 2020 which matches the model summary.
+
+### Solve the model
+
+> We will use `glpk` to solve the above model.
+
+The solver can generate a lot of additional information.  The default is `verbose = FALSE` but let's see the extra information that we get with a verbose solution.
+
+If you run this code chunk, you may see the first noticeable pause in running a code chunk.  As I said, this is a non-trivial MIP problem!  It may take only a few seconds or perhaps a few minutes depending upon your computer. This also means that you must be careful in running MIP problems on cloud based services.  A particularly big MIP running on Amazon Web Services might create a sizeable bill.  Running it on a shared service like RStudio.cloud's service, currently being provided for free while in Alpha should not be used for such computationally intense purposes.  
+
+In summary, non-trivial MIP models should be run locally on a computer unless you are certain that your computational loads will not cause a problem for yourself or others.  
+
+```{r}
+library(ompr.roi)
+library(ROI.plugin.glpk)
+result <- solve_model(model, with_ROI(solver = "glpk", verbose = TRUE))
+```
+
+We can summarize the information by simply extracting a the objective function value.  This can be done with inline R code.  For example, we can say the following.
+
+> We solved the problem with an objective value of `r sprintf("%d", objective_value(result))`.
+
+With 2020 variables, it isn't always terribly useful to just list out all of the variables.
+
+At this point, we are really interested in the small minority of non-zero variables.  Only 5% of the _x_ variables are not zero.  _Challenge: Do you know why it must be 5% in this problem?)_ We can do some processing to extract the non-zero _x_ (or `Vx`) variables from the zero values.
+
+In order to do so, Dirk uses the `dplyr` package.  This package provides a tremendous number of functions for data management.  To illustrate how this is done, let's review line by line how this code chunk works.
+
+```{r}
+suppressPackageStartupMessages(library(dplyr))
+matching <- result %>% 
+  get_solution(Vx[i,j]) %>%
+  filter(value > .9) %>%  
+  select(i, j)
+```
+
+The first line wraps the loading of the library in a function that strips out a lot of messages upon loading that we don't need to worry about for now.  I need to remember to use `suppressPackageStartupMessages` more often!  
+
+The next command matching `matching <- result %>%` does a few things.  It using the piping operator `%>%` to pass the `result` object into being used by the following command and then taking everything that gets done in this piped sequence will be assigned to `matching`.   
+
+The command `get_solution(Vx[i,j]) %>%` extract solution values for the x variables (`Vx`) from the solved model object `result` piped in from the previous stage.  This will give us a data object consisting of 2000 variables values, 95% of them being zero.  
+
+The command `filter(value > .9) %>%` takes the previous command's 2000 variable values and only keeps the ones for which the value is larger than 0.9. Since these are binary variables, they should all be exactly 1.0 but just in case there is any numerical anomaly where a value is passed as a value close to one, 0.99999999999, it is best to test with some tolerance.  This command then only passes to the next command the 100 non-zero values.
+
+The last command in this code chunk `select(i, j)` says to only select the columns named `i` and `j`  to pass out.  Notice that does not pass the actual value (we know it is one!).  Also, note that it does not including piping operator `%>%` which means that it is the end of this piped sequence.  
+
+Let's review what the two versions of the results look like.  
+
+```{r}
+pander(head( get_solution(result, Vx[i,j])), 
+       caption = "Example of some of the raw results for variable x")
+
+pander(head( matching), 
+       caption = "Example of some of the processed results for variable x")
+```
+
+Notice that in the table, among the first six entries (obtained using the `head` function, we didn't get any customers assigned to a warehouse.  This isn't surprising given that only one in twenty values are non-zero.  
+
+The second table shows the `matching` object that simply lists each pairing of customer to warehouse that is used.  
+
+This clean and simple listing is interesting and will then be used for adding lines to the earlier `ggplot` model.
+
+> The last step is to add the assignments to the previous plot we generated.
+
+Dirk used one single code chunk to do more processing of results, focused on warehouses, and then create the final plot.  I'll break up the steps into separate code chunks just for the sake of illustrating how they work and showing the intermediate products.  This is a useful chance to see how to manage results.  
+
+```{r plot-assignment}
+plot_assignment <- matching %>% 
+  inner_join(customer_locations, by = c("i" = "id")) %>% 
+  inner_join(warehouse_locations, by = c("j" = "id"))
+
+pander (head(plot_assignment), 
+        caption="XY coordinates for lines to draw for Customer-Warehouse Routes used")
+```
+
+Notice that this gives the beginning and ending coordinates lines to show the connections between customers and warehouses.
+
+Now, let's calcuate how many customers each warehouse serves.  
+
+```{r customer-count}
+
+customer_count <- matching %>% # Process matching and save result to customer_count
+  group_by(j) %>%              # Group by warehouse
+  summarise(n = n()) %>%       # Summarize count
+  rename(id = j)               # Rename column from j to id
+
+pander (customer_count, 
+        caption="Count of customers assigned to each operating warehouse")
+```
+
+We can see that warehouse 17 has the most customers.  
+
+```{r prepare_to_plot_warehouses}
+
+plot_warehouses <- warehouse_locations %>% 
+  mutate(costs = fixedcost) %>% 
+  inner_join(customer_count, by = "id") %>% 
+  filter(id %in% unique(matching$j))
+
+pander (plot_warehouses, caption = "Table of information about warehouses used")
+```
+
+The `plot_warehouses` again uses `dplyr` functions to create a summary of the important information about the warehouses used:  where they are located, costs, and number of customers served.
+
+```{r plot_warehouses}
+
+p + 
+  geom_segment(data = plot_assignment, aes(x = x.y, y = y.y, xend = x.x, yend = y.x)) + 
+  geom_point(data  = plot_warehouses, color = "red", size = 3, shape = 17) +
+  ggrepel::geom_label_repel(data  = plot_warehouses, 
+                            aes(label = paste0("fixed costs:", costs, "; customers: ", n)), 
+                            size = 2, nudge_y = 20) + 
+  ggtitle(paste0("Cost optimal warehouse locations and customer assignment"),
+          "Big red triangles show warehouses that will be built, light red are unused warehouse locations. 
+Dots represent customers served by the respective warehouses.")
+```
+
+>The fixed costs for setting up the `r n_distinct(matching$j)` warehouses is:
+
+```{r}
+sum(fixedcost[unique(matching$j)])
+```
+
+The above function cleverly uses the warehouse ID column from  `matching` (`matching$j`), makes the list unique to get rid of duplicates.  Recall that warehouses will be listed 100 times since ever customer has a warehouse listed in matching.  Next, it uses these ID numbers to extract fixedcost values and adds them up.  Note that when you see a command such as this in R, it can often work to run them one at time in the console to see how they work.  To demonstrate this, see how each statement builds upon the previous.
+
+```{r demonstrate_calculation_of_fixed_costs}
+
+matching$j                          # List the warehouses used by customers
+
+unique(matching$j)                  # Eliminate duplicate warehouse IDs
+
+fixedcost[unique(matching$j)]       # Find fixed costs of warehouses used
+
+sum(fixedcost[unique(matching$j)])  # Add fixed costs of all warehouses used
+
+```
+
+### Discussion
+
+This warehouse customer assignment problem was discussed in detail for a variety of reasons.  
+
+* Demonstrate a large, classic, and common industrial application of optimization.
+* Demonstrate creation of simulated data
+* Demonstrate how to handle double subscripted variables 
+* Show how to do timing of R functions
+* Explore solving with multiple optimization routines.
+* Visualize results graphically
+* Process results using `dplyr`
+
+This analysis could be extended in a variety of ways to explore other questions.
+
+* How often would it be optimal to five or more warehouses?
+* Does decreasing variation in fixed costs affect the number of warehouses?
+* The model can also be extended to allow for additional application characteristics such as warehouse capacity and customer demand.
+* Using actual cities in a region for locations rather than randomly generated data
+* Examining the solving time of larger problems
+* Testing other solvers (ex. does Gurobi run faster?)
+* Testing the impact of passing modeling parameters
+
+The same concepts can also be applied to other applications.  
+
+## Solving MIPs with Different Solvers
+
+Let's revisit the Warehouse assignment problem.  The emphasis in this section is not model building but comparing the use of different solvers.  Since we have the model already defined, we can easily pass it to the different solvers for optimizing.  There is a large collection of other solvers that can be used with R.[^1]
+
+[^1]: This section is not covered in Dirk's article.
+
+Let's use the `tictoc` package for examining computation time.  
+
+We'll demonstrate the performance for illustration purposes.  Again, do not run the following code chunks in this section on a cloud-based service unless you are certain that imposing a non-trivial computational load is acceptable. 
+
+```{r timeglpk}
+library(tictoc)   # Package used for timing R functions
+
+tic("glpk")        # Start the timer...
+
+result_glpk <-  solve_model(model, with_ROI(solver = "glpk", verbose=TRUE))
+
+glpktime <- toc()  # End the timer and save results
+
+print(solver_status(result_glpk))
+
+glpktime1 <- c("glpk", glpktime$toc - glpktime$tic, 
+               result_glpk$status, 
+               result_glpk$objective_value)
+
+```
+
+The `glpk` solver worked.  Let's move on to testing the `symphony` solver.
+
+```{r timesymphony}
+
+library (ROI.plugin.symphony, quietly = TRUE) # Plugin for solving
+
+tic("symphony")
+
+result_symphony <-  solve_model(model, with_ROI(solver = "symphony",
+                                                verbosity = -1))
+
+symphonytime <- toc()
+
+print(solver_status(result_symphony))
+
+symphonytime1 <- c("symphony", symphonytime$toc - symphonytime$tic,
+                   result_symphony$status,
+                   result_symphony$objective_value)
+
+```
+
+Again, `symphony` successfully solved the optimization problem.
+
+Several items should be noted from the above code and output. One item is that parameters can be passed directly to solvers.  This is why `verbose = TRUE` was used for `glpk` but `symphony` uses `verbosity = -1`. Differing levels of verbosity gives much more granularity than a simple TRUE/FALSE. Setting `verbosity = 0` will give rich detail that an analyst trying to improve solution speed may find useful or for debugging why a model did not work but explaining the options is well beyond the scope of this text.  
+
+It should be noted that other options can be passed to the the symphony solver though such as `time_limit`, `gap_limit`, and  `first_feasible`.  
+
+The `time_limit` option has a default value of -1 meaning no time limit.  It should be an integer to indicate the number of seconds to run before stopping.  
+
+The `node_limit` option has a default value of -1 meaning no limit on the number of nodes (in an MIP problem, the number of linear programs). It should be an integer to indicate the number of nodes examined before stopping.  
+
+The last option, `first_feasible`, has a default value of FALSE.  If it is set to TRUE, then symphony will stop when it has found a first solution that satisfies all the constraints (including integrality) rather than continuing on to prove optimality.
+
+Let's examine this by passing `first_feasible=TRUE` to see what happens.
+
+```{r timesymphonyfirstfeasible}
+
+library (ROI.plugin.symphony, quietly = TRUE) # Plugin for solving
+
+tic("symphony")
+
+result_symphony_ff <- solve_model(model, with_ROI(solver = "symphony",
+                                                verbosity = -1,
+                                                first_feasible=TRUE))
+
+symphonytimeff <- toc()
+
+print(solver_status(result_symphony_ff))
+
+symphonytimeff <- c("symphony first feas.", symphonytimeff$toc - symphonytimeff$tic,
+                   result_symphony_ff$status,
+                   result_symphony_ff$objective_value)
+
+```
+
+Several interesing and important things should be noted here.  First, `ompr` interprets the status message from the solver as not being solved to optimality to indicate that the problem is not feasible.  This is a known issue in `ompr` and `ompr.ROI`as of version 0.8.0.0.  It highlights that "infeasible" status from the `ompr` should be thought of as meaning that an optimal solution was not found for _some_ reason such as being told to terminate after the first feasible solution was found, time limit reached, node limit reached, the MIP was infeasible, the MIP was unbounded, or some other issue.
+
+A second thing to note that in my randomly generated instance, the very first feasible solution it found, happens to have the same objective function value as the optimal solution found to optimality earlier by `glpk` and `symphony`. This is similar to the very simple, two variable integer programming problem that we examined using a branch and bound tree in the previous chapter.  Symphony just doesn't have confirmation yet that this first feasible solution is truly optimal yet.  
+
+Thirdly, the time on my computer sometimes took less time to solve to optimality than for when it stopped _early_ with just the initial feasible solution.  This demonstrates the variability of solving time.  
+
+```{r timelpsolve}
+library (ROI.plugin.lpsolve, quietly = TRUE) # Plugin for solving
+
+tic("lpsolve")
+
+result_lpsolve <-  solve_model(model, with_ROI(solver = "lpsolve", verbose=TRUE))
+
+lpsolvetime <- toc()
+
+print(solver_status(result_lpsolve))
+
+lpsolvetime1 <- c("lpsolve", lpsolvetime$toc - lpsolvetime$tic,
+                   result_lpsolve$status,
+                   result_lpsolve$objective_value)
+
+```
+
+We can see that `lpsolve` was also successful.
+
+Now let's compare how they each did.  
+
+```{r comparetimes}
+
+timeresults <- rbind(glpktime1, symphonytime1, symphonytimeff, lpsolvetime1)
+
+colnames (timeresults) <- c("Solver", "Time (Sec)", "Status", "Obj. Func. Value")
+
+rownames (timeresults) <- NULL
+
+panderOptions('round', 2)
+
+pander(timeresults, caption="Comparison of Results from Warehouse 
+       Customer Assignment Across Solvers", digits=2)
+```
+
+
+The most important thing to note is that each solver states that it found an optimal solution with the same  objective function value.  While they may vary in how it is achieved if there are multiple optima (in other words, different values for decision variables _x_ and _y_), this means that they all found a correct solution.  It would be a big issue if they differed. Causes for difference could be timing out, satisfying a suboptimality tolerance factor condition, or some error.  
+
+Note that time will vary significantly from computer to computer and may also depend upon the other tasks and the amount of memory available.  Also, performance will change for different solver settings and for different problems.  Also, performance time will change for different random instances-simply changing the random number seed will create diferent results.  
+
+The ROI package lists 19 different solvers with ROI plugins.  Three commercial solvers, C-Plex, GUROBI, and MOSEK are worth highlighting.  These programs may be substantially faster on large MIP problems and may make versions available for academic use.  Others are for quadratic optimization or special classes of optimization problems.  
+
+## Solving Sudoku puzzles using Optimization
+
+After spending a significant amount of time for a serious industrial application of warehouse optimization, let's take a break with a more lighthearted application.  Again, this is based on an article by Dirk Schumacher.
+
+> In this vignettes we will solve Sudoku puzzles using MILP. [Sudoku](https://en.wikipedia.org/wiki/Sudoku) in its most popular form is a constraint satisfaction problem and by setting the objective function to $0$ you transform the optimization problem into a pure constraint satistication problem. In this document we will consider Sudokus in a 9x9 grid with 3x3 sub-matrices.
+
+> Of course you can formulate an objective function as well that directs the solver towards solutions maximizing a certain linear function.
+
+### The Sudoku model
+
+> The idea is to introduce a binary variable $x$ with three indexes $i, j, k$ that is $1$ if and only if the number $k$ is in cell $i, j$.
+
+The basic optimization formulation is interesting for a few reasons.
+
+First, there isn't a clear objective function.  We are simply trying to find a a set of values that solves the problem without violating any of the rules of Sudoku.  In other words, any feasible solution would be acceptable.  We could minimize $x_{1,1,1}$, the sum of all decision variables (which would be 81, corresponding to the number of cells in the Sudoku grid.)  We could also just tell it to maximize a particular number, say 42, or minimize another number like 0, which is exactly what Dirk did.
+
+We need a constraint to ensure that each cell $(i,j)$ contains a value. $\sum\limits_{k=1}^{9}   x_{i,j,k} = 1, \; \forall i,j$.  
+
+We then need to ensure that each in row, $i$, each digit only appears once. $\sum\limits_{i=1}^{n}   x_{i,j,k} = 1, \; \forall j,k$.
+
+We then need to ensure that each in column, $j$, each digit only appears once.
+$\sum\limits_{j=1}^{n}   x_{i,j,k} = 1, \; \forall i,k$.
+
+Next, we need to create a constraint each 3x3 grouping contains each digit only once. This is more complicated.  Let's consider the top left 3x3 cluster.  For each digit $k$, we need to ensure that only one cell has it.
+
+$$\begin {split}
+\begin {aligned}
+x_{1,1,k}+x_{1,2,k}+x_{1,1,3}+x_{2,1,k}+x_{2,2,k}+x_{2,1,3}+x_{3,1,k}+x_{3,2,k}+x_{3,1,3} = 1, \; \forall \; k \\
+\end {aligned}
+\end {split}
+$$
+
+Let's generalize this by using summations.
+
+$$\begin {split}
+\begin {aligned}
+\sum\limits_{i=1}^{3} \sum\limits_{j=1}^{3}x_{i,j,k} = 1 , \; k=1 ,\ldots, 9\\
+\end {aligned}
+\end {split}
+$$
+
+Unfortunately this set of constraints only covers one cluster.
+
+If we are clever, we may note that the top left corner of each cluster is a row or column value of 1, 4, or 7.  
+
+We could extend this constraint to handle each set of clusters. We'll use a counter across for each cluster by row, using $r$.  Similarly, we'll use $c$ for cluster.  
+
+$$\begin {split}
+\begin {aligned}
+\sum\limits_{i=1+3r}^{3+3r} \sum\limits_{j=1+3c}^{3+3c}x_{i,j,k} = 1, 
+                     \; k=1 ,\ldots, 9 
+                     \; r=0,1,2,  \; c=0,1,2, \\
+\end {aligned}
+\end {split}
+$$
+
+
+$$
+\begin{split}
+\begin{aligned}
+\text{min } \; & 0  \\
+\text{subject to } \; & \sum\limits_{k=1}^{9}   x_{i,j,k} = 1  
+                                  & i=1,\ldots, n, \; j=1 ,\ldots, n\\
+                      & \sum\limits_{i=1}^{n}   x_{i,j,k} = 1  
+                                  & j=1,\ldots, n, \; k=1 ,\ldots, 9\\
+                      & \sum\limits_{j=1}^{n}   x_{i,j,k} = 1  
+                                  & i=1,\ldots, n, \; k=1 ,\ldots, 9\\
+&\sum\limits_{i=1+r}^{3+r} \; \sum\limits_{j=1+c}^{3+c}x_{i,j,k} = 1, 
+                     \; & k=1 ,\ldots, 9 
+                     \; r=0,3,6,  \; c=0,3,6, \\
+                 &  x_{i,j,k} \in \{0,1\} \; &i=1 ,\ldots, n, \;  
+                     j=1 ,\ldots, n, \;  k=1 ,\ldots, 9\\
+  \end{aligned}
+  \end{split}
+$$
+
+### Implementing the Sudoku model in ompr
+
+```{r, message=FALSE}
+library(ompr)
+library(dplyr)
+n <- 9
+Sudoku_model <- MIPModel() %>%
+  
+  # The number k stored in position i,j
+  add_variable(Vx[i, j, k], i = 1:n, j = 1:n, k = 1:9, type = "binary") %>%
+  
+  # no objective
+  set_objective(0) %>%
+  
+  # only one number can be assigned per cell
+  add_constraint(sum_expr(Vx[i, j, k], k = 1:9) == 1, i = 1:n, j = 1:n) %>%
+  
+  # each number is exactly once in a row
+  add_constraint(sum_expr(Vx[i, j, k], j = 1:n) == 1, i = 1:n, k = 1:9) %>%
+  
+  # each number is exactly once in a column
+  add_constraint(sum_expr(Vx[i, j, k], i = 1:n) == 1, j = 1:n, k = 1:9) %>% 
+  
+  # each 3x3 square must have all numbers
+  add_constraint(sum_expr(Vx[i, j, k], i = 1:3 + r, j = 1:3 + c) == 1, 
+                 r = seq(0, n - 3, 3), c = seq(0, n - 3, 3), k = 1:9)
+Sudoku_model
+```
+
+### Solve the model
+
+> We will use `glpk` to solve the above model. Note that we haven't fixed any numbers to specific values. That means that the solver will find a valid sudoku without any prior hints.
+
+```{r}
+library(ompr.roi)
+library(ROI.plugin.glpk)
+Sudoku_result <- solve_model(Sudoku_model, with_ROI(solver = "glpk", verbose = TRUE))
+
+# the following dplyr statement plots a 9x9 matrix
+Solution <- Sudoku_result %>% 
+  get_solution(Vx[i,j,k]) %>%
+  filter(value > 0) %>%  
+  select(i, j, k) %>% 
+  tidyr::spread(j, k) %>% 
+  select(-i)
+```
+
+> If you want to solve a specific sudoku you can fix certain cells to specific values. For example here we solve a sudoku that has the sequence from 1 to 9 in the first 3x3 matrix fixed.
+
+I've made a couple of minor changes to Dirk's code chunks. I replaced the `x` variable with `Vx` to avoid R name space collisions with previously defined enviromental variables for `x`. Secondly, I switch the `sx` and `sy` to `r` and `c` to represent moving over by rows and columns.  
+
+```{r Enter_specific_puzzle}
+
+Sudoku_model_specific <- Sudoku_model %>% 
+  add_constraint(Vx[1, 1, 1] == 1) %>%  # Set the cell in top left to the number 1
+  add_constraint(Vx[1, 2, 2] == 1) %>%  # Set the cell in row 1, column 2 to the number 2
+  add_constraint(Vx[1, 3, 3] == 1) %>%  # Set the cell in row 1, column 3 to the number 3
+  add_constraint(Vx[2, 1, 4] == 1) %>%  # Set the cell in row 2, column 1 to the number 4
+  add_constraint(Vx[2, 2, 5] == 1) %>% 
+  add_constraint(Vx[2, 3, 6] == 1) %>% 
+  add_constraint(Vx[3, 1, 7] == 1) %>% 
+  add_constraint(Vx[3, 2, 8] == 1) %>% 
+  add_constraint(Vx[3, 3, 9] == 1)
+
+Sudoku_result_specific <- solve_model(Sudoku_model_specific, with_ROI(solver = "glpk", verbose = TRUE))
+
+Solution_specific <- Sudoku_result_specific %>% 
+  get_solution(Vx[i,j,k]) %>%
+  filter(value > 0) %>%  
+  select(i, j, k) %>% 
+  tidyr::spread(j, k) %>% 
+  select(-i) 
+
+Solution_specific   # Display solution to Sudoku Puzzle
+
+```
+Have at it.  Any Sudoku puzzle can be solved using this model as long as there is a feasible solution.  Note that if there are two or more solutions to the puzzle based on the hints, this model will find one of them and does not indicate whether there might be other solutions.
+
+Feel free to time the solution using the `tictoc` package.  
+
+
+

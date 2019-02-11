@@ -290,7 +290,7 @@ Let's compare the results for the new production plan and the original base case
 
 ```{r}
 rownames(base_case_res) <- "Base Case"
-Table1_case_res           <- cbind(xchairs,xdesks,xtables,obj_val)
+Table1_case_res           <- cbind(obj_val, xchairs,xdesks,xtables)
   rownames(Table1_case_res) <- "with forced change to Tables"
   pander(rbind(base_case_res,Table1_case_res),
          caption="Impact of a Forced Change in Tables")
@@ -309,7 +309,8 @@ colnames(bookcase_res_used)<-c("Row Duals", "Resources Used")
 pander(bookcase_res_used, caption="Resources Used by a Bookcase and their Shadow Prices")
 ```
 
-Even without adding it to the model, we can check to see if it is worthwhile to consider seriously.  The opportunity cost of producing one bookcase would result in the $\$35 - \$1*12  - \$2*16=\$-9 $.  In other words, even though a bookcase has higher profit than any other product, producing one would cost the company nine dollars of overall profit.
+Even without adding it to the model, we can check to see if it is worthwhile to consider seriously.  The opportunity cost of producing one bookcase would result in the $\$35 - \$1*12  - \$2*16=\$-9 $.  In other words, even though a bookcase has higher profit than any other product, producing one would cost the company nine dollars of overall profit. 
+
 
 We could interpret this as a simple hard stop on the decision to produce bookcases but we could go one step further by setting a target for redesigning the product or its production.  If the machining time could be reduced by 4.5 hours to 11.5 hours, then the value of the resources consumed would be equal to the profit and we would be indifferent to producing some bookcases.  
 
@@ -335,7 +336,7 @@ d) Interpret and discuss the model in R Markdown.
 e) Examine and reflect upon the reduced costs and shadow prices from the context of which products to produce and not produce.
 f) Using the results from e), (i.e. reduced cost and shadow prices) make one change to the base model's **objective function** that will change the production plan.  Rerun and discuss the new results.
 g) Using the results from e), (i.e. reduced cost and shadow prices) make one change to the base model's **resource usage values** that will change the production plan. Rerun and discuss the new results.
-h) Using the results from e), (i.e. reduced cost and shadow prices) make one change to the base model's **available resource values** that will change the production plan. Rerun and discuss the new results.
+h) Using the results from e), (i.e. reduced cost and shadow prices) make one change to the base model's **available resource values** that will change the production plan. Rerun and discuss the new results. 
 i) Combine the results of the base case e), as well as the variations f) through h) into a single table and discuss the results.  
 
 
