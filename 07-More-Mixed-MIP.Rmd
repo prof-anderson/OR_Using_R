@@ -58,20 +58,21 @@ Rather than typing in fixed data or loading it from data file, Dirk simply gener
 
 > The first thing we need is the data. In this article we will simply generate artificial data.
 
-> We assume the **customers** are located in a grid with euclidian distances.
+> We assume the **customers** are located in a grid with Euclidian distances.
 
 Let's explain the functions used for this data generation.  The first command sets the random number seed. In general, computers don't actually generate random numbers, they generate what is called pseudo random numbers according to a particular algorithm in a sequence.  The starting point will set a sequence that appears to be random and behaves in a relatively random way.  Much more can be said but this is setting as the first random number, 1234.  It could just as easily have been 4321 or any other integer.  
 
 The grid size is set to 1000.  You can think of this as 1000 kilometers for visualization purposes.  This would be equivalent to saying that we are randomly placing customers on a map, 1000 kilometers horizontally and vertically.
 
-Next we set the number of customers to be 100.  
+Next we set the number of customers to be 100 and the number of warehouses to be 20. The size of this problem can have a tremendous impact on solving speed.[^2]  
 
+[^2]: In particular, I recommend using a much smalller size if you are using slow computer or a shared resource such as a server or cloud-based service like RStudio.cloud.  Integer programming problems can quickly consume tremendous amounts of computer processing time which can have budgetary impacts or other problems. 
 ```{r Prepare-for-Data-Generation}
 set.seed(1234)      # Set random number seed
 grid_size <- 1000   # Horizontal and vertical axis ranges 
 
 n <- 100 ; m <- 20 # Set number of customers and warehouses
-#n <- 10 ; m <- 3   # Safer problem size for cloud services
+#n <- 10 ; m <- 3  # Safer problem size for cloud services
                    # Select  100 and 20 for local comuter runs
                    # Text discussion is for the larger size
 
@@ -146,9 +147,7 @@ p + ggtitle("Warehouse location problem",
           "Black dots are customers. Light red triangles show potential warehouse locations.")
 ```
 
-> The model in `ompr` then looks like this:
-
-Note that I have modified the variables names for _x_ and _y_ to be `Vx` and `Vy` in the code chunk to remove confusion over x and y representing location or variables.  The prefix of `V` is meant to suggest that it is a variable.  
+Note that I have modified the variables names for _x_ and _y_ to be `Vx` and `Vy` in the code chunk to remove confusion over x and y representing location or variables.  The prefix of `V` is meant to suggest that it is a variable.
 
 ```{r, message=FALSE}
 library(ompr)
@@ -176,8 +175,7 @@ This is a non-trivial sized MIP problem. Since the number of _x_ (or `Vx`) varia
 
 ### Solve the model
 
-> We will use `glpk` to solve the above model.
-
+We are now ready to work on solving the model. We will start with using `glpk`.
 The solver can generate a lot of additional information.  The default is `verbose = FALSE` but let's see the extra information that we get with a verbose solution.
 
 If you run this code chunk, you may see the first noticeable pause in running a code chunk.  As I said, this is a non-trivial MIP problem!  It may take only a few seconds or perhaps a few minutes depending upon your computer. This also means that you must be careful in running MIP problems on cloud based services.  A particularly big MIP running on Amazon Web Services might create a sizeable bill.  Running it on a shared service like RStudio.cloud's service, currently being provided for free while in Alpha should not be used for such computationally intense purposes.  
@@ -196,7 +194,7 @@ We can summarize the information by simply extracting a the objective function v
 
 With 2020 variables, it isn't always terribly useful to just list out all of the variables.
 
-At this point, we are really interested in the small minority of non-zero variables.  Only 5% of the _x_ variables are not zero.  _Challenge: Do you know why it must be 5% in this problem?)_ We can do some processing to extract the non-zero _x_ (or `Vx`) variables from the zero values.
+At this point, we are really interested in the small minority of non-zero variables.  Only 5% of the _x_ variables are not zero.  _Challenge: Do you know why it must be 5% in this problem?)_ We can do some processing to extract the non-zero _x_ (or `Vx`) variables from those with zero values.
 
 In order to do so, Dirk uses the `dplyr` package.  This package provides a tremendous number of functions for data management.  To illustrate how this is done, let's review line by line how this code chunk works.
 
@@ -208,31 +206,37 @@ matching <- result %>%
   select(i, j)
 ```
 
-The first line wraps the loading of the library in a function that strips out a lot of messages upon loading that we don't need to worry about for now.  I need to remember to use `suppressPackageStartupMessages` more often!  
+The first line wraps the loading of the library in a function that strips out a lot of messages upon loading that we don't need to worry about for now.[^suppress]
 
-The next command matching `matching <- result %>%` does a few things.  It using the piping operator `%>%` to pass the `result` object into being used by the following command and then taking everything that gets done in this piped sequence will be assigned to `matching`.   
+[^suppress]: This is a very handy function!  I will have to take note of this to use more oten.
 
-The command `get_solution(Vx[i,j]) %>%` extract solution values for the x variables (`Vx`) from the solved model object `result` piped in from the previous stage.  This will give us a data object consisting of 2000 variables values, 95% of them being zero.  
+The next command  `matching <- result %>%` does a few things. It uses the piping operator `%>%` to pass the `result` object into being used by the following command and then everything that gets done later in this piped sequence will be assigned to `matching`.
 
-The command `filter(value > .9) %>%` takes the previous command's 2000 variable values and only keeps the ones for which the value is larger than 0.9. Since these are binary variables, they should all be exactly 1.0 but just in case there is any numerical anomaly where a value is passed as a value close to one, 0.99999999999, it is best to test with some tolerance.  This command then only passes to the next command the 100 non-zero values.
+The command `get_solution(Vx[i,j]) %>%` extracts solution values for the x variables (`Vx`) from the solved model object `result` piped in from the previous stage.  This will give us a data object consisting of 2000 variables values, 95% of them being zero.  
 
-The last command in this code chunk `select(i, j)` says to only select the columns named `i` and `j`  to pass out.  Notice that does not pass the actual value (we know it is one!).  Also, note that it does not including piping operator `%>%` which means that it is the end of this piped sequence.  
+The command `filter(value > .9) %>%` takes the previous command's 2000 variable values and only keeps the ones for which the value is larger than 0.9. Since these are binary variables, they should all be exactly 1.0 but just in case there is any numerical anomaly where a value is passed as a value close to one, such as 0.9999999, it is best to test with some tolerance.  This command then only passes to the next command the 100 non-zero values.
+
+The last command in this code chunk `select(i, j)` says to only select (or retain) the columns named `i` and `j`.  Notice that this does not pass the actual value of zero or one - we know it is one!  Also, note that it does not include the piping operator `%>%` which means that it is the end of this piped sequence.
 
 Let's review what the two versions of the results look like.  
 
-```{r}
+```{r raw_results_table}
 pander(head( get_solution(result, Vx[i,j])), 
        caption = "Example of some of the raw results for variable x")
 
-pander(head( matching), 
-       caption = "Example of some of the processed results for variable x")
 ```
 
-Notice that in the table, among the first six entries (obtained using the `head` function, we didn't get any customers assigned to a warehouse.  This isn't surprising given that only one in twenty values are non-zero.  
+Notice that in the table of raw results, the first six entries (obtained using the `head` function) did not show any customers assigned to a warehouse.  This isn't surprising given that only one in twenty values are non-zero.  
 
-The second table shows the `matching` object that simply lists each pairing of customer to warehouse that is used.  
+```{r processed_results_table}
 
-This clean and simple listing is interesting and will then be used for adding lines to the earlier `ggplot` model.
+pander(head( matching), 
+       caption = "Example of some of the processed results for variable x from matching")
+```
+
+The processed results table shows that the `matching` object  simply lists six customers and which to warehouse it is assigned to be served by. It has cut out the 95% of rows that would be zero.  
+
+This clean and simple listing from `matching` is interesting and will then be used for adding lines to the earlier `ggplot` model.
 
 > The last step is to add the assignments to the previous plot we generated.
 
@@ -247,7 +251,7 @@ pander (head(plot_assignment),
         caption="XY coordinates for lines to draw for Customer-Warehouse Routes used")
 ```
 
-Notice that this gives the beginning and ending coordinates lines to show the connections between customers and warehouses.
+Notice that this gives the beginning and ending coordinates of what will soon be lines to show the connections between customers and warehouses.
 
 Now, let's calcuate how many customers each warehouse serves.  
 
@@ -262,7 +266,7 @@ pander (customer_count,
         caption="Count of customers assigned to each operating warehouse")
 ```
 
-We can see that warehouse 17 has the most customers.  
+We can see that warehouse 17 has the most customers but that the two warehouses are pretty evenly balanced.
 
 ```{r prepare_to_plot_warehouses}
 
@@ -274,8 +278,9 @@ plot_warehouses <- warehouse_locations %>%
 pander (plot_warehouses, caption = "Table of information about warehouses used")
 ```
 
-The `plot_warehouses` again uses `dplyr` functions to create a summary of the important information about the warehouses used:  where they are located, costs, and number of customers served.
+The `plot_warehouses` data frame[^data_type] is built using `dplyr` functions to create a summary of the important information about the warehouses used:  where they are located, costs, and number of customers served.
 
+[^data_type]: Note that the data type can sometimes be a source of problems for R users.  You can use the command `class(plot_warehouses)` to confirm that it is a `data.frame`.
 ```{r plot_warehouses}
 
 p + 
@@ -285,17 +290,18 @@ p +
                             aes(label = paste0("fixed costs:", costs, "; customers: ", n)), 
                             size = 2, nudge_y = 20) + 
   ggtitle(paste0("Cost optimal warehouse locations and customer assignment"),
-          "Big red triangles show warehouses that will be built, light red are unused warehouse locations. 
+          "Big red triangles show warehouses that will be built.
+          Light red are unused warehouse locations. 
 Dots represent customers served by the respective warehouses.")
 ```
 
->The fixed costs for setting up the `r n_distinct(matching$j)` warehouses is:
+>The total fixed costs for setting up the `r n_distinct(matching$j)` warehouses is:
 
 ```{r}
 sum(fixedcost[unique(matching$j)])
 ```
 
-The above function cleverly uses the warehouse ID column from  `matching` (`matching$j`), makes the list unique to get rid of duplicates.  Recall that warehouses will be listed 100 times since ever customer has a warehouse listed in matching.  Next, it uses these ID numbers to extract fixedcost values and adds them up.  Note that when you see a command such as this in R, it can often work to run them one at time in the console to see how they work.  To demonstrate this, see how each statement builds upon the previous.
+The above function cleverly uses the warehouse ID column from  `matching` (`matching$j`), makes the list unique to get rid of duplicates.  Recall that warehouses will be listed 100 times since every customer has a warehouse listed in matching.  Next, it uses these ID numbers to extract fixedcost values and adds them up.  Note that when you see a command such as this in R, it can often work to run them one at time in the console to see how they work.  To demonstrate this, see how each statement builds upon the previous.
 
 ```{r demonstrate_calculation_of_fixed_costs}
 
@@ -313,35 +319,39 @@ sum(fixedcost[unique(matching$j)])  # Add fixed costs of all warehouses used
 
 This warehouse customer assignment problem was discussed in detail for a variety of reasons.  
 
-* Demonstrate a large, classic, and common industrial application of optimization.
-* Demonstrate creation of simulated data
-* Demonstrate how to handle double subscripted variables 
-* Show how to do timing of R functions
-* Explore solving with multiple optimization routines.
-* Visualize results graphically
-* Process results using `dplyr`
+* It demonstrates a large, classic, and common industrial application of optimization.
+* The application uses simulated data to feed into an optimization model.
+* This model uses both single and double subscripted variables as well how to process them. 
+* Introduces the use of `ggplot` to visualize the data and results.
+* Data munging is a major time sink for analysts which can also occur in large optimizaton models so this application shows how to use `dplyr` to process data and results.
 
 This analysis could be extended in a variety of ways to explore other questions.
 
 * How often would it be optimal to five or more warehouses?
-* Does decreasing variation in fixed costs affect the number of warehouses?
-* The model can also be extended to allow for additional application characteristics such as warehouse capacity and customer demand.
-* Using actual cities in a region for locations rather than randomly generated data
-* Examining the solving time of larger problems
-* Testing other solvers (ex. does Gurobi run faster?)
-* Testing the impact of passing modeling parameters
+* Does decreasing variation in fixed costs affect the number of warehouses used?
+* Does decreasing the mean cost of warehouses affect the number of warehouses used?
+* What is the statistical distribution of warehouses counts when simulated a 1000 times?
+
+The model can also be extended in a variety of ways.  
+
+* To allow for additional application characteristics such as warehouse capacity and customer demand.
+* Using actual cities in a region for locations rather than randomly generated data.
 
 The same concepts can also be applied to other applications.  
 
 ## Solving MIPs with Different Solvers
 
-Let's revisit the Warehouse assignment problem.  The emphasis in this section is not model building but comparing the use of different solvers.  Since we have the model already defined, we can easily pass it to the different solvers for optimizing.  There is a large collection of other solvers that can be used with R.[^1]
+Let's revisit the Warehouse assignment problem.  The emphasis in this section is not model building but comparing the use of different solvers.  Since we have the model already defined, we can easily pass it to the different solvers for optimizing.  There is a large collection of other solvers that can be used with R.[^new_material]
 
-[^1]: This section is not covered in Dirk's article.
+[^new_material]: This section is not covered in Dirk's article.
 
 Let's use the `tictoc` package for examining computation time.  
 
-We'll demonstrate the performance for illustration purposes.  Again, do not run the following code chunks in this section on a cloud-based service unless you are certain that imposing a non-trivial computational load is acceptable. 
+We'll demonstrate the performance for illustration purposes.  Again, do not run the following code chunks in this section on a cloud-based service such as Rstudio.cloud, unless you are certain that imposing a non-trivial computational load is acceptable. 
+
+### Performance of glpk
+
+We have been using `glpk` for all of our earlier examples.  For the sake of comparison, let's start off with it too.  We will use the `tictoc` package to help us collect data on timing.  Note that timing can vary even if the same problem is solved on the same computer twice in rapid succession.
 
 ```{r timeglpk}
 library(tictoc)   # Package used for timing R functions
@@ -360,7 +370,11 @@ glpktime1 <- c("glpk", glpktime$toc - glpktime$tic,
 
 ```
 
-The `glpk` solver worked.  Let's move on to testing the `symphony` solver.
+The `glpk` solver worked.  We'll take the results and combine them with other shortly
+
+### Performance of Symphony
+
+Let's move on to testing the `symphony` solver.
 
 ```{r timesymphony}
 
@@ -421,6 +435,10 @@ A second thing to note that in my randomly generated instance, the very first fe
 
 Thirdly, the time on my computer sometimes took less time to solve to optimality than for when it stopped _early_ with just the initial feasible solution.  This demonstrates the variability of solving time.  
 
+### Performance of lpsolve
+
+The `lpsolve` package has a long history too and is widely used.  Let's test it and see how it performs.
+
 ```{r timelpsolve}
 library (ROI.plugin.lpsolve, quietly = TRUE) # Plugin for solving
 
@@ -439,6 +457,8 @@ lpsolvetime1 <- c("lpsolve", lpsolvetime$toc - lpsolvetime$tic,
 ```
 
 We can see that `lpsolve` was also successful.
+
+### Comparing results across solvers
 
 Now let's compare how they each did.  
 
@@ -462,6 +482,15 @@ The most important thing to note is that each solver states that it found an opt
 Note that time will vary significantly from computer to computer and may also depend upon the other tasks and the amount of memory available.  Also, performance will change for different solver settings and for different problems.  Also, performance time will change for different random instances-simply changing the random number seed will create diferent results.  
 
 The ROI package lists 19 different solvers with ROI plugins.  Three commercial solvers, C-Plex, GUROBI, and MOSEK are worth highlighting.  These programs may be substantially faster on large MIP problems and may make versions available for academic use.  Others are for quadratic optimization or special classes of optimization problems.  
+
+### Discussion
+
+Computer time can be intense for for large scale analysis but a variety of questions can be examined such as the following.
+
+* How is problem size related to solving time?
+* Are there systematic differences in speed or solving success for different solvers?   (ex. does Gurobi run faster?)
+* How do various modeling parameters affect solution speed?
+
 
 ## Solving Sudoku puzzles using Optimization
 
@@ -519,6 +548,7 @@ $$\begin {split}
 \end {split}
 $$
 
+We can now pull everything together into a single formulation.  Again, remember that we could use _any_ objective function since we are simply trying to find a feasible solution.  We could also tell a solver such as `symphony` to just find a first feasible solution and terminate.
 
 $$
 \begin{split}
@@ -541,9 +571,10 @@ $$
 
 ### Implementing the Sudoku model in ompr
 
-```{r, message=FALSE}
-library(ompr)
-library(dplyr)
+We are now ready to implement the model. As always, clearly defining variables and constraints is important.  A triple subscripted variable often makes for a tricky model.  Also, that last constraint may take careful examination.
+
+```{r, implementing_sudoku}
+
 n <- 9
 Sudoku_model <- MIPModel() %>%
   
@@ -568,9 +599,11 @@ Sudoku_model <- MIPModel() %>%
 Sudoku_model
 ```
 
-### Solve the model
+### Solving a blank Sudoku model
 
 > We will use `glpk` to solve the above model. Note that we haven't fixed any numbers to specific values. That means that the solver will find a valid sudoku without any prior hints.
+
+I've made a couple of minor changes to Dirk's code chunks. I replaced the `x` variable with `Vx` to avoid R name space collisions with previously defined enviromental variables for `x`. Secondly, I switch the `sx` and `sy` to `r` and `c` to represent moving over by rows and columns.  
 
 ```{r}
 library(ompr.roi)
@@ -586,9 +619,9 @@ Solution <- Sudoku_result %>%
   select(-i)
 ```
 
-> If you want to solve a specific sudoku you can fix certain cells to specific values. For example here we solve a sudoku that has the sequence from 1 to 9 in the first 3x3 matrix fixed.
+### Solving a particular Sudoku model
 
-I've made a couple of minor changes to Dirk's code chunks. I replaced the `x` variable with `Vx` to avoid R name space collisions with previously defined enviromental variables for `x`. Secondly, I switch the `sx` and `sy` to `r` and `c` to represent moving over by rows and columns.  
+> If you want to solve a specific sudoku you can fix certain cells to specific values. For example here we solve a sudoku that has the sequence from 1 to 9 in the first 3x3 matrix fixed.
 
 ```{r Enter_specific_puzzle}
 
@@ -615,9 +648,7 @@ Solution_specific <- Sudoku_result_specific %>%
 Solution_specific   # Display solution to Sudoku Puzzle
 
 ```
+
 Have at it.  Any Sudoku puzzle can be solved using this model as long as there is a feasible solution.  Note that if there are two or more solutions to the puzzle based on the hints, this model will find one of them and does not indicate whether there might be other solutions.
 
 Feel free to time the solution using the `tictoc` package.  
-
-
-
