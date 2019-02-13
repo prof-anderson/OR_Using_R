@@ -758,44 +758,42 @@ The rightmost columns, denoted by "L_" are the resulting lambda values.
 
 ## Exercises
 
-If you have followed along this far - you deserve a medal!  If you work your way through by cutting and pasting code fragments, you should be able to reproduce my exact results.  At this point you are ready for a few challenges:
-
 ```{exercise, name="Adding DMU E-Graphically"}
 Add a fifth unit, E, to the first example that produces 400 units output using 30 units of input.  Graphically evaluate all five units for their efficiency scores and lambda values. Interpret the solution in terms of who is doing well, who is doing poorly, and who should be learning from whom.  _Difficulty: Cup of coffee_
 ```
-
+\  
 ```{exercise, name="Adding DMU E-Using R"}
 Examine the new unit, E, using  R. Interpret the solution in terms of who is doing well, who is doing poorly, and who should be learning from whom. _Difficulty: Decaf cup of coffee_
 ```
-
+\  
 ```{exercise, name="Looping"}
 Wrap a for loop around the model to examine every unit.  Discuss results.
 ```
 ```{exercise, name="Bigger Data"}
 Use a bigger data set and conduct an analysis & interpretation (more inputs, outputs, and units.)  _Difficulty: Cup of coffee_
 ```
-
+\  
 ```{exercise, name="Test Results"}
 Check results against a DEA package (ex. DEAMultiplier, TFDEA, Benchmarking, nonparaeff) _Difficulty: Pot of coffee_
 ```
-
+\  
 ```{exercise, name="Slacking"}
 Construct an example where Phase 2 increases positive slacks from Phase 1.  _Difficulty: Pot of coffee_
 ```
-
+\  
 ```{exercise, name="Graphics"}
 Create "cool" graphs or plots of results.  _Difficulty: It depends..._
 ```
-
+\  
 To pass the challenges, work on extending my RMarkdown file or using a similar script.  You can use my *.rmd file as a starting point. Others might prefer to create a well documented R script instead of using RMarkdown.  Others might even prefer using LaTeX. If you use RMarkdown or LaTeX, please use section headings to indicate each challenge solved.  
 
 You can use other packages for graphics or data manipulation but don't use a DEA package.  (Don't worry, we'll get there later.)
-
+\  
 ```{exercise, name="DEA Application"}
 ```
 Conduct a DEA study for an application that you are personally familiar with.  (Pick one for which data is readily available but something that you are passionate about.  It can have scrubbed or anonymized data.  Examples might include your favorite sports league, team salaries, coaching salaries, wins, etc. or it can be USAF related.  )
+
 a)  Describe the application
 b)  Describe and justify the data including the inputs and outputs used as well as items explicitly not used.
 c)  Select an appropriate DEA model and conduct the analysis.
 d)  Discuss the results
-

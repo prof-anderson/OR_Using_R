@@ -72,8 +72,8 @@ set.seed(1234)      # Set random number seed
 grid_size <- 1000   # Horizontal and vertical axis ranges 
 
 n <- 100 ; m <- 20 # Set number of customers and warehouses
-#n <- 10 ; m <- 3  # Safer problem size for cloud services
                    # Select  100 and 20 for local comuter runs
+#n <- 10 ; m <- 3  # Safer problem size for cloud services
                    # Text discussion is for the larger size
 
 customer_locations <- data.frame(      
@@ -485,37 +485,36 @@ The ROI package lists 19 different solvers with ROI plugins.  Three commercial s
 
 ### Discussion
 
-Computer time can be intense for for large scale analysis but a variety of questions can be examined such as the following.
+Significant computer time can be used for large models but a variety of questions can be examined such as the following.  
 
-* How is problem size related to solving time?
-* Are there systematic differences in speed or solving success for different solvers?   (ex. does Gurobi run faster?)
-* How do various modeling parameters affect solution speed?
-
+* How is problem size related to solving time?  
+* Are there systematic differences in speed or solving success for different solvers?   (ex. does Gurobi run faster?)  
+* How do various modeling parameters affect solution speed?  
 
 ## Solving Sudoku puzzles using Optimization
 
-After spending a significant amount of time for a serious industrial application of warehouse optimization, let's take a break with a more lighthearted application.  Again, this is based on an article by Dirk Schumacher.
+After spending a significant amount of time for a serious industrial application of warehouse optimization, let's take a break with a more lighthearted application.  Again, this is based on an article by Dirk Schumacher.  
 
-> In this vignettes we will solve Sudoku puzzles using MILP. [Sudoku](https://en.wikipedia.org/wiki/Sudoku) in its most popular form is a constraint satisfaction problem and by setting the objective function to $0$ you transform the optimization problem into a pure constraint satistication problem. In this document we will consider Sudokus in a 9x9 grid with 3x3 sub-matrices.
+> In this vignettes we will solve Sudoku puzzles using MILP. [Sudoku](https://en.wikipedia.org/wiki/Sudoku) in its most popular form is a constraint satisfaction problem and by setting the objective function to $0$ you transform the optimization problem into a pure constraint satistication problem. In this document we will consider Sudokus in a 9x9 grid with 3x3 sub-matrices.  
 
-> Of course you can formulate an objective function as well that directs the solver towards solutions maximizing a certain linear function.
+> Of course you can formulate an objective function as well that directs the solver towards solutions maximizing a certain linear function.  
 
 ### The Sudoku model
 
-> The idea is to introduce a binary variable $x$ with three indexes $i, j, k$ that is $1$ if and only if the number $k$ is in cell $i, j$.
+> The idea is to introduce a binary variable $x$ with three indexes $i, j, k$ that is $1$ if and only if the number $k$ is in cell $i, j$.  
 
-The basic optimization formulation is interesting for a few reasons.
+The basic optimization formulation is interesting for a few reasons.  
 
-First, there isn't a clear objective function.  We are simply trying to find a a set of values that solves the problem without violating any of the rules of Sudoku.  In other words, any feasible solution would be acceptable.  We could minimize $x_{1,1,1}$, the sum of all decision variables (which would be 81, corresponding to the number of cells in the Sudoku grid.)  We could also just tell it to maximize a particular number, say 42, or minimize another number like 0, which is exactly what Dirk did.
+First, there isn't a clear objective function.  We are simply trying to find a a set of values that solves the problem without violating any of the rules of Sudoku.  In other words, any feasible solution would be acceptable.  We could minimize $x_{1,1,1}$, the sum of all decision variables (which would be 81, corresponding to the number of cells in the Sudoku grid.)  We could also just tell it to maximize a particular number, say 42, or minimize another number like 0, which is exactly what Dirk did.  
 
-We need a constraint to ensure that each cell $(i,j)$ contains a value. $\sum\limits_{k=1}^{9}   x_{i,j,k} = 1, \; \forall i,j$.  
+We need a constraint to ensure that each cell $(i,j)$ contains a value. $\sum\limits_{k=1}^{9}   x_{i,j,k} = 1, \; \forall i,j$.    
 
-We then need to ensure that each in row, $i$, each digit only appears once. $\sum\limits_{i=1}^{n}   x_{i,j,k} = 1, \; \forall j,k$.
+We then need to ensure that each in row, $i$, each digit only appears once. $\sum\limits_{i=1}^{n}   x_{i,j,k} = 1, \; \forall j,k$.  
 
 We then need to ensure that each in column, $j$, each digit only appears once.
-$\sum\limits_{j=1}^{n}   x_{i,j,k} = 1, \; \forall i,k$.
+$\sum\limits_{j=1}^{n}   x_{i,j,k} = 1, \; \forall i,k$.  
 
-Next, we need to create a constraint each 3x3 grouping contains each digit only once. This is more complicated.  Let's consider the top left 3x3 cluster.  For each digit $k$, we need to ensure that only one cell has it.
+Next, we need to create a constraint each 3x3 grouping contains each digit only once. This is more complicated.  Let's consider the top left 3x3 cluster.  For each digit $k$, we need to ensure that only one cell has it.  
 
 $$\begin {split}
 \begin {aligned}
@@ -533,7 +532,7 @@ $$\begin {split}
 \end {split}
 $$
 
-Unfortunately this set of constraints only covers one cluster.
+Unfortunately this set of constraints only covers one cluster.  
 
 If we are clever, we may note that the top left corner of each cluster is a row or column value of 1, 4, or 7.  
 
@@ -571,7 +570,7 @@ $$
 
 ### Implementing the Sudoku model in ompr
 
-We are now ready to implement the model. As always, clearly defining variables and constraints is important.  A triple subscripted variable often makes for a tricky model.  Also, that last constraint may take careful examination.
+We are now ready to implement the model. As always, clearly defining variables and constraints is important.  A triple subscripted variable often makes for a tricky model.  Also, that last constraint may take careful examination.  
 
 ```{r, implementing_sudoku}
 
@@ -626,17 +625,18 @@ Solution <- Sudoku_result %>%
 ```{r Enter_specific_puzzle}
 
 Sudoku_model_specific <- Sudoku_model %>% 
-  add_constraint(Vx[1, 1, 1] == 1) %>%  # Set the cell in top left to the number 1
-  add_constraint(Vx[1, 2, 2] == 1) %>%  # Set the cell in row 1, column 2 to the number 2
-  add_constraint(Vx[1, 3, 3] == 1) %>%  # Set the cell in row 1, column 3 to the number 3
-  add_constraint(Vx[2, 1, 4] == 1) %>%  # Set the cell in row 2, column 1 to the number 4
-  add_constraint(Vx[2, 2, 5] == 1) %>% 
+  add_constraint(Vx[1, 1, 1] == 1) %>%  # Set digit in top left to the number 1
+  add_constraint(Vx[1, 2, 2] == 1) %>%  # Set digit in row 1, column 2 to the number 2
+  add_constraint(Vx[1, 3, 3] == 1) %>%  # Set digit in row 1, column 3 to the number 3
+  add_constraint(Vx[2, 1, 4] == 1) %>%  # Set digit in row 2, column 1 to the number 4
+  add_constraint(Vx[2, 2, 5] == 1) %>%  # etc....
   add_constraint(Vx[2, 3, 6] == 1) %>% 
   add_constraint(Vx[3, 1, 7] == 1) %>% 
   add_constraint(Vx[3, 2, 8] == 1) %>% 
   add_constraint(Vx[3, 3, 9] == 1)
 
-Sudoku_result_specific <- solve_model(Sudoku_model_specific, with_ROI(solver = "glpk", verbose = TRUE))
+Sudoku_result_specific <- solve_model(Sudoku_model_specific, 
+                                      with_ROI(solver = "glpk", verbose = TRUE))
 
 Solution_specific <- Sudoku_result_specific %>% 
   get_solution(Vx[i,j,k]) %>%
@@ -652,3 +652,67 @@ Solution_specific   # Display solution to Sudoku Puzzle
 Have at it.  Any Sudoku puzzle can be solved using this model as long as there is a feasible solution.  Note that if there are two or more solutions to the puzzle based on the hints, this model will find one of them and does not indicate whether there might be other solutions.
 
 Feel free to time the solution using the `tictoc` package.  
+
+The intention here is not to imply that optimization is the only way or the best way to solve Sudoku problems.  There are algorithmic approaches for solving Sudoku that can be more computationally efficient than using a general purpose integer programming system and in fact people have implemented such algorithms in R and other languages.  The purpose of this example was to show how a problem can be framed and implemented.  
+
+## Conclusion
+
+In this chapter, we covered some problems with medium-sized integer programming problems.  The same approaches and models can be scaled up to larger problems.  
+
+Improvements in software and computer hardware have opened up optimization to a variety of large scale problems.  Integrating this into R has made it straightforward to connect together a variety of tools including simulation and data visualization.  
+
+## Exercises
+  
+Even moderate sized integer programming problems can result in significant computational loads.  While these problems will not represent a heavy load for a desktop or laptop computer, they be intensive for netbooks or cloud-based services.  If you are using a cloud-based service such as RStudio.cloud, a server, or third party service such as Amazon Web Services, be sure to understand the implications of heavy computational loads.  Possible results of excessive use of third party computer time include throttling of access similar to cell phone users exceeding monthly data caps, high "overage" charges, a warning from a systems administrator, or even account termination.  
+\  
+```{exercise, name="Warehouse-Max Customers-Small"}
+Run the analysis for the smaller warehouse optimization but with just 10 customers and 3 warehouses. Extend the warehouse customer assignment problem to have each warehouse that is built be assigned a maximum of 4 customers. Compare the solution to that obtained earlier. Ensure that your data for customers and warehouses is the same for the two cases. _This problem size should be cloud-friendly but ensure that you are solving the appropropriate sized problem before running._ 
+```
+\  
+```{exercise, name="Warehouse-Max and Min Customers-Small"}
+Run the analysis for the smaller warehouse optimization but with just 10 customers and 3 warehouses. Extend and solve the warehouse customer assignment problem to have each warehouse that is built be assigned a maximum of 4 customers and a minimum of 2 customers. Show plots of both solutions. Compare the solution to that obtained earlier using tables as appropriate. Ensure that your data for customers and warehouses is the same for the two cases. _This problem size should be cloud-friendly but ensure that you are solving the appropropriate sized problem before running._ 
+```
+\  
+```{exercise, name="Warehouse-Simulating Customers-Moderate"}
+Run the analysis for the smaller warehouse optimization with a max of 10 customers and 3 warehouses. Simulate it 20 times and plot the results in terms of number of warehouses used and the total cost.  Discuss the results. _This problem size should not be be run on a cloud or remote server without full understanding of load implications. Note that this will be somewhat computationally intensive and is best done on a local computer rather than the cloud.  Doing it on a personal computer may require on the order of five minutes of processing time._
+```
+\  
+```{exercise, name="Warehouse-Max Customers-Big"}
+Extend the warehouse customer assignment problem to have each warehouse that is built be assigned a maximum of 40 customers.  Compare the solution to that obtained earlier.  Ensure that your data for customers and warehouses is the same for the two cases.  _This problem size should not be be run on a cloud or remote server without full understanding of load implications._ 
+```
+\  
+```{exercise, name="Warehouse-Max and Min Customers-Big"}
+Extend the warehouse customer assignment problem to have each warehouse that is built be assigned a maximum of 40 customers and a minimum of 15 customers.  Compare the solution to that obtained earlier.  Ensure that your data for customers and warehouses is the same for the two cases.  _This problem size should not be be run on a cloud or remote server without full understanding of load implications._ 
+```
+\  
+```{exercise, name="Warehouse-Simulating Customers - Big"}
+Run the analysis for the warehouse optimization model 20 times and plot the results in terms of number of warehouses used and the total cost. Discuss and interpret the results.  _Note that this will be **computationally intensive** and should not be done on the cloud.  Doing it on a personal computer may require on the order of five minutes of processing time._  
+```
+\  
+```{exercise, name="Sudoku-Bottom Row"}
+Solve a Sudoku model using optimization where the bottom row is 9 numbered down to 1.  ```
+\  
+```{exercise, name="Sudoku-Right Column"}
+Solve a Sudoku model using optimization where the right most column  is 9 numbered down to 1.    
+```
+\  
+```{exercise, name="Sudoku-Center Cluster"}
+Solve a Sudoku model using optimization where the center 3x3 cluster is made up of the numbers from 9 to 1.  (First row is 9, 8, 7; second row is 6, 5, 4; bottom row is 3, 2, 1)
+```
+\  
+```{exercise, name="Sudoku-Center Cluster"}
+Find Sudkoku puzzle from a newspaper or elsewhere and solve it using optimization.  
+```
+\  
+```{exercise, name="Sudoku-Multiple Optima"}
+**Challenge:**  Sudoku puzzles are often created with the intention of having a single solution since the approaches people use to solve them are based on incrementally reasoning out what values each cell must contain.  The result is that the ambiguity of multiple optima may cause problems for people to solve.  While the optimization model can solve these without difficulty, it is only going to find one, arbitrary solution. Simply resolving is likely to give you the same solution even when there are multiple optima.  Consider variations of the above model that would allow you to easily find if there are multiple optimal solutions.
+```
+\  
+```{exercise, name="Sudoku-Infeasible"}
+**Challenge:**  A Sudoku puzzle with only a small numbers shown can be infeasible even though it does not contain any obvious violation of repeated digits.  People building Sudoku puzzles need to ensure that every puzzle is solveable or risk having frustrated customers.  Add a digit one at a time to an existing Sudoku puzzle board that does not immediately violate the repeated digits requirement, test for a valid solution, and repeat, until the Sudkoku game board becomes infeasible.  
+```
+\  
+```{exercise, name="Sudoku-Hexadecimal"}
+**Ultra-Challenge:**  Modify the above formulation for Sudoku to allow for 16 4x4 grids.  Use the digits 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, and F. Solve a sample game board with just the digits in order across the top row.
+```
+  
