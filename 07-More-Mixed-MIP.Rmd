@@ -76,11 +76,6 @@ n <- 100 ; m <- 20 # Set number of customers and warehouses
 #n <- 10 ; m <- 3  # Safer problem size for cloud services
                    # Text discussion is for the larger size
 
-customer_locations <- data.frame(      
-  id = 1:n,
-  x = round(runif(n) * grid_size),
-  y = round(runif(n) * grid_size)
-)
 ```
 
 Next we create the customer data as a dataframe.  
@@ -171,18 +166,19 @@ model <- MIPModel() %>%
 model
 ```
 
-This is a non-trivial sized MIP problem. Since the number of _x_ (or `Vx`) variables is $m \cdot s$ or 2000 and and the number of _y_ (or `Vy`) variables is $m$ or 20, the total number of variables is 2020 which matches the model summary.
+The number of _x_ (or `Vx`) variables is $m \cdot n =20 \cdot 100$ or 2000 and the number of _y_ (or `Vy`) variables is $m$ or 20, the total number of variables is 2020 which matches the model summary. A similar calculation can be done on the constraints.  The number of variables and constraints make this a non-trivial sized MIP problem. Fortunately, solving turns out to be quite easy.
 
 ### Solve the model
 
-We are now ready to work on solving the model. We will start with using `glpk`.
-The solver can generate a lot of additional information.  The default is `verbose = FALSE` but let's see the extra information that we get with a verbose solution.
+We are now ready to work on solving the model. We will start with using `glpk`.  
+
+The solver can generate a lot of additional information.  The default is `verbose = FALSE` but let's see the extra information that we get with a verbose solution.  
 
 If you run this code chunk, you may see the first noticeable pause in running a code chunk.  As I said, this is a non-trivial MIP problem!  It may take only a few seconds or perhaps a few minutes depending upon your computer. This also means that you must be careful in running MIP problems on cloud based services.  A particularly big MIP running on Amazon Web Services might create a sizeable bill.  Running it on a shared service like RStudio.cloud's service, currently being provided for free while in Alpha should not be used for such computationally intense purposes.  
 
 In summary, non-trivial MIP models should be run locally on a computer unless you are certain that your computational loads will not cause a problem for yourself or others.  
 
-```{r}
+```{r warehouse_glpk_solving}
 library(ompr.roi)
 library(ROI.plugin.glpk)
 result <- solve_model(model, with_ROI(solver = "glpk", verbose = TRUE))
@@ -198,7 +194,7 @@ At this point, we are really interested in the small minority of non-zero variab
 
 In order to do so, Dirk uses the `dplyr` package.  This package provides a tremendous number of functions for data management.  To illustrate how this is done, let's review line by line how this code chunk works.
 
-```{r}
+```{r warehouse_parsing_results}
 suppressPackageStartupMessages(library(dplyr))
 matching <- result %>% 
   get_solution(Vx[i,j]) %>%
