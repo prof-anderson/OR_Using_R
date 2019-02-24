@@ -5,6 +5,8 @@ output_dir: docs
 #rmd_files: ["index.Rmd", "01-Introduction.Rmd", "02-Diving-In.Rmd"]
 #clean: [Master4Bookdowns.bib]
 #clean: [packages.bib, Z5_R_Resources.bib, bookdown.bbl]
+lof: True
+lot: True
 new_session: yes
 bibliography: ["Master4Bookdowns.bib", "another.bib"]
 biblio-style: "apalike"

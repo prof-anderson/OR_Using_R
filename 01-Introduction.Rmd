@@ -14,9 +14,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## What is Operations Research
 
-Operations Research is the application of mathematics and scientific approaches to decision making.  It is a field deeply connected with applications.  
+Operations Research is the application of mathematics and scientific approaches to decision making. It is a field deeply connected with applications.  
 
-The field of Operations Research had strong roots in World War II as nations and militaries urgently tried to best make use of their resources and capabilities.  Leaders asked people from various disciplines to help improve  a variety of problems such as submarine hunting, mining of resources, and production planning. Essentially, these tools are scientific approaches for making decisions for the design and operation of a system with limited resources. The tools that that they used came from combining applied math and scientific approaches resulting in tremendous improvements.  
+The field of Operations Research has strong roots in World War II as nations and militaries urgently tried to best make use of their resources and capabilities.  Leaders asked people from various disciplines to help improve  a variety of problems such as submarine hunting, mining of resources, and production planning. Essentially, these tools are scientific approaches for making decisions for the design and operation of a system with limited resources. The tools that that they used came from combining applied math and scientific approaches resulting in tremendous improvements.  
 
 After the war, many of the same approaches were also then used for business applications.  Military groups most commonly used the term Operations Research while business groups often used the term Management Science.  
 
@@ -49,7 +49,7 @@ Operations Research covers many different techniques.  They can be classified in
 
 Each of these topics can require a full graduate level class or more to cover. In particular, Optimization and Simulation can be further subdivided into separate sub areas that represent entire specialties of their own. In this book, we currently limit ourselves to the field of Optimization for this current book.  The interested reader is welcome to explore each area further.  
 
-One way of conceptualizing the relationship between different techniques by whether they generally serve a descriptive role or prescriptive role.  A descriptive technique would be one that describes the current state of the system.  A prescriptive technique is one that would prescribe a certain course of action to achieve a desired outcome.  For example, weather forecasting is a very sophisticated descriptive discipline since we don't generally have control over short term weather.  On the other hand, if we were to look at intervention approaches such as cloud seeding we might try to come up a prescriptive application.  Prescriptive applications are abundant and can often be wherever decisions need to be made.
+Analysis methods are typically characterized as either descriptive  prescriptive.  A descriptive technique would be one that describes the current state of the system.  A prescriptive technique is one that would prescribe a certain course of action to achieve a desired outcome.  For example, weather forecasting is a very sophisticated descriptive discipline since we don't generally have control over short term weather.  On the other hand, if we were to look at intervention approaches such as cloud seeding we might try to come up a prescriptive application.  Prescriptive applications are abundant and can often be wherever decisions need to be made.
 
 ## Relationship between Operations Research and Analytics
 
@@ -135,9 +135,9 @@ b<-matrix(c(1,2,3,4,5,6,7,8), ncol=4,
                      list(c("Col1", "Col2","Col3","Col4"))))
 ```
 
-Okay, this command has a lot more going on.  The dimnames is a parameter that contain names for rows and columns.  One thing to note is that this line fills up more space than a single line so it rolls over to multiple line.  
+Okay, this command has a lot more going on.  The term `dimnames` is a parameter that contain names for rows and columns.  One thing to note is that this line fills up more space than a single line so it rolls over to multiple line.  
 
-The dimnames parameter will get get two concatenated (combined) lists. The first list is a combined list of two text strings "Row1" and "Row2". The next line does the same for columns.  
+The `dimnames` parameter will get get two concatenated (combined) lists. The first list is a combined list of two text strings "Row1" and "Row2". The next line does the same for columns.  
 
 Let's confirm that it works.
 
@@ -186,6 +186,15 @@ Now we have done some basic operations within R.  Try your hand at the following
 Change the row and column names for the transposed matrix above.   
 ```
 
+here is my solution to that....
+
+```{r}
+c
+d
+```
+
+Oops..  Still not right.  Need to do some more...
+
 ```{exercise, name="Creating a Matrix of Weekly Demand"}
 Assume that your company's product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday.  Create a matrix where the column indicates that the day of the week and the row is the product name.  
 ```
@@ -227,7 +236,7 @@ pander(b, caption="Matrix b")
 pander(c, caption="Matrix c")
 ```
 
-Let's take the first row of b and combine it with the second row of c to form a new matrix, e.  Since these are rows that are going to be combined, we will use a command, rbind, to bind these rows together.
+Let's take the first row of `b` and combine it with the second row of `c` to form a new matrix, `e`.  Since these are rows that are going to be combined, we will use a command, `rbind`, to bind these rows together.
 
 ```{r}
 e<-rbind(b[1,],c[2,])
@@ -241,7 +250,7 @@ rownames(e)<-list("From_b", "From_c")
 pander(e, caption="Combined Matrix with Explanation of Source")
 ```
 
-We could combine all of matrix b and matrix c together using row binding or column binding.
+We could combine all of matrix `b` and matrix `c` together using row binding or column binding.
 
 ```{r}
 pander(cbind(b,c), caption="Column Binding of Matrices b and c")
@@ -250,7 +259,7 @@ pander(rbind(b,c), caption="Row Binding of Matrices b and c")
 
 Data organizing is a less glamorous part of the job for practicing analytics professionals but can consume a majority of the workday.  There is a lot more that can be said about data wrestling but scripting the data cleansing in terms R commands will make the work more repeatable, consistent, and in the end save time.[^Data]
 
-[^Data]: A PhD student that I knew was preparing for his final defense and did a practice presentation with a professor. He was proud of a well polished 250 page thesis with dozens of tables of numerical results.  The analysis included dozens of regressions, all with  similar form and dependent variables. The professor asked him why his dependent variables number of projects rather than projects per year. The doctoral student thought for a moment and realized that all of his analysis was wrong and needed to be redone. This could take weeks if he had used a GUI based tool. Using R he did a search and replace for the dependent variable, cross-checked results, and met the next day to update that professor and his advisor of the new (and much better!) results.  
+[^Data]: A PhD student that I knew was preparing for his final defense and did a practice presentation with his advisor and a professor. He was proud of a well polished 250 page thesis with dozens of tables of numerical results.  The analysis included dozens of regressions, all with  similar form and dependent variables. The professor asked him why his dependent variables was the number of projects rather than projects per year. The student thought for a moment and realized that all of his analysis needed to be redone. This would take days or weeks if he had used a GUI based tool. Using R he did a search and replace for the dependent variable, cross-checked results, and met the next day to update that professor and his advisor of the new (and much better!) results. He successfully defended his thesis a couple weeks later.
 
 ```{exercise, name="Creating a Matrix of Daily Demand for Four Weeks"}
 Assume that your company's product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday.  Build a matrix of four weeks of demand where each row is a separate week.  

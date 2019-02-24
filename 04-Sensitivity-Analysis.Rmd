@@ -35,7 +35,7 @@ $$
     \text{subject to } & 6*Chairs+2*Desks+4*Tables \leq 2000 \\
                        & 8*Chairs+6*Desks+4*Tables \leq 2000 \\
                        & 6*Chairs+4*Desks+8*Tables \leq 1440 \\
-                       & 40*Chairs+25*Desks+25*Tables \leq 9600 \\
+                       & 40*Chairs+25*Desks+16*Tables \leq 9600 \\
                        & Tables \leq 200 \\
                        & Chairs,  \; Desks, \; Tables \geq 0  
   \end{aligned}
@@ -57,7 +57,7 @@ Base3VarModel <- MIPModel() %>%
   add_constraint(6*Chairs + 2*Desks + 4*Tables <= 2000) %>% #fabrication
   add_constraint(8*Chairs + 6*Desks + 4*Tables <= 2000) %>% #assembly
   add_constraint(6*Chairs + 4*Desks + 8*Tables <= 1440) %>% #machining
-  add_constraint(40*Chairs + 25*Desks + 25*Tables <= 9600) %>% #wood
+  add_constraint(40*Chairs + 25*Desks + 16*Tables <= 9600) %>% #wood
   add_constraint(Tables <= 200) %>% #
   solve_model(with_ROI(solver = "glpk"))
 
@@ -113,7 +113,7 @@ $$
     \text{subject to } & 6*Chairs+2*Desks+4*Tables \leq 2000 \\
                        & 8*Chairs+6*Desks+4*Tables \leq 2000 \\
                        & 6*Chairs+4*Desks+8*Tables \leq 1441 \\
-                       & 40*Chairs+25*Desks+25*Tables \leq 9600 \\
+                       & 40*Chairs+25*Desks+16*Tables \leq 9600 \\
                        & Tables \leq 200 \\
                        & Chairs,  \; Desks, \; Tables \geq 0  
   \end{aligned}
@@ -133,7 +133,7 @@ IncMachiningHrs <- MIPModel() %>%
   add_constraint(6*Chairs + 2*Desks + 4*Tables <= 2000) %>% #fabrication
   add_constraint(8*Chairs + 6*Desks + 4*Tables <= 2000) %>% #assembly
   add_constraint(6*Chairs + 4*Desks + 8*Tables <= 1441) %>% #machining
-  add_constraint(40*Chairs + 25*Desks + 25*Tables <= 9600) %>% #wood
+  add_constraint(40*Chairs + 25*Desks + 16*Tables <= 9600) %>% #wood
   add_constraint(Tables <= 200) %>% #
   solve_model(with_ROI(solver = "glpk"))
 
@@ -164,7 +164,7 @@ $$
     \text{subject to } & 6*Chairs+2*Desks+4*Tables \leq 2000 \\
                        & 8*Chairs+6*Desks+4*Tables \leq 2000 \\
                        & 6*Chairs+4*Desks+8*Tables \leq 1440 \\
-                       & 40*Chairs+25*Desks+25*Tables \leq 19600 \\
+                       & 40*Chairs+25*Desks+16*Tables \leq 19600 \\
                        & Tables \leq 200 \\
                        & Chairs,  \; Desks, \; Tables \geq 0  
   \end{aligned}
@@ -184,7 +184,7 @@ IncWood<- MIPModel() %>%
   add_constraint(6*Chairs + 2*Desks + 4*Tables <= 2000) %>% #fabrication
   add_constraint(8*Chairs + 6*Desks + 4*Tables <= 2000) %>% #assembly
   add_constraint(6*Chairs + 4*Desks + 8*Tables <= 1440) %>% #machining
-  add_constraint(40*Chairs + 25*Desks + 25*Tables <= 19600) %>% #wood
+  add_constraint(40*Chairs + 25*Desks + 16*Tables <= 19600) %>% #wood
   add_constraint(Tables <= 200) %>% #
   solve_model(with_ROI(solver = "glpk"))
 
@@ -270,7 +270,7 @@ Table1Model <- MIPModel() %>%
   add_constraint(6*Chairs + 2*Desks + 4*Tables <= 2000) %>% #fabrication
   add_constraint(8*Chairs + 6*Desks + 4*Tables <= 2000) %>% #assembly
   add_constraint(6*Chairs + 4*Desks + 8*Tables <= 1440) %>% #machining
-  add_constraint(40*Chairs + 25*Desks + 25*Tables <= 9600) %>% #wood
+  add_constraint(40*Chairs + 25*Desks + 16*Tables <= 9600) %>% #wood
   add_constraint(Tables <= 200) %>% #
   solve_model(with_ROI(solver = "glpk"))
 
@@ -290,7 +290,7 @@ Let's compare the results for the new production plan and the original base case
 
 ```{r}
 rownames(base_case_res) <- "Base Case"
-Table1_case_res           <- cbind(xchairs,xdesks,xtables,obj_val)
+Table1_case_res           <- cbind(obj_val, xchairs,xdesks,xtables)
   rownames(Table1_case_res) <- "with forced change to Tables"
   pander(rbind(base_case_res,Table1_case_res),
          caption="Impact of a Forced Change in Tables")
@@ -309,13 +309,15 @@ colnames(bookcase_res_used)<-c("Row Duals", "Resources Used")
 pander(bookcase_res_used, caption="Resources Used by a Bookcase and their Shadow Prices")
 ```
 
-Even without adding it to the model, we can check to see if it is worthwhile to consider seriously.  The opportunity cost of producing one bookcase would result in the $\$35 - \$1*12  - \$2*16=\$-9 $.  In other words, even though a bookcase has higher profit than any other product, producing one would cost the company nine dollars of overall profit.
+Even without adding it to the model, we can check to see if it is worthwhile to consider seriously.  The opportunity cost of producing one bookcase would result in the $\$35 - \$1*12  - \$2*16=\$-9 $.  In other words, even though a bookcase has higher profit than any other product, producing one would cost the company nine dollars of overall profit. 
+
 
 We could interpret this as a simple hard stop on the decision to produce bookcases but we could go one step further by setting a target for redesigning the product or its production.  If the machining time could be reduced by 4.5 hours to 11.5 hours, then the value of the resources consumed would be equal to the profit and we would be indifferent to producing some bookcases.  
 
-##Exercises##
+##Exercises
 
 ```{exercise, name="Adding Frames"}
+```
 Your company has extended production to allow for producing picture frames and is now including a finishing department that primes and paints (or stains) the furniture.
 
 | Characteristic | Chairs | Desks | Frames | Tables | Available  | 
@@ -334,8 +336,9 @@ d) Interpret and discuss the model in R Markdown.
 e) Examine and reflect upon the reduced costs and shadow prices from the context of which products to produce and not produce.
 f) Using the results from e), (i.e. reduced cost and shadow prices) make one change to the base model's **objective function** that will change the production plan.  Rerun and discuss the new results.
 g) Using the results from e), (i.e. reduced cost and shadow prices) make one change to the base model's **resource usage values** that will change the production plan. Rerun and discuss the new results.
-h) Using the results from e), (i.e. reduced cost and shadow prices) make one change to the base model's **available resource values** that will change the production plan. Rerun and discuss the new results.
+h) Using the results from e), (i.e. reduced cost and shadow prices) make one change to the base model's **available resource values** that will change the production plan. Rerun and discuss the new results. 
 i) Combine the results of the base case e), as well as the variations f) through h) into a single table and discuss the results.  
 
+```{exercise, name="Revisiting Transportation"}
 ```
-
+Using sensitivity analysis, revisit the transportation exercise from chapter 3.  If one more unit of supply was available, where would it be prioritized and why?  If demand could be increased by one unit, would it affect the result and at which destination node it be preferred and why?
