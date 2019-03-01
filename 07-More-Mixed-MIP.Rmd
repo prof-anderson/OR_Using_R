@@ -222,7 +222,7 @@ pander(head( get_solution(result, Vx[i,j])),
 
 ```
 
-Notice that in the table of raw results, the first six entries (obtained using the `head` function) did not show any customers assigned to a warehouse.  This isn't surprising given that only one in twenty values are non-zero.  
+Notice that in the table of raw results, the first six entries (obtained using the `head` function) did not show any customers assigned to a warehouse. This isn't surprising given that only one in twenty values are non-zero.  
 
 ```{r processed_results_table}
 
@@ -472,7 +472,6 @@ pander(timeresults, caption="Comparison of Results from Warehouse
        Customer Assignment Across Solvers", digits=2)
 ```
 
-
 The most important thing to note is that each solver states that it found an optimal solution with the same  objective function value.  While they may vary in how it is achieved if there are multiple optima (in other words, different values for decision variables _x_ and _y_), this means that they all found a correct solution.  It would be a big issue if they differed. Causes for difference could be timing out, satisfying a suboptimality tolerance factor condition, or some error.  
 
 Note that time will vary significantly from computer to computer and may also depend upon the other tasks and the amount of memory available.  Also, performance will change for different solver settings and for different problems.  Also, performance time will change for different random instances-simply changing the random number seed will create diferent results.  
@@ -487,6 +486,73 @@ Significant computer time can be used for large models but a variety of question
 * Are there systematic differences in speed or solving success for different solvers?   (ex. does Gurobi run faster?)  
 * How do various modeling parameters affect solution speed?  
 
+### Popularity of Solvers
+
+Let's take another look at comparing solvers by examining their popularity. More precisely, let's examine the download logs of CRAN for a variety of linear programming solvers.  
+
+```{r lp_package_download_stats, echo=FALSE}
+
+library("ggplot2")
+library("dlstats")
+
+optim_packages <- c("alabama",  "DEoptim",  "Rglpk", 
+                  "lpSolve", "clpAPI",
+                  "scs", "Rsymphony", 
+                  "lpSolveAPI", "glpkAPI")
+
+pkg_dl_data <- cran_stats(packages = optim_packages)
+
+
+ggplot(pkg_dl_data, aes(end, downloads, group=package, color=package)) +
+    geom_line()  + 
+    labs(title = "Monthly Downloads of Optimization Packages",
+       subtitle = "Wide choice of Optimization packages",
+       caption = "Source: CRAN", 
+       x = "Month", y = "Downloads") 
+
+```
+
+Many of these packages are being used directly in other packages. While we can't see packages are being used most often for `ompr`, we can see which ROI plugins are downloaded most often.  
+
+We will focus our attention on the ROI packages that emphasize linear programming. This means dropping packages such as `ROI.plugin.nloptr`, `ROI.plugin.qpOASES`, and `ROI.plugin.quadprog`. Also, propreitary packages that are not available on CRAN such as GUROBI and XPress, are not included.  
+
+```{r ROI_Package_Stats, echo=FALSE}
+
+ROI_packages <- c("ROI.plugin.alabama", "ROI.plugin.clp", 
+                  "ROI.plugin.glpk", "ROI.plugin.lpsolve", 
+                  "ROI.plugin.scs",  "ROI.plugin.symphony")
+
+pkg_dl_data <- cran_stats(packages = ROI_packages)
+
+ggplot(pkg_dl_data, aes(end, downloads, group=package, color=package)) +
+    geom_line() + geom_point(aes(shape=package)) + 
+    labs(title = "Monthly Downloads of ROI Linear Programming Packages",
+       subtitle = "Wide choice of ROI LP packages",
+       caption = "Source: CRAN", 
+       x = "Month", y = "Downloads") 
+
+
+```
+
+Interesting to see that the symphony and glpk ROI plugins  were relatively even in downloads until about 2015 when glpk started to open a lead in usage.  This of course does not mean that glpk is better than others but is interesting to note. The spikes in downloads could be drived by other packages that use this particular solver, visibility from vignettes or other publications, or package updates.  
+
+Let's close this with examining the popularity of `ompr` itself.   
+
+```{r package_download_stats, echo=FALSE}
+
+library("ggplot2")
+library("dlstats")
+
+pkg_dl_data <- cran_stats(packages = c("ompr"))
+
+ggplot(pkg_dl_data, aes(end, downloads, group=package, color=package)) +
+    geom_line()  + 
+    labs(title = "Monthly Downloads of OMPR",
+       subtitle = "Optimization Modelling Package for R",
+       caption = "Source: CRAN", 
+       x = "Month", y = "Downloads") 
+
+```
 ## Solving Sudoku puzzles using Optimization
 
 After spending a significant amount of time for a serious industrial application of warehouse optimization, let's take a break with a more lighthearted application.  Again, this is based on an article by Dirk Schumacher.  

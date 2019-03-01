@@ -959,3 +959,50 @@ This section on graphically exploring linear programming is a great first start 
 * Adding more aesthetics
 * Refining limits for the plotting area to be non-negative.
 
+## Miscellaneous Tips and Tricks
+
+At this point, you are able to build your own optimization model.
+Here are a collection of tips and tricks that have confounded past students.  
+
+### `ompr` Related Tips and Tricks
+
+* `ompr` will complain if you use the same variable name a data object in R and in `ompr`. For example, if you have variables _x_ and y in a formulation, then build an `ompr` model with `x` and `y` variables.  You might then assign the results to `x` and `y` objects in R, and run it again. You will then get a notification of a name space conflict from `ompr`. One work around is to prefix the `ompr` variables with a V to indicate variable thereby using `Vx` and `Vy` in `ompr` for is assigned to x and y in r.  
+* Typos can happen easily in piped models being built but are not typically localized.  Try commenting and in and lines until the problem goes away.  This will help to identify where the problem is.
+* Check for ompr updates.  It is under active development. You may find versions on the author's github repository that are not yet available through CRAN.
+* `ompr` is featuring a much faster form of model building with a different syntax using `MILPmodel` rather than "MIPmodel".  If you are running into delays running ompr but not solving the problem, this may be worth investigating.
+
+### RMD Tips and Tricks
+
+RMarkdown is very helpful for integrating analysis and results but the code can also be brittle. Knitting this full book can be stopped by one small error.  
+
+* Make sure to get your header information correct.  Small typos can cause problems preventing knitting from occuring.
+* Name your code chunks uniquely. Not naming code chunks can make it harder to find errors or to navigate complex documents. Once you start naming code chunks though and copying code chunks for building more complex models, you run into duplicate code chunk problems.  Each name must be unique.  
+* Use code chunk options smartly. Look over the list of common options such as `eval` and `echo` are particularly helpful.
+* Remember to put a blank line before a bulleted list.
+* Putting two blank spaces at the end of a paragraphy will give a little more spacing between paragraphs.  
+* Sometimes running all chunks will make more visible where a problem is than when an RMD is knitted.  
+
+### RStudio Tips and Tricks
+
+* RStudio.cloud can be a very helpful service sometimes it can help be a test to see if a problem is with a personal software installation.  Some things will `knit` on RStudio.cloud that do not knit on local computer.
+* Installing LaTeX before RStudio resolves some problems with knitting.  If you have problems with knitting documents to PDF, even the simple "New RMarkdown" document.  Try uninstalling RStudio, install a LaTeX system (ex. MikTeX) if one is not already installed, and reinstalling RStudio.
+* Use the RStudio cheat sheets!  
+
+### General R Tips and Tricks
+
+* If you are getting an error message read it carefully.  You may also be able to google generic parts that do not reference your own R code to get clues.
+* R is case sensitive.  Be careful in watching for typos regarding case.  A student spent many hours trying to find why a document was no longer knitting before discovering that `echo=FALSE` in one code chunk was typed in as `echo=False`.
+* Many problems might be due to R data objects now having the data as you think it is. Displying the data or a part using the `head()` or `tail()` functions can be helpful for debugging.
+
+### LaTeX Tips and Tricks
+
+* Find good, working LaTeX formulations and then reuse and change it to fit the situation.
+* Using inline LaTeX is helpful and easy.  
+
+### General Tips and Tricks
+
+* After spending _too much_ time stuck on a problem, get up walk away, and look at it freshly.  
+* Join an R User's Group.
+* When you learn something new or interesting for R or related items, write it down in a Tips and Tricks section.  
+
+

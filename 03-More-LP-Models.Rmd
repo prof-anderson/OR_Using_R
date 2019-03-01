@@ -24,7 +24,7 @@ In this chapter, we will examine a range of classic applications of linear progr
 
 In the previous chapter, we examined situations with only a few products and constraints.  In general, most companies have many more products and we won't be wanting to name each product explicilty and uniquely.  Instead, we use sets of products and resources.  
 
-We could also reframe the model more algebraically. Let's use subscripts to differentiate between products and resources. We can define that _i=1_ represents Chairs, _i=2_ represents Desks, and _i=3_ represents Tables.  Similarly, _j=1_ represents fabrication, _j=2_, represents assembly, etc.   Now, let's move on to defining the data.  Let's define the amount to produce of each product, _i_, as $x_i$ and resource _j_ consumed by product _i_ as $R_{i,j}$.  The available resource _j_ is then $A_j$. The profit per product _i_ is then $P_i$. The LP can now be rewritten in more general terms as the following if there are three products and four constraints.
+We could also reframe the model more algebraically. Let's use subscripts to differentiate between products and resources. We can define that _i=1_ represents Chairs, _i=2_ represents Desks, and _i=3_ represents Tables.  Similarly, _j=1_ represents fabrication, _j=2_, represents assembly, etc.   Now, let's move on to defining the data.  Let's define the amount to produce of each product, _i_, as $x_i$ and resource _j_ consumed by product _i_ as $R_{i,j}$.  The available resource _j_ is then $A_j$. The profit per product _i_ is then $P_i$. The LP can now be rewritten in more general terms as the following if there are three products and four constraints.  
 
 $$
  \begin{split}
@@ -37,7 +37,7 @@ $$
   (\#eq:Base-Algebraic1)
 $$
 
-We could further generalize this by instead of hard coding the number of products and resource constraints, we instead define the number of products and resources as NProd and NResources respectively.  We can then rewrite the above formulation as the following
+We could further generalize this by instead of hard coding the number of products and resource constraints, we instead define the number of products and resources as NProd and NResources respectively.  We can then rewrite the above formulation as the following.  
 
 $$
  \begin{split}
@@ -52,19 +52,19 @@ $$
 
 #### Tips and Conventions for Algebraic Models
 
-The symbol, $\forall$, is read as "for all" and can be interpreted to mean "repeat this line substituting in a value for this subscript **for all** possible values of this subscript."  In other words, given that i is used consistently for the three products, then $x_i \geq 0  \; \forall \; i$ is equivalent to $x_i \geq 0  \;,i=1,2,3$ or even $x_1 \geq 0, \; x_2 \geq 0, \; x_3 \geq 0$.  The result is that the $\forall$ symbol can simplify the description of complex models when index ranges are clear.
+The symbol, $\forall$, is read as "for all" and can be interpreted to mean "repeat this line substituting in a value for this subscript **for all** possible values of this subscript."  In other words, given that i is used consistently for the three products, then $x_i \geq 0  \; \forall \; i$ is equivalent to $x_i \geq 0  \;,i=1,2,3$ or even $x_1 \geq 0, \; x_2 \geq 0, \; x_3 \geq 0$.  The result is that the $\forall$ symbol can simplify the description of complex models when index ranges are clear.  
 
 Also, another good practice is to use a mnemonic to help suggest the meaning of data. That is why I chose "R" for Resource, "P" for Profit, and "A" for Available resources. 
 
-Another helpful convention is to use capital letters for data and lower case letters for variables.  (Some people will swap this around and use capital letters for variables and lower case letters for data - it doesn't really matter as long as a model is consistent.)
+Another helpful convention is to use capital letters for data and lower case letters for variables.  (Some people will swap this around and use capital letters for variables and lower case letters for data - it doesn't really matter as long as a model is consistent.)  
 
-More complex models often run out of letters that make sense.  A common approach in these models is to use a superscript. For example, perhaps labor cost for each worker, _w_, could have different values for both normal and overtime rates.  Rather than separate data terms for such closely related concepts, we might denote regular hourly labor cost for worker _w_ as $C^R_w$ and for overtime as $C^O_w$.  Again, it is very important to clearly define all the data and variables used in the model.
+More complex models often run out of letters that make sense.  A common approach in these models is to use a superscript. For example, perhaps labor cost for each worker, _w_, could have different values for both normal and overtime rates.  Rather than separate data terms for such closely related concepts, we might denote regular hourly labor cost for worker _w_ as $C^R_w$ and for overtime as $C^O_w$.  Again, it is very important to clearly define all the data and variables used in the model.  
 
 #### Building the Generalized Model in R
 
-This concise, algebraic representation can be easily scaled to any number of products and resources. Let's write this as the following.  I'll expand the names of data slightly for making the R code more readable but this is meant to be consistent with the above formulation.
+This concise, algebraic representation can be easily scaled to any number of products and resources. Let's write this as the following.  I'll expand the names of data slightly for making the R code more readable but this is meant to be consistent with the above formulation.  
 
-We will define the number of products as four and five resource constraints.
+We will define the number of products as four and five resource constraints.  
 
 ```{r}
 NProd <- 4
@@ -86,14 +86,14 @@ Available <- matrix(c(1440, 1440, 2000, 1000, 9600),
               ncol=1,dimnames=c(ResNames,"Available"))
 ```
 
-Let's now display the data.  This should match the data that we hard coded into the R linear programming model in the previous chapter.  Let's display the data.  (Recall from last chapter that the _pander_ library is helpful for making tables look better.)
+Let's now display the data.  This should match the data that we hard coded into the R linear programming model in the previous chapter.  Let's display the data.  (Recall from last chapter that the _pander_ library is helpful for making tables look better.)  
 
 ```{r}
 library(pander)
 pander(Profit, caption="Profit per Product")
 ```
 
-Similarly, we can display the resources used by each product and the amount of each resource available.
+Similarly, we can display the resources used by each product and the amount of each resource available.  
 
 ```{r}
 pander(Resources, caption="Resources used by each product")
@@ -102,7 +102,7 @@ pander (Available, caption="Amount of each Resource Available")
 
 ```
 
-Notice that the resources available are listed as a column (vertical) vector rather than a row (flat) vector.  This differentiation will be important later.   
+Notice that the resources available are listed as a column (vertical) vector rather than a row (flat) vector.  This differentiation will be important later.  
 
 Now we need to define variables.  
 
@@ -114,11 +114,11 @@ pander(cbind(Resources, Available), caption="Resources Used by Each Product and 
 
 ```
 
-To ensure that we know how to access the data, if we want to see how the amount of the first resource used by the second product, you can enter _Resources[1,2]_ in R Studio's console which is `r Resources[1,2]`.
+To ensure that we know how to access the data, if we want to see how the amount of the first resource used by the second product, you can enter _Resources[1,2]_ in R Studio's console which is `r Resources[1,2]`.  
 
-Now, let's begin building our optimization model.
+Now, let's begin building our optimization model.  
 
-First, we'll start by loading the packages that we are using.
+First, we'll start by loading the packages that we are using.  
 
 ``` {r warning=FALSE}
 library (magrittr, quietly = TRUE) #Used for pipes/dplyr
@@ -170,7 +170,7 @@ Another thing to take note of in learning how to use RMarkdown is that results f
 
 One thing to note is that the first row of `Resources` is by definition a row vector and `result.products` is also a row vector.  What we want to do is do a row vector multiplied by a column vector.  In order to do this, we need to convert the row vector of results into a column vector.  This is done by doing a _transpose_ which changes the row to a column.  This is done often enough that that the operation is just one letter, `t`.  
 
-We can go one further step now and multiply the matrix of resources by the column vector of production.
+We can go one further step now and multiply the matrix of resources by the column vector of production.  
 
 ```{r}
 Results.Resources <- Resources[]%*%t(results.products)
