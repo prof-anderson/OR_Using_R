@@ -347,9 +347,9 @@ We'll demonstrate the performance for illustration purposes.  Again, do not run 
 
 ### Performance of glpk
 
-We have been using `glpk` for all of our earlier examples.  For the sake of comparison, let's start off with it too.  We will use the `tictoc` package to help us collect data on timing.  Note that timing can vary even if the same problem is solved on the same computer twice in rapid succession.
+We have been using `glpk` for all of our earlier examples.  For the sake of comparison, let's start off with it too.  We will use the `tictoc` package to help us collect data on timing.  Note that timing can vary even if the same problem is solved on the same computer twice in rapid succession.  
 
-```{r timeglpk}
+```{r timeglpk, cache=TRUE }
 library(tictoc)   # Package used for timing R functions
 
 tic("glpk")        # Start the timer...
@@ -372,7 +372,7 @@ The `glpk` solver worked.  We'll take the results and combine them with other sh
 
 Let's move on to testing the `symphony` solver.
 
-```{r timesymphony}
+```{r timesymphony, cache=TRUE }
 
 library (ROI.plugin.symphony, quietly = TRUE) # Plugin for solving
 
@@ -405,7 +405,7 @@ The last option, `first_feasible`, has a default value of FALSE.  If it is set t
 
 Let's examine this by passing `first_feasible=TRUE` to see what happens.
 
-```{r timesymphonyfirstfeasible}
+```{r timesymphonyfirstfeasible, cache=TRUE }
 
 library (ROI.plugin.symphony, quietly = TRUE) # Plugin for solving
 
@@ -435,7 +435,7 @@ Thirdly, the time on my computer sometimes took less time to solve to optimality
 
 The `lpsolve` package has a long history too and is widely used.  Let's test it and see how it performs.
 
-```{r timelpsolve}
+```{r timelpsolve, cache=TRUE}
 library (ROI.plugin.lpsolve, quietly = TRUE) # Plugin for solving
 
 tic("lpsolve")
@@ -477,6 +477,8 @@ The most important thing to note is that each solver states that it found an opt
 Note that time will vary significantly from computer to computer and may also depend upon the other tasks and the amount of memory available.  Also, performance will change for different solver settings and for different problems.  Also, performance time will change for different random instances-simply changing the random number seed will create diferent results.  
 
 The ROI package lists 19 different solvers with ROI plugins.  Three commercial solvers, C-Plex, GUROBI, and MOSEK are worth highlighting.  These programs may be substantially faster on large MIP problems and may make versions available for academic use.  Others are for quadratic optimization or special classes of optimization problems.  
+
+After running these chunks dozens of times and finding the results to be quite stable across the various solvers tested, I decided to make use of the code chunk option `cache=TRUE`. Caching means that it will save the results unless things are changed.  If it determines that things have changed, it will rerun that chunk. This can save a lot of time in knitting the chapter or rebuilding the book. This is an excellent application area for demonstrating the benefits of using the chunk option for caching. The current application requires 10-15 seconds to do each full size customer warehouse optimization run. Caching just the four runs can save about a minute of knitting time. RStudio and knitr do a sophisticated check for changes which can invalidate the previously cached results and will then rerun the code chunk and save the results for future cached knits as appropriate. More demanding needs can use the granularity of numerical options for caching as compared to simply TRUE/FALSE and additional options. These might be required in detailed performance testing or numerical performance comparisons.  
 
 ### Discussion
 

@@ -978,7 +978,7 @@ RMarkdown is very helpful for integrating analysis and results but the code can 
 * Make sure to get your header information correct.  Small typos can cause problems preventing knitting from occuring.
 * Name your code chunks uniquely. Not naming code chunks can make it harder to find errors or to navigate complex documents. Once you start naming code chunks though and copying code chunks for building more complex models, you run into duplicate code chunk problems.  Each name must be unique.  
 * Use code chunk options smartly. Look over the list of common options such as `eval` and `echo` are particularly helpful.
-* Remember to put a blank line before a bulleted list.
+* Remember to put a blank line before a bulleted or numbered list.
 * Putting two blank spaces at the end of a paragraphy will give a little more spacing between paragraphs.  
 * Sometimes running all chunks will make more visible where a problem is than when an RMD is knitted.  
 
