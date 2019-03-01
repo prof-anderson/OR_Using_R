@@ -92,13 +92,13 @@ Now, let's assume that you are running RStudio.
 
 In this book, I  will frequently show code fragments called chunks to show R code. In general, these code chunks can be run by simply retyping the command(s) in the Console.  
 
-```{r}
+```{r Assigning}
 a <- 7
 ```
 
 This command assigns the value of 7 to the variable _a_. It is standard in R to use `<-` as an assignment operator rather than an equals sign. We can then use R to process this information. 
 
-```{r}
+```{r Math_operation}
 6*a
 ```
 
@@ -106,7 +106,7 @@ Yes, not surprisingly, _6*7_ is _42_.  Notice that if we don't assign that resul
 
 We will often be using or defining data that has more than one element.  In fact, R is designed around more complex data structures.  Let's go ahead and define a matrix of data.  
 
-```{r}
+```{r Create_Matrix}
 b<-matrix(c(1,2,3,4,5,6,7,8))
 ```
 
@@ -114,13 +114,13 @@ By default, it is assuming that the matrix has one column which means that every
 
 Let's look at _b_ now to see what it contains.
 
-```{r}
+```{r Looking_at_an_Object}
 b
 ```
 
 Let's instead define this matrix to have four columns and two rows.
 
-```{r}
+```{r Resizing_Matrix}
 b<-matrix(c(1,2,3,4,5,6,7,8), ncol=4)
 b
 ```
@@ -129,7 +129,7 @@ Notice that we only needed to tell R that the matrix has four columns and it the
 
 This is still a little boring.  Let's give the rows and columns names.  
 
-```{r}
+```{r Naming_Rows_and_Columns}
 b<-matrix(c(1,2,3,4,5,6,7,8), ncol=4, 
           dimnames=c(list(c("Row1", "Row2")),
                      list(c("Col1", "Col2","Col3","Col4"))))
@@ -141,13 +141,13 @@ The `dimnames` parameter will get get two concatenated (combined) lists. The fir
 
 Let's confirm that it works.
 
-```{r}
+```{r Displaying_New_Matrix}
 b
 ```
 
 This table is still not that "nice" looking.  Let's use a package that does a nicer job of formatting tables.  To do this, we will use an extra package.  Up to this point, everything that we have done just simply uses standard built in functions of R. The package that we will use is `pander` but there are plenty of others available such as `kable`,`xtable`, and `huxtable`.  Let's start by loading the package.
 
-```{r}
+```{r Installing_a_Package}
 # install.packages("pander") # Use this command if pander is not installed.
 library(pander)
 ```
@@ -158,7 +158,7 @@ Notice the hash symbol is used to mark comment in the above code chunk.  It is a
 
 Now, let's put the `pander` package to work.
 
-```{r}
+```{r Using_Pander}
 pander(b, caption="Nicely formatted table using pander")
 ```
 
@@ -166,14 +166,14 @@ When rendered in plain text, it might not look so fancy but it looks much better
 
 Let's continue experimenting with operators.  
 
-```{r}
+```{r Scalar_Multiplication}
 c<-a*b
 pander(c, caption="Scalar Multiplication of Matrix b")
 ```
 
 Now let's do a transpose operation on the original matrix.  What this means that it converts rows into columns and columns into rows.
 
-```{r}
+```{r Transposing}
 d<-t(b)
 pander(d, caption="Transposition of Matrix b")
 ```
@@ -188,7 +188,7 @@ Change the row and column names for the transposed matrix above.
 
 here is my solution to that....
 
-```{r}
+```{r Displaying_My_Solution}
 c
 d
 ```
@@ -203,24 +203,24 @@ Recall that we have created a variety of objects now: a, b, c, and d. R provides
 
 Let's look at the original matrix, b and what we can do with it.  Let's grab the second row, third column and last element.  
 
-```{r}
+```{r Original_Matrix}
 pander(b, caption="Original Matrix b")
 
 ```
 
-```{r}
+```{r Extracting_Second_Row}
 pander(as.matrix(b[2,]), caption="Second Row of b")
 ```
 
 The `as.matrix` function is used to convert the object into a matrix so that pander can display it well.  Note that I might explore alternatives to `pander` such as `huxtable` in the future.  Here is a discussion of huxtable and comparison of many different packages for displaying tables https://hughjonesd.github.io/huxtable/design-principles.html 
 
-```{r}
+```{r Extracting_Third_Column}
 pander(as.matrix(b[,3]), caption="Third Column of b")
 ```
 
 Grabbing the third column is not terribly interesting but operations such as this will often be quite useful.
 
-```{r}
+```{r Displaying Bottom_Right_Element}
 pander(as.matrix(b[2,4]), caption="Last Element of b")
 ```
 
@@ -230,7 +230,7 @@ Now, let's show how we can combine two objects.
 
 Recall tables _b_ and _c_ from earlier.
 
-```{r}
+```{r Show_both_Matrices}
 pander(b, caption="Matrix b")
 
 pander(c, caption="Matrix c")
@@ -238,21 +238,21 @@ pander(c, caption="Matrix c")
 
 Let's take the first row of `b` and combine it with the second row of `c` to form a new matrix, `e`.  Since these are rows that are going to be combined, we will use a command, `rbind`, to bind these rows together.
 
-```{r}
+```{r Combined_Matrix}
 e<-rbind(b[1,],c[2,])
 pander(e,caption="Combined Matrix")
 ```
 
 Notice that _e_ has inherited the column names but lost the row names.  Let's set the row names for this matrix.
 
-```{r}
+```{r Changing_Row_Names}
 rownames(e)<-list("From_b", "From_c")
 pander(e, caption="Combined Matrix with Explanation of Source")
 ```
 
 We could combine all of matrix `b` and matrix `c` together using row binding or column binding.
 
-```{r}
+```{r Row_and_Column_Binding}
 pander(cbind(b,c), caption="Column Binding of Matrices b and c")
 pander(rbind(b,c), caption="Row Binding of Matrices b and c")
 ```

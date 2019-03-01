@@ -502,7 +502,7 @@ You may use Dirk's vignette as a starting point to build your own model for assi
 
 Student preferences can be loaded from the comma separated file as shown below or typed in.
 
-```{r}
+```{r Student_Preference_Data}
 #studentpref<-read.csv(file="HW5data.csv")
 
 #pander (studentpref, caption="Student to Project Preferences")

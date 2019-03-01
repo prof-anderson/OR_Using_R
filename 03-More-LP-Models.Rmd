@@ -66,7 +66,7 @@ This concise, algebraic representation can be easily scaled to any number of pro
 
 We will define the number of products as four and five resource constraints.  
 
-```{r}
+```{r Product_Planning_4x5 }
 NProd <- 4
 NResources <- 5
 
@@ -88,14 +88,14 @@ Available <- matrix(c(1440, 1440, 2000, 1000, 9600),
 
 Let's now display the data.  This should match the data that we hard coded into the R linear programming model in the previous chapter.  Let's display the data.  (Recall from last chapter that the _pander_ library is helpful for making tables look better.)  
 
-```{r}
+```{r Display_Profit_per_Product}
 library(pander)
 pander(Profit, caption="Profit per Product")
 ```
 
 Similarly, we can display the resources used by each product and the amount of each resource available.  
 
-```{r}
+```{r Display_Resources_and_Available}
 pander(Resources, caption="Resources used by each product")
 
 pander (Available, caption="Amount of each Resource Available")
@@ -108,7 +108,7 @@ Now we need to define variables.
 
 Let's show how we can display the resources used and available in one table.  We will use the _cbind_ function to do a column binding of the data.  
 
-```{r}
+```{r Display_Resources_Available_Combined}
 
 pander(cbind(Resources, Available), caption="Resources Used by Each Product and Available")
 
@@ -129,7 +129,7 @@ library (ompr, quietly = TRUE)
 library (ompr.roi, quietly = TRUE)
 ```
 
-```{r}
+```{r Build_Prod_Model}
 
 prodmodel <- MIPModel() %>%
   add_variable (x[i], i=1:NProd, type="continuous", lb=0) %>%
@@ -149,7 +149,7 @@ Displaying the object of _prodmodel_ only shows a simple summary of the results 
 
 This is useful to know but we are really interested in how to generate this profit.  To do this, we need to extract the values of the variables.  
 
-```{r}
+```{r Display_Results}
 results.products <- matrix (rep(-1.0,NProd), nrow = NProd, ncol=1,
                             dimnames=c(ProdNames,c("x")))
 
@@ -172,7 +172,7 @@ One thing to note is that the first row of `Resources` is by definition a row ve
 
 We can go one further step now and multiply the matrix of resources by the column vector of production.  
 
-```{r}
+```{r Calculate_Resources_Used}
 Results.Resources <- Resources[]%*%t(results.products)
                   # Multiply matrix of resources by amount of products produced
 
@@ -192,7 +192,7 @@ Let's modify the above model.  We can do this by simply changing the data that w
 
 Let's change the time required for painting a chair to 20.  Recall that this is the first product and the fourth resource.  This is how we can change the value.
 
-```{r}
+```{r Change_Data}
 
 Resources[4,1] <- 20  # Set value of the 4th row, 1st column to 20
         # In our example, this is the paint resource used by making a chair
@@ -201,7 +201,7 @@ Resources[4,1] <- 20  # Set value of the 4th row, 1st column to 20
 
 Now we will rebuild the the optimization model.
 
-```{r}
+```{r Rebuild_and_Solve_Model}
 prodmodel <- MIPModel() %>%
   add_variable (x[i], i=1:NProd, type="continuous", lb=0) %>%
   set_objective (sum_expr(Profit[i] * x[i] , i=1:NProd ), "max") %>%
@@ -216,7 +216,7 @@ prodmodel
 
 Note that the objective function has changed.  
 
-```{r}
+```{r Examine_Results_of_Changed_Model}
 results.products <- matrix (rep(-1.0,NProd), nrow = NProd, ncol=1,
                             dimnames=c(ProdNames,c("x")))
 
@@ -324,7 +324,7 @@ resBlending <- solve_model(ModelBlending, with_ROI(solver = "glpk"))
 ```
 
 
-```{r}
+```{r Blending_Results}
 blendres<-cbind(get_solution (resBlending, Chairs),
                 get_solution (resBlending, Desks),
                 get_solution (resBlending, Tables))
@@ -333,7 +333,7 @@ blendres<-cbind(get_solution (resBlending, Chairs),
 
 Okay, now let's put both side by side in a table to show the results.
 
-```{r}
+```{r Compare_Blending_to_Base_Results}
 
 rownames(base_case_res)<-"Base Model Plan"
 
@@ -386,7 +386,7 @@ Consider the case of Trevor's Trail Mix Company.  Trevor creates a variety of cu
 
 Let's go ahead and build a model in the same way as we had done earlier for production planning.
 
-```{r}
+```{r Trail_Mix_Data}
 NMix <- 4
 NCharacteristic <- 4
 
@@ -411,7 +411,7 @@ CharMin <- matrix(c(1440, 1440, 2000, 1000),
 
 Hint:  You might need to add a total amount to make!   Modify the numbers until it runs...
 
-```{r}
+```{r Display_Trail_Mix_Data}
 pander(cbind(MixChar,CharMin), caption="Data for Trevor Trail Mix Company")
 ```
 

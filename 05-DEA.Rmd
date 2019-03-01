@@ -67,7 +67,7 @@ Let's start by creating a simple dataset.  We'll assume that we have a small gro
 
 Which of these units are the best?  Which are laggards?  Simply looking at the data is difficult.  Let's get started now with R.  
 
-```{r}
+```{r Displaying_First_Dataset}
 library(pander, quietly=TRUE)
 x <- matrix(c(10,20,30,50),ncol=1,dimnames=list(LETTERS[1:4],"x"))
 
@@ -91,7 +91,7 @@ Graphical Analysis
 
 Let's start by doing a simple plot of the data.  For now, I'm going to make use of a function in Peter Bogetoft and Lars Otto's Benchmarking package which provides a very handy two-dimensional  plot in the format often used for showing production. 
 
-```{r}
+```{r DEA_Isoquant_Plot}
 library(Benchmarking, quietly=TRUE)
 
 dea.plot(x, y, RTS="crs", ORIENTATION="in-out", txt=LETTERS[1:length(x)], 
@@ -339,7 +339,7 @@ for (k in 1:ND) {
 
 Success!  This indicates each of the four linear programs was solved to optimality.  By itself, it doesn't help much though.  We need to now display each column of results. Lambda, $\lambda$, reflects the way that a best target is made for that unit.
 
-```{r}
+```{r Display_Envelopment_Results}
 Lambdanames <- list("L_A", "L_B", "L_C", "L_D")
 DMUnames <- list("A", "B", "C", "D")
 dimnames(results.efficiency)<-list(DMUnames,"CCR-IO")
@@ -478,7 +478,7 @@ This data is a little more complicated so let's make sure that we understand the
 
 The two outputs of _reimbursed patient-days_ and _privately paid patient-days_ are named "y1" and "y2" but otherwise have the same structure as the inputs.  
 
-```{r}
+```{r Baker_Data}
 YBaker1 <- matrix(c(14000, 14000, 42000, 28000, 19000, 14000, 3500, 21000, 10500, 
                     42000, 25000, 15000),
                   ncol=2,dimnames=list(LETTERS[1:6],c("y1", "y2")))
@@ -569,7 +569,7 @@ The small, nearly zero, values that may appear in DEA calculations can cause som
 
 Let's compare the results from the constant and variable returns to scale cases.
 
-```{r}
+```{r Compare_CRS_to_VRS}
 pander(cbind(results.efficiency,BakerCCR.Res), round=6,
        caption="Comparison of CRS vs. VRS Efficiency Scores")
 ```

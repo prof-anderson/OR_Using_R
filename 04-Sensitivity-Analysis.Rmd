@@ -222,7 +222,7 @@ These results are interesting.  The reduced costs of variables that are between 
 
 Let's start by examining the Shadow Prices of the resources along with the number of each resource used in the production of a single chair.  
 
-```{r}
+```{r Shadow_Price_Single_Chair}
 chair_res_used<-cbind(rduals1,c(2,8,6,40,0))
 colnames(chair_res_used)<-c("Row Duals", "Resources Used")
 pander(chair_res_used, caption="Resources Used by a Chair and their Shadow Prices")
@@ -232,7 +232,7 @@ Taking the product in each row and adding them up will give the marginal value o
 
 We can repeat the same process and calculations for Desks.  
 
-```{r}
+```{r Shadow_Price_Desks}
 desk_res_used<-cbind(rduals1,c(2,6,4,25,0))
 colnames(desk_res_used)<-c("Row Duals", "Resources Used")
 pander(desk_res_used, caption="Resources Used by a Desk and their Shadow Prices")
@@ -244,9 +244,9 @@ In this case, the marginal value is $0+1*6+2*4+0+0=14$.  Since the profit per de
 
 The situation is more interesting for Tables. The production plan does not call for producing any tables. This means that it is sitting right at the lower bound of zero Tables.  This hints that perhaps we would like to make even less than zero Tables if we could and that being _forced_ to make even one table would be costly. A reduced cost of -4 means that the opportunity cost of resources used in producing a table is $\$4$ more than the profit of producing a single table.  In other words, we would expect that if we force the production of a single table, the over all production plan's profit will go down by $\$4$.
 
-Let's go ahead and test this. interpretation by again looking at the value of the resources consumed and the number used.  
+Let's go ahead and test this interpretation by again looking at the value of the resources consumed in the production of a table and the number used.  
 
-```{r}
+```{r Shadow_Price_Table}
 table_res_used<-cbind(rduals1,c(4,4,8,25,0))
 colnames(table_res_used)<-c("Row Duals", "Resources Used")
 pander(table_res_used, caption="Resources Used by a Table and their Shadow Prices")
@@ -288,7 +288,7 @@ Table1Model <- MIPModel() %>%
 
 Let's compare the results for the new production plan and the original base case.  
 
-```{r}
+```{r Base_vs_Forced_Table}
 rownames(base_case_res) <- "Base Case"
 Table1_case_res           <- cbind(obj_val, xchairs,xdesks,xtables)
   rownames(Table1_case_res) <- "with forced change to Tables"
@@ -303,7 +303,7 @@ As we expected, the forced change of making one additional table resulted in a d
 
 Let's consider a design proposal for a bookcase.  The bookcase has a projected profit of $\$35$ each and uses 6 hours of fabrication time, 12 of assembly, and 16 of machining.  It uses 80 square feet of wood.  
 
-```{r}
+```{r New_Prod_with_Shadow_Prices}
 bookcase_res_used<-cbind(rduals1,c(6,12,16,80,0))
 colnames(bookcase_res_used)<-c("Row Duals", "Resources Used")
 pander(bookcase_res_used, caption="Resources Used by a Bookcase and their Shadow Prices")

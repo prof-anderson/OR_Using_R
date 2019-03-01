@@ -138,7 +138,7 @@ model0b <- add_variable(model0a, Desks, type = "continuous",lb = 0)
 
 The next line takes `model0` and adds the _Chairs_ variable to it, creating an enhanced `model0a`.  These variables are continuous (as compared to integer or binary), and non-negative. The variable is made non-negative by setting a zero lowerbound (`lb=0`). The lowerbound can be set to other values such as a minimum production level of ten.  Also upperbounds for variables can be set using `ub` as a parameter. Do the same thing to add the _Desks_ variable to `model0a` creating `model0b`. Let's check the new model.
 
-```{r}
+```{r Model_Summary_with_Desks}
 model0b
 ```
 
@@ -165,7 +165,7 @@ result0 <- solve_model(model0g, with_ROI(solver = "glpk"))
 
 Notice that we do not need to include non-negativity constraints since they were in the earlier definition of the variables. Let's take a look at the summary of the model after all of the constraints have been added.
 
-```{r}
+```{r Model_Summary_with_All_Constraints}
 model0g
 ```
 
@@ -468,7 +468,7 @@ $$
 
 The implementation can be simplified again since we are only changing the objective function, let's change the objective function in `model1` and save it to `model2a`.
 
-```{r}
+```{r Modify_Model_to_Have_Multiple_Optima}
 model2a <- set_objective(model1, 20*Chairs - 10*Desks - 16*Tables, "max") 
 
 result2a <-  solve_model(model2a, with_ROI(solver = "glpk"))
@@ -477,7 +477,7 @@ result2a <-  solve_model(model2a, with_ROI(solver = "glpk"))
 
 #### Results and Interpretation of Multiple Optima
 
-```{r}
+```{r Show_First_Solution_from_Multiple_Optima}
 print(solver_status(result2a))
 res2a <- cbind(objective_value (result2a),
                get_solution(result2a, Chairs),
@@ -493,7 +493,7 @@ pander(res2a,caption="Results 2a - A First of Multiple Optima")
 
 Okay.  When I ran it, all the production was focused on Chairs.  I think that there is an alternate solution producing Desks with the same total profit. The LP engine won't necessarily tell you that there is an alternate optimal solution.  Let's see if we can "trick" the LP to show an alternate solution by disallowing the previous solution by setting Chairs=0.  
 
-```{r }
+```{r Show_Second_Solution_from_Multiple_Optima}
 model2b <- add_constraint(model2a, Chairs <= 0) 
             # FORCING LP TO FIND A DIFFERENT SOLUTION
 
@@ -516,7 +516,7 @@ Again, only one product is made but now it is Desks instead of Chairs.  The numb
 
 Let's summarize these two results more clearly by displaying them in a single table.  
 
-```{r}
+```{r Summarize_Results_of_Multiple_Optima}
 pander(rbind(res2a,res2b), caption="Comparison of Two Alternate Optimal Solutions")
 ```
 
@@ -550,7 +550,7 @@ $$
 
 Now we can implement the model.
 
-```{r}
+```{r Redundant_Constraint_Model}
 result3 <- MIPModel() %>%
   add_variable(Chairs, type = "continuous", lb = 0) %>%
   add_variable(Desks, type = "continuous", lb = 0) %>%
@@ -571,7 +571,7 @@ result3 <- MIPModel() %>%
 
 ### Results and Interpretation with a Redundant Constraint
 
-```{r}
+```{r Solve_with_Redundant_Constraint}
 
 print(solver_status(result3))
 get_solution(result3, Chairs)
@@ -588,7 +588,7 @@ Challenge:  How would you modify the formulation to find the most pieces of furn
 
 ### Case 4: Unbounded Solution
 
-#### Formulation 
+#### Formulation of an Unbounded Situation
 
 As with other cases, there are multiple ways of triggering this condition.  For the unbounded solution, instead of at *most* a certain amount of resources can be used, the constraints are changed to at *least* that amount of each resource must be used.  This doesn't make a lot of sense in the setting of this application.  Perhaps a cynic would say that in a cost-plus business arrangement or a situation where the factory manager has a limited purview and doesn't see issues such as downstream demand limits and cost impacts, it results in this kind of myopic perspective. More commonly, an unbounded solution might be a sign that the analyst had simply reversed one or more inequalities or the form of the objective (max vs. min).
 
@@ -607,11 +607,11 @@ $$
   (\#eq:BaseModelEx4d)
 $$
 
-#### Implementation
+#### Implementation with Unbounded Modification
 
 The implementation simply requires changing a < to a > for each constraint as well.
 
-```{r}
+```{r Unbounded_Model}
 result4 <- MIPModel() %>%
   add_variable(Chairs, type = "continuous", lb = 0) %>%
   add_variable(Desks, type = "continuous", lb = 0) %>%
@@ -632,7 +632,7 @@ result4 <- MIPModel() %>%
 
 #### Results and Interpretation
 
-```{r}
+```{r Unbounded_Results}
 print(solver_status(result4))
 get_solution(result4, Chairs)
 get_solution(result4, Desks)
@@ -778,7 +778,7 @@ Next we can turn those into functions. Rather than inequalities, treat them as e
 
 Note that R makes it very easy to define a function!  In this case, the first function will take a value of `x` and return the value of `y` for the first constraint.  
 
-```{r}
+```{r Using_Functions}
 
 r1y <- function(x) 7400 / 60 - 40 / 60 * x
 r2y <- function(x) 3300 / 25 - 20 / 25 * x
@@ -789,7 +789,7 @@ r2y <- function(x) 3300 / 25 - 20 / 25 * x
 
 Secondly we will create an artificial series for x to plug into our functions, then create a data frame with a column for each series.  Let's populate the data frame of possible plans of xbots `x1`.  The `seq` function is very handy here in that it will generate a sequence of values from _0_ to _200_ xbots.  
 
-```{r}
+```{r Create_a_Series}
 
 # create the series
 x1 = seq(0,200)
@@ -799,7 +799,7 @@ pander(head(as.matrix(x1)),caption="Beginning of Sequence x1")
 
 The next statement takes a little unpacking to fully understand and illustrates another strength of R.  Now, we would like to evaluate each of these 201 values for `x1` using the functions for the two constraints that we just defined.  We could use a `for-next loop` if we were using a language such as BASIC but R handles these operations more smoothly and efficiently.  We can pass the data frame for `x1` into the function and R is smart enough to return the results in the same size data frame, `y1`. Of course we do the same thing for the second function (constraint).  
 
-```{r}
+```{r Creating_More_Data}
 
 # 2 constraints in this equation so there are 2 y variables, y1 and y2.  
 # If you have more constraints you can just keep adding them here.
@@ -814,7 +814,7 @@ Note that we now have coordinates for each series. If you have more than 2 const
 
 To show our feasible region on a graph the x and y coordinates are not enough, we also need to determine the area of the region we want to shade in to show the region. To do this we really just need to get the minimum of y1 or y2. Note this is for a maximization problem, if we were looking at a minimization problem you would change 'pmin' to 'pmax', which would shade the region above the line rather than below the line. If this doesn't make sense at this point, it will when you see the graph.
 
-```{r}
+```{r First_ggplot}
 library(ggplot2)
 
 # Add the Z region for shading
@@ -827,7 +827,7 @@ head(seriesDf)
 
 To find the optimal value we will look for the intersection of the constraints. Unfortunately in R there isn't a nice easy way to get this so we'll need to write a function that takes in our lines and returns the x,y coordinates of their intersection.
 
-```{r}
+```{r Intersecting_Constraints}
 # this function returns a data frame with the intersection point of 2 lines
 # pass in the model for each line 
 lmInt <- function(line1, line2) {
@@ -844,7 +844,7 @@ lmInt <- function(line1, line2) {
 
 Next we can use this function to find the intercept of these lines:
 
-```{r}
+```{r Finding_Intersection}
 
 # find the intersect of the lines
 intersection <- lmInt(lm(seriesDf$y1~seriesDf$x1), lm(seriesDf$y2~seriesDf$x1))
@@ -857,7 +857,7 @@ At this point we have everything we need to see our results on a graph. There ar
 
 In this example we are going to just scratch the surface of ggplot functionality, so know that if you study up a bit you can do much more!
 
-```{r}
+```{r Plotting_Lines}
 #make a plot with PSU colors for the lines!
 ggplot(seriesDf, aes(x = x1)) + 
   geom_line(aes(y = y1), color = 'white') +
@@ -871,7 +871,7 @@ Awesome, it looks good! Though PSU colors don't work so well, that white is hard
 
 Now let's solve the model for real to see if it's right!
 
-```{r}
+```{r Solving_Model}
 
 result0 <- MIPModel() %>%
   add_variable(R1, type = "continuous", lb = 0) %>%
@@ -910,9 +910,9 @@ $$
   (\#eq:ExampleTwo)
 $$
 
-```{r}
+```{r Translate_Constraints}
 
-# first transate the constraints:
+# first translate the constraints:
 # 5*x + 3*y >=  210   becomes y = 210/3 - 5/3*x
 # x + y <= 110        becomes y = 110 - x
 # 4*x + y <= 200      becomes y = 200 - 4*x

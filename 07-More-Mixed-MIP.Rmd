@@ -117,7 +117,7 @@ For transportation cost, we will assume that simple Euclidean distance is a good
 
 Her we define a function to calculate the distance between customer _i_ and warehouse _j_.
 
-```{r}
+```{r Calculate_Transport_Cost}
 transportcost <- function(i, j) {
   customer <- customer_locations[i, ]
   warehouse <- warehouse_locations[j, ]
@@ -128,7 +128,7 @@ transportcost(1, 3)
 
 > Now let's plot everything. Black dots are customers and red dots are possible warehouse locations.
 
-```{r}
+```{r Plot_Map_of_Customers_and_Warehouses}
 library(ggplot2)
 p <- ggplot(customer_locations, aes(x, y)) + 
   geom_point() + 
@@ -144,7 +144,7 @@ p + ggtitle("Warehouse location problem",
 
 Note that I have modified the variables names for _x_ and _y_ to be `Vx` and `Vy` in the code chunk to remove confusion over x and y representing location or variables.  The prefix of `V` is meant to suggest that it is a variable.
 
-```{r, message=FALSE}
+```{r Build_Warehous_Model, message=FALSE}
 library(ompr)
 library(magrittr)
 model <- MIPModel() %>%
@@ -293,7 +293,7 @@ Dots represent customers served by the respective warehouses.")
 
 >The total fixed costs for setting up the `r n_distinct(matching$j)` warehouses is:
 
-```{r}
+```{r Add_up_Fixed_Costs_of_Used_Warehous}
 sum(fixedcost[unique(matching$j)])
 ```
 
@@ -668,7 +668,7 @@ Sudoku_model
 
 I've made a couple of minor changes to Dirk's code chunks. I replaced the `x` variable with `Vx` to avoid R name space collisions with previously defined enviromental variables for `x`. Secondly, I switch the `sx` and `sy` to `r` and `c` to represent moving over by rows and columns.  
 
-```{r}
+```{r Build_Sudoku_Model}
 library(ompr.roi)
 library(ROI.plugin.glpk)
 Sudoku_result <- solve_model(Sudoku_model, with_ROI(solver = "glpk", verbose = TRUE))
