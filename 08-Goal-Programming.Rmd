@@ -34,3 +34,6 @@ Req <- matrix(c(10,35,30,
 Idea, extend Dirk's class schedule assignment example to include secondary objectives.  
 
 **MORE TO BE ADDED**
+
+
+Let's say we want to add some more content, save it to the local branch, then push for Dr. Anderson to review. 
