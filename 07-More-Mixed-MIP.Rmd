@@ -360,6 +360,215 @@ We'll demonstrate the performance for illustration purposes.  Again, do not run 
 We have been using `glpk` for all of our earlier examples.  For the sake of comparison, let's start off with it too.  We will use the `tictoc` package to help us collect data on timing.  Note that timing can vary even if the same problem is solved on the same computer twice in rapid succession. 
 \vspace{12pt}
 
+
+```{r timeglpk, cache=TRUE }
+library(tictoc)   # Package used for timing R functions
+
+tic("glpk")        # Start the timer...
+
+result_glpk <-  solve_model(model, with_ROI(solver = "glpk", verbose=TRUE))
+
+glpktime <- toc()  # End the timer and save results
+
+print(solver_status(result_glpk))
+
+glpktime1 <- c("glpk", glpktime$toc - glpktime$tic, 
+               result_glpk$status, 
+               result_glpk$objective_value)
+
+```
+
+The `glpk` solver worked.  We'll take the results and combine them with other shortly
+
+## Performance of Symphony
+
+Let's move on to testing the `symphony` solver.
+
+```{r timesymphony, cache=TRUE }
+
+library (ROI.plugin.symphony, quietly = TRUE) # Plugin for solving
+
+tic("symphony")
+
+result_symphony <-  solve_model(model, with_ROI(solver = "symphony",
+                                                verbosity = -1))
+
+symphonytime <- toc()
+
+print(solver_status(result_symphony))
+
+symphonytime1 <- c("symphony", symphonytime$toc - symphonytime$tic,
+                   result_symphony$status,
+                   result_symphony$objective_value)
+
+```
+
+Again, `symphony` successfully solved the optimization problem.
+
+Several items should be noted from the above code and output. One item is that parameters can be passed directly to solvers.  This is why `verbose = TRUE` was used for `glpk` but `symphony` uses `verbosity = -1`. Differing levels of verbosity gives much more granularity than a simple TRUE/FALSE. Setting `verbosity = 0` will give rich detail that an analyst trying to improve solution speed may find useful or for debugging why a model did not work but explaining the options is well beyond the scope of this text.  
+
+It should be noted that other options can be passed to the the symphony solver though such as `time_limit`, `gap_limit`, and  `first_feasible`.  
+
+The `time_limit` option has a default value of -1 meaning no time limit.  It should be an integer to indicate the number of seconds to run before stopping.  
+
+The `node_limit` option has a default value of -1 meaning no limit on the number of nodes (in an MIP problem, the number of linear programs). It should be an integer to indicate the number of nodes examined before stopping.  
+
+The last option, `first_feasible`, has a default value of FALSE.  If it is set to TRUE, then symphony will stop when it has found a first solution that satisfies all the constraints (including integrality) rather than continuing on to prove optimality.
+
+Let's examine this by passing `first_feasible=TRUE` to see what happens.
+
+```{r timesymphonyfirstfeasible, cache=TRUE }
+
+library (ROI.plugin.symphony, quietly = TRUE) # Plugin for solving
+
+tic("symphony")
+
+result_symphony_ff <- solve_model(model, with_ROI(solver = "symphony",
+                                                verbosity = -1,
+                                                first_feasible=TRUE))
+
+symphonytimeff <- toc()
+
+print(solver_status(result_symphony_ff))
+
+symphonytimeff <- c("symphony first feas.", symphonytimeff$toc - symphonytimeff$tic,
+                   result_symphony_ff$status,
+                   result_symphony_ff$objective_value)
+
+```
+
+Several interesing and important things should be noted here.  First, `ompr` interprets the status message from the solver as not being solved to optimality to indicate that the problem is not feasible.  This is a known issue in `ompr` and `ompr.ROI`as of version 0.8.0.0.  It highlights that "infeasible" status from the `ompr` should be thought of as meaning that an optimal solution was not found for _some_ reason such as being told to terminate after the first feasible solution was found, time limit reached, node limit reached, the MIP was infeasible, the MIP was unbounded, or some other issue.
+
+A second thing to note that in my randomly generated instance, the very first feasible solution it found, happens to have the same objective function value as the optimal solution found to optimality earlier by `glpk` and `symphony`. This is similar to the very simple, two variable integer programming problem that we examined using a branch and bound tree in the previous chapter.  Symphony just doesn't have confirmation yet that this first feasible solution is truly optimal yet.  
+
+Thirdly, the time on my computer sometimes took less time to solve to optimality than for when it stopped _early_ with just the initial feasible solution.  This demonstrates the variability of solving time.  
+
+## Performance of lpsolve
+
+The `lpsolve` package has a long history too and is widely used.  Let's test it and see how it performs.
+
+```{r timelpsolve, cache=TRUE}
+library (ROI.plugin.lpsolve, quietly = TRUE) # Plugin for solving
+
+tic("lpsolve")
+
+result_lpsolve <-  solve_model(model, with_ROI(solver = "lpsolve", verbose=TRUE))
+
+lpsolvetime <- toc()
+
+print(solver_status(result_lpsolve))
+
+lpsolvetime1 <- c("lpsolve", lpsolvetime$toc - lpsolvetime$tic,
+                   result_lpsolve$status,
+                   result_lpsolve$objective_value)
+
+```
+
+We can see that `lpsolve` was also successful.
+
+### Comparing results across solvers
+
+Now let's compare how they each did.  
+
+```{r comparetimes}
+
+timeresults <- rbind(glpktime1, symphonytime1, symphonytimeff, lpsolvetime1)
+
+colnames (timeresults) <- c("Solver", "Time (Sec)", "Status", "Obj. Func. Value")
+
+rownames (timeresults) <- NULL
+
+panderOptions('round', 2)
+
+pander(timeresults, caption="Comparison of Results from Warehouse 
+       Customer Assignment Across Solvers", digits=2)
+```
+
+The most important thing to note is that each solver states that it found an optimal solution with the same  objective function value.  While they may vary in how it is achieved if there are multiple optima (in other words, different values for decision variables _x_ and _y_), this means that they all found a correct solution.  It would be a big issue if they differed. Causes for difference could be timing out, satisfying a suboptimality tolerance factor condition, or some error.  
+
+Note that time will vary significantly from computer to computer and may also depend upon the other tasks and the amount of memory available.  Also, performance will change for different solver settings and for different problems.  Also, performance time will change for different random instances-simply changing the random number seed will create diferent results.  
+
+The ROI package lists 19 different solvers with ROI plugins.  Three commercial solvers, C-Plex, GUROBI, and MOSEK are worth highlighting.  These programs may be substantially faster on large MIP problems and may make versions available for academic use.  Others are for quadratic optimization or special classes of optimization problems.  
+
+After running these chunks dozens of times and finding the results to be quite stable across the various solvers tested, I decided to make use of the code chunk option `cache=TRUE`. Caching means that it will save the results unless things are changed.  If it determines that things have changed, it will rerun that chunk. This can save a lot of time in knitting the chapter or rebuilding the book. This is an excellent application area for demonstrating the benefits of using the chunk option for caching. The current application requires 10-15 seconds to do each full size customer warehouse optimization run. Caching just the four runs can save about a minute of knitting time. RStudio and knitr do a sophisticated check for changes which can invalidate the previously cached results and will then rerun the code chunk and save the results for future cached knits as appropriate. More demanding needs can use the granularity of numerical options for caching as compared to simply TRUE/FALSE and additional options. These might be required in detailed performance testing or numerical performance comparisons.  
+
+## Performance Discussion
+
+Significant computer time can be used for large models but a variety of questions can be examined such as the following.  
+
+* How is problem size related to solving time?  
+* Are there systematic differences in speed or solving success for different solvers?   (ex. does Gurobi run faster?)  
+* How do various modeling parameters affect solution speed?  
+
+## Popularity of LP Solvers
+
+Let's take another look at comparing solvers by examining their popularity. More precisely, let's examine the download logs of CRAN for a variety of linear programming solvers.  
+
+```{r lp_package_download_stats, echo=FALSE}
+
+library("ggplot2")
+library("dlstats")
+
+optim_packages <- c("alabama",  "DEoptim",  "Rglpk", 
+                  "lpSolve", "clpAPI",
+                  "scs", "Rsymphony", 
+                  "lpSolveAPI", "glpkAPI")
+
+pkg_dl_data <- cran_stats(packages = optim_packages)
+
+
+ggplot(pkg_dl_data, aes(end, downloads, group=package, color=package)) +
+    geom_line()  + 
+    labs(title = "Monthly Downloads of Optimization Packages",
+       subtitle = "Wide choice of Optimization packages",
+       caption = "Source: CRAN", 
+       x = "Month", y = "Downloads") 
+
+```
+
+Many of these packages are being used directly in other packages. While we can't see packages are being used most often for `ompr`, we can see which ROI plugins are downloaded most often.  
+
+We will focus our attention on the ROI packages that emphasize linear programming. This means dropping packages such as `ROI.plugin.nloptr`, `ROI.plugin.qpOASES`, and `ROI.plugin.quadprog`. Also, propreitary packages that are not available on CRAN such as GUROBI and XPress, are not included.  
+
+```{r ROI_Package_Stats, echo=FALSE}
+
+ROI_packages <- c("ROI.plugin.alabama", "ROI.plugin.clp", 
+                  "ROI.plugin.glpk", "ROI.plugin.lpsolve", 
+                  "ROI.plugin.scs",  "ROI.plugin.symphony")
+
+pkg_dl_data <- cran_stats(packages = ROI_packages)
+
+ggplot(pkg_dl_data, aes(end, downloads, group=package, color=package)) +
+    geom_line() + geom_point(aes(shape=package)) + 
+    labs(title = "Monthly Downloads of ROI Linear Programming Packages",
+       subtitle = "Wide choice of ROI LP packages",
+       caption = "Source: CRAN", 
+       x = "Month", y = "Downloads") 
+
+
+```
+
+Interesting to see that the symphony and glpk ROI plugins  were relatively even in downloads until about 2015 when glpk started to open a lead in usage.  This of course does not mean that glpk is better than others but is interesting to note. The spikes in downloads could be drived by other packages that use this particular solver, visibility from vignettes or other publications, or package updates.  
+
+Let's close this with examining the popularity of `ompr` itself.   
+
+```{r package_download_stats, echo=FALSE}
+
+library("ggplot2")
+library("dlstats")
+
+pkg_dl_data <- cran_stats(packages = c("ompr"))
+
+ggplot(pkg_dl_data, aes(end, downloads, group=package, color=package)) +
+    geom_line()  + 
+    labs(title = "Monthly Downloads of OMPR",
+       subtitle = "Optimization Modelling Package for R",
+       caption = "Source: CRAN", 
+       x = "Month", y = "Downloads") 
+
+```
+
+
 ## Solving Sudoku puzzles using Optimization
 
 After spending a significant amount of time for a serious industrial application of warehouse optimization, let's take a break with a more lighthearted application.  Again, this is based on an article by Dirk Schumacher.  
