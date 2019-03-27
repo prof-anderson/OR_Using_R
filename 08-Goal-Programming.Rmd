@@ -1,12 +1,8 @@
 ---
 title: "Getting Started with Goal Programming"
-author: "Tim Anderson"
-date: "9/25/2018"
-output:
-  pdf_document: default
-  html_document: default
+output: 
+  tufte::tufte_handout: default
 ---
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library (magrittr, quietly = TRUE) #Used for pipes/dplyr
@@ -21,8 +17,10 @@ library (pander, quietly = TRUE)
 # Goal Programming and Multiple Objectives
 
 Up until this point, we assumed that there would be a single, clear objective function. Often we have more complex situations where there are multiple conflicting objectives.  In our earlier production planning case, we might have additional objectives besides maximizing profit such as minimizing environmental waste or longer term strategic positioning. In the case of our capital budgeting problem, we can envision a range of additional considerations beyond simple unexpected net present value maximization.  
+\vspace{12pt}
 
 Let's look at another type of problem, staff scheduling.  The Information Technology Security Institute or ITSI needs to maintain 24x7 staffing to respond to crises in addition to regular workloads. The result is that there is a varying demand over time. For the sake of simplicity, let's treat the schedule as a series of 21 eight hour shifts.   
+\vspace{12pt}
 
 ITSI has a variety of staff with different skill sets, pay rates, preferences, and scheduling requests.  Jane is the Director of ITSI and wants to find a good schedule of workers.  
 
@@ -32,5 +30,8 @@ Req <- matrix(c(10,35,30,
 ```
 
 Idea, extend Dirk's class schedule assignment example to include secondary objectives.  
+\vspace{12pt}
 
+```{marginfigure}
 **MORE TO BE ADDED**
+```

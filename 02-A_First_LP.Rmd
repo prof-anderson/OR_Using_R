@@ -1,12 +1,8 @@
 ---
-title: "A First Linear Program"
-author: "Tim Anderson"
-date: "11/23/2018"
-output:
-  pdf_document: default
-  word_document: default
+title: "Chapter 2: A First Linear Program"
+output: 
+  tufte::tufte_handout: default
 ---
-
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -16,19 +12,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## What is Linear Programming
 
-Linear programming is a tool for optimization.  It is a widely used tool for planning, scheduling, resource allocation and many other applications.  
+Linear programming is a tool for optimization.  It is a widely used tool for planning, scheduling, resource allocation and many other applications.
 
 ## Two Variable Base Case
 
-This data and case is drawn from an example in Chapter 2 of Kenneth Baker's *Optimization Modeling with Spreadsheets*, 3rd Edition [@BakerOptimizationModelingSpreadsheets2015].  The example is a modification of the example 2.1 on page 29.  
-
-The goal of the furniture manufacturer in this case is to find the best product mix of Chairs and Desks.  
-
-### Base Data
+This data and case is drawn from an example in Chapter 2 of Kenneth Baker's *Optimization Modeling with Spreadsheets*, 3rd Edition. The example is a modification of the example 2.1 on page 29.     
+The goal of the furniture manufacturer in this case is to find the best product mix of Chairs and Desks.
 
 Making a piece of furniture requires time in fabrication, assembly, and machining as a certain amount of wood. For example, a chair requires 6 hours of fabrication time, 8 hours of assembly, and 6 hours of machining. It uses 40 square feet of wood but the net profit is $20. The characteristics of desks are similar but different and shown in the following table as well as the available amount of each limited resource. 
- 
-  
+
 | Characteristic | Chairs | Desks |  Available| 
 |---------------:|:-----:|:------:|:----------:|
 |  Profit        |  $20  |   $14  |            |
@@ -37,9 +29,7 @@ Making a piece of furniture requires time in fabrication, assembly, and machinin
 |  Machining     |   6   |     4  |   2000     |
 |  Wood          |  40   |    25  |   9600     |
 
-A simple LP now is to find the production plan of products that results in the most profit.
-
-In order to do so, we need to define certain key items:
+A simple LP now is to find the production plan of products that results in the most profit. In order to do so, we need to define certain key items:
 
 * the goal(s)
 * the decisions
@@ -49,30 +39,29 @@ Let's start with the goal(s).  In this case, the production manager is simply tr
 
 People new to linear programming will often think of the decisions as the amount of each resource to use. Instead, the decisions in this case would be how much to make of each particular product.  This drives the resource usage and the resource usage is a byproduct of these decisions. These decisions can take on a range of values and are therefore called *decision variables*.  
 
-The decision variables are then combined in some way to reflect the performance with respect to the organization's objective. The equation combining the decision variables to reflect this is then the *objective function*.  In general we will assume that there is a single objective function, at least for now.[^1]
+The decision variables are then combined in some way to reflect the performance with respect to the organization's objective. The equation combining the decision variables to reflect this is then the *objective function*.  In general we will assume that there is a single objective function, at least for now.
 
-[^1]: There is a field of multiple-objective linear programming where multiple objectives or goals can be accommodated. This will be explored in Chapter 7.
+```{marginfigure}
+There is a field of multiple-objective linear programming where multiple objectives or goals can be accommodated. This will be explored in Chapter 7.
+```
 
-Lastly, what is limiting the organization from even better performance?  There are typically many limits such as the number of customers, personnel, supplier capacity, etc.  In this case, we focus on a set of resource limits based on staffing in different centers and the supply of raw material (wood).  Since these limitations constrain the possible values of decision variables, they are called constraints.  
 
+Lastly, what is limiting the organization from even better performance?  There are typically many limits such as the number of customers, personnel, supplier capacity, etc.  In this case, we focus on a set of resource limits based on staffing in different centers and the supply of raw material (wood).  Since these limitations constrain the possible values of decision variables, they are called constraints.
+
+\vspace{12pt}
 Every optimization model can be thought of a collection of:
 
 * an objective function  (goal)
 * decision variable(s) (decisions)
 * constraint(s)  (limitations)
 
-### Base Case Formulation
-
-Let's put things together in the context of this application.  
-
-In the base case, our objective function is to Maximize Profit. We can't express it though until we define our decision variables.
-
-It is good practice to very clearly and precisely define  decision variables.  In this case it is straightforward but they can get much more complicated as we move into richer and larger models.
-
-Let's define them:
-
-* Chairs = # of Chairs to Make
+Let's put things together in the context of this application. In the base case, our objective function is to Maximize Profit. We can't express it though until we define our decision variables. It is good practice to very clearly and precisely define  decision variables. In this case it is straightforward but they can get much more complicated as we move into richer and larger models.     
+\vspace{12pt}
+Let's define them:     
+* Chairs = # of Chairs to Make     
 * Desks = # of Desks to Make
+
+\vspace{60pt}
 
 Our objective function and constraints can now be written as the following optimization model.
 
@@ -93,9 +82,9 @@ Note that since the objective function and each constraint is a simple linear fu
 
 It is impressive the number of situations that can be modeled well using linear programming.  Keeping to the world of linear programming in general allows for finding the very best solution to very big problems in a short amount of time. For example, it is common for practitioners to be analyzing real-world problems with hundreds of thousands of decision variables and constraints.  
 
-### Base Case Implementation
+For the sake of simplicity, we will implement our first R LP model using explicit variables and data consistent with the first formulation.
 
-For the sake of simplicity, we will implement our first R LP model using explicit variables and data consistent with the first formulation.  
+\vspace{12pt}
 
 First, let us load the required libraries.  Then we will move on to the actual implementation.
 
@@ -106,7 +95,6 @@ library (ROI.plugin.glpk, quietly = TRUE) # Plugin for solving
 library (ompr, quietly = TRUE)     # Allows specifying model algebraically
 library (ompr.roi, quietly = TRUE) # Glue for ompr to solve with ROI
 ```
-
 Each of these packages plays a role. As we discussed in the earlier chapter, pander makes for nicely formatted tables.  
 
 This brings us to four packages that provide the optimization functions that we be relying on frequently. The ROI package is the R Optimization Interface for for connecting various optimization solvers to R.  The ROI.plugin.glpk provides a connection between the the glpk solver and R through ROI.  While this would be sufficient, we are going to make use of the ompr package by Dirk Schumacher to provide algebraic representations for linear programs. The ompr package also requires a connector to ROI, aptly named ompr.roi.  
@@ -116,9 +104,7 @@ As noted earlier, if these packages are not preinstalled, you may need to instal
 Now we move on to implement and solve the linear program. Let's go through it step by step.
 
 ```{r base_case_no_pipes_step_1}
-
 model0  <- MIPModel()     # Initialize an empty model!
-
 ```
 
 The first line initializes an empty model and stores it in `model0`.  We can see that the model is empty by simply displaying the model summary.
@@ -130,10 +116,8 @@ model0
 There are no constraints or variables.  Next we will add variables.
 
 ```{r base_case_no_pipes_step_2}
-
 model0a <- add_variable(model0, Chairs, type = "continuous", lb = 0) 
 model0b <- add_variable(model0a, Desks, type = "continuous",lb = 0)
-
 ```
 
 The next line takes `model0` and adds the _Chairs_ variable to it, creating an enhanced `model0a`.  These variables are continuous (as compared to integer or binary), and non-negative. The variable is made non-negative by setting a zero lowerbound (`lb=0`). The lowerbound can be set to other values such as a minimum production level of ten.  Also upperbounds for variables can be set using `ub` as a parameter. Do the same thing to add the _Desks_ variable to `model0a` creating `model0b`. Let's check the new model.
@@ -145,20 +129,17 @@ model0b
 Next, we need to add the objective function. We set the objective function as well declaring it to be a *max* rather than a *min* function.
 
 ```{r base_case_no_pipes_step_3}
-
 model0c <- set_objective(model0b, 20*Chairs + 14*Desks, "max")
-
 ```
 
-Now we move on to adding constraints.  
+Now we move on to adding constraints.
 
-```{r base_case_no_pipes_step_4}
+```{r base_case_no_pipes_step_4, fig.fullwidth=TRUE}
 
 model0d <- add_constraint(model0c, 6*Chairs + 2*Desks <= 2000) #fabrication
 model0e <- add_constraint(model0d, 8*Chairs + 6*Desks <= 2000)  #assembly
 model0f <- add_constraint(model0e, 6*Chairs + 4*Desks <= 1440)  #machining
 model0g <- add_constraint(model0f, 40*Chairs + 25*Desks <= 9600) #wood
-
 result0 <- solve_model(model0g, with_ROI(solver = "glpk"))
 
 ```
@@ -172,26 +153,20 @@ model0g
 Our model has variables, constraints, and an objective function.  Let's go ahead and solve it. The LP can be solved using different LP engines - we'll use `glpk` for now. We'll assign the result of the solved model to `result0`
 
 ```{r base_case_no_pipes_step_5}
-
 result0 <- solve_model(model0g, with_ROI(solver = "glpk"))
-
 ```
 
 We built up the model line by line incrementally taking the previous model, adding a new element, and storing it in a new model. Note that we could keep placing them into the original model if we had wished such as the following.
 
 ```{r base_case_no_pipes_single_model}
 model0  <- MIPModel()     # Initialize an empty model!
-
 model0 <- add_variable(model0, Chairs, type = "continuous", lb = 0) 
 model0 <- add_variable(model0, Desks, type = "continuous",lb = 0)
-
 model0 <- set_objective(model0, 20*Chairs + 14*Desks, "max")
-
 model0 <- add_constraint(model0, 6*Chairs + 2*Desks <= 2000) #fabrication
 model0 <- add_constraint(model0, 8*Chairs + 6*Desks <= 2000)  #assembly
 model0 <- add_constraint(model0, 6*Chairs + 4*Desks <= 1440)  #machining
 model0 <- add_constraint(model0, 40*Chairs + 25*Desks <= 9600) #wood
-
 result0 <- solve_model(model0, with_ROI(solver = "glpk"))
 ```
 
@@ -226,16 +201,14 @@ constr0<-extract_constraints(model0)    # Pass the constraints out of  model
 constr00<- (cbind(as.matrix(constr0$matrix), # Get the matrix of data
                   as.matrix(constr0$sense),  # Get the inequality 
                   as.matrix(constr0$rhs)))   # Get the Right Hand Side
-
 dimnames(constr00)<-c(list(c("Fabrication", "Assembly","Machining", "Wood")),
                       list(c("Chairs", "Desks","Relationship","RHS")))
-
 pander(constr00, caption="Elements of the Constraints")
 ```
 
 In the first version of the LP model implementation, we created many different  versions of the model along the way while we really just keep adding stuff to the same model.  This uses extra memory and will be slower.  The second implementation keeps reusing the same model object until the very end when solving is done and it places the results into an object.  This may be more memory efficient but is still likely slower and carries along a lot of extra notation.
 
-### Implementing the Base Case with Piping
+## Implementing the Base Case with Piping
 
 In each step, we are simply taking the output of the previous step and feeding it in as the first term of the following step.  It is almost like the output is a bucket that is then passed as a bucket into the next step.  Rather than carrying a bucket from one step into the next one, a plumber might suggest a pipe connecting one step to the next. This is done so often that we refer to it as piping and a pipe operator.
 
@@ -246,7 +219,6 @@ Here is the equivalent process for building the base case implementation using a
 ```{r base_case}
 library (magrittr, quietly = TRUE) # Used for pipes/dplyr
 # library (dplyr, quietly = TRUE)    # Data management
-
 result0 <- MIPModel() %>%
   add_variable(Chairs, type = "continuous", lb = 0) %>%
   add_variable(Desks, type = "continuous",lb = 0) %>%
@@ -264,8 +236,6 @@ result0 <- MIPModel() %>%
 Note that we load a new package `magrittr` which gives us the piping function that simplifies model building.  
 
 The first line creates the basic model.  The `%>%` serves as a pipe symbol at the end of each line.  It  basically means take product of the previous command and feed it in as the first argument of the following command.  
-
-### Base Case Results and Interpretation
 
 Let's check to see the status of the solver.  Did it find the optimal solution?  We do this by extracting the solver status from the result object.  
 
@@ -292,8 +262,6 @@ print(get_solution(result0, Desks))
 
 We will now extend the previous model to account for a third product, Tables.  The goal is now to find the best product mix of Chairs, Desks, and Tables.  
 
-### Three Product Data
-
 | Characteristic | Chairs | Desks | Tables | Available  | 
 |---------------:|:-----:|:------:|:---------:|:----------:|
 |  Profit        |  $20  |   $14  |  $16      |            |
@@ -306,8 +274,6 @@ There is an additional constraint that the number of Tables made (sold) can not 
 
 A simple LP now is to find the production plan or amount of each of the  products that results in the most profit.  This will require a new decision variable, Tables, to be added to the model.
 
-### Three Variable Case Formulation
-
 Let's extend our previous model.  Just to reinforce the point, it is an important habit to very clearly define the decision variables.
 
 * Chairs = # of Chairs to Make
@@ -315,7 +281,6 @@ Let's extend our previous model.  Just to reinforce the point, it is an importan
 * Tables = # of Tables to Make
 
 Our objective function and constraints can now be written as the following optimization model.
-
 $$
  \begin{split}
  \begin{aligned}
@@ -330,8 +295,6 @@ $$
   \end{split}
   (\#eq:BaseModelEx4a)
 $$
-
-### Three Variable Case Implementation
 
 Let's now implement the three variable case.  
 
@@ -352,10 +315,9 @@ model1 <- MIPModel() %>%
   add_constraint(Tables <= 200)  #
   
 result1 <-  solve_model(model1, with_ROI(solver = "glpk"))
-
 ```
 
-### Three Variable Case Results and Interpretation
+## Three Variable Case Results and Interpretation
 
 Let's check to see the status of the solver.  Did it find the optimal solution?
 
@@ -375,8 +337,6 @@ This is interesting - even though we added a new product to our product portfoli
 
 ## Linear Programming Special Cases
 
-### Introduction
-
 There are several special cases where a linear program does not give the simple unique solution that we might expect.  These are:
 
 * No feasible solution
@@ -386,14 +346,11 @@ There are several special cases where a linear program does not give the simple 
 
 Now, let's look at how we would modify the earlier formulation to come up with each of these situations.
 
-### Case 1: No Feasible Solution
-
-#### Making the Formulation Infeasible
+## Case 1: No Feasible Solution
 
 Let's assume that the sales manager comes in and says that we have a contractual requirement to deliver 300 Chairs to customers.
-
+\vspace{12pt}
 This results in the following LP.
-
 $$
  \begin{split}
  \begin{aligned}
@@ -410,8 +367,6 @@ $$
   (\#eq:Base_Model_Ex4)
 $$
 
-#### Implementing the Infeasible Model
-
 Now let's rebuild our formulation with this change.
 
 ```{r infeasible_case}
@@ -419,33 +374,27 @@ model1infeas <-
   add_constraint(model1, Chairs >= 300)  #THIS IS THE NEW CHANGE
   
 result1infeas <-  solve_model(model1infeas, with_ROI(solver = "glpk"))
-
 ```
 
 In this case, we are going to simply add the new constraint to `model1` and create a new model to solve.
-
+\vspace{12pt}
 Note that the constraint on the minimum number of chairs could also be implemented by changing the lower bound on the chairs variable to be 300 instead of zero.  Also, the maximum limit on Tables could be set as an upper bound on the Tables variable.
-
-#### Results and Interpretation of Infeasibility
 
 ```{r}
 print(solver_status(result1infeas))
-
 get_solution(result1infeas, Chairs)
 get_solution(result1infeas, Desks)
 get_solution(result1infeas, Tables)
-
 ```
 
 Notice that since the solver status was infeasible, the  values for the decision variables are not feasible and therefore cannot be considered a reliable (or possible) production plan.  This highlights why the solver's status should always be tested before results are discussed.
 
-### Case 2: Multiple Optima
-
-#### Formulating a Situation with Multiple Optima
+## Case 2: Multiple Optima
 
 There are a couple of ways of creating situations for multiple optima.  One situation is to have a decision variable be identical or a linear multiple of another variable.  In this case, each table now consumes  exactly half of the resources as a desk and generates half the profit of a desk.
-
+\vspace{12pt}
 To clarify the objective function value, I will define a variable for Profit.  Add a constraint to set the value of profit to what had been the objective function, and now simply maximize profit.  This will allow me to find the objective function value by using the `get_solution` for the variable profit.
+\vspace{12pt}
 
 The new LP is shown in the following formulation.
 $$
@@ -464,18 +413,12 @@ $$
   (\#eq:BaseModelEx4b)
 $$
 
-#### Implementing a Model with Multiple Optima
-
 The implementation can be simplified again since we are only changing the objective function, let's change the objective function in `model1` and save it to `model2a`.
 
 ```{r Modify_Model_to_Have_Multiple_Optima}
 model2a <- set_objective(model1, 20*Chairs - 10*Desks - 16*Tables, "max") 
-
 result2a <-  solve_model(model2a, with_ROI(solver = "glpk"))
-
 ```
-
-#### Results and Interpretation of Multiple Optima
 
 ```{r Show_First_Solution_from_Multiple_Optima}
 print(solver_status(result2a))
@@ -483,12 +426,9 @@ res2a <- cbind(objective_value (result2a),
                get_solution(result2a, Chairs),
                get_solution(result2a, Desks),
                get_solution(result2a, Tables))
-
 colnames(res2a)<-list("Profit", "Chairs", "Desks", "Tables")
 rownames(res2a)<-list("Solution 2a")
-
 pander(res2a,caption="Results 2a - A First of Multiple Optima")
-
 ```
 
 Okay.  When I ran it, all the production was focused on Chairs.  I think that there is an alternate solution producing Desks with the same total profit. The LP engine won't necessarily tell you that there is an alternate optimal solution.  Let's see if we can "trick" the LP to show an alternate solution by disallowing the previous solution by setting Chairs=0.  
@@ -496,23 +436,19 @@ Okay.  When I ran it, all the production was focused on Chairs.  I think that th
 ```{r Show_Second_Solution_from_Multiple_Optima}
 model2b <- add_constraint(model2a, Chairs <= 0) 
             # FORCING LP TO FIND A DIFFERENT SOLUTION
-
 result2b <- solve_model(model2b, with_ROI(solver = "glpk"))
-
 print(solver_status(result2b))
 res2b <- cbind(objective_value(result2b),
                get_solution(result2b, Chairs),
                get_solution(result2b, Desks),
                get_solution(result2b, Tables))
-
 colnames(res2b)<-list("Profit", "Chairs", "Desks", "Tables")
 rownames(res2b)<-list("Solution 2b")
-
 pander(res2b,caption="Results 2b - A Second of Multiple Optima")
-
 ```
 
 Again, only one product is made but now it is Desks instead of Chairs.  The number of Desks made is now double the number of Chairs previously made.  The total profit is the same.  This is an instance of multiple optima.
+\vspace{12pt}
 
 Let's summarize these two results more clearly by displaying them in a single table.  
 
@@ -521,12 +457,11 @@ pander(rbind(res2a,res2b), caption="Comparison of Two Alternate Optimal Solution
 ```
 
 Which solution is the best? Within the limits of this problem, we can't distinguish between them and they are equally good. If an application area expert or the end decision maker prefers one solution over the other, there should be extra information that we can use to extend the model.  
+\vspace{12pt}
 
 Also, it should be note that when there are two alternate optimal in a linear program with continuous variables, there is actually an infinite number of other optimal solutions between them.
 
-### Case 3: Redundant Constraint
-
-#### Reformulating with a Redundant Constraint
+## Case 3: Redundant Constraint
 
 For the redundant constraint, a new constraint for painting is created.  Let's assume each item is painted and requires one gallon of paint. We have 1500 gallons. The corresponding constraint is then added to the model.
 
@@ -546,8 +481,6 @@ $$
   (\#eq:BaseModelEx4c)
 $$
 
-#### Implementing a Redundant Constraint
-
 Now we can implement the model.
 
 ```{r Redundant_Constraint_Model}
@@ -566,13 +499,9 @@ result3 <- MIPModel() %>%
   add_constraint(Tables <= 200) %>% 
   
   solve_model(with_ROI(solver = "glpk"))
-
 ```
 
-### Results and Interpretation with a Redundant Constraint
-
 ```{r Solve_with_Redundant_Constraint}
-
 print(solver_status(result3))
 get_solution(result3, Chairs)
 get_solution(result3, Desks)
@@ -580,15 +509,17 @@ get_solution(result3, Tables)
 ```
 
 This constraint was a redundant constraint because the other constraints would keep us from ever having 1500 pieces of furniture or therefore needing 1500 gallons of paint.  In other words, there is no way that this constraint could ever be binding at any solution regardless of what the objective function is.  More precisely, elimination of a redundant constraint does not change the size of the feasible region at all.
+\vspace{12pt}
 
 Note that not all non-binding constraints at an optimal solution are redundant.  Deleting a non-binding constraint and resolving won't change the optimal objective function value.  On the other hand, for a different objective function, that non-binding constraint might become binding and therefore different solutions would be found if it were deleted. 
+\vspace{12pt}
 
 Challenge:  Can you use a calculator to simply estimate the maximum number of Chairs that could be made?  Desks?  Tables?  
+\vspace{12pt}
+
 Challenge:  How would you modify the formulation to find the most pieces of furniture that could be produced?
 
-### Case 4: Unbounded Solution
-
-#### Formulation of an Unbounded Situation
+## Case 4: Unbounded Solution
 
 As with other cases, there are multiple ways of triggering this condition.  For the unbounded solution, instead of at *most* a certain amount of resources can be used, the constraints are changed to at *least* that amount of each resource must be used.  This doesn't make a lot of sense in the setting of this application.  Perhaps a cynic would say that in a cost-plus business arrangement or a situation where the factory manager has a limited purview and doesn't see issues such as downstream demand limits and cost impacts, it results in this kind of myopic perspective. More commonly, an unbounded solution might be a sign that the analyst had simply reversed one or more inequalities or the form of the objective (max vs. min).
 
@@ -606,8 +537,6 @@ $$
   \end{split}
   (\#eq:BaseModelEx4d)
 $$
-
-#### Implementation with Unbounded Modification
 
 The implementation simply requires changing a < to a > for each constraint as well.
 
@@ -627,10 +556,7 @@ result4 <- MIPModel() %>%
   add_constraint(Tables >= 200) %>% 
   
   solve_model(with_ROI(solver = "glpk"))
-
 ```
-
-#### Results and Interpretation
 
 ```{r Unbounded_Results}
 print(solver_status(result4))
@@ -640,16 +566,20 @@ get_solution(result4, Tables)
 ```
 
 Again, the solver status is report that the problem is *infeasible* rather than *unbounded* but by inspection, the LP is feasible.  A value for Tables = 1000, Chairs=Desks=0, satisfies all of the constraints.  Perhaps I am missing something in my model or it might be a bug in one of the packages that is misreporting the solver status.  I need to do more digging to check on that.
+\vspace{12pt}
 
 This is another good reminder that it is important to always check the status of the solver.  
 
 ## Abstracting the Production Planning Model
 
 We have explicitly created two variable model and a three variable model by naming each variable independently.  This process doesn't scale well for companies with dozens, hundreds, or thousands of different products.  Simply writing out the full linear program gets very tedious, hard to read, and even maintain.  An application for a company with a thousand products and a thousand resources would have a million terms.  Assume that variables are on average seven letters long, each resource consumed is a single digit whole number and a plus symbol is used to add terms together and no spaces.  This means that there will be (7+1)*1000+999=8999 characters in each line before the inequality.  Just say each constraint corresponds to 9000.  If a line has 60 characters, this would mean 150 lines or around two pages for each resource (constraint.)  The 1000 resources would correspond to about 2000 pages, along with an objective function, and non-negativity constraints.  All in all, this single model would make for some rather dry reading.
+\vspace{12pt}
 
 In practice, people don't write out the full LP explicitly for large models.  This includes journals, no journal's page limit would be able to accommodate the above explicit linear program even if readers had the patience to wade through the model.  
+\vspace{12pt}
 
 Rather than writing out models explicitly, instead we should express them algebraically.  The products are numbered instead of given names:  Chairs, Desks, and Tables become products 1, 2, and 3 respectively.
+\vspace{12pt}
 
 We could view the naming conventions of the variables as going from least to most generalized:
 
@@ -671,16 +601,13 @@ Here we are talking about abstracting the model in terms of variable names and n
 
 * You can talk with classmates or colleagues but your markdown should be your own.  
 * The D2L Learning Management System has had issues with uploading HTML files. Instead use PDFs.  Upload both the Rmd and PDF versions of your file.
-* Include your name as the author.  
-
-### General Comments on Homeworks
-  
+* Include your name as the author.
 * Explain your model or modifications and interpret the results. I explicitly had a subsection for each formulation, implementation, and results/interpretation.  Frequently people try to mix all three together and this makes it very hard to help or debug.  Also, formulations should be understood before moving into implementation.
 * If the solution does not make sense, acknowledge and explain.  
 * Always show your LP.  It is best to show it algebraically as the problems get bigger.  This will also pay off for most projects where the models become larger.  
 * Discussion of results does not need to be long but this can be an interesting part of any paper.
   
-### Comments specific to R
+## Comments specific to R
 
 * Using the LaTeX equations and rendering it in rmarkdown is helpful.  Getting the first one written is sometimes tricky but then it is just a matter of cut and paste.
 * Installing LaTeX allows knitting to PDF which may be good for readability and turning in but please be sure to also turn in the .rmd file.
@@ -701,7 +628,6 @@ In particular, you might want to look over this document with respect to:
 
 ```{exercise, name="Adding Frames"}
 Your company has extended production to allow for producing picture frames and is now including a finishing department that primes and paints (or stains) the furniture.
-
 | Characteristic | Chairs | Desks | Frames | Tables | Available  | 
 |---------------:|:-----:|:-----:|:------:|:---------:|:----------:|
 |  Profit        |  $20  |  $14  |    $3  |  $16      |            |
@@ -710,13 +636,11 @@ Your company has extended production to allow for producing picture frames and i
 |  Machining     |   6   |   4   |     1  |   25      |   2000     |
 |  Painting      |   7   |  10   |     2  |   12      |   1000     |
 |  Wood          |  40   |  25   |     5  |   16      |   9600     |
-
 a) Use R Markdown to create your own description of the model.
 b) Extend the R Markdown to show your LP Model.  Be sure to define models.
 c) Solve the model in R
 d) Interpret and discuss the model in R Markdown.
 e) Discuss how one parameter would need to change in order to result in a different production plan.  Demonstrate how this affects the results.
-
 ```
 
 
@@ -747,11 +671,11 @@ $$
   (\#eq:Example One)
 $$
 
-### Create a data series to plot
+## Create a data series to plot
 
 To graph a line in R you need to have a series of coordinates, you can't just input a formula and see it on a chart. Here are some steps to help turn your constraints into data series.
 
-### Reduce the constraints
+## Reduce the constraints
 
 To convert our constraints into a series of numbers the first thing we want to do is update the formulas to solve for _y_. Let's take a look at the constraints in this problem. We simply do a little rearranging of terms for the first constraint to get _y_ on its own on the left hand side.
 
@@ -779,35 +703,28 @@ Next we can turn those into functions. Rather than inequalities, treat them as e
 Note that R makes it very easy to define a function!  In this case, the first function will take a value of `x` and return the value of `y` for the first constraint.  
 
 ```{r Using_Functions}
-
 r1y <- function(x) 7400 / 60 - 40 / 60 * x
 r2y <- function(x) 3300 / 25 - 20 / 25 * x
-
 ```
 
-### Create the series
+## Create the series
 
 Secondly we will create an artificial series for x to plug into our functions, then create a data frame with a column for each series.  Let's populate the data frame of possible plans of xbots `x1`.  The `seq` function is very handy here in that it will generate a sequence of values from _0_ to _200_ xbots.  
 
 ```{r Create_a_Series}
-
 # create the series
 x1 = seq(0,200)
-
 pander(head(as.matrix(x1)),caption="Beginning of Sequence x1")
 ```
 
 The next statement takes a little unpacking to fully understand and illustrates another strength of R.  Now, we would like to evaluate each of these 201 values for `x1` using the functions for the two constraints that we just defined.  We could use a `for-next loop` if we were using a language such as BASIC but R handles these operations more smoothly and efficiently.  We can pass the data frame for `x1` into the function and R is smart enough to return the results in the same size data frame, `y1`. Of course we do the same thing for the second function (constraint).  
 
 ```{r Creating_More_Data}
-
 # 2 constraints in this equation so there are 2 y variables, y1 and y2.  
 # If you have more constraints you can just keep adding them here.
 seriesDf = data.frame(x1, y1=r1y(x1), y2=r2y(x1))
-
 # take a look at the generated data
 pander(head(seriesDf),caption="Some datapoints from the lines for the constraints")
-
 ```
 
 Note that we now have coordinates for each series. If you have more than 2 constraints you can just continue to add columns to your data frame.
@@ -816,14 +733,12 @@ To show our feasible region on a graph the x and y coordinates are not enough, w
 
 ```{r First_ggplot}
 library(ggplot2)
-
 # Add the Z region for shading
 seriesDf <- transform(seriesDf, z = pmin(y1,y2))
 head(seriesDf)
-
 ```
 
-### Finding the intersection of constraints
+## Finding the intersection of constraints
 
 To find the optimal value we will look for the intersection of the constraints. Unfortunately in R there isn't a nice easy way to get this so we'll need to write a function that takes in our lines and returns the x,y coordinates of their intersection.
 
@@ -839,18 +754,14 @@ lmInt <- function(line1, line2) {
   y <- m1*x + b1             #plug in the result 
   data.frame(x=round(x, 2), y=round(y, 2)) #create a data frame with x and y
 }
-
 ```
 
 Next we can use this function to find the intercept of these lines:
 
 ```{r Finding_Intersection}
-
 # find the intersect of the lines
 intersection <- lmInt(lm(seriesDf$y1~seriesDf$x1), lm(seriesDf$y2~seriesDf$x1))
-
 head(intersection)
-
 ```
 
 At this point we have everything we need to see our results on a graph. There are a few ways to build graphs in R but one very popular and powerful library is ggplot. ggplot was written by [Hadley Wickham](http://hadley.nz/) to implement the [_Grammar of Graphics_](https://www.amazon.com/Grammar-Graphics-Statistics-Computing/dp/0387245448). That book is kind of expensive, a more affordable intro would be [Hadley's overview](http://vita.had.co.nz/papers/layered-grammar.pdf).
@@ -864,7 +775,6 @@ ggplot(seriesDf, aes(x = x1)) +
   geom_line(aes(y = y2), color = 'green') +
   geom_ribbon(aes(ymin=0,ymax = z), fill = 'gray60') + 
   geom_point(x = intersection$x, y = intersection$y)
-
 ```
 
 Awesome, it looks good! Though PSU colors don't work so well, that white is hard to see.
@@ -872,7 +782,6 @@ Awesome, it looks good! Though PSU colors don't work so well, that white is hard
 Now let's solve the model for real to see if it's right!
 
 ```{r Solving_Model}
-
 result0 <- MIPModel() %>%
   add_variable(R1, type = "continuous", lb = 0) %>%
   add_variable(R2, type = "continuous",lb = 0) %>%
@@ -881,19 +790,16 @@ result0 <- MIPModel() %>%
   
   add_constraint(40*R1 + 60*R2 <= 7400) %>% 
   add_constraint(20*R1 + 25*R2 <= 3300) %>% 
-
   solve_model(with_ROI(solver = "glpk"))
-
 print(solver_status(result0))
 print(objective_value(result0))
 print(get_solution(result0, R1))
 print(get_solution(result0, R2))
-
 ```
 
 Same results as our graph, great!
 
-### Putting it all together in a more complex example.
+## Putting it all together in a more complex example.
 
 Now that you've seen all of these steps let's change the scenario and put all our code in one place. Let's still say we know we want to maximize profit and each robot can still make the same amount of money. However there are new constraints to the model.
 
@@ -911,30 +817,23 @@ $$
 $$
 
 ```{r Translate_Constraints}
-
 # first translate the constraints:
 # 5*x + 3*y >=  210   becomes y = 210/3 - 5/3*x
 # x + y <= 110        becomes y = 110 - x
 # 4*x + y <= 200      becomes y = 200 - 4*x
-
 constraint1 <- function(x) 210/3 -5/3*x
 constraint2 <- function(x) 110 -x
 constraint3 <- function(x) 200 -4*x
-
 x2 = seq(0,100)
 dataFrameTwo = data.frame(x2, y1=constraint1(x2), 
                           y2=constraint2(x2) , y3=constraint3(x2))
-
 # because constraints are mixed leq and geq, we take the min of y2 and y3
-
 dataFrameTwo <-  transform(dataFrameTwo, z = pmax(y1,pmin(y2,y3)))
-
 # get the intersections of the lines
 intersection1 <- 
   lmInt(lm(dataFrameTwo$y3~dataFrameTwo$x2), lm(dataFrameTwo$y2~dataFrameTwo$x2))
 intersection2 <- 
   lmInt(lm(dataFrameTwo$y3~dataFrameTwo$x2), lm(dataFrameTwo$y1~dataFrameTwo$x2))
-
 #plot it
 ggplot(dataFrameTwo, aes(x = x2)) + 
   geom_line(aes(y = y1), color = 'aquamarine', size = 2) + #you can change line size
@@ -943,12 +842,11 @@ ggplot(dataFrameTwo, aes(x = x2)) +
   geom_ribbon(aes(ymin=y1,ymax = z), fill = 'gray80') + #you can change alpha on colors
   geom_point(x = intersection1$x, y = intersection1$y, color = "green", size = 5) +
   geom_point(x = intersection2$x, y = intersection2$y, color = "red") 
-
 ```
 
 Note now our chart looks much different because we have combination of lesser than and greater than constraints.
 
-### Next Steps
+## Next Steps
 
 Note that we only used 2 variables, so we were able to see this in a 2 dimensional space. If you add another variable to equation you will have to map this in a 3 dimensional chart which you may want to try a different charting library for like [plotly](https://plot.ly/r/). If you have more variables than that using the graphical method will become very hard!
 
@@ -964,14 +862,14 @@ This section on graphically exploring linear programming is a great first start 
 At this point, you are able to build your own optimization model.
 Here are a collection of tips and tricks that have confounded past students.  
 
-### `ompr` Related Tips and Tricks
+## `ompr` Related Tips and Tricks
 
 * `ompr` will complain if you use the same variable name a data object in R and in `ompr`. For example, if you have variables _x_ and y in a formulation, then build an `ompr` model with `x` and `y` variables.  You might then assign the results to `x` and `y` objects in R, and run it again. You will then get a notification of a name space conflict from `ompr`. One work around is to prefix the `ompr` variables with a V to indicate variable thereby using `Vx` and `Vy` in `ompr` for is assigned to x and y in r.  
 * Typos can happen easily in piped models being built but are not typically localized.  Try commenting and in and lines until the problem goes away.  This will help to identify where the problem is.
 * Check for ompr updates.  It is under active development. You may find versions on the author's github repository that are not yet available through CRAN.
 * `ompr` is featuring a much faster form of model building with a different syntax using `MILPmodel` rather than "MIPmodel".  If you are running into delays running ompr but not solving the problem, this may be worth investigating.
 
-### RMD Tips and Tricks
+## RMD Tips and Tricks
 
 RMarkdown is very helpful for integrating analysis and results but the code can also be brittle. Knitting this full book can be stopped by one small error.  
 
@@ -982,27 +880,25 @@ RMarkdown is very helpful for integrating analysis and results but the code can 
 * Putting two blank spaces at the end of a paragraphy will give a little more spacing between paragraphs.  
 * Sometimes running all chunks will make more visible where a problem is than when an RMD is knitted.  
 
-### RStudio Tips and Tricks
+## RStudio Tips and Tricks
 
 * RStudio.cloud can be a very helpful service sometimes it can help be a test to see if a problem is with a personal software installation.  Some things will `knit` on RStudio.cloud that do not knit on local computer.
 * Installing LaTeX before RStudio resolves some problems with knitting.  If you have problems with knitting documents to PDF, even the simple "New RMarkdown" document.  Try uninstalling RStudio, install a LaTeX system (ex. MikTeX) if one is not already installed, and reinstalling RStudio.
 * Use the RStudio cheat sheets!  
 
-### General R Tips and Tricks
+## General R Tips and Tricks
 
 * If you are getting an error message read it carefully.  You may also be able to google generic parts that do not reference your own R code to get clues.
 * R is case sensitive.  Be careful in watching for typos regarding case.  A student spent many hours trying to find why a document was no longer knitting before discovering that `echo=FALSE` in one code chunk was typed in as `echo=False`.
 * Many problems might be due to R data objects now having the data as you think it is. Displying the data or a part using the `head()` or `tail()` functions can be helpful for debugging.
 
-### LaTeX Tips and Tricks
+## LaTeX Tips and Tricks
 
 * Find good, working LaTeX formulations and then reuse and change it to fit the situation.
 * Using inline LaTeX is helpful and easy.  
 
-### General Tips and Tricks
+## General Tips and Tricks
 
 * After spending _too much_ time stuck on a problem, get up walk away, and look at it freshly.  
 * Join an R User's Group.
-* When you learn something new or interesting for R or related items, write it down in a Tips and Tricks section.  
-
-
+* When you learn something new or interesting for R or related items, write it down in a Tips and Tricks section. 

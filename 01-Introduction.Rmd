@@ -3,7 +3,7 @@ title: "Introduction to Operations Research"
 author: "Tim Anderson"
 date: "11/23/2018"
 output: 
-  pdf_document: default
+  tufte::tufte_handout: default
 ---
 
 ```{r setup, include=FALSE}
@@ -158,11 +158,13 @@ Notice the hash symbol is used to mark comment in the above code chunk.  It is a
 
 Now, let's put the `pander` package to work.
 
-```{r Using_Pander}
-pander(b, caption="Nicely formatted table using pander")
+```{marginfigure}
+When rendered in plain text, it might not look so fancy but it looks much better when a report is generated using knitr into html or as a pdf.  If you are viewing this output in a formatted output, the results will be very visible.]
 ```
 
-When rendered in plain text, it might not look so fancy but it looks much better when a report is generated using knitr into html or as a pdf.  If you are viewing this output in a formatted output, the results will be very visible.
+```{r Using_Pander, echo=FALSE}
+pander(b, caption="Nicely formatted table using pander")
+```
 
 Let's continue experimenting with operators.  
 
@@ -180,24 +182,23 @@ pander(d, caption="Transposition of Matrix b")
 
 Woops, notice that row and column names are also transposed.  The result is that we now have rows labeled as columns and columns labeled as rows!  
 
-Now we have done some basic operations within R.  Try your hand at the following exercises.
+Now we have done some basic operations within R. Try your hand at the following exercises.
 
 ```{exercise, name="Changing Row and Column Names"}
 Change the row and column names for the transposed matrix above.   
 ```
 
-here is my solution to that....
+Here is my solution to that...
+```{marginfigure}
+Oops..  Still not right.  Need to do some more...
+```
 
 ```{r Displaying_My_Solution}
 c
 d
 ```
 
-Oops..  Still not right.  Need to do some more...
-
-```{exercise, name="Creating a Matrix of Weekly Demand"}
-Assume that your company's product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday.  Create a matrix where the column indicates that the day of the week and the row is the product name.  
-```
+Assume that your company's product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday.  Create a matrix where the column indicates that the day of the week and the row is the product name.
 
 Recall that we have created a variety of objects now: a, b, c, and d. R provides a lot of tools for slicing, dicing, and combining data.  
 
@@ -205,7 +206,6 @@ Let's look at the original matrix, b and what we can do with it.  Let's grab the
 
 ```{r Original_Matrix}
 pander(b, caption="Original Matrix b")
-
 ```
 
 ```{r Extracting_Second_Row}
@@ -224,15 +224,11 @@ Grabbing the third column is not terribly interesting but operations such as thi
 pander(as.matrix(b[2,4]), caption="Last Element of b")
 ```
 
-A table made up of just one element is even less profound but is again useful.
-
-Now, let's show how we can combine two objects.  
-
+A table made up of just one element is even less profound but is again useful. Now, let's show how we can combine two objects.  
 Recall tables _b_ and _c_ from earlier.
 
 ```{r Show_both_Matrices}
 pander(b, caption="Matrix b")
-
 pander(c, caption="Matrix c")
 ```
 
@@ -257,14 +253,16 @@ pander(cbind(b,c), caption="Column Binding of Matrices b and c")
 pander(rbind(b,c), caption="Row Binding of Matrices b and c")
 ```
 
-Data organizing is a less glamorous part of the job for practicing analytics professionals but can consume a majority of the workday.  There is a lot more that can be said about data wrestling but scripting the data cleansing in terms R commands will make the work more repeatable, consistent, and in the end save time.[^Data]
+Data organizing is a less glamorous part of the job for practicing analytics professionals but can consume a majority of the workday. There is a lot more that can be said about data wrestling but scripting the data cleansing in terms R commands will make the work more repeatable, consistent, and in the end save time.
 
-[^Data]: A PhD student that I knew was preparing for his final defense and did a practice presentation with his advisor and a professor. He was proud of a well polished 250 page thesis with dozens of tables of numerical results.  The analysis included dozens of regressions, all with  similar form and dependent variables. The professor asked him why his dependent variables was the number of projects rather than projects per year. The student thought for a moment and realized that all of his analysis needed to be redone. This would take days or weeks if he had used a GUI based tool. Using R he did a search and replace for the dependent variable, cross-checked results, and met the next day to update that professor and his advisor of the new (and much better!) results. He successfully defended his thesis a couple weeks later.
-
-```{exercise, name="Creating a Matrix of Daily Demand for Four Weeks"}
-Assume that your company's product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday.  Build a matrix of four weeks of demand where each row is a separate week.  
+```{marginfigure}
+A PhD student that I knew was preparing for his final defense and did a practice presentation with his advisor and a professor. He was proud of a well polished 250 page thesis with dozens of tables of numerical results.  The analysis included dozens of regressions, all with similar form and dependent variables. The professor asked him why his dependent variables was the number of projects rather than projects per year. The student thought for a moment and realized that all of his analysis needed to be redone. This would take days or weeks if he had used a GUI based tool. Using R he did a search and replace for the dependent variable, cross-checked results, and met the next day to update that professor and his advisor of the new (and much better!) results. He successfully defended his thesis a couple weeks later.
 ```
+\vspace{12pt}
+***Excercise:*** "Creating a Matrix of Daily Demand for Four Weeks"
+Assume that your company's product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday. Build a matrix of four weeks of demand where each row is a separate week.     
+\vspace{12pt}
+***Exercise:*** "Creating a Matrix of Demand for Two Products" 
+Assume that your company's product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday. Gadgets have a demand of 20 on Monday, increasing by 3 units a day through Sunday. Build a matrix showing each product as a separate row.
 
-```{exercise, name="Creating a Matrix of Demand for Two Products"}
-Assume that your company's product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday.  Gadgets have a demand of 20 on Monday, increasing by 3 units a day through Sunday.  Build a matrix showing each product as a separate row.  
-```
+
