@@ -3,6 +3,10 @@ title: "Chapter 7: More Integer Programming Models"
 output: 
   tufte::tufte_handout: default
 ---
+```{r setup_chapter7, echo=FALSE, warning=FALSE}
+library (tufte)
+library (pander)
+```
 
 # More Integer Programming Models
 
@@ -19,7 +23,6 @@ This chapter consists of a collection of rich MILP  models that can be used for 
 > In this article we will look at the [Warehouse Location Problem](https://en.wikipedia.org/wiki/Facility_location_problem). Given a set of customers and set of locations to build warehoses the task is to decide where to build warehouses and from what warehouses goods should be shipped to which customer. Dirk Schumacher notes that this basic version of the warehouse location problem is adapted from the [German Wikipedia page](https://de.wikipedia.org/wiki/Warehouse_Location_Problem) about the problem.
 > Thus there are two decisions that need to made at once: where and if to build warehouses and the assignment of customers to warehouses. This simple setting also implies that at least one warehouse must be built and that any warehouse is big enough to serve all customers.
 > As a practical example: you run the logistics for an NGO and want to regularly distribute goods to people in need. You identified a set of possible locations to set up your distribution hubs, but you are not sure where to build them. Then such a model might help. In practice however you might need to incorporate additional constraints into the model.
-### The mathematical model
 
 Let's start by defining the decision variables.  Each possible location of a warehouse, $j$ can have a warehouse be built or not be built.  We will use $y_j=1$ to indicate that warehouse $j$ is built.  Conversely, $y_j=0$ indicates that we are not building a warehouse at location $j$.  Since a warehous is either built or not built, a binary variable is appropriate for $y_j$.
 \vspace{12pt}
@@ -579,18 +582,32 @@ After spending a significant amount of time for a serious industrial application
 ## The Sudoku model
 
 > The idea is to introduce a binary variable $x$ with three indexes $i, j, k$ that is $1$ if and only if the number $k$ is in cell $i, j$.  
+
 The basic optimization formulation is interesting for a few reasons.  
 
 First, there isn't a clear objective function.  We are simply trying to find a a set of values that solves the problem without violating any of the rules of Sudoku.  In other words, any feasible solution would be acceptable.  We could minimize $x_{1,1,1}$, the sum of all decision variables (which would be 81, corresponding to the number of cells in the Sudoku grid.)  We could also just tell it to maximize a particular number, say 42, or minimize another number like 0, which is exactly what Dirk did.  
 \vspace{12pt}
 
-We need a constraint to ensure that each cell $(i,j)$ contains a value. $\sum\limits_{k=1}^{9}   x_{i,j,k} = 1, \; \forall i,j$.    
+We need a constraint to ensure that each cell $(i,j)$ contains a value. 
+```{marginfigure marginsudoku_const1}
+$$\sum\limits_{k=1}^{9}   x_{i,j,k} = 1, \; \forall i,j$$
+```
+
 \vspace{12pt}
 
-We then need to ensure that each in row, $i$, each digit only appears once. $\sum\limits_{i=1}^{n}   x_{i,j,k} = 1, \; \forall j,k$.  
 
-We then need to ensure that each in column, $j$, each digit only appears once.
-$\sum\limits_{j=1}^{n}   x_{i,j,k} = 1, \; \forall i,k$.  
+We then need to ensure that in each row, $i$, each digit $k$ only appears once.
+
+```{marginfigure marginsudoku_const2}
+$$\sum\limits_{i=1}^{n}   x_{i,j,k} = 1, \; \forall j,k$$
+```
+
+We then need to ensure that each in column, $j$, each digit only appears once.  
+
+```{marginfigure marginsudoku_const3}
+$$\sum\limits_{j=1}^{n}   x_{i,j,k} = 1, \; \forall i,k$$
+```
+
 \vspace{12pt}
 
 Next, we need to create a constraint each 3x3 grouping contains each digit only once. This is more complicated.  Let's consider the top left 3x3 cluster.  For each digit $k$, we need to ensure that only one cell has it.  

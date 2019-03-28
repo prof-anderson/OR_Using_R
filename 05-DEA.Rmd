@@ -2,6 +2,7 @@
 title: "Chapter 5: Data Envelopment Analysis"
 output: 
   tufte::tufte_handout: default
+  tufte::tufte_html: default
 ---
 
 ```{r setup, warning=FALSE, include=FALSE}
@@ -13,6 +14,7 @@ library (ROI.plugin.glpk, quietly = TRUE)
 library (ompr, quietly = TRUE)
 library (ompr.roi, quietly = TRUE)
 library (pander, quietly = TRUE)
+library (tufte, quietly = TRUE)
 ```
 
 # Data Envelopment Analysis
@@ -55,9 +57,13 @@ Let's start by creating a simple dataset.  We'll assume that we have a small gro
 Which of these units are the best?  Which are laggards?  Simply looking at the data is difficult.  Let's get started now with R.  
 
 ```{r Displaying_First_Dataset}
-library(pander, quietly=TRUE)
-x <- matrix(c(10,20,30,50),ncol=1,dimnames=list(LETTERS[1:4],"x"))
-y <- matrix(c(75,100,300,400),ncol=1,dimnames=list(LETTERS[1:4],"y"))
+x <- matrix(c(10,20,30,50),ncol=1, 
+            dimnames=list(LETTERS[1:4],"x"))
+y <- matrix(c(75,100,300,400),ncol=1,
+            dimnames=list(LETTERS[1:4],"y"))
+```
+
+```{r first_dataset_table, fig.margin=TRUE}
 pander(cbind(x,y), caption="First Dataset for DEA")
 ```
 
