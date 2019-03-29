@@ -63,9 +63,9 @@ In about 2012, my Extreme Technology Analytics Research Group was facing a decis
 
 In the end, we debated between Python and R. While R grew out from statisticians to encompass broader areas, Python grew from a general purpose programming language to add features to address a broad range of different application areas including statistics. While they both have deep roots with over 20 years of active development, this also means that aspects of their original designs are somewhat dated and carry forward the burden of legacies of past decisions when computers were more limited and the meaning of a big dataset would have been much smaller.  
 
-Python had some advantages from the optimization side while R had advantages from the statistical side. In the end, we chose R because Python's numerical methods were not quite as rich. Since that time, both R and Python have significantly matured. 
+Python had some advantages from the optimization side while R had advantages from the statistical side. In the end, we chose R because Python's numerical methods capabilities were not quite as rich. Since that time, both R and Python have significantly matured. 
 
-As time has gone by, R has developed robust toolsets such as RStudio to making R more powerful and easier to use. R's extensive package community has become so diverse and powerful that in fact proprietary statistics software such as SPSS and JMP now promote that they can use R packages. The result is that R is still a great choice for analysts and code developed for R should be usable for a long time.  
+As time has gone by, R has developed robust toolsets such as RStudio to making it more powerful and easier to use. R's extensive package community has become so diverse and powerful that proprietary statistics software such as SPSS and JMP now promote that they can use R packages. The result is that R is still a great choice for analysts and code developed for R should be usable for a long time.  
 
 As should be expected, new tools continue to arise. In particular, Julia is a new, modern language developed around numerical analysis. Industry adoption of Julia is far behind R and Python given their head start of multiple decades. Even if Julia or some other environment does someday become more popular, skills developed using R will be readily transferable and provide an excellent foundation for learning new languages. 
 
@@ -73,9 +73,9 @@ As should be expected, new tools continue to arise. In particular, Julia is a ne
 
 I've adopted the following conventions in this book.  
 
-* R code fragments, including packages will be denoted using monospaced text such as adding two R data objects `a+b`.
+* R code fragments, including packages will be denoted using monospaced text such as adding two R data objects `a+b`.  
 * Mathematical symbols and equations will be italicized.  For example, if two variables are mathematical symbols and being added, then it would be _a+b_.  
-* Tables of information and code fragments are provided liberally and at times erring on the side of repetitious to assist in interpretation and reproducing analyses.
+* Tables of information and code fragments are provided liberally and at times erring on the side of repetitious to assist in interpretation and reproducing analyses.  
 * There may be more efficient ways of performing operations but the focus is on readability.  
 
 This book is continuing to be updated. Comments, suggestions, and corrections are welcome.

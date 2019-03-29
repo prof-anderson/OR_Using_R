@@ -187,7 +187,7 @@ inc_wd_res  <- cbind(objective_value(IncWood),
 colnames(inc_wd_res)<-list("Profit", "Chairs", "Desks", "Tables")
 rownames(inc_wd_res)<-list("Increased Wood")
 pander(rbind(base_case_res, inc_mc_res, inc_wd_res),
-       caption="Production Plan with 10,000 Additional Square Feet of Wood")
+       caption="Production Plan with 10,000 More Wood")
 ```
 
 The demand constraint of 200 is an upper limit only on Tables.  Since far fewer than 200 Tables are produced in the optimal production plan, relaxing this constraint also has no impact (shadow price=0).
@@ -205,7 +205,8 @@ Next, let's discuss the column duals which are often referred to as reduced cost
 ```{r cduals_3var}
 #cduals1 <-as.matrix(get_column_duals(result1), ncol=1 )
 cduals1 <-as.matrix(get_column_duals(Base3VarModel) )
-dimnames(cduals1)<-list(c("Chairs", "Desks", "Tables"), c("Column Duals"))
+dimnames(cduals1)<-list(c("Chairs", "Desks", "Tables"), 
+                        c("Column Duals"))
 pander(cduals1,caption="Reduced Costs of Variables")
 ```
 
@@ -218,7 +219,8 @@ Let's start by examining the Shadow Prices of the resources along with the numbe
 ```{r Shadow_Price_Single_Chair}
 chair_res_used<-cbind(rduals1,c(2,8,6,40,0))
 colnames(chair_res_used)<-c("Row Duals", "Resources Used")
-pander(chair_res_used, caption="Resources Used by a Chair and their Shadow Prices")
+pander(chair_res_used, 
+       caption="Resources Used by a Chair and their Shadow Prices")
 ```
 
 Taking the product in each row and adding them up will give the marginal value of the resources consumed by an incremental change in production of chairs. In this case, the marginal value is $0+1*8+2*6+0+0=20$.  Since the profit per chair (from the objective function coefficient on Chairs) is also $\$ 20$, they are in balance and the difference between them is zero which is why the reduced cost for Chairs is zero. This can be thought of saying that there is marginal benefit of cost to a very small forced change in the value of the Chairs variable.  The value of the resources used in producing a chair equals that of the profit of a chair.  
@@ -229,7 +231,8 @@ We can repeat the same process and calculations for Desks.
 ```{r Shadow_Price_Desks}
 desk_res_used<-cbind(rduals1,c(2,6,4,25,0))
 colnames(desk_res_used)<-c("Row Duals", "Resources Used")
-pander(desk_res_used, caption="Resources Used by a Desk and their Shadow Prices")
+pander(desk_res_used, 
+       caption="Resources Used by a Desk and their Shadow Prices")
 ```
 
 In this case, the marginal value is $0+1*6+2*4+0+0=14$.  Since the profit per desk (from the objective function coefficient on Desks) is also $\$ 14$, they are in balance and the difference between them is zero which is why the reduced cost for the _Desks_ variable is also zero.
@@ -244,7 +247,8 @@ Let's go ahead and test this interpretation by again looking at the value of the
 ```{r Shadow_Price_Table}
 table_res_used<-cbind(rduals1,c(4,4,8,25,0))
 colnames(table_res_used)<-c("Row Duals", "Resources Used")
-pander(table_res_used, caption="Resources Used by a Table and their Shadow Prices")
+pander(table_res_used, 
+       caption="Resources Used by a Table and their Shadow Prices")
 ```
 
 Notice that the values based on shadow prices of the resources used by a table are $\$1*4+\$2*8=\$20$. Alas, the profit for each table is just $\$16$ which means that forcing the production of a single table will decrease the production plan's profit by $\$4$. In other words, the impact on the objective function is   $\$-4$ which is the same as the reduced price entry of Tables.  
@@ -284,7 +288,7 @@ Let's compare the results for the new production plan and the original base case
 
 ```{r Base_vs_Forced_Table}
 rownames(base_case_res) <- "Base Case"
-Table1_case_res           <- cbind(obj_val, xchairs,xdesks,xtables)
+Table1_case_res         <- cbind(obj_val, xchairs,xdesks,xtables)
   rownames(Table1_case_res) <- "with forced change to Tables"
   pander(rbind(base_case_res,Table1_case_res),
          caption="Impact of a Forced Change in Tables")
@@ -336,4 +340,3 @@ i) Combine the results of the base case e), as well as the variations f) through
 ## Exercise: Revisiting Transportation
 
 Using sensitivity analysis, revisit the transportation exercise from chapter 3.  If one more unit of supply was available, where would it be prioritized and why?  If demand could be increased by one unit, would it affect the result and at which destination node it be preferred and why?
-

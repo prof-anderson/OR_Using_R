@@ -3,6 +3,7 @@ title: "Getting Started with Goal Programming"
 output: 
   tufte::tufte_handout: default
 ---
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library (magrittr, quietly = TRUE) #Used for pipes/dplyr

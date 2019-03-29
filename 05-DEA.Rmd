@@ -5,7 +5,7 @@ output:
   tufte::tufte_html: default
 ---
 
-```{r setup, warning=FALSE, include=FALSE}
+```{r setup_chapter5, warning=FALSE, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library (magrittr, quietly = TRUE) #Used for pipes/dplyr
 library (dplyr, quietly = TRUE)

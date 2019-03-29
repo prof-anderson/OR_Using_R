@@ -45,7 +45,6 @@ The decision variables are then combined in some way to reflect the performance 
 There is a field of multiple-objective linear programming where multiple objectives or goals can be accommodated. This will be explored in Chapter 7.
 ```
 
-
 Lastly, what is limiting the organization from even better performance?  There are typically many limits such as the number of customers, personnel, supplier capacity, etc.  In this case, we focus on a set of resource limits based on staffing in different centers and the supply of raw material (wood).  Since these limitations constrain the possible values of decision variables, they are called constraints.
 
 \vspace{12pt}
@@ -319,7 +318,7 @@ result1 <-  solve_model(model1, with_ROI(solver = "glpk"))
 
 ## Three Variable Case Results and Interpretation
 
-Let's check to see the status of the solver.  Did it find the optimal solution?
+Let's check to see the status of the solver.  Did it find the optimal solution?  
 
 ```{r base_status_3var}
 print(solver_status(result1))
@@ -333,7 +332,7 @@ get_solution(result1, Desks)
 get_solution(result1, Tables)
 ```
 
-This is interesting - even though we added a new product to our product portfolio, production decision stayed the same.  
+This is interesting - even though we added a new profitable product to our portfolio, the production decision stayed the same.  
 
 ## Linear Programming Special Cases
 
@@ -367,16 +366,18 @@ $$
   (\#eq:Base_Model_Ex4)
 $$
 
-Now let's rebuild our formulation with this change.
+Now let's extend our formulation with this change.
 
 ```{r infeasible_case}
 model1infeas <- 
-  add_constraint(model1, Chairs >= 300)  #THIS IS THE NEW CHANGE
+  add_constraint(model1, Chairs >= 300)  
+                              #THIS IS THE NEW CHANGE
   
-result1infeas <-  solve_model(model1infeas, with_ROI(solver = "glpk"))
+result1infeas <-  solve_model(model1infeas, 
+                              with_ROI(solver = "glpk"))
 ```
 
-In this case, we are going to simply add the new constraint to `model1` and create a new model to solve.
+In this case, we are going to simply add the new constraint to `model1` and create a new model, `model1infeas` to solve.
 \vspace{12pt}
 Note that the constraint on the minimum number of chairs could also be implemented by changing the lower bound on the chairs variable to be 300 instead of zero.  Also, the maximum limit on Tables could be set as an upper bound on the Tables variable.
 
@@ -387,7 +388,7 @@ get_solution(result1infeas, Desks)
 get_solution(result1infeas, Tables)
 ```
 
-Notice that since the solver status was infeasible, the  values for the decision variables are not feasible and therefore cannot be considered a reliable (or possible) production plan.  This highlights why the solver's status should always be tested before results are discussed.
+Notice that since the solver status was infeasible, the values for the decision variables are not feasible and therefore cannot be considered a reliable (or possible) production plan. This highlights why the solver's status should always be confirmed to be "Optimal" before results are discussed.
 
 ## Case 2: Multiple Optima
 
@@ -416,7 +417,7 @@ $$
 The implementation can be simplified again since we are only changing the objective function, let's change the objective function in `model1` and save it to `model2a`.
 
 ```{r Modify_Model_to_Have_Multiple_Optima}
-model2a <- set_objective(model1, 20*Chairs - 10*Desks - 16*Tables, "max") 
+model2a <- set_objective(model1, 20*Chairs + 10*Desks + 16*Tables, "max") 
 result2a <-  solve_model(model2a, with_ROI(solver = "glpk"))
 ```
 
@@ -484,40 +485,34 @@ $$
 Now we can implement the model.
 
 ```{r Redundant_Constraint_Model}
-result3 <- MIPModel() %>%
-  add_variable(Chairs, type = "continuous", lb = 0) %>%
-  add_variable(Desks, type = "continuous", lb = 0) %>%
-  add_variable(Tables, type = "continuous", lb = 0) %>%
-  
-  set_objective(20*Chairs + 14*Desks + 16*Tables, "max") %>%
-  
-  add_constraint(6*Chairs + 2*Desks + 4*Tables <= 2000) %>% #fabrication
-  add_constraint(8*Chairs + 6*Desks + 4*Tables <= 2000) %>% #assembly
-  add_constraint(6*Chairs + 4*Desks + 8*Tables <= 1440) %>% #machining
-  add_constraint(40*Chairs + 25*Desks + 16*Tables <= 9600) %>% #wood
-  add_constraint(1*Chairs + 1*Desks + 1*Tables <= 1500) %>% # NEW CONSTRAINT-PAINT
-  add_constraint(Tables <= 200) %>% 
-  
-  solve_model(with_ROI(solver = "glpk"))
+model1redund <- add_constraint(model1, 
+                          Chairs + Desks + Tables 
+                          >= 300)  
+          #THIS IS THE NEW CHANGE
+
 ```
 
 ```{r Solve_with_Redundant_Constraint}
+result3 <- solve_model(model1redund, 
+                       with_ROI(solver = "glpk"))
 print(solver_status(result3))
 get_solution(result3, Chairs)
 get_solution(result3, Desks)
 get_solution(result3, Tables)
 ```
 
-This constraint was a redundant constraint because the other constraints would keep us from ever having 1500 pieces of furniture or therefore needing 1500 gallons of paint.  In other words, there is no way that this constraint could ever be binding at any solution regardless of what the objective function is.  More precisely, elimination of a redundant constraint does not change the size of the feasible region at all.
+This constraint was _redundant_ because the other constraints would keep us from ever having 1500 pieces of furniture or therefore needing 1500 gallons of paint.  In other words, there is no way that this constraint could ever be binding at any solution regardless of what the objective function is.  More precisely, elimination of a redundant constraint does not change the size of the feasible region at all.
 \vspace{12pt}
 
 Note that not all non-binding constraints at an optimal solution are redundant.  Deleting a non-binding constraint and resolving won't change the optimal objective function value.  On the other hand, for a different objective function, that non-binding constraint might become binding and therefore different solutions would be found if it were deleted. 
 \vspace{12pt}
 
-Challenge:  Can you use a calculator to simply estimate the maximum number of Chairs that could be made?  Desks?  Tables?  
+```{marginfigure}
+**Challenge:**  Can you use a calculator to simply estimate the maximum number of Chairs that could be made?  Desks?  Tables?  
 \vspace{12pt}
 
-Challenge:  How would you modify the formulation to find the most pieces of furniture that could be produced?
+**Challenge:**  How would you modify the formulation to find the most pieces of furniture that could be produced?
+```
 
 ## Case 4: Unbounded Solution
 
@@ -548,10 +543,14 @@ result4 <- MIPModel() %>%
   
   set_objective(20*Chairs + 14*Desks + 16*Tables, "max") %>%
   
-  add_constraint(6*Chairs + 2*Desks + 4*Tables >= 2000) %>% #fabrication
-  add_constraint(8*Chairs + 6*Desks + 4*Tables >= 2000) %>% #assembly
-  add_constraint(6*Chairs + 4*Desks + 8*Tables >= 1440) %>% #machining
-  add_constraint(40*Chairs + 25*Desks + 16*Tables >= 9600) %>% #wood
+  add_constraint(6*Chairs + 2*Desks + 4*Tables >= 2000) %>%
+      #fabrication
+  add_constraint(8*Chairs + 6*Desks + 4*Tables >= 2000) %>% 
+      #assembly
+  add_constraint(6*Chairs + 4*Desks + 8*Tables >= 1440) %>%
+      #machining
+  add_constraint(40*Chairs + 25*Desks + 16*Tables >= 9600) %>% 
+      #wood
   
   add_constraint(Tables >= 200) %>% 
   
@@ -565,8 +564,11 @@ get_solution(result4, Desks)
 get_solution(result4, Tables)
 ```
 
-Again, the solver status is report that the problem is *infeasible* rather than *unbounded* but by inspection, the LP is feasible.  A value for Tables = 1000, Chairs=Desks=0, satisfies all of the constraints.  Perhaps I am missing something in my model or it might be a bug in one of the packages that is misreporting the solver status.  I need to do more digging to check on that.
+The solver status reports that the problem is *infeasible* rather than *unbounded* but by inspection, the LP is feasible. A value for _Tables = 1000, Chairs=Desks=0,_ satisfies all of the constraints and therefore the LP is feasible.  
 \vspace{12pt}
+```{marginfigure}
+This is a known issue in ompr as of 0.8.0 reported on github. It is caused by not distinguishing between the different status conditions that can result in a failed optimization.  The result is that you should read the ompr status of "infeasible" to indicate no optimal solution.
+```
 
 This is another good reminder that it is important to always check the status of the solver.  
 
@@ -642,7 +644,6 @@ c) Solve the model in R
 d) Interpret and discuss the model in R Markdown.
 e) Discuss how one parameter would need to change in order to result in a different production plan.  Demonstrate how this affects the results.
 ```
-
 
 Hint:  Knit your RMarkdown as a PDF or open the HTML version in your browser and print to PDF.
 

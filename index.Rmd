@@ -31,6 +31,9 @@ I would like to thank many people for their contributions, collaborations, and a
 * **Christopher Davis,** graphical example of LP
 * **Thanh Thuy Nguyen,** fixed charge example 
 * **Roland Richards,** converted format to Tufte-style
+* **Caroline Blackledge,** Co-author of summation introduction appendix
+* **Alexander Keller,** Co-author of summation introduction appendix
+* **Shahram Khorasanizadeh,** Co-author of summation introduction appendix
 
 In addition, several groups have been of tremendous help:
 
