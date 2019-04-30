@@ -3,11 +3,20 @@ title: "Introduction to Operations Research"
 author: "Tim Anderson"
 date: "11/23/2018"
 output: 
-  tufte::tufte_handout: default
+  tufte::tufte_handout:
+    tufte_variant: "envisioned"
+  tufte::tufte_html:
+    tufte_variant: "envisioned"
+  tint::tintPdf: default
+  tint: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(tidy = F)
+library(tufte)
+library(tint)
+library(knitr)
 ```
 
 # Introduction 

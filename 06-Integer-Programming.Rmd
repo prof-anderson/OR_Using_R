@@ -1,10 +1,16 @@
 ---
 title: "Chapter 6: Integer Programming"
 output: 
-  tufte::tufte_handout: default
+  tufte::tufte_handout:
+    tufte_variant: "envisioned"
+  tufte::tufte_html:
+    tufte_variant: "envisioned"
+  tint::tintPdf: default
+  tint: default
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(tidy = F)
 suppressPackageStartupMessages(library(magrittr))  # Used for pipes
 suppressPackageStartupMessages(library(dplyr))     # Used for data management
 suppressPackageStartupMessages(library(ROI))
@@ -12,6 +18,9 @@ suppressPackageStartupMessages(library(ROI.plugin.glpk))
 suppressPackageStartupMessages(library(ompr))
 suppressPackageStartupMessages(library(ompr.roi))
 suppressPackageStartupMessages(library(pander))    # Used for nice tables
+library (tint)
+library (tufte)
+library (knitr)
 ```
 
 # Getting Started with Integer Variables

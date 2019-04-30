@@ -1,11 +1,17 @@
 ---
 title: "Getting Started with Goal Programming"
 output: 
-  tufte::tufte_handout: default
+  tint::tintPdf: default
+  tufte::tufte_html:
+    tufte_variant: "envisioned"
+  tint: default
+  tufte::tufte_handout:
+    tufte_variant: "envisioned"
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(tidy = F)
 library (magrittr, quietly = TRUE) #Used for pipes/dplyr
 library (dplyr, quietly = TRUE)
 library (ROI, quietly = TRUE)
@@ -13,6 +19,8 @@ library (ROI.plugin.glpk, quietly = TRUE)
 library (ompr, quietly = TRUE)
 library (ompr.roi, quietly = TRUE)
 library (pander, quietly = TRUE)
+library (tint)
+library (tufte)
 ```
 
 # Goal Programming and Multiple Objectives
