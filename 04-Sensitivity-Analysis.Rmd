@@ -1,11 +1,17 @@
 ---
 title: "Chapter 4: Sensitivity Analysis"
 output: 
-  tufte::tufte_handout: default
+  tufte::tufte_handout:
+    tufte_variant: "envisioned"
+  tufte::tufte_html:
+    tufte_variant: "envisioned"
+  tint::tintPdf: default
+  tint: default
 ---
 
 ```{r setup, warning=FALSE, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(tidy = F)
 library (magrittr, quietly = TRUE) #Used for pipes/dplyr
 library (dplyr, quietly = TRUE)
 library (ROI, quietly = TRUE)
