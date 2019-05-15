@@ -11,3 +11,4 @@ new_session: yes
 bibliography: ["Master4Bookdowns.bib", "another.bib"]
 biblio-style: "apalike"
 link-citations: true
+date: "`r format(Sys.time(), '%p, %d %B, %Y')`"

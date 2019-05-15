@@ -1,11 +1,20 @@
 ---
 title: "Chapter 7: More Integer Programming Models"
 output: 
-  tufte::tufte_handout: default
+  tufte::tufte_handout:
+    tufte_variant: "envisioned"
+  tufte::tufte_html:
+    tufte_variant: "envisioned"
+  tint::tintPdf: default
+  tint: default
 ---
+
 ```{r setup_chapter7, echo=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(tidy = F)
 library (tufte)
 library (pander)
+library (tint)
 ```
 
 # More Integer Programming Models
@@ -469,7 +478,7 @@ lpsolvetime1 <- c("lpsolve", lpsolvetime$toc - lpsolvetime$tic,
 
 We can see that `lpsolve` was also successful.
 
-### Comparing results across solvers
+## Comparing results across solvers
 
 Now let's compare how they each did.  
 

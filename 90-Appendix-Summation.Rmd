@@ -2,14 +2,18 @@
 title: "Appendix Introduction to Summation Notation"
 author: "Caroline Blackledge, Alexander Keller, and Shahram Khorasanizadeh"
 output: 
-  tufte::tufte_handout: default
+  tufte::tufte_handout:
+    tufte_variant: "envisioned"
+  tufte::tufte_html:
+    tufte_variant: "envisioned"
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(tidy = F)
 ```
 
-# Introduction to Summation Notation
+# Appendix: An Introduction to Summation Notation {-}
 
 ## Basic Summation Notation
 
@@ -20,24 +24,33 @@ In linear programming, we often need to sum sets of numbers, such as:
 + 31 + 32 + 33 + 34 + 35 + 36 + 37 + 38 + 39 + 40
 + 41 + 42 + 43 + 44 + 45 + 46 + 47 + 48 + 49 + 50
 
-Summation notation is a mathematical shorthand used to represent repeated addition of algebraic expressions involving one or more variables. The Greek capital letter sigma, $\sum$, is the symbol used to show that we wish to make calculations using summation notation. Since summation notation includes at least one variable--let's limit this initial examination to one variable only--the variable is displayed below the $\sum$ symbol. The summation notation below tells us that we will be finding the summation of a variable expression involving $x$.
+Summation notation is a mathematical shorthand used to represent repeated addition of algebraic expressions involving one or more variables. The Greek capital letter sigma, $\sum$, is the symbol used to show that we wish to make calculations using summation notation. Since summation notation includes at least one variable--let's limit this initial examination to one variable only--the variable is displayed below the $\sum$ symbol. The summation notation below tells us that we will be finding the summation of a variable expression involving $x$.  
 
 $$\sum_{x}$$
 
-The starting value of the variable may be given below $\sum$ as well. In this case, the summation notation below tells us that the initial value of $x$ will be equal to 1.
+The starting value of the variable may be given below $\sum$ as well. In this case, the summation notation below tells us that the initial value of $x$ will be equal to 1.  
+
+```{marginfigure}
 $$\sum_{x=1}$$
+```
+  
+In some cases, we may also wish to designate an ending value of the variable, which we can include above the $\sum$.  The summation notation below also tells us that the final value of $x$ will be equal to 5.  
 
-In some cases, we may also wish to designate an ending value of the variable, which we can include above the $\sum$.  The summation notation below also tells us that the final value of $x$ will be equal to 5.
-
+```{marginfigure}
 $$\sum_{x=1}^5$$
+```
 
-In all dealings with summation notation, variables will only take integer values, beginning and ending at any values provided within the summation notation.  Note that some summations may use an "ending" value of $\infty$, which would involve the summation of an infinite number of values.
+In all dealings with summation notation, variables will only take integer values, beginning and ending at any values provided within the summation notation.  Note that some summations may use an "ending" value of $\infty$, which would involve the summation of an infinite number of values.  
  
-Let's look at a basic summation problem. 
+Let's look at a basic summation problem.  
+
+```{marginfigure}
 $$\sum_{x=1}^5 2x$$
+```
 
 The summation above means that we will take the $x$ values, starting at $x=1$, and multiply the value of $x$ by 2.  We will continue to do this for each integer value of $x$ until we have reached our ending value of 5.  Then we will sum all of our results (five of them, in this case) to produce one final value for the summation.  
 
+```{marginfigure}
 $$
 \begin{split}
 \begin{aligned}
@@ -48,8 +61,9 @@ $$
 \end{aligned}
 \end{split}
 $$
+```
 
-Summation can be calculated over a variety of algebraic expressions.  Another, perhaps more challenging, example is shown below.
+Summation can be calculated over a variety of algebraic expressions.  Another, perhaps more challenging, example is shown below.  
 
 $$
 \begin{split}
@@ -68,21 +82,28 @@ LaTex is a common typesetting used to express mathematical notation.  The summat
 
 ## Sums
 
-To display the $\sum$ symbol in LaTex, use the command backslash sum.
- 
-The sum expression can be added using the command:
+To display the $\sum$ symbol in LaTex, use the command `\sum_{lower}^{upper}`.  
+
+The sum expression can be added using the command:  
+```{marginfigure}
 $$\sum_{lower}^{upper}$$ 
+```
 
-Sum limits can be written to appear above and below the operator.
+Sum limits can be written to appear above and below the operator.  
 
+```{marginfigure}
 $$
 \sum\limits_{t=0}^{n}\dfrac{CF_t}{(1+r)^t}
 $$
+```
 
 ## Products
 
-The multiplication or product over a sequence is denoted as the uppercase Greek letter pi, $\prod$.  The product command can be added using the expression:
+The multiplication or product over a sequence is denoted as the uppercase Greek letter pi, $\prod$.  The product command can be added using the expression `\prod_{x = a}^{b} f(x)`
+
+```{marginfigure}
 $$\prod_{x = a}^{b} f(x)$$
+```
 
 The lower and upper limits of summation after the `\sum` are both optional.  Products and integrals work similarly, only with `\prod` and `\int`:
 
@@ -95,7 +116,10 @@ $$\left( \sum_{i=1}^{n}{i} \right)^2 = \left( \frac{n(n-1)}{2}\right)^2 = \frac{
 Below are some common mathematical functions that are often used. 
 
 1. x = y
+```{marginfigure}
 $$1. x = y$$
+```
+
 2. x < y
 
 $$2. x < y$$
@@ -151,17 +175,20 @@ $$26.\prod_{x = a}^{b} f(x)$$
 
 ## Sequences and Summation Notation
 
-Often times, especially in the context of optimization, summation notation is used to find the sum of a sequence of terms.  The summation below represents a summing of the first five values of of a sequence of the variable $x$.  The location of the values within the sequence are given by an index value, $i$ in this case.
+Often, especially in the context of optimization, summation notation is used to find the sum of a sequence of terms.  The summation below represents a summing of the first five values of of a sequence of the variable $x$.  The location of the values within the sequence are given by an index value, $i$ in this case.
 $$\sum_{i=1}^5 x_i=x_1+x_2+x_3+x_4+x_5$$
 
 Coefficient values may also be included in a summation, as shown below.
+```{marginfigure}
 $$\sum_{i=1}^5 (10-i)x_i=9x_1+8x_2+7x_3+6x_4+5x_5$$
+```
 
 ## Applications of Summation
 
 Sequence applications of summation notation can be very practical in that we can extract real-world data values given in an array or a matrix.
 
 For example, let's imagine that the itemized cost for the production of a product from start to finish is that which is given in the table below.
+
 ```{r}
 
 ##Load Library
@@ -169,9 +196,11 @@ library(pander,quietly = TRUE)
 
 #Load Data Table
 M1<-matrix(c(11,12,13,14,15), ncol=1)
-rownames(M1)<-list("Design", "Materials", "Production", "Packaging", "Distribution")
+rownames(M1)<-list("Design", "Materials", 
+                   "Production", "Packaging", "Distribution")
 colnames(M1)<-list("Product 1")
-pander(M1, caption="Table 1: Itemized Production Costs for Product 1")
+pander(M1, 
+       caption="Table 1: Itemized Production Costs for Product 1")
 
 ```
 
@@ -234,12 +263,15 @@ We can see that the summation expression resulted in three summation values sinc
 
 ## Double Summation
 
-For some projects or models, we may need to add one summation into another. This procedure is called "double summation."  Consider the following double summation expression.
-$$\sum_{i=1}^3\sum_{j=1}^4 (i+j)
-$$
+For some projects or models, we may need to add one summation into another. This procedure is called "double summation."  Consider the following double summation expression:  `\sum_{i=1}^3\sum_{j=1}^4 (i+j)`
+
+```{marginfigure}
+$$\sum_{i=1}^3\sum_{j=1}^4 (i+j)$$
+```
 
 Note that the expression contains two $\sum$ symbols, indicating a double summation.  The double summation would expand as shown below.
 
+```{marginfigure}
 $$
 \begin{split}
 \begin{aligned}
@@ -251,16 +283,19 @@ $$
 \end{aligned}
 \end{split}
 $$
+```
 
 ## Applications of Double Summation
 
 Consider a transportation application using double summation in which we want to ship a given amount of product $X$ from location $i$ to location $j$, denoted $X_{i,j}$.  The summation notation for this application is shown below.
 
+```{marginfigure}
 $$\sum_{i=1}^n\sum_{j=1}^m X_{i,j}$$
+```
 
 Expanding on the previous summation, we may also want to include shipping costs $C$ from location $i$ to location $j$, denoted $C_{i,j}$.  Combining the amount of product with the related shipping costs would result in the double summation expression shown below.
 
-$$\sum_{i=1}^n\sum_{j=1}^m (C_{i,j})(X_{i,j})$$
+$$\sum_{i=1}^n\sum_{j=1}^m C_{i,j}X_{i,j}$$
 
 ## Exercises
 

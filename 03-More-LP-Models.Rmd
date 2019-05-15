@@ -1,11 +1,23 @@
 ---
-title: "Chapter 3: More LP Models"
-output: 
-  tufte::tufte_handout: default
+title: 'Chapter 3: More LP Models'
+output:
+  tufte::tufte_handout:
+    tufte_variant: envisioned
+  tint::tintPdf: default
+  tint: default
+  tufte::tufte_html:
+    tufte_variant: envisioned
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(tidy = F)
+library(kableExtra)
+library(pander)
+library(knitr)
+library(magrittr)
+library(tint)
+library(tufte)
 ```
 
 # More Linear Programming Models
@@ -76,19 +88,24 @@ Available <- matrix(c(1440, 1440, 2000, 1000, 9600),
               ncol=1,dimnames=c(ResNames,"Available"))
 ```
 
-Let's now display the data.  This should match the data that we hard coded into the R linear programming model in the previous chapter.  Let's display the data.  (Recall from last chapter that the _pander_ library is helpful for making tables look better.)  
+Let's now display the data.  This should match the data that we hard coded into the R linear programming model in the previous chapter.  Let's display the data.  
 
-```{r Display_Profit_per_Product}
-library(pander)
+```{r Display_Profit_per_Product, tidy=FALSE, echo = FALSE, results='asis'}
 pander(Profit, caption="Profit per Product")
+#knitr::kable(Profit, booktabs = T) %>%
+#kable_styling(latex_options = c("striped", "scale_down"))
 ```
 
 Similarly, we can display the resources used by each product and the amount of each resource available.  
 
-
-```{r Display_Resources_and_Available}
-pander(Resources, caption="Resources used by each product")
-pander (Available, caption="Amount of each Resource Available")
+```{r Display_Resources_and_Available, tidy=FALSE, echo = FALSE, results='asis'}
+pander (Resources, 
+       caption="Resources Used by Each Product")
+pander (Available, 
+       caption="Amount of Each Resource Available")
+#kable (Available,  format="latex", 
+#       caption="Amount of Each Resource Available", booktabs = T)
+# kable_styling(latex_options = c("striped", "scale_down"))
 ```
 
 ```{marginfigure}
@@ -100,7 +117,8 @@ Now we need to define variables.
 Let's show how we can display the resources used and available in one table.  We will use the _cbind_ function to do a column binding of the data.  
 
 ```{r Display_Resources_Available_Combined}
-pander(cbind(Resources, Available), caption="Resources Used by Each Product and Available")
+pander(cbind(Resources, Available), 
+       caption="Resources Used by Each Product and Available")
 ```
 
 To ensure that we know how to access the data, if we want to see how the amount of the first resource used by the second product, you can enter _Resources[1,2]_ in R Studio's console which is `r Resources[1,2]`.  

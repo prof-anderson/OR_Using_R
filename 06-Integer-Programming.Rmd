@@ -1,10 +1,16 @@
 ---
 title: "Chapter 6: Integer Programming"
 output: 
-  tufte::tufte_handout: default
+  tufte::tufte_handout:
+    tufte_variant: "envisioned"
+  tufte::tufte_html:
+    tufte_variant: "envisioned"
+  tint::tintPdf: default
+  tint: default
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(tidy = F)
 suppressPackageStartupMessages(library(magrittr))  # Used for pipes
 suppressPackageStartupMessages(library(dplyr))     # Used for data management
 suppressPackageStartupMessages(library(ROI))
@@ -12,6 +18,9 @@ suppressPackageStartupMessages(library(ROI.plugin.glpk))
 suppressPackageStartupMessages(library(ompr))
 suppressPackageStartupMessages(library(ompr.roi))
 suppressPackageStartupMessages(library(pander))    # Used for nice tables
+library (tint)
+library (tufte)
+library (knitr)
 ```
 
 # Getting Started with Integer Variables
@@ -200,7 +209,7 @@ The simplicity of making the change in the model from continuous to integer vari
 At its core, the basic problem is that the simplex method and linear programming solves a system of equations and unknowns (or variables).  It is trivial to solve one equation with one unknown such as $5x=7$.  It is only slightly harder to solve a system of two equations and two unknowns.  Doing three equations and three unknowns requires some careful algebra but is not too hard. In general, solving *n* equations and *n* unknowns is readily solvable.  On the other hand, none of this algebraic work will of solving for unknown variables can require that the variables take on integer values.  Even with only one equation and one unknown, *x* will only be integer for certain combinations of numbers in the above equation.  Specifically when the number on the right is a multiple of the number in front of *x*.  It gets even less likely to have an all integer solution as the number of equations and unknowns increase.  
 \vspace{12pt}
 
-Another way to visualize why integer solutions for general systems of inequalities is to think of the two equation and two unknown case.  Finding a solution is the same as finding where lines intersect in two dimensional space.  The odds of getting lucky and having the two lines intersect at an integer solution is small.  Even if we limit ourselves to a two dimensional space of the intersection occurs for x and y both being between 0 and 10, this means that there $11^2=121$ possible integer valued points in this space such as (0,0), (0,3), and (10,10).  In contrast, the set of all points, including non-integers, in this region includes all of the above points as well as (0,0.34) and (4.71, 7.89) among infinitely more.  The result is that if you think of this as a target shooting, the probability of finding an integer solution by blind luck is  $\frac{121}{\infty}\approx 0$. Certain structures for optimization problems will result in 
+Another way to visualize why integer solutions for general systems of inequalities is to think of the two equation and two unknown case.  Finding a solution is the same as finding where lines intersect in two dimensional space.  The odds of getting lucky and having the two lines intersect at an integer solution is small.  Even if we limit ourselves to a two dimensional space of the intersection occurs for x and y both being between 0 and 10, this means that there are $11^2=121$ possible integer valued points in this space such as (0,0), (0,3), and (10,10).  In contrast, the set of all points, including non-integers, in this region includes all of the above points as well as (0,0.34) and (4.71, 7.89) among infinitely more.  The result is that if you think of this as a target shooting, the probability of finding an integer solution by blind luck is  $\frac{121}{\infty}\approx 0$. Certain structures for optimization problems will result in quick solving.
 \vspace{12pt}
 
 What we need to do is create an algorithm around the simplex method to accomplish this.  
@@ -391,27 +400,27 @@ pander(BandB, caption="Sequence of LPs followed by Branch and Bound")
 As for computational complexity, this was a small problem with only two integer variables but it still required solving the LP Relaxation and four separate LP subproblems for a total of five linear programs in all.  As the number of variables and constraints increases, so do the number of LPs needed to typically find a solution using branch and bound.  Small and medium size problems can generally be solved quickly but worst case scenarios have a combinatorial explosion.  
 
 ## Full Enumeration
-Another approach to integer programming is full enumeration which means listing out all possible solutions and then determining if that solution is feasible and if so, what the objective function value is. Alas, this can result in a combinatorial explosion. For example, if a problem has 1000 non-negative integer variables each of which has an upper bound of 10, full enumeration would require listing $10^{1000}$ possible solutions.  Written out, the number of LPs would then be a 1 followed by a thousand zeros. This is far larger than the number of grains of sand on Earth (~$10^{19}$) or the number of stars in the universe (~$10^{19}$).  In fact this is much larger than the number of atoms in the universe (~$10^{80}$).  Needless to say explicit enumeration for large problems is not an option.  
+Another approach to integer programming is full enumeration which means listing out all possible solutions and then determining if that solution is feasible and if so, what the objective function value is. Alas, this can result in a combinatorial explosion. For example, if a problem has 1000 non-negative integer variables each of which has an upper bound of 10, full enumeration would require listing $10^{1000}$ possible solutions. This is far larger than the number of grains of sand on Earth (~$10^{19}$) or the number of stars in the universe (~$10^{19}$).  In fact this is much larger than the number of atoms in the universe (~$10^{80}$).  Needless to say explicit enumeration for large problems is not an option.  
 
 ## Branch and Bound in Practice
-
-Worst case scenarios for Branch and Bound may approach that of full enumeration but in practice performs much better.  A variety of sophisticated algorithmic extensions have been added by researchers over the years but solving large scale integer programming problems can still be quite difficult.
-\vspace{12pt}
 
 The Branch and Bound algorithm has the benefit that it will find the optimal solution.  Sometimes it will find it quickly, other times it may take a very long time.  
 \vspace{12pt}
 
-Also, if it is terminated early, it may report the best feasible solution found so far and a precise bound as to how much better an as yet unfound solution might be based on the best remaining open branch.  This difference between the best feasible solution found so far and the theoretically possible best solution to be found gives a gap that an analyst can set. This acceptable gap is sometimes referred to as a suboptimality tolerance factor.  In other words, what percentage of suboptimality is the analyst willing to accept for getting a solution more quickly. For example, a suboptimality tolerance factor of 10% would tell the software to terminate the branch and bound algorithm if a feasible solution is found and it is certain that regardless of how much more time is spent solving, it is impossible to improve upon this solution by more than 10%.
+Worst case scenarios for Branch and Bound may approach that of full enumeration but in practice performs much better.  A variety of sophisticated algorithmic extensions have been added by researchers over the years but solving large scale integer programming problems can still be quite difficult.
+\vspace{12pt}
+
+One option to deal with long solving times is to set early termination conditions such as running for a certain number of seconds.  If it is terminated early, it may report the best feasible solution found so far and a precise bound as to how much better an as yet unfound solution might be based on the best remaining open branch.  This difference between the best feasible solution found so far and the theoretically possible best solution to be found gives a gap that an analyst can set. This acceptable gap is sometimes referred to as a suboptimality tolerance factor.  In other words, what percentage of suboptimality is the analyst willing to accept for getting a solution more quickly. For example, a suboptimality tolerance factor of 10% would tell the software to terminate the branch and bound algorithm if a feasible solution is found and it is certain that regardless of how much more time is spent solving, it is impossible to improve upon this solution by more than 10%.
 \vspace{12pt}
 
 Note that if we had a wide enough suboptimality tolerance, say 30% and followed the branch for $x_1\ge3.0$ first rather than $x_1\le2.0$, we might have terminated with a suboptimal solution.
 \vspace{12pt}
 
-In practice, even small suboptimality tolerance factors like 1% can allow big problems to be solved more quickly and are often well with the margin of error for model data.  In other cases, organizations may be interested in finding *any* feasible solution to large, vexing problems.  
+In practice, even small suboptimality tolerance factors like 1% can allow big problems to be solved more quickly and are often well within the margin of error for model data.  In other cases, organizations may be interested in finding *any* feasible solution to large, vexing problems.  
 
 ## Binary Variables and Logical Relations
 
-Binary variables are a special case of general integer variables. Rather than variables taking on the value such as 46 and 973, acceptable values are limited to just 0 and 1.  This greatly reduces the possible search space for branch and bound since you know that in any branch, you will never branch on a single variable more than once.  On the other hand, with a large number of variables, the search space can still be very large.  If the previous case with 1000 variables were binary, a full enumeration list would rely on a list of $2^{1000}$ or one followed by about 300 zeros) possible solutions.  While better than the case of integers, it is still vastly more than the number of  atoms in the universe.
+Binary variables are a special case of general integer variables. Rather than variables taking on values such as 46 and 973, acceptable values are limited to just 0 and 1.  This greatly reduces the possible search space for branch and bound since you know that in any branch, you will never branch on a single variable more than once.  On the other hand, with a large number of variables, the search space can still be very large.  If the previous case with 1000 variables were binary, a full enumeration list would rely on a list of $2^{1000}$ or one followed by about 300 zeros) possible solutions.  While better than the case of integers, it is still vastly more than the number of  atoms in the universe.
 \vspace{12pt}
 
 The important thing is is that binary variables give us a lot of rich opportunities to model complex, real world situations.
@@ -447,6 +456,7 @@ These projects all carry their own expenses and engineering support.  There are 
 ## Create and solve the basic naive formulation as a mathematical model
 
 Formulate and solve a basic, naive model that allows project to repeated and partially completed.  Implement and solve your model.  What is the optimal decision?  Is this result surprising?  Does this make sense in terms of the application?  
+
 ## Implementing a constraint to ensure no project is repeated
 
 Now, let's explore one aspect of moving towards binary variables.  What constraint or constraints are needed to ensure no project is done more than once while allowing partial projects to still be funded and incur both proportionate costs and benefits.  How does this solution compare to that of above?

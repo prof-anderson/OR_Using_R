@@ -1,12 +1,23 @@
 ---
 title: "Chapter 2: A First Linear Program"
 output: 
-  tufte::tufte_handout: default
+  tufte::tufte_handout:
+    tufte_variant: "envisioned"
+  tint::tintPdf: 
+    tufte_variant: "envisioned"
+  tufte::tufte_html:
+    tufte_variant: "envisioned"
+  tint::tintBook: 
+    tufte_variant: "envisioned"
+  tufte::tufte_book2:
+    toc: yes
+    includes:
+      in_header: preamble.tex
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(cache = TRUE)
+
 ```
 
 # Introduction to Linear Programming
