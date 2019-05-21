@@ -1,11 +1,13 @@
 ---
 title: "Chapter 2: A First Linear Program"
+header-includes:
+ \usepackage{longtable}
+ \usepackage{caption}
 output:
   tufte::tufte_handout:
     citation_package: natbib
     latex_engine: xelatex
-  sansfont: Calibri Light
-  mainfont: Calibri Light
+  highlight: monochrome
   tufte::tufte_html: default
   tufte::tufte_book:
     citation_package: natbib
@@ -15,14 +17,17 @@ output:
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(tidy = F)
-knitr::opts_chunk$set(cache = TRUE)
 library(tufte)
 library(tint)
 library(knitr)
+library(gridExtra)
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(tidy = F)
+knitr::opts_chunk$set(cache = TRUE)
+knitr::opts_chunk$set(width = 30)
+#knitr::opts_knit$set(eval.after = 'fig.cap')
+#knitr::opts_chunk$set(fig.lp='fig:')
 ```
-
 
 # Introduction to Linear Programming
 
@@ -35,8 +40,8 @@ Linear programming is a tool for optimization.  It is a widely used tool for pla
 This data and case is drawn from an example in Chapter 2 of Kenneth Baker's *Optimization Modeling with Spreadsheets*, 3rd Edition. The example is a modification of the example 2.1 on page 29.     
 The goal of the furniture manufacturer in this case is to find the best product mix of Chairs and Desks.
 
-Making a piece of furniture requires time in fabrication, assembly, and machining as a certain amount of wood. For example, a chair requires 6 hours of fabrication time, 8 hours of assembly, and 6 hours of machining. It uses 40 square feet of wood but the net profit is $20. The characteristics of desks are similar but different and shown in the following table as well as the available amount of each limited resource. 
-
+Making a piece of furniture requires time in fabrication, assembly, and machining as a certain amount of wood. For example, a chair requires 6 hours of fabrication time, 8 hours of assembly, and 6 hours of machining. It uses 40 square feet of wood but the net profit is $20. The characteristics of desks are similar but different as shown in the Table 1 on the right as well as the available amount of each limited resource. 
+```{marginfigure}
 | Characteristic | Chairs | Desks |  Available| 
 |---------------:|:-----:|:------:|:----------:|
 |  Profit        |  $20  |   $14  |            |
@@ -44,7 +49,10 @@ Making a piece of furniture requires time in fabrication, assembly, and machinin
 |  Assembly      |   8   |     6  |   1440     |
 |  Machining     |   6   |     4  |   2000     |
 |  Wood          |  40   |    25  |   9600     |
-
+```
+```{marginfigure}
+Table 1: Two variable base case
+```
 A simple LP now is to find the production plan of products that results in the most profit. In order to do so, we need to define certain key items:
 
 * the goal(s)
@@ -88,8 +96,8 @@ Our objective function and constraints can now be written as the optimization mo
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max  }   & 20*Chairs+14*Desks \\
-    \text{subject to } & \\
+    \text{Max: }   & 20*Chairs+14*Desks \\
+    \text{subject to:} & \\
                   & 6*Chairs+2*Desks \leq 2000 \\
                   & 8*Chairs+6*Desks \leq 2000 \\
                   & 6*Chairs+4*Desks \leq 1440 \\
@@ -192,7 +200,7 @@ Our model has variables, constraints, and an objective function.  Let's go ahead
 
 nonlinear programming or NLP. NLP is also widely used but has limitations.
 ```{marginfigure}
-**GLPK**: "GNU Linear Programming Kit" package is intended for solving large-scale linear programming (LP), mixed integer programming (MIP), and other related problems.
+**glpk**: "GNU Linear Programming Kit" package is intended for solving large-scale linear programming (LP), mixed integer programming (MIP), and other related problems.
 ```
 
 
@@ -245,7 +253,7 @@ extract_constraints(model0)
 
 This should look familiar.  Let's see if we can arrange to make it look more similar to what we had given the model.
 
-```{r construct_constraints_for_display}
+```{r construct_constraints_for_display, fig.margin=TRUE}
 constr0<-extract_constraints(model0)    
 # Pass the constraints out of  model
 constr00<- (cbind(as.matrix(constr0$matrix), 
@@ -258,8 +266,13 @@ dimnames(constr00)<-c(list(c("Fabrication",
                              "Assembly","Machining", "Wood")),
                       list(c("Chairs", 
                              "Desks","Relationship","RHS")))
-pander(constr00, caption="Elements of the Constraints")
+grid.table(constr00)
 ```
+
+```{marginfigure}
+Table 2: Elements of the Constraints
+```
+
 
 In the first version of the LP model implementation, we created many different  versions of the model along the way while we really just keep adding stuff to the same model.  This uses extra memory and will be slower.  The second implementation keeps reusing the same model object until the very end when solving is done and it places the results into an object.  This may be more memory efficient but is still likely slower and carries along a lot of extra notation.
 
@@ -326,8 +339,8 @@ print(get_solution(result0, Desks))
 
 ## Adding a Third Product (Variable)
 
-We will now extend the previous model to account for a third product, Tables.  The goal is now to find the best product mix of Chairs, Desks, and Tables.  
-
+We will now extend the previous model to account for a third product, Tables.  The goal is now to find the best product mix of Chairs, Desks, and Tables. See the Table 2 with the summary of the new situation. 
+```{marginfigure}
 | Characteristic | Chairs | Desks | Tables | Available  | 
 |---------------:|:-----:|:------:|:---------:|:----------:|
 |  Profit        |  $20  |   $14  |  $16      |            |
@@ -335,7 +348,10 @@ We will now extend the previous model to account for a third product, Tables.  T
 |  Assembly      |   8   |     6  |    8      |   1440     |
 |  Machining     |   6   |     4  |   25      |   2000     |
 |  Wood          |  40   |    25  |   16      |   9600     |
-
+```
+```{marginfigure}
+Table 3: Three variable base case
+```
 There is an additional constraint that the number of Tables made (sold) can not exceed 200.
 
 A simple LP now is to find the production plan or amount of each of the  products that results in the most profit.  This will require a new decision variable, Tables, to be added to the model.
@@ -349,15 +365,16 @@ Let's extend our previous model.  Just to reinforce the point, it is an importan
 Our objective function and constraints can now be written as the optimization model showed on the right.
 ```{marginfigure}
 $$
- \begin{split}
- \begin{aligned}
-    \text{Max:  }   & 20*Chairs+14*Desks+16*Tables \\
-    \text{subject to: }& 6*Chairs+2*Desks+4*Tables \leq 2000 \\
-                       & 8*Chairs+6*Desks+4*Tables \leq 2000 \\
-                       & 6*Chairs+4*Desks+8*Tables \leq 1440 \\
-                       & 40*Chairs+25*Desks+16*Tables \leq 9600 \\
-                       & Tables \leq 200 \\
-                       & Chairs, Desks, Tables \geq 0  
+\begin{split}
+\begin{aligned}
+\text{Max:  }  & 20*Chairs+14*Desks+16*Tables \\
+\text{S.t.: } & \\
+  & 6*Chairs+2*Desks+4*Tables \leq 2000 \\
+  & 8*Chairs+6*Desks+4*Tables \leq 2000 \\
+  & 6*Chairs+4*Desks+8*Tables \leq 1440 \\
+  & 40*Chairs+25*Desks+16*Tables \leq 9600 \\
+  & Tables \leq 200 \\
+  & Chairs, Desks, Tables \geq 0  
   \end{aligned}
   \end{split}
 $$
@@ -428,14 +445,15 @@ This results in the LP on the right.
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max:  }   & 20*Chairs+14*Desks+16*Tables \\
-    \text{subject to: } & 6*Chairs+2*Desks+4*Tables \leq 2000 \\
-                       & 8*Chairs+6*Desks+4*Tables \leq 2000 \\
-                       & 6*Chairs+5*Desks+8*Tables \leq 1440 \\
-                       & 40*Chairs+25*Desks+16*Tables \leq 9600 \\
-                       & Tables \leq 200 \\
-                       & Chairs \geq 300 \\
-                       & Desks, Tables \geq 0  
+    \text{Max:  } & 20*Chairs+14*Desks+16*Tables \\
+    \text{S.t.:} & \\
+                  & 6*Chairs+2*Desks+4*Tables \leq 2000 \\
+                  & 8*Chairs+6*Desks+4*Tables \leq 2000 \\
+                  & 6*Chairs+5*Desks+8*Tables \leq 1440 \\
+                  & 40*Chairs+25*Desks+16*Tables \leq 9600 \\
+                  & Tables \leq 200 \\
+                  & Chairs \geq 300 \\
+                  & Desks, Tables \geq 0  
   \end{aligned}
   \end{split}
 $$
@@ -458,6 +476,7 @@ result1infeas <- solve_model(model1infeas,
 
 In this case, we are going to simply add the new constraint to `model1` and create a new model, `model1infeas` to solve.
 \vspace{12pt}
+
 Note that the constraint on the minimum number of chairs could also be implemented by changing the lower bound on the chairs variable to be 300 instead of zero.  Also, the maximum limit on Tables could be set as an upper bound on the Tables variable.
 
 ```{r}
@@ -481,14 +500,14 @@ The new LP is shown in the formulation on the right.
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max  }   & Profit \\
-    \text{subject to } & Profit=20*Chairs+10*Desks+16*Tables \\
-                       & 6*Chairs+3*Desks+4*Tables \leq 2000 \\
-                       & 8*Chairs+4*Desks+4*Tables \leq 2000 \\
-                       & 6*Chairs+3*Desks+8*Tables \leq 1440 \\
-                       & 40*Chairs+20*Desks+16*Tables \leq 9600 \\
-                       & Tables \leq 200 \\
-                       & Chairs, Desks, Tables \geq 0  
+    \text{Max: } & Profit=20*Chairs+10*Desks+16*Tables \\
+    \text{S.t.:} & \\
+                  & 6*Chairs+3*Desks+4*Tables \leq 2000 \\
+                  & 8*Chairs+4*Desks+4*Tables \leq 2000 \\
+                  & 6*Chairs+3*Desks+8*Tables \leq 1440 \\
+                  & 40*Chairs+20*Desks+16*Tables \leq 9600 \\
+                  & Tables \leq 200 \\
+                  & Chairs, Desks, Tables \geq 0  
   \end{aligned}
   \end{split}
 $$
@@ -514,12 +533,17 @@ res2a <- cbind(objective_value (result2a),
            get_solution(result2a, Tables))
 colnames(res2a)<-list("Profit", "Chairs", "Desks", "Tables")
 rownames(res2a)<-list("Solution 2a")
-pander(res2a,caption="Results 2a - A First of Multiple Optima")
+```
+```{r, fig.margin = T}
+grid.table(res2a)
+```
+```{marginfigure}
+Table 4: Results 2a - A First of Multiple Optima
 ```
 
 Okay.  When I ran it, all the production was focused on Chairs.  I think that there is an alternate solution producing Desks with the same total profit. The LP engine won't necessarily tell you that there is an alternate optimal solution.  Let's see if we can "trick" the LP to show an alternate solution by disallowing the previous solution by setting Chairs=0.  
 
-```{r Show_Second_Solution_from_Multiple_Optima}
+```{r Show_Second_Solution_from_Multiple_Optima,  fig.margin = T}
 model2b <- add_constraint(model2a, Chairs <= 0) 
             # FORCING LP TO FIND A DIFFERENT SOLUTION
 result2b <- solve_model(model2b, with_ROI(solver = "glpk"))
@@ -530,8 +554,10 @@ res2b <- cbind(objective_value(result2b),
                get_solution(result2b, Tables))
 colnames(res2b)<-list("Profit", "Chairs", "Desks", "Tables")
 rownames(res2b)<-list("Solution 2b")
-pander(res2b,
-caption="Results 2b - A Second of Multiple Optima")
+grid.table(res2b)
+```
+```{marginfigure}
+Table 5: Results 2b - A Second of Multiple Optima
 ```
 
 Again, only one product is made but now it is Desks instead of Chairs.  The number of Desks made is now double the number of Chairs previously made.  The total profit is the same.  This is an instance of multiple optima.
@@ -539,10 +565,14 @@ Again, only one product is made but now it is Desks instead of Chairs.  The numb
 
 Let's summarize these two results more clearly by displaying them in a single table.  
 
-```{r Summarize_Results_of_Multiple_Optima}
-pander(rbind(res2a,res2b), 
-caption="Comparison of Two Alternate Optimal Solutions")
+```{r Summarize_Results_of_Multiple_Optima, fig.margin =T}
+res2c <- rbind(res2a,res2b)
+grid.table(res2c)
 ```
+```{marginfigure}
+Table 6: Results 2c - A Second of Multiple Optima
+```
+
 
 Which solution is the best? Within the limits of this problem, we can't distinguish between them and they are equally good. If an application area expert or the end decision maker prefers one solution over the other, there should be extra information that we can use to extend the model.  
 \vspace{12pt}
@@ -556,14 +586,15 @@ For the redundant constraint, a new constraint for painting is created.  Let's a
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max  }   & 20*Chairs+14*Desks+16*Tables \\
-    \text{subject to } & 6*Chairs+2*Desks+4*Tables \leq 2000 \\
-                       & 8*Chairs+6*Desks+4*Tables \leq 2000 \\
-                       & 6*Chairs+5*Desks+8*Tables \leq 1440 \\
-                       & 40*Chairs+25*Desks+16*Tables \leq 9600 \\
-                       & Chairs+Desks+Tables \leq 1500 \\
-                                             & Tables \leq 200 \\
-                       & Chairs, Desks, Tables \geq 0  
+    \text{Max:  }   & 20*Chairs+14*Desks+16*Tables \\
+    \text{S.t.:} & \\
+                    & 6*Chairs+2*Desks+4*Tables \leq 2000 \\
+                    & 8*Chairs+6*Desks+4*Tables \leq 2000 \\
+                    & 6*Chairs+5*Desks+8*Tables \leq 1440 \\
+                    & 40*Chairs+25*Desks+16*Tables \leq 9600 \\
+                    & Chairs+Desks+Tables \leq 1500 \\
+                    & Tables \leq 200 \\
+                    & Chairs, Desks, Tables \geq 0  
   \end{aligned}
   \end{split}
 $$
@@ -612,12 +643,13 @@ $$
  \begin{split}
  \begin{aligned}
     \text{Max  }   & 20*Chairs+14*Desks+16*Tables \\
-    \text{subject to } & 6*Chairs+2*Desks+4*Tables \geq 2000 \\
-                       & 8*Chairs+6*Desks+4*Tables \geq 2000 \\
-                       & 6*Chairs+5*Desks+8*Tables \geq 1440 \\
-                       & 40*Chairs+25*Desks+16*Tables \geq 9600 \\
-                       & Tables \geq 200 \\
-                       & Chairs, Desks, Tables \geq 0  
+    \text{S.t.:} & \\
+&6*Chairs+2*Desks+4*Tables \geq 2000 \\
+& 8*Chairs+6*Desks+4*Tables \geq 2000 \\
+& 6*Chairs+5*Desks+8*Tables \geq 1440 \\
+& 40*Chairs+25*Desks+16*Tables \geq 9600 \\
+& Tables \geq 200 \\
+& Chairs, Desks, Tables \geq 0  
   \end{aligned}
   \end{split}
 $$
@@ -726,7 +758,19 @@ In particular, you might want to look over this document with respect to:
 ## Exercises
 
 ```{exercise, name="Adding Frames"}
-Your company has extended production to allow for producing picture frames and is now including a finishing department that primes and paints (or stains) the furniture.
+Your company has extended production to allow for producing picture 
+frames and is now including a finishing department that primes 
+and paints (or stains) the furniture. See Table 3 on the right.
+a) Use R Markdown to create your own description of the model.
+b) Extend the R Markdown to show your LP Model.Be sure to 
+define models.
+c) Solve the model in R
+d) Interpret and discuss the model in R Markdown.
+e) Discuss how one parameter would need to change in order 
+to result in a different production plan. Demonstrate 
+how this affects the results.
+```
+```{marginfigure}
 | Characteristic | Chairs | Desks | Frames | Tables | Available  | 
 |---------------:|:-----:|:-----:|:------:|:---------:|:----------:|
 |  Profit        |  $20  |  $14  |    $3  |  $16      |            |
@@ -735,13 +779,10 @@ Your company has extended production to allow for producing picture frames and i
 |  Machining     |   6   |   4   |     1  |   25      |   2000     |
 |  Painting      |   7   |  10   |     2  |   12      |   1000     |
 |  Wood          |  40   |  25   |     5  |   16      |   9600     |
-a) Use R Markdown to create your own description of the model.
-b) Extend the R Markdown to show your LP Model.  Be sure to define models.
-c) Solve the model in R
-d) Interpret and discuss the model in R Markdown.
-e) Discuss how one parameter would need to change in order to result in a different production plan.  Demonstrate how this affects the results.
 ```
-
+```{marginfigure}
+Table 7: Exercise 2.1
+```
 Hint:  Knit your RMarkdown as a PDF or open the HTML version in your browser and print to PDF.
 
 ## Graphically Solving LPs with R
@@ -760,10 +801,11 @@ Let's make up a simple example where we want to build robots - because I love to
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max  }   & 150*x+200*y \\
-    \text{subject to } & 40*x+60*y \leq 7400 \\
-                       & 20*x+25*y \leq 3300 \\
-                       & x, y \geq 0  
+    \text{Max:}  & 150*x+200*y \\
+    \text{S.t.: } &\\
+&40*x+60*y \leq 7400 \\
+& 20*x+25*y \leq 3300 \\
+& x, y \geq 0  
   \end{aligned}
   \end{split}
 $$
@@ -815,24 +857,30 @@ r2y <- function(x) 3300 / 25 - 20 / 25 * x
 
 Secondly we will create an artificial series for x to plug into our functions, then create a data frame with a column for each series.  Let's populate the data frame of possible plans of xbots `x1`.  The `seq` function is very handy here in that it will generate a sequence of values from _0_ to _200_ xbots.  
 
-```{r Create_a_Series}
+```{r Create_a_Series, fig.margin=T}
 # create the series
 x1 = seq(0,200)
-pander(head(as.matrix(x1)), 
-caption="Beginning of Sequence x1")
+tablex1 <- head(as.matrix(x1))
+grid.table(tablex1)
 ```
+```{marginfigure}
+Table 8: Beginning of Sequence x1
+```
+
 
 The next statement takes a little unpacking to fully understand and illustrates another strength of R.  Now, we would like to evaluate each of these 201 values for `x1` using the functions for the two constraints that we just defined.  We could use a `for-next loop` if we were using a language such as BASIC but R handles these operations more smoothly and efficiently.  We can pass the data frame for `x1` into the function and R is smart enough to return the results in the same size data frame, `y1`. Of course we do the same thing for the second function (constraint).  
 
-```{r Creating_More_Data}
+```{r Creating_More_Data, fig.margin=T}
 # 2 constraints in this equation so there are 2 y variables, 
 # y1 and y2.  
 # If you have more constraints you can just keep adding them 
 # here.
 seriesDf = data.frame(x1, y1=r1y(x1), y2=r2y(x1))
 # take a look at the generated data
-pander(head(seriesDf),
-caption="Some datapoints from the lines for the constraints")
+grid.table(head(seriesDf))
+```
+```{marginfigure}
+Table 9: Some datapoints from the lines for the constraints
 ```
 
 Note that we now have coordinates for each series. If you have more than 2 constraints you can just continue to add columns to your data frame.
@@ -924,11 +972,12 @@ Now that you've seen all of these steps let's change the scenario and put all ou
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max  }   & 150x+200y \\
-    \text{subject to } & 5x+3y \geq 210 \\
-                       & x+y \leq 110 \\
-                       & 4x+y \leq 200 \\
-                       & x, y \geq 0  
+    \text{Max:} & 150x+200y \\
+    \text{S.t.:} & \\
+&5x+3y \geq 210 \\
+& x+y \leq 110 \\
+& 4x+y \leq 200 \\
+& x, y \geq 0  
   \end{aligned}
   \end{split}
 $$
