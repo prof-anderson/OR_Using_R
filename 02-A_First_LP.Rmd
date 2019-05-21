@@ -1,19 +1,18 @@
 ---
 title: "Chapter 2: A First Linear Program"
-output: 
-  tint::tintPdf: 
-    tufte_variant: "envisioned"
+output:
   tufte::tufte_handout:
-    tufte_variant: "envisioned"
-  tufte::tufte_html:
-    tufte_variant: "envisioned"
-  tint::tintBook: 
-    tufte_variant: "envisioned"
-  tufte::tufte_book2:
-    toc: yes
-    includes:
-      in_header: preamble.tex
+    citation_package: natbib
+    latex_engine: xelatex
+  sansfont: Calibri Light
+  mainfont: Calibri Light
+  tufte::tufte_html: default
+  tufte::tufte_book:
+    citation_package: natbib
+    latex_engine: xelatex
 ---
+\pagestyle{headings}
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -90,11 +89,12 @@ $$
  \begin{split}
  \begin{aligned}
     \text{Max  }   & 20*Chairs+14*Desks \\
-    \text{subject to } & 6*Chairs+2*Desks \leq 2000 \\
-                       & 8*Chairs+6*Desks \leq 2000 \\
-                       & 6*Chairs+4*Desks \leq 1440 \\
-                       & 40*Chairs+25*Desks \leq 9600 \\
-                       & Chairs, Desks \geq 0    
+    \text{subject to } & \\
+                  & 6*Chairs+2*Desks \leq 2000 \\
+                  & 8*Chairs+6*Desks \leq 2000 \\
+                  & 6*Chairs+4*Desks \leq 1440 \\
+                  & 40*Chairs+25*Desks \leq 9600 \\
+                  & Chairs, Desks \geq 0    
   \end{aligned}
   \end{split} 
 $$
