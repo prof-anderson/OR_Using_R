@@ -25,7 +25,6 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = F)
 knitr::opts_chunk$set(cache = TRUE)
 knitr::opts_chunk$set(width = 30)
-#knitr::opts_knit$set(eval.after = 'fig.cap')
 #knitr::opts_chunk$set(fig.lp='fig:')
 ```
 

@@ -9,6 +9,8 @@ output:
   tint: default
 ---
 
+\pagestyle{headings}
+
 ```{r setup_chapter7, echo=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = F)
