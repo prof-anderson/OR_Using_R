@@ -1,17 +1,20 @@
 ---
 title: 'Chapter 3: More LP Models'
 output:
+  tufte::tufte_html: default
   tufte::tufte_handout:
-    tufte_variant: envisioned
-  tint::tintPdf: default
-  tint: default
-  tufte::tufte_html:
-    tufte_variant: envisioned
+    citation_package: natbib
+    latex_engine: xelatex
+  tufte::tufte_book:
+    citation_package: natbib
+    latex_engine: xelatex
 ---
+\pagestyle{headings}
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = F)
+knitr::opts_chunk$set(cache = TRUE)
 library(kableExtra)
 library(pander)
 library(knitr)
