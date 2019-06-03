@@ -1,18 +1,23 @@
 ---
 title: "Chapter 2: A First Linear Program"
 header-includes:
- \usepackage{longtable}
- \usepackage{caption}
+- \usepackage{longtable}
+- \usepackage{caption}
+monofont: Times New Roman
 output:
   tufte::tufte_handout:
     citation_package: natbib
     latex_engine: xelatex
-  highlight: monochrome
+    toc: TRUE
+    number_sections: true
+    highlight: monochrome
   tufte::tufte_html: default
   tufte::tufte_book:
     citation_package: natbib
     latex_engine: xelatex
+    highlight: monochrome
 ---
+
 \pagestyle{headings}
 
 
@@ -50,7 +55,7 @@ Making a piece of furniture requires time in fabrication, assembly, and machinin
 |  Wood          |  40   |    25  |   9600     |
 ```
 ```{marginfigure}
-Table 1: Two variable base case
+**Table 2.1**: Two variable base case
 ```
 A simple LP now is to find the production plan of products that results in the most profit. In order to do so, we need to define certain key items:
 
@@ -107,7 +112,7 @@ $$
 $$
 ```
 ```{marginfigure}
-Formula 1: Optimization mode. Base equation with 2 variables
+**Formula 2.1**: Optimization mode. Base equation with 2 variables
 ```
 Note that since the objective function and each constraint is a simple linear function of the decision variables, this is what we call a *linear* programming model or LP for short. It would not be linear if any nonlinear function is made of the decision variables. For example, squaring a decision variable, using conditional logic based on the variable value, or multiplying two variables.  These and other issues would then require using nonlinear programming or NLP. NLP is also widely used but has limitations.
 ```{marginfigure}
@@ -269,7 +274,7 @@ grid.table(constr00)
 ```
 
 ```{marginfigure}
-Table 2: Elements of the Constraints
+**Table 2.2**: Elements of the Constraints
 ```
 
 
@@ -340,16 +345,16 @@ print(get_solution(result0, Desks))
 
 We will now extend the previous model to account for a third product, Tables.  The goal is now to find the best product mix of Chairs, Desks, and Tables. See the Table 2 with the summary of the new situation. 
 ```{marginfigure}
-| Characteristic | Chairs | Desks | Tables | Available  | 
-|---------------:|:-----:|:------:|:---------:|:----------:|
-|  Profit        |  $20  |   $14  |  $16      |            |
-|  Fabrication   |   6   |     2  |    4      |   1440     |
-|  Assembly      |   8   |     6  |    8      |   1440     |
-|  Machining     |   6   |     4  |   25      |   2000     |
-|  Wood          |  40   |    25  |   16      |   9600     |
+|Characteristic| Chairs| Desks | Tables |Available| 
+|-------------:|:-----:|:-----:|:------:|:-------:|
+|  Profit      |  $20  |  $14  |  $16   |         |
+|  Fabrication |   6   |    2  |    4   |   1440  |
+|  Assembly    |   8   |    6  |    8   |   1440  |
+|  Machining   |   6   |    4  |   25   |   2000  |
+|  Wood        |  40   |   25  |   16   |   9600  |
 ```
 ```{marginfigure}
-Table 3: Three variable base case
+**Table 2.3**: Three variable base case
 ```
 There is an additional constraint that the number of Tables made (sold) can not exceed 200.
 
@@ -379,7 +384,7 @@ $$
 $$
 ```
 ```{marginfigure}
-Formula 2: Optimization model adding a third product(variable)
+**Formula 2.2**: Optimization model adding a third product(variable)
 ```
 Let's now implement the three variable case.  
 
@@ -458,7 +463,7 @@ $$
 $$
 ```
 ```{marginfigure}
-Formula 3: Optimization model for a Non Feasible solution 
+**Formula 2.3**: Optimization model for a Non Feasible solution 
 ```
 
 
@@ -512,7 +517,7 @@ $$
 $$
 ```
 ```{marginfigure}
-Formula 4: Optimization model for Multiple Optima solution 
+**Formula 2.4**: Optimization model for Multiple Optima solution 
 ```
 
 The implementation can be simplified again since we are only changing the objective function, let's change the objective function in `model1` and save it to `model2a`.
@@ -537,7 +542,7 @@ rownames(res2a)<-list("Solution 2a")
 grid.table(res2a)
 ```
 ```{marginfigure}
-Table 4: Results 2a - A First of Multiple Optima
+**Table 2.4**: Results 2a - A First of Multiple Optima
 ```
 
 Okay.  When I ran it, all the production was focused on Chairs.  I think that there is an alternate solution producing Desks with the same total profit. The LP engine won't necessarily tell you that there is an alternate optimal solution.  Let's see if we can "trick" the LP to show an alternate solution by disallowing the previous solution by setting Chairs=0.  
@@ -556,7 +561,7 @@ rownames(res2b)<-list("Solution 2b")
 grid.table(res2b)
 ```
 ```{marginfigure}
-Table 5: Results 2b - A Second of Multiple Optima
+**Table 2.5**: Results 2b - A Second of Multiple Optima
 ```
 
 Again, only one product is made but now it is Desks instead of Chairs.  The number of Desks made is now double the number of Chairs previously made.  The total profit is the same.  This is an instance of multiple optima.
@@ -569,7 +574,7 @@ res2c <- rbind(res2a,res2b)
 grid.table(res2c)
 ```
 ```{marginfigure}
-Table 6: Results 2c - A Second of Multiple Optima
+**Table 2.6**: Results 2c - A Second of Multiple Optima
 ```
 
 
@@ -585,7 +590,7 @@ For the redundant constraint, a new constraint for painting is created.  Let's a
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max:  }   & 20*Chairs+14*Desks+16*Tables \\
+    \text{Max:}   & 20*Chairs+14*Desks+16*Tables \\
     \text{S.t.:} & \\
                     & 6*Chairs+2*Desks+4*Tables \leq 2000 \\
                     & 8*Chairs+6*Desks+4*Tables \leq 2000 \\
@@ -599,7 +604,7 @@ $$
 $$
 ```
 ```{marginfigure}
-Formula 5: Optimization model with a dedundant constraint 
+**Formula 2.5**: Optimization model with a dedundant constraint 
 ```
 
 Now we can implement the model.
@@ -654,7 +659,7 @@ $$
 $$
 ```
 ```{marginfigure}
-Formula 6: Optimization model with an unbounded solution 
+**Formula 2.6**: Optimization model with an unbounded solution 
 ```
 
 The implementation simply requires changing a < to a > for each constraint as well.
@@ -769,18 +774,18 @@ e) Discuss how one parameter would need to change in order
 to result in a different production plan. Demonstrate 
 how this affects the results.
 ```
-```{marginfigure}
-| Characteristic | Chairs | Desks | Frames | Tables | Available  | 
-|---------------:|:-----:|:-----:|:------:|:---------:|:----------:|
-|  Profit        |  $20  |  $14  |    $3  |  $16      |            |
-|  Fabrication   |   6   |   2   |     1  |    4      |   1440     |
-|  Assembly      |   8   |   6   |     1  |    8      |   1440     |
-|  Machining     |   6   |   4   |     1  |   25      |   2000     |
-|  Painting      |   7   |  10   |     2  |   12      |   1000     |
-|  Wood          |  40   |  25   |     5  |   16      |   9600     |
+```{marginfigure, fig.align='left', fig.width = 10}
+|Characteristic|Chairs|Desks|Frames|Tables|Available| 
+|-------------:|:----:|:---:|:----:|:----:|:-------:|
+| Profit       | $20  | $14 |   $3 |  $16 |         |
+| Fabrication  |   6  |   2 |   1  |    4 |   1440  |
+| Assembly     |   8  |   6 |   1  |    8 |   1440  |
+| Machining    |   6  |   4 |   1  |   25 |   2000  |
+| Painting     |   7  |  10 |   2  |   12 |   1000  |
+| Wood         |  40  |  25 |   5  |   16 |   9600  |
 ```
 ```{marginfigure}
-Table 7: Exercise 2.1
+**Table 2.7**: Exercise 2.1
 ```
 Hint:  Knit your RMarkdown as a PDF or open the HTML version in your browser and print to PDF.
 
@@ -810,7 +815,7 @@ $$
 $$
 ```
 ```{marginfigure}
-Formula 7: Optimization model for Graphically Solving LPs with R exercise 
+**Formula 2.7**: Optimization model for Graphically Solving LPs with R exercise 
 ```
 ## Create a data series to plot
 
@@ -825,10 +830,9 @@ $$
  40x+60y \leq 7400 \\
  y \leq \frac{7400-40x}{60}\\
   \end{split}
-  (\#eq:Constraint1)
 $$
 ```{marginfigure}
-Formula 8: Update formalation for constraint 1. 
+**Formula 2.8**: Update formalation for constraint 1. 
 ```
 We do the same thing for the second constraint.
 
@@ -841,7 +845,7 @@ $$
   (\#eq:Constraint2)
 $$
 ```{marginfigure}
-Formula 9: Update formalation for constraint 2. 
+**Formula 2.9**: Update formalation for constraint 2. 
 ```
 Next we can turn those into functions. Rather than inequalities, treat them as equalities so that we can find the edge defined by this constraint.  
 
@@ -863,7 +867,7 @@ tablex1 <- head(as.matrix(x1))
 grid.table(tablex1)
 ```
 ```{marginfigure}
-Table 8: Beginning of Sequence x1
+**Table 2.8**: Beginning of Sequence x1
 ```
 
 
@@ -879,7 +883,7 @@ seriesDf = data.frame(x1, y1=r1y(x1), y2=r2y(x1))
 grid.table(head(seriesDf))
 ```
 ```{marginfigure}
-Table 9: Some datapoints from the lines for the constraints
+**Table 2.9**: Some datapoints from the lines for the constraints
 ```
 
 Note that we now have coordinates for each series. If you have more than 2 constraints you can just continue to add columns to your data frame.
@@ -938,7 +942,7 @@ ggplot(seriesDf, aes(x = x1)) +
   geom_point(x = intersection$x, y = intersection$y)
 ```
 ```{marginfigure}
-Figure 1. Example of ggplot
+**Figure 2.1**: Example of ggplot
 ```
 
 Awesome, it looks good! Though PSU colors don't work so well, that white is hard to see.
@@ -982,7 +986,7 @@ $$
 $$
 ```
 ```{marginfigure}
-Formula 10: More complex formulation
+**Formula 2.10**: More complex formulation
 ```
 
 ```{r Translate_Constraints, fig.margin=TRUE,width=20}
@@ -1023,7 +1027,7 @@ ggplot(dataFrameTwo, aes(x = x2)) +
              y = intersection2$y, color = "red") 
 ```
 ```{marginfigure}
-Figure 2. Example of ggplot (2)
+**Figure 2.2**: Example of ggplot (2)
 ```
 
 Note now our chart looks much different because we have combination of lesser than and greater than constraints.
