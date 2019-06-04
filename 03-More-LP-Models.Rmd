@@ -1,27 +1,41 @@
 ---
 title: 'Chapter 3: More LP Models'
+header-includes:
+- \usepackage{longtable}
+- \usepackage{caption}
+monofont: Times New Roman
 output:
-  tufte::tufte_html: default
   tufte::tufte_handout:
     citation_package: natbib
     latex_engine: xelatex
+    toc: TRUE
+    number_sections: true
+    highlight: monochrome
+  tufte::tufte_html: default
   tufte::tufte_book:
     citation_package: natbib
     latex_engine: xelatex
+    highlight: monochrome
 ---
+
 \pagestyle{headings}
 
+
 ```{r setup, include=FALSE}
+library(tufte)
+library(tint)
+library(knitr)
+library(gridExtra)
+library(kableExtra)
+library(pander)
+library(magrittr)
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = F)
 knitr::opts_chunk$set(cache = TRUE)
-library(kableExtra)
-library(pander)
-library(knitr)
-library(magrittr)
-library(tint)
-library(tufte)
+knitr::opts_chunk$set(width = 30)
+#knitr::opts_chunk$set(fig.lp='fig:')
 ```
+
 
 # More Linear Programming Models
 
@@ -33,8 +47,8 @@ In this chapter, we will examine a range of classic applications of linear progr
 
 In the previous chapter, we examined situations with only a few products and constraints.  In general, most companies have many more products and we won't be wanting to name each product explicilty and uniquely.  Instead, we use sets of products and resources.  
 \vspace{12pt}
-We could also reframe the model more algebraically. Let's use subscripts to differentiate between products and resources. We can define that _i=1_ represents Chairs, _i=2_ represents Desks, and _i=3_ represents Tables.  Similarly, _j=1_ represents fabrication, _j=2_, represents assembly, etc.   Now, let's move on to defining the data.  Let's define the amount to produce of each product, _i_, as $x_i$ and resource _j_ consumed by product _i_ as $R_{i,j}$.  The available resource _j_ is then $A_j$. The profit per product _i_ is then $P_i$. The LP can now be rewritten in more general terms as the following if there are three products and four constraints.  
-
+We could also reframe the model more algebraically. Let's use subscripts to differentiate between products and resources. We can define that _i=1_ represents Chairs, _i=2_ represents Desks, and _i=3_ represents Tables. 
+```{marginfigure}
 $$
  \begin{split}
  \begin{aligned}
@@ -43,21 +57,31 @@ $$
                        & x_1,x_2,x_3 \geq 0  \; 
   \end{aligned}
   \end{split}
-  (\#eq:Base-Algebraic1)
 $$
+```
+```{marginfigure}
+**Formula 3.1**: Linear MOdel with 3 products and 4 contraints
+```
+Similarly, _j=1_ represents fabrication, _j=2_, represents assembly, etc.   Now, let's move on to defining the data.  Let's define the amount to produce of each product, _i_, as $x_i$ and resource _j_ consumed by product _i_ as $R_{i,j}$.  The available resource _j_ is then $A_j$. The profit per product _i_ is then $P_i$. The LP can now be rewritten as showed on the right margin, formula 3.1, if there are three products and four constraints.  
 
-We could further generalize this by instead of hard coding the number of products and resource constraints, we instead define the number of products and resources as NProd and NResources respectively.  We can then rewrite the above formulation as the following.  
 
+We could further generalize this by instead of hard coding the number of products and resource constraints, we instead define the number of products and resources as NProd and NResources respectively.  We can then rewrite the above formulation as the following. 
+
+```{marginfigure}
 $$
  \begin{split}
  \begin{aligned}
-    \text{Maximize  }   &  \sum_{i=1}^{NProd} P_i x_i \\
+    \text{Max:}  &  \sum_{i=1}^{NProd} P_i x_i \\
     \text{subject to } & \sum_{i=1}^{NProd} R_{i,j}x_i \leq A_j \; \forall \; j\\
                        & x_i \geq 0  \; \forall \; i
   \end{aligned}
   \end{split}
-  (\#eq:Base-Algebraic2)
 $$
+```
+```{marginfigure}
+**Formula 3.2**: Linear MOdel with 3 products and 4 contraints.
+Not hardcoding the products and constraints.
+```
 
 ## Tips and Conventions for Algebraic Models
 
@@ -74,61 +98,84 @@ More complex models often run out of letters that make sense.  A common approach
 
 This concise, algebraic representation can be easily scaled to any number of products and resources. Let's write this as the following.  I'll expand the names of data slightly for making the R code more readable but this is meant to be consistent with the above formulation.  
 \vspace{12pt}
+```{r, fig.margin=TRUE, echo=FALSE}
+NProd <- 4
+NResources <- 5
+ProdNames <- lapply(list(rep("Prod",NProd)),paste0,1:NProd) 
+                 # Product names: Prod1, Prod2, ... 
+Profit <- matrix(c(20, 14, 3, 16), 
+              ncol=NProd,dimnames=c("Profit",ProdNames))
+grid.table(Profit)
+```
+```{marginfigure}
+**Table 3.1**: Profit per product
+```
 We will define the number of products as four and five resource constraints. 
 
-```{r Product_Planning_4x5 }
+```{r Product_Planning_4x5, max.width=30}
 NProd <- 4
 NResources <- 5
 ProdNames <- lapply(list(rep("Prod",NProd)),paste0,1:NProd) 
                  # Product names: Prod1, Prod2, ... 
 ResNames<- lapply(list(rep("Res",NResources)),paste0,1:NResources) 
                  # Resource names: Res1, Res2, ... 
-Profit <- matrix(c(20, 14, 3, 16), 
-              ncol=NProd,dimnames=c("Profit",ProdNames))
-Resources <- matrix(c( 6, 8, 6, 7 , 40, 2, 6, 4, 10, 25, 1, 1, 1, 2, 5, 4, 8, 25, 12, 16), 
+Resources <- matrix(c( 6, 8, 6, 7 , 40, 2, 6, 4, 10, 
+                       25, 1, 1, 1, 2, 5, 4, 8, 25, 12, 16), 
               ncol=NProd,dimnames=c(ResNames,ProdNames))
 Available <- matrix(c(1440, 1440, 2000, 1000, 9600), 
               ncol=1,dimnames=c(ResNames,"Available"))
 ```
 
-Let's now display the data.  This should match the data that we hard coded into the R linear programming model in the previous chapter.  Let's display the data.  
 
-```{r Display_Profit_per_Product, tidy=FALSE, echo = FALSE, results='asis'}
-pander(Profit, caption="Profit per Product")
-#knitr::kable(Profit, booktabs = T) %>%
-#kable_styling(latex_options = c("striped", "scale_down"))
+```{r Display_Resources, tidy=FALSE, echo = FALSE, results='asis',fig.margin=TRUE}
+grid.table(Resources)
+```
+```{marginfigure}
+**Table 3.2**: Resources Used by Each Product
 ```
 
-Similarly, we can display the resources used by each product and the amount of each resource available.  
-
-```{r Display_Resources_and_Available, tidy=FALSE, echo = FALSE, results='asis'}
-pander (Resources, 
-       caption="Resources Used by Each Product")
-pander (Available, 
-       caption="Amount of Each Resource Available")
-#kable (Available,  format="latex", 
-#       caption="Amount of Each Resource Available", booktabs = T)
-# kable_styling(latex_options = c("striped", "scale_down"))
-```
+On the right side we can see the data. This should match the data that we hard coded into the R linear programming model in the previous chapter.  
 
 ```{marginfigure}
-Notice that the resources available are listed as a column (vertical) vector rather than a row (flat) vector.  This differentiation will be important later.
+**cbind function**: This function join 2 tables using the columns as binding element between tables.
+
+**rbind function**: Same concept as previous one, but in this case using rows as binding element.
 ```
+
+
+Similarly, we can display the resources used by each product and the amount of each resource available. See both tables on the right. Table 3.2 displayes the resources used by each product and Table 3.3 the amount of resources available from each product.   
+
+```{r Display_Available, tidy=FALSE, echo = FALSE, results='asis',fig.margin=TRUE}
+grid.table(Available)
+```
+```{marginfigure}
+**Table 3.3**: Amount of Each Resource Available
+```
+
 \vspace{12pt}
 Now we need to define variables.  
-\vspace{12pt}
-Let's show how we can display the resources used and available in one table.  We will use the _cbind_ function to do a column binding of the data.  
 
-```{r Display_Resources_Available_Combined}
-pander(cbind(Resources, Available), 
-       caption="Resources Used by Each Product and Available")
+```{r Display_Resources_Available_Combined, fig.margin=TRUE}
+Combined <- cbind(Resources, Available) 
+grid.table(Combined)
 ```
+```{marginfigure}
+**Table 3.4**: Resources Used by Each Product and Available
+```
+
+\vspace{12pt}
+On the right table, we can see the resources used and available in a single table.  We have used the _cbind_ function to do a column binding of the data. In this way the representation is more visually intuitive. 
 
 To ensure that we know how to access the data, if we want to see how the amount of the first resource used by the second product, you can enter _Resources[1,2]_ in R Studio's console which is `r Resources[1,2]`.  
 \vspace{12pt}
 Now, let's begin building our optimization model.  
 \vspace{12pt}
+
 First, we'll start by loading the packages that we are using.  
+
+```{marginfigure}
+**Notice** that the resources available are listed as a column (vertical) vector rather than a row (flat) vector.  This differentiation will be important later.
+```
 
 ``` {r warning=FALSE}
 library (tufte) 
@@ -141,6 +188,8 @@ library (ROI.plugin.glpk, quietly = TRUE)
 library (ompr, quietly = TRUE)
 library (ompr.roi, quietly = TRUE)
 ```
+
+And we will continue wiht the code to build the mode in a generic format.
 
 ```{r Build_Prod_Model}
 prodmodel <- MIPModel() %>%
@@ -170,7 +219,7 @@ Displaying the object of `prodmodel` only shows a simple summary of the results 
 \vspace{12pt}
 This is useful to know but we are really interested in how to generate this profit.  To do this, we need to extract the values of the variables.  
 
-```{r Display_Results}
+```{r Display_Results, fig.margin=TRUE}
 results.products <- matrix (rep(-1.0,NProd), nrow = NProd, ncol=1,
                             dimnames=c(ProdNames,c("x")))
 temp <- get_solution (prodmodel, x[i]) 
@@ -181,9 +230,14 @@ results.products <- matrix (results.products,
                             nrow = 1, ncol=NProd,
                             dimnames=c(c("x"),ProdNames))  
                                        # Resizes and renames 
-pander (results.products, 
-        caption = "Optimal Production Plan")
+grid.table(results.products)
 ```
+```{marginfigure}
+**Table 3.5**: Optimal Production Plan
+```
+
+The table on the right displays the Optimal production plan.
+\vspace{12pt}
 
 Let's examine how the resources are consumed.  To do this, we can multiply the amount of each product by the amount of each resource used for that product. For the first product, this would be a term by term sum of each product resulting in ``r Resources[1,]%*%t(results.products)`` which is less than ``r Available[1]``. We can do this manually for each product. Another approach is to use the command, `Resources[1,]%*%t(results.products)`. This command will take the first row of the Resources matrix and multiplies it by the vector of results.  
 \vspace{12pt}
@@ -195,12 +249,15 @@ One thing to note is that the first row of `Resources` is by definition a row ve
 \vspace{12pt}
 We can go one further step now and multiply the matrix of resources by the column vector of production.
 
-```{r Calculate_Resources_Used}
+```{r Calculate_Resources_Used, fig.margin=TRUE}
 Results.Resources <- Resources[]%*%t(results.products)
-                  # Multiply matrix of resources by amount of products produced
+    # Multiply matrix of resources by amount of products produced
 ResourceSlacks <- cbind (Results.Resources,Available,Available-Results.Resources)
 colnames(ResourceSlacks)<-c("Used", "Available", "Slack")      
-pander(ResourceSlacks, caption="Resources Used")
+grid.table(ResourceSlacks)
+```
+```{marginfigure}
+**Table 3.6**: Resources Used
 ```
 
 This section covered a lot of concepts including defining the data, setting names, using indices in _ompr_, building a generalized _ompr_ model, extracting decision variable values, and calculating constraint right hand sides.  If you find this a little uncomfortable, try doing some experimenting with the model. It may take some experimenting to get familiar and comfortable with this.  
@@ -224,8 +281,10 @@ Now we will rebuild the the optimization model.
 prodmodel <- MIPModel() %>%
   add_variable (x[i], i=1:NProd, type="continuous", lb=0) %>%
   set_objective (sum_expr(Profit[i] * x[i] , i=1:NProd ), "max") %>%
-  add_constraint (sum_expr(Resources[j,i]*x[i], i=1:NProd) # Left hand side of constraint
-                  <= Available[j],    # Inequality and Right side of constraint
+  add_constraint (sum_expr(Resources[j,i]*x[i], i=1:NProd) 
+                  # Left hand side of constraint
+                  <= Available[j],    
+                  # Inequality and Right side of constraint
                   j=1:NResources) %>% # Repeat for each resource, j.  
   solve_model(with_ROI(solver = "glpk"))
   
@@ -234,7 +293,7 @@ prodmodel
 
 Note that the objective function has changed.  
 
-```{r Examine_Results_of_Changed_Model}
+```{r Examine_Results_of_Changed_Model, fig.margin=TRUE}
 results.products <- matrix (rep(-1.0,NProd), nrow = NProd, ncol=1,
                             dimnames=c(ProdNames,c("x")))
 temp <- get_solution (prodmodel, x[i]) 
@@ -244,13 +303,16 @@ results.products <- t(temp [,3] )
 results.products <- matrix (results.products, 
                             nrow = 1, ncol=NProd,
                             dimnames=c(c("x"),ProdNames))  
-   # Resizes and renames 
-pander (results.products, 
-        caption = "Revised Optimal Production Plan")
+   # Resizes and renames
+grid.table(results.products) 
 ```
+```{marginfigure}
+**Table 3.7**: Revised Optimal Production Plan
+```
+The table on the right displays the new Production plan and the optimal distribution of the resources.
 
 ```{marginfigure}
-Note that the production plan has significantly changed. At this point, we could discuss why this makes sense or not.  
+**Note** that the production plan has significantly changed. At this point, we could discuss why this makes sense or not.  
 ```
 
 ##Blending Problems
@@ -258,13 +320,15 @@ Note that the production plan has significantly changed. At this point, we could
 Specific blend limitations arise in many situations.  In our example, we might say that Chairs can make up no more than 10% of the overall product plan.  In our original case, this would be expressed as the following.  
 \vspace{12pt}
 
-Blending constraints can appear as nonlinear constraints but can be readily linearized.  
-
+Blending constraints can appear as nonlinear constraints but can be readily linearized. We can see the formulation on the right side.  
+```{marginfigure}
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max  }   & 20*Chairs+14*Desks+16*Tables \\
-    \text{subject to } & 6*Chairs+2*Desks+4*Tables \leq 2000 \\
+    \text{Max  } \\
+               & 20*Chairs+14*Desks+16*Tables \\
+    \text{S.t.} \\
+                       & 6*Chairs+2*Desks+4*Tables \leq 2000 \\
                        & 8*Chairs+6*Desks+4*Tables \leq 2000 \\
                        & 6*Chairs+4*Desks+8*Tables \leq 1440 \\
                        & 40*Chairs+25*Desks+16*Tables \leq 9600 \\
@@ -272,10 +336,13 @@ $$
                        & Chairs,  \; Desks, \; Tables \geq 0  
   \end{aligned}
   \end{split}
-  (\#eq:Base_Model_Ex4)
 $$
-
-```{r Base3VarModel}
+```
+```{marginfigure}
+**Formula 3.3**: Chairs can make up no more than 10% of the overall  
+```
+      
+```{r Base3VarModel, fig.margin=TRUE}
 Base3VarModel <- MIPModel() %>%
   add_variable(Chairs, type = "continuous", lb = 0) %>%
   add_variable(Desks, type = "continuous",lb = 0) %>%
@@ -298,9 +365,13 @@ xdesks  <- get_solution (res3base , Desks)
 xtables <- get_solution (res3base , Tables)
 base_case_res           <- cbind(xchairs,xdesks,xtables)
 rownames(base_case_res) <- "Amount to Produce"
-pander(base_case_res,
-       caption="Production Plan for Base Case")
+grid.table(base_case_res)
 ```
+```{marginfigure}
+**Table 3.8**: Production Plan for Base Case
+```
+The table on the right displays the optimal production plan for the formulation described in Formula 3.3. 
+\vspace{12pt}
 
 Let's add a constraint that chairs can't make up more than 40% of the total production.  Also, Desks can't be more than 50% of total production.  Lastly, let's say that Tables can't be more more than 40% of total production.  
 \vspace{12pt}
@@ -324,11 +395,16 @@ Let's simplify this a little, which gives us the following:
 \vspace{12pt}
 
 $0.6*Chairs-0.4*Desks-0.4*Tables \leq 0$
+
+The result is displayed as a formula on the right.
+```{marginfigure}
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max  }   & 20*Chairs+14*Desks+16*Tables \\
-    \text{subject to } & 6*Chairs+2*Desks+4*Tables \leq 2000 \\
+    \text{Max:} & \\
+                & 20*Chairs+14*Desks+16*Tables \\
+    \text{S.t.} & \\
+                       & 6*Chairs+2*Desks+4*Tables \leq 2000 \\
                        & 8*Chairs+6*Desks+4*Tables \leq 2000 \\
                        & 6*Chairs+4*Desks+8*Tables \leq 1440 \\
                        & 40*Chairs+25*Desks+16*Tables \leq 9600 \\
@@ -337,8 +413,11 @@ $$
                        & Chairs,  \; Desks, \; Tables \geq 0  
   \end{aligned}
   \end{split}
-  (\#eq:Blending)
 $$
+```
+```{marginfigure}
+**Formula 3.4**: Three constraints  
+```
 
 ```{r Blending}
 ModelBlending <- add_constraint(Base3VarModel,
@@ -351,52 +430,75 @@ blendres<-cbind(get_solution (resBlending, Chairs),
                 get_solution (resBlending, Tables))
 ```
 Okay, now let's put both side by side in a table to show the results.
-```{r Compare_Blending_to_Base_Results}
+```{r Compare_Blending_to_Base_Results, fig.margin=TRUE,fig.width=3}
 rownames(base_case_res)<-"Base Model Plan"
 rownames(blendres)<-"with Blend Constraint"
 blendingresults <- rbind(base_case_res,blendres)
 colnames (blendingresults) <- c( "Chairs", "Desks", "Tables")
-pander(rbind(base_case_res,blendres),
-       caption="Changing Production Plan due to a Blending Constraint")
+comparative <- rbind(base_case_res,blendres)
+grid.table(comparative)
 ```
+```{marginfigure}
+**Table 3.9**: Compare Baseline and Production Plan due to a Blending Constraint
+```
+As a summary, we can see on the table on the right a comparative between the baseline case and the new production plan with the blending constraint.
+
+
 
 ## Allocation Models
 An allocation model divides resources and assigns them to competing activities. Typically has a maximization objective with less than or equal to constraints.
-
+```{marginfigure}
 $$
  \begin{split}
  \begin{aligned}
-    \text{Maximize  }   &  \sum_{i=1}^3 P_i x_i \\
-    \text{subject to } & \sum_{i=1}^3 R_{i,j} x_i \leq A_j \forall \; j\\
-                       & x_i \geq 0  \; \forall \; i
+    \text{Max:}  &  \sum_{i=1}^3 P_i x_i \\
+    \text{S.t.} \\ & 
+                \sum_{i=1}^3 R_{i,j} x_i \leq A_j \forall \; j\\
+                & x_i \geq 0  \; \forall \; i
   \end{aligned}
   \end{split}
-  (\#eq:Allocation)
 $$
-
+```
+```{marginfigure}
+**Formula 3.5**: Allocation  
+```
 ## Covering Models
 A covering model combines resources and coordinates activities. A classic covering application would be what mix of ingredients "covers" the requirements at the lowest possible cost. Typically it has a minimization objective function and greater than or equal to constraints.
 
+```{marginfigure}
 $$
  \begin{split}
  \begin{aligned}
-    \text{Minimize }   &  \sum_{i=1}^3 C_i x_i \\
-    \text{subject to } & \sum_{i=1}^3 A_{i,j}x_i \geq R_j \forall \; j\\
+    \text{Min:}   &  \sum_{i=1}^3 C_i x_i \\
+    \text{S.t.} & \sum_{i=1}^3 A_{i,j}x_i \geq R_j \forall \; j\\
                        & x_i \geq 0  \; \forall \; i
   \end{aligned}
   \end{split}
-  (\#eq:Covering)
 $$
+```      
+```{marginfigure}
+**Formula 3.6**: Covering  
+```
+\vspace{12pt}
 
-Consider the case of Trevor's Trail Mix Company.  Trevor creates a variety of custom trail mixes for health food fans.  He can use a variety of ingredients.
+Consider the case of Trevor's Trail Mix Company.  Trevor creates a variety of custom trail mixes for health food fans.  He can use a variety of ingredients displayed in the table on the right.
+```{marginfigure}
 
-| Characteristic | Mix1  | Mix2  | Mix3   | Mix4  | Min Required  | 
-|---------------:|:-----:|:-----:|:------:|:-----:|:-------------:|
-|  Cost          |  $20  |  $14  |    $3  |  $16  |               |
-|  Calcium       |   6   |   2   |     1  |    4  |   1440        |
-|  Protein       |   8   |   6   |     1  |    8  |   1440        |
-|  Carbohydrates |   6   |   4   |     1  |   25  |   2000        |
-|  Calories      |   7   |  10   |     2  |   12  |   1000        |
+```
+\vspace{12pt}
+
+```{marginfigure, fig.pos="H"}
+|Characteristic |Mix1 |Mix2 |Mix3|Mix4 |Min Req.| 
+|--------------:|:---:|:---:|:--:|:---:|:------:|
+| Cost          | $20 | $14 | $3 | $16 |        |
+| Calcium       |  6  |  2  |  1 |   4 |  1440  |
+| Protein       |  8  |  6  |  1 |   8 |  1440  |
+| Carbohydrates |  6  |  4  |  1 |  25 |  2000  |
+| Calories      |  7  | 10  |  2 |  12 |  1000  |
+```  
+```{marginfigure}
+**Table 3.10**: Trevor Trail Mix Company ingredients  
+```
 
 Let's go ahead and build a model in the same way as we had done earlier for production planning.
 
@@ -418,12 +520,16 @@ CharMin <- matrix(c(1440, 1440, 2000, 1000),
               ncol=1,dimnames=c(CharNames,"Minimum"))
 ```
 
-```{r Display_Trail_Mix_Data}
-pander(cbind(MixChar,CharMin), caption="Data for Trevor Trail Mix Company")
+```{r Display_Trail_Mix_Data, fig.margin=TRUE}
+TTMix <-cbind(MixChar,CharMin)
+grid.table(TTMix)
+```
+```{marginfigure}
+**Table 3.11**: Data for Trevor Trail Mix Company  
 ```
 
 ```{marginfigure}
-Hint:  You might need to add a total amount to make!   Modify the numbers until it runs...
+**Hint**: You might need to add a total amount to make!   Modify the numbers until it runs...
 ```
 
 
@@ -433,9 +539,12 @@ Now let's build our model.
 trailmixmodel <- MIPModel() %>%
   add_variable (x[i], i=1:NMix, type="continuous", lb=0) %>%
   set_objective (sum_expr(Cost[i] * x[i] , i=1:NMix ), "min") %>%
-  add_constraint (sum_expr(MixChar[j,i]*x[i], i=1:NProd) # Left hand side of constraint
-                  >= CharMin[j],    # Inequality and Right side of constraint
-                  j=1:NCharacteristic)  # Repeat for each resource, j.  
+  add_constraint (sum_expr(MixChar[j,i]*x[i], i=1:NProd) 
+                  # Left hand side of constraint
+                  >= CharMin[j],    
+                  # Inequality and Right side of constraint
+                  j=1:NCharacteristic)  
+                  # Repeat for each resource, j.  
 results.trailmix <-    solve_model(trailmixmodel, with_ROI(solver = "glpk"))
   
 results.trailmix
@@ -453,7 +562,7 @@ A transportation model is typically for getting material from one place to anoth
 \vspace{12pt}
 
 In this formulation we need to make sure that we don't ship out more than capacity from each supply node. Similarly, we need to ensure that we don't take in more than demand capacity at any destination.
-
+```{marginfigure}
 $$
  \begin{split}
  \begin{aligned}
@@ -463,9 +572,11 @@ $$
                        & x_{i,j} \geq 0  \; \forall \; i,j
   \end{aligned}
   \end{split}
-  (\#eq:Base-Transportation)
 $$
-
+```
+```{marginfigure}
+**Formula 3.7**: Base Case for Transportation model  
+```
 If we simply run this model, as is, the minimum cost plan would be to simply not do any thing!  The cost would be zero.  What we want to do is instead determine if the problem is supply limited or demand limited.  This is a simple matter of comparing the net demand vs. the net supply and making sure that the lesser is satisfied completely.
 \vspace{12pt}
 
@@ -482,7 +593,7 @@ Similarly, if we try to use equality constraints for both the supply and demand 
 \vspace{12pt}
 
 ```{marginfigure}
-Hint:  In `ompr`, a double subscripted non-negative variable, $x_{i,j}$ can be defined easily as the following:
+**Hint**:  In `ompr`, a double subscripted non-negative variable, $x_{i,j}$ can be defined easily as the following:
 `add_variable(x[i, j], type = "continuous", i = 1:10, j = 1:10, lb=0)`
 ```
 
@@ -493,12 +604,17 @@ Let's show how to set up a basic implementation of the tranportation problem in 
 transportationmodel <- MIPModel() %>%
   add_variable(x[i, j], type = "continuous", i = 1:NSupply, j = 1:NDest, lb=0) %>%
   set_objective (sum_expr(Cost[i,j] * x[i,j] , i=1:NSupply, j=1:NDest ), "min") %>%
-    add_constraint (sum_expr(x[i,j], i=1:NSupply) # Left hand side of Demand constraints
-                  >= D[j],    # Inequality and Right side of constraint
+    add_constraint (sum_expr(x[i,j], i=1:NSupply) 
+                    # Left hand side of Demand constraints
+                  >= D[j],   
+                    # Inequality and Right side of constraint
                   j=1:NDest)  %>% # Repeat for each demand node j.  
-  add_constraint (sum_expr(x[i,j], j=1:NDest) # Left hand side of Supply constraints
-                  <= S[i],    # Inequality and Right side of constraints
-                  i=1:NSupply)  # Repeat for each supply node i.  
+  add_constraint (sum_expr(x[i,j], j=1:NDest)
+                  # Left hand side of Supply constraints
+                  <= S[i],    
+                  # Inequality and Right side of constraints
+                  i=1:NSupply)  
+                  # Repeat for each supply node i.  
 results.transportation <- solve_model(transportationmodel, 
                                       with_ROI(solver = "glpk"))
   
@@ -515,16 +631,22 @@ Lastly is a step where all of the inequalities are replaced by strict equality r
 \vspace{12pt}
 
 ## Exercises: Transportation
-Four manufacturing plants are supplying material for distributors in four regions.  The four supply plants are located in Chicago, Beaverton, Eugene, and Dallas.  The four distributors are in PDX (Portland), SEA (Seattle), MSP(Minneapolis), and ATL (Atlanta).  Each manufacturing plant has a maximum amount that they can produce.  For example, Chicago can produce at most 500.  Similarly, the PDX region can handle at most 700 units.  The cost to transport from Dallas to MSP is three times as high as the cost from Dallas to Atlanta.
+Four manufacturing plants are supplying material for distributors in four regions.  The four supply plants are located in Chicago, Beaverton, Eugene, and Dallas.  The four distributors are in PDX (Portland), SEA (Seattle), MSP(Minneapolis), and ATL (Atlanta).  Each manufacturing plant has a maximum amount that they can produce.  For example, Chicago can produce at most 500.  Similarly, the PDX region can handle at most 700 units.  The cost to transport from Dallas to MSP is three times as high as the cost from Dallas to Atlanta. The table on the right displays the transportation cost between all the cities.
 \vspace{12pt}
 
-| Node        | PDX   |   SEA |  MSP  | ATL   | **Supply** | 
-|------------:|:-----:|:-----:|:-----:|:-----:|:----------:|
-|  Chicago    |  20   |  21   |   8   |  12   |   **500**  |
-|  Beaverton  |   6   |   7   |   18  | 24    |   **500**  |
-|  Eugene     |   8   |   10  |  22   | 28    |   **500**  |
-|  Dallas     |   16  |   26  |  15   |  5    |   **600**  |
-|**Capacity** |**700**|**500**|**500**|**600**|            |
+```{marginfigure}
+| Node        | PDX  |  SEA |  MSP | ATL  | *Supply* | 
+|------------:|:----:|:----:|:----:|:----:|:--------:|
+|  Chicago    |  20  |  21  |   8  | 12   | **500**  |
+|  Beaverton  |   6  |   7  |  18  | 24   | **500**  |
+|  Eugene     |   8  |  10  |  22  | 28   | **500**  |
+|  Dallas     |  16  |  26  |  15  |  5   | **600**  |
+|**Capacity** | *700*| *500*| *500*| *600*|          |
+```  
+```{marginfigure}
+**Table 3.12**: Transportation cost between cities  
+```
+
 
 Formulate an explicit model for the above application that solves this transporation problem to find the lowest cost way of transporting as much as product as we can to distributors.  Hint:  You might choose to define variables based on the first letter of source and destination so *XCP* is the amount to ship from Chicago to PDX.  
 \vspace{12pt}
@@ -537,7 +659,7 @@ Formulate a generalized model for the above application that solves this transpo
 
 
 ```{marginfigure}
-Hint: Feel free to use my LaTeX formulation for the general transportation model and make change(s) to reflect your case.
+**Hint**: Feel free to use my LaTeX formulation for the general transportation model and make change(s) to reflect your case.
 ```
 
 Implement and solve the model using ompr.  Be sure to discuss the solution as to why it makes sense.
@@ -545,29 +667,34 @@ Implement and solve the model using ompr.  Be sure to discuss the solution as to
 ## Exercise: Convert LP to Standard Form
 
 Convert the following three variable LP into standard form.
-
+```{marginfigure}
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max  }   & Profit \\
-    \text{subject to } & Profit=20*Chairs+10*Desks+16*Tables \\
-                       & 6*Chairs+3*Desks+4*Tables \leq 2000 \\
-                       & 8*Chairs+4*Desks+4*Tables \leq 2000 \\
-                       & 6*Chairs+3*Desks+8*Tables \leq 1440 \\
-                       & 40*Chairs+20*Desks+16*Tables \leq 9600 \\
-                       & Tables  \leq 200 \\
-                       & Chairs, Desks, Tables \geq 0  
+    \text{Max:} & \\
+                & Profit=20*Chairs+10*Desks+16*Tables \\
+    \text{S.t.} & \\
+                & 6*Chairs+3*Desks+4*Tables \leq 2000 \\
+                & 8*Chairs+4*Desks+4*Tables \leq 2000 \\
+                & 6*Chairs+3*Desks+8*Tables \leq 1440 \\
+                & 40*Chairs+20*Desks+16*Tables \leq 9600 \\
+                & Tables  \leq 200 \\
+                & Chairs, Desks, Tables \geq 0  
   \end{aligned}
   \end{split}
-  (\#eq:Base_Model_Ex4)
 $$
+```
+```{marginfigure}
+**Table 3.13**: 
+```
 
 ## Excercise: Convert LP to Standard Form
 Implement and solve the standard form of the LP using R.  Be sure to interpret the solution and discuss how it compares to the solution from the original model. 
 
 ## Exercise: Convert Generalized LP to Standard Form
-Convert our generalized production planning LP into standard form.  Hint: define a set of variables, $s_j$ to reflect these changes and add it to the following formulation.   
-
+Convert our generalized production planning LP, displayed on the right, into standard form.  
+Hint: define a set of variables, $s_j$ to reflect these changes and add it to the following formulation.   
+```{marginfigure}
 $$
  \begin{split}
  \begin{aligned}
@@ -576,5 +703,8 @@ $$
                        & x_i \geq 0  \; \forall \; i
   \end{aligned}
   \end{split}
-  (\#eq:Base-Algebraic)
 $$
+```
+```{marginfigure}
+**Table 3.14**: Generalized LP case
+```
