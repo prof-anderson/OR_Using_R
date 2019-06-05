@@ -3,6 +3,8 @@ title: "Operations Research Using R<br />"
 author: "Timothy R. Anderson"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
+monofont: Times New Roman
+highlight: monochrome
 documentclass: book
 bibliography: ["Master4Bookdowns.bib"]
 ---
