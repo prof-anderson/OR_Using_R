@@ -1,13 +1,23 @@
 ---
 title: "Getting Started with Goal Programming"
-output: 
-  tint::tintPdf: default
-  tufte::tufte_html:
-    tufte_variant: "envisioned"
-  tint: default
+header-includes:
+- \usepackage{longtable}
+- \usepackage{caption}
+monofont: Times New Roman
+output:
   tufte::tufte_handout:
-    tufte_variant: "envisioned"
+    citation_package: natbib
+    latex_engine: xelatex
+    toc: TRUE
+    number_sections: true
+    highlight: monochrome
+  tufte::tufte_html: default
+  tufte::tufte_book:
+    citation_package: natbib
+    latex_engine: xelatex
 ---
+
+\pagestyle{headings}
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)

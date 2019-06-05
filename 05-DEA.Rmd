@@ -1,13 +1,23 @@
 ---
 title: "Chapter 5: Data Envelopment Analysis"
-output: 
+header-includes:
+- \usepackage{longtable}
+- \usepackage{caption}
+monofont: Times New Roman
+output:
   tufte::tufte_handout:
-    tufte_variant: "envisioned"
-  tufte::tufte_html:
-    tufte_variant: "envisioned"
-  tint::tintPdf: default
-  tint: default
+    citation_package: natbib
+    latex_engine: xelatex
+    toc: TRUE
+    number_sections: true
+    highlight: monochrome
+  tufte::tufte_html: default
+  tufte::tufte_book:
+    citation_package: natbib
+    latex_engine: xelatex
 ---
+
+\pagestyle{headings}
 
 ```{r setup_chapter5, warning=FALSE, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
