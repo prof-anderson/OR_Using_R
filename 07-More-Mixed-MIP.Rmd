@@ -22,6 +22,7 @@ output:
 ```{r setup_chapter7, echo=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = F)
+#knitr::opts_chunk$set(cache = TRUE)
 library (tufte)
 library (pander)
 library (tint)

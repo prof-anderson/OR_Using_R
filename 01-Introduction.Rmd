@@ -25,9 +25,11 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = F)
+knitr::opts_chunk$set(cache = TRUE)
 library(tufte)
 library(tint)
 library(knitr)
+library(pander)
 ```
 
 # Introduction 
@@ -165,43 +167,58 @@ Let's confirm that it works.
 b
 ```
 
-This table is still not that "nice" looking.  Let's use a package that does a nicer job of formatting tables.  To do this, we will use an extra package.  Up to this point, everything that we have done just simply uses standard built in functions of R. The package that we will use is `pander` but there are plenty of others available such as `kable`,`xtable`, and `huxtable`.  Let's start by loading the package.
+This table is still not that "nice" looking.  Let's use a package that does a nicer job of formatting tables.  To do this, we will use an extra package.  Up to this point, everything that we have done just simply uses standard built in functions of R. The package that we will use is `grid.table` but there are plenty of others available such as `pander`, `kable`, `xtable`, and `huxtable`.  Let's start by loading the package.
 
 ```{r Installing_a_Package}
-# install.packages("pander") # Use this command if pander is not installed.
-library(pander)
+# install.packages("gridExtra")
+# Use this command if pander is not installed.
+library(gridExtra)
 ```
 
 If R indicates that you don't have pander installed on your computer, you can  press the "Install" command under the Packages tab and then type in pander or use the `install.packages` command.  
-
-Notice the hash symbol is used to mark comment in the above code chunk.  It is also used to "comment out" a command that I don't need to use at the current time.  Using comments to explain what a command is doing can be helpful to anyone that needs to revisit your code in the future, including yourself!  
-
-Now, let's put the `pander` package to work.
-
 ```{marginfigure}
-When rendered in plain text, it might not look so fancy but it looks much better when a report is generated using knitr into html or as a pdf.  If you are viewing this output in a formatted output, the results will be very visible.]
+**pander**: The main aim of the pander R package is to provide a minimal and easy tool for rendering R objects into Pandoc's markdown. The package is also capable of exporting/converting complex Pandoc documents (reports) in various ways
+```
+\vspace{12pt}
+Notice the hash symbol is used to mark comment in the above code chunk.  It is also used to "comment out" a command that I don't need to use at the current time.  Using comments to explain what a command is doing can be helpful to anyone that needs to revisit your code in the future, including yourself! 
+\vspace{12pt}
+```{marginfigure}
+**gridExtra**: Provides a number of user-level functions to work with "grid" graphics, notably to arrange multiple grid-based plots on a page, and draw tables.grid.table draw a text table.
+```
+Now, we have several options to draw a table. We could use the `pander` package to work or we can use the grid.table package.
+
+
+
+```{r Using_Pander, fig.margin=TRUE}
+grid.table(b)
 ```
 
-```{r Using_Pander, echo=FALSE}
-pander(b, caption="Nicely formatted table using pander")
+```{marginfigure}
+**Table 1.1**: Nicely formatted table using pander
 ```
 
 Let's continue experimenting with operators.  
 
-```{r Scalar_Multiplication}
+```{r Scalar_Multiplication, fig.margin=TRUE}
 c<-a*b
-pander(c, caption="Scalar Multiplication of Matrix b")
+grid.table(c)
 ```
-
+```{marginfigure}
+**Table 1.2**: Scalar Multiplication of Matrix b
+```
 Now let's do a transpose operation on the original matrix.  What this means that it converts rows into columns and columns into rows.
 
-```{r Transposing}
+```{r Transposing, fig.margin=TRUE}
 d<-t(b)
-pander(d, caption="Transposition of Matrix b")
+grid.table(d)
+```
+```{marginfigure}
+**Table 1.3**: Transposition of Matrix b
 ```
 
+\vspace{12pt}
 Woops, notice that row and column names are also transposed.  The result is that we now have rows labeled as columns and columns labeled as rows!  
-
+\vspace{12pt}
 Now we have done some basic operations within R. Try your hand at the following exercises.
 
 ```{exercise, name="Changing Row and Column Names"}
@@ -221,68 +238,104 @@ d
 Assume that your company's product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday.  Create a matrix where the column indicates that the day of the week and the row is the product name.
 
 Recall that we have created a variety of objects now: a, b, c, and d. R provides a lot of tools for slicing, dicing, and combining data.  
-
+```{r Original_Matrix,fig.margin=TRUE}
+grid.table(b)
+```
+```{marginfigure}
+**Table 1.4**: Original Matrix b
+```
 Let's look at the original matrix, b and what we can do with it.  Let's grab the second row, third column and last element.  
 
-```{r Original_Matrix}
-pander(b, caption="Original Matrix b")
+
+```{r Extracting_Second_Row,fig.margin=TRUE}
+temp <- as.matrix(b[2,])
+grid.table(temp)
 ```
-
-```{r Extracting_Second_Row}
-pander(as.matrix(b[2,]), caption="Second Row of b")
+```{marginfigure}
+**Table 1.5**: Second Row of b
 ```
+\vspace{12pt}
+The `as.matrix` function is used to convert the object into a matrix so that pander can display it well.
+Note that I might explore alternatives to `grid.table` such as `pander`or `huxtable` in the future.  Here is a discussion of huxtable and comparison of many different packages for displaying tables https://hughjonesd.github.io/huxtable/design-principles.html 
+\vspace{12pt}
 
-The `as.matrix` function is used to convert the object into a matrix so that pander can display it well.  Note that I might explore alternatives to `pander` such as `huxtable` in the future.  Here is a discussion of huxtable and comparison of many different packages for displaying tables https://hughjonesd.github.io/huxtable/design-principles.html 
-
-```{r Extracting_Third_Column}
-pander(as.matrix(b[,3]), caption="Third Column of b")
+```{r Extracting_Third_Column,fig.margin=TRUE, fig.width=3}
+temp2 <- as.matrix(b[,3])
+grid.table(temp2)
 ```
-
+```{marginfigure}
+**Table 1.6**: Third Column of b
+```
+\vspace{12pt}
 Grabbing the third column is not terribly interesting but operations such as this will often be quite useful.
 
-```{r Displaying Bottom_Right_Element}
-pander(as.matrix(b[2,4]), caption="Last Element of b")
+```{r Bottom_Right_Element,fig.margin=TRUE}
+temp4 <- as.matrix(b[2,4]) 
+grid.table(temp4)
 ```
-
+```{marginfigure}
+**Table 1.7**: Last Element of b
+```
 A table made up of just one element is even less profound but is again useful. Now, let's show how we can combine two objects.  
 Recall tables _b_ and _c_ from earlier.
 
-```{r Show_both_Matrices}
+```{r Show_both_Matrices, echo=FALSE}
 pander(b, caption="Matrix b")
 pander(c, caption="Matrix c")
 ```
 
 Let's take the first row of `b` and combine it with the second row of `c` to form a new matrix, `e`.  Since these are rows that are going to be combined, we will use a command, `rbind`, to bind these rows together.
 
-```{r Combined_Matrix}
+```{r Combined_Matrix,fig.margin=TRUE}
 e<-rbind(b[1,],c[2,])
-pander(e,caption="Combined Matrix")
+grid.table(e)
 ```
-
+```{marginfigure}
+**Table 1.8**: Combined Matrix
+```
 Notice that _e_ has inherited the column names but lost the row names.  Let's set the row names for this matrix.
 
-```{r Changing_Row_Names}
+```{r Changing_Row_Names,fig.margin=TRUE}
 rownames(e)<-list("From_b", "From_c")
-pander(e, caption="Combined Matrix with Explanation of Source")
+grid.table(e)
+```
+```{marginfigure}
+**Table 1.9**: Combined Matrix with Explanation of Source
+```
+\vspace{12pt}
+We could combine all of matrix `b` and matrix `c` together using row binding or column binding. Table 1.10 will bind using columns.
+\vspace{12pt}
+```{r Row_and_Column_Binding,fig.margin=TRUE}
+temp5<- cbind(b,c)
+grid.table(temp5)
+```
+```{marginfigure}
+**Table 1.10**: Column Binding of Matrices b and c
 ```
 
-We could combine all of matrix `b` and matrix `c` together using row binding or column binding.
-
-```{r Row_and_Column_Binding}
-pander(cbind(b,c), caption="Column Binding of Matrices b and c")
+\vspace{12pt}
+And Table 1.11 will use rows as bidding condition.
 pander(rbind(b,c), caption="Row Binding of Matrices b and c")
+```{r Row_and_Column_Binding2,fig.margin=TRUE}
+temp6 <- rbind(b,c)
+grid.table(temp6)
 ```
-
+```{marginfigure}
+**Table 1.11**: Row Binding of Matrices b and c
+```
+\vspace{12pt}
 Data organizing is a less glamorous part of the job for practicing analytics professionals but can consume a majority of the workday. There is a lot more that can be said about data wrestling but scripting the data cleansing in terms R commands will make the work more repeatable, consistent, and in the end save time.
 
 ```{marginfigure}
 A PhD student that I knew was preparing for his final defense and did a practice presentation with his advisor and a professor. He was proud of a well polished 250 page thesis with dozens of tables of numerical results.  The analysis included dozens of regressions, all with similar form and dependent variables. The professor asked him why his dependent variables was the number of projects rather than projects per year. The student thought for a moment and realized that all of his analysis needed to be redone. This would take days or weeks if he had used a GUI based tool. Using R he did a search and replace for the dependent variable, cross-checked results, and met the next day to update that professor and his advisor of the new (and much better!) results. He successfully defended his thesis a couple weeks later.
 ```
 \vspace{12pt}
-***Excercise:*** "Creating a Matrix of Daily Demand for Four Weeks"
-Assume that your company's product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday. Build a matrix of four weeks of demand where each row is a separate week.     
+```{exercise, name="Creating a Matrix of Daily Demand for Four Weeks"}
+Assume that your company's product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday. Build a matrix of four weeks of demand where each row is a separate week. 
+```
 \vspace{12pt}
-***Exercise:*** "Creating a Matrix of Demand for Two Products" 
+```{exercise, name="Creating a Matrix of Demand for Two Products"} 
 Assume that your company's product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday. Gadgets have a demand of 20 on Monday, increasing by 3 units a day through Sunday. Build a matrix showing each product as a separate row.
+```
 
 
