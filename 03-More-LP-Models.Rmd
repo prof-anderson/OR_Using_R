@@ -10,12 +10,10 @@ output:
     latex_engine: xelatex
     toc: TRUE
     number_sections: true
-    highlight: monochrome
   tufte::tufte_html: default
   tufte::tufte_book:
     citation_package: natbib
     latex_engine: xelatex
-    highlight: monochrome
 ---
 
 \pagestyle{headings}
@@ -117,7 +115,8 @@ NProd <- 4
 NResources <- 5
 ProdNames <- lapply(list(rep("Prod",NProd)),paste0,1:NProd) 
                  # Product names: Prod1, Prod2, ... 
-ResNames<- lapply(list(rep("Res",NResources)),paste0,1:NResources) 
+ResNames<- lapply(list(rep("Res",NResources)),
+                  paste0,1:NResources) 
                  # Resource names: Res1, Res2, ... 
 Resources <- matrix(c( 6, 8, 6, 7 , 40, 2, 6, 4, 10, 
                        25, 1, 1, 1, 2, 5, 4, 8, 25, 12, 16), 
@@ -143,7 +142,7 @@ On the right side we can see the data. This should match the data that we hard c
 ```
 
 
-Similarly, we can display the resources used by each product and the amount of each resource available. See both tables on the right. Table 3.2 displayes the resources used by each product and Table 3.3 the amount of resources available from each product.   
+Similarly, we can display the resources used by each product and the amount of each resource available. See both tables on the right. Table 3.2 displays the resources used by each product and Table 3.3 the amount of resources available from each product.   
 
 ```{r Display_Available, tidy=FALSE, echo = FALSE, results='asis',fig.margin=TRUE}
 grid.table(Available)
@@ -220,7 +219,8 @@ Displaying the object of `prodmodel` only shows a simple summary of the results 
 This is useful to know but we are really interested in how to generate this profit.  To do this, we need to extract the values of the variables.  
 
 ```{r Display_Results, fig.margin=TRUE}
-results.products <- matrix (rep(-1.0,NProd), nrow = NProd, ncol=1,
+results.products <- matrix (rep(-1.0,NProd), 
+                            nrow = NProd, ncol=1,
                             dimnames=c(ProdNames,c("x")))
 temp <- get_solution (prodmodel, x[i]) 
    # Extracts optimal values of variables   
@@ -229,7 +229,7 @@ results.products <- t(temp [,3] )
 results.products <- matrix (results.products, 
                             nrow = 1, ncol=NProd,
                             dimnames=c(c("x"),ProdNames))  
-                                       # Resizes and renames 
+                            # Resizes and renames 
 grid.table(results.products)
 ```
 ```{marginfigure}
@@ -251,8 +251,11 @@ We can go one further step now and multiply the matrix of resources by the colum
 
 ```{r Calculate_Resources_Used, fig.margin=TRUE}
 Results.Resources <- Resources[]%*%t(results.products)
-    # Multiply matrix of resources by amount of products produced
-ResourceSlacks <- cbind (Results.Resources,Available,Available-Results.Resources)
+# Multiply matrix of resources by amount of 
+# products produced
+ResourceSlacks <- cbind (Results.Resources,
+                         Available,
+                         Available-Results.Resources)
 colnames(ResourceSlacks)<-c("Used", "Available", "Slack")      
 grid.table(ResourceSlacks)
 ```
@@ -270,8 +273,10 @@ Let's modify the above model.  We can do this by simply changing the data that w
 Let's change the time required for painting a chair to 20.  Recall that this is the first product and the fourth resource.  This is how we can change the value.
 
 ```{r Change_Data}
-Resources[4,1] <- 20  # Set value of the 4th row, 1st column to 20
-        # In our example, this is the paint resource used by making a chair
+Resources[4,1] <- 20  
+# Set value of the 4th row, 1st column to 20
+# In our example, this is the paint resource 
+# used by making a chair
 ```
 
 Now we will rebuild the the optimization model.
@@ -279,13 +284,17 @@ Now we will rebuild the the optimization model.
 
 ```{r Rebuild_and_Solve_Model}
 prodmodel <- MIPModel() %>%
-  add_variable (x[i], i=1:NProd, type="continuous", lb=0) %>%
-  set_objective (sum_expr(Profit[i] * x[i] , i=1:NProd ), "max") %>%
-  add_constraint (sum_expr(Resources[j,i]*x[i], i=1:NProd) 
+  add_variable (x[i], i=1:NProd, 
+                type="continuous", lb=0) %>%
+  set_objective (sum_expr(Profit[i] * x[i] , 
+                          i=1:NProd ), "max") %>%
+  add_constraint (sum_expr(Resources[j,i]*x[i], 
+                           i=1:NProd) 
                   # Left hand side of constraint
                   <= Available[j],    
                   # Inequality and Right side of constraint
-                  j=1:NResources) %>% # Repeat for each resource, j.  
+                  j=1:NResources) %>% 
+                  # Repeat for each resource, j.  
   solve_model(with_ROI(solver = "glpk"))
   
 prodmodel
@@ -294,14 +303,17 @@ prodmodel
 Note that the objective function has changed.  
 
 ```{r Examine_Results_of_Changed_Model, fig.margin=TRUE}
-results.products <- matrix (rep(-1.0,NProd), nrow = NProd, ncol=1,
+results.products <- matrix (rep(-1.0,NProd), 
+                            nrow = NProd, 
+                            ncol=1,
                             dimnames=c(ProdNames,c("x")))
 temp <- get_solution (prodmodel, x[i]) 
    # Extracts optimal values of variables   
 results.products <- t(temp [,3] )      
    # Extracts third column
 results.products <- matrix (results.products, 
-                            nrow = 1, ncol=NProd,
+                            nrow = 1, 
+                            ncol=NProd,
                             dimnames=c(c("x"),ProdNames))  
    # Resizes and renames
 grid.table(results.products) 
@@ -344,22 +356,23 @@ $$
       
 ```{r Base3VarModel, fig.margin=TRUE}
 Base3VarModel <- MIPModel() %>%
-  add_variable(Chairs, type = "continuous", lb = 0) %>%
-  add_variable(Desks, type = "continuous",lb = 0) %>%
-  add_variable(Tables, type = "continuous", lb = 0) %>%
+ add_variable(Chairs, type = "continuous", lb = 0) %>%
+ add_variable(Desks, type = "continuous",lb = 0) %>%
+ add_variable(Tables, type = "continuous", lb = 0) %>%
   
-  set_objective(20*Chairs + 14*Desks + 16*Tables, "max") %>%
+ set_objective(20*Chairs + 14*Desks + 16*Tables,"max")%>%
   
-  add_constraint(6*Chairs + 2*Desks + 4*Tables <= 2000) %>%
+ add_constraint(6*Chairs + 2*Desks + 4*Tables<= 2000)%>%
       #fabrication
-  add_constraint(8*Chairs + 6*Desks + 4*Tables <= 2000) %>% 
+ add_constraint(8*Chairs + 6*Desks + 4*Tables<= 2000)%>% 
       #assembly
-  add_constraint(6*Chairs + 4*Desks + 8*Tables <= 1440) %>%
+ add_constraint(6*Chairs + 4*Desks + 8*Tables<= 1440)%>%
       #machining
-  add_constraint(40*Chairs + 25*Desks + 16*Tables <= 9600) %>% 
+ add_constraint(40*Chairs + 25*Desks + 16*Tables<= 9600)%>% 
       #wood
   add_constraint(Tables <= 200) #
-res3base <- solve_model(Base3VarModel, with_ROI(solver = "glpk"))
+res3base <- solve_model(Base3VarModel, 
+                        with_ROI(solver = "glpk"))
 xchairs <- get_solution (res3base , Chairs)
 xdesks  <- get_solution (res3base , Desks)
 xtables <- get_solution (res3base , Tables)
@@ -420,9 +433,10 @@ $$
 ```
 
 ```{r Blending}
-ModelBlending <- add_constraint(Base3VarModel,
-                           0.6*Chairs -0.4*Desks - 0.4*Tables <= 0) 
-resBlending <- solve_model(ModelBlending, with_ROI(solver = "glpk"))
+ModelBlending<- add_constraint(Base3VarModel,
+                0.6*Chairs -0.4*Desks - 0.4*Tables <= 0) 
+resBlending<- solve_model(ModelBlending, 
+                          with_ROI(solver = "glpk"))
 ```
 ```{r Blending_Results}
 blendres<-cbind(get_solution (resBlending, Chairs),
@@ -434,7 +448,7 @@ Okay, now let's put both side by side in a table to show the results.
 rownames(base_case_res)<-"Base Model Plan"
 rownames(blendres)<-"with Blend Constraint"
 blendingresults <- rbind(base_case_res,blendres)
-colnames (blendingresults) <- c( "Chairs", "Desks", "Tables")
+colnames (blendingresults) <- c("Chairs","Desks","Tables")
 comparative <- rbind(base_case_res,blendres)
 grid.table(comparative)
 ```
@@ -446,7 +460,7 @@ As a summary, we can see on the table on the right a comparative between the bas
 
 
 ## Allocation Models
-An allocation model divides resources and assigns them to competing activities. Typically has a maximization objective with less than or equal to constraints.
+An allocation model divides resources and assigns them to competing activities. Typically has a maximization objective with less than or equal to constraints. 
 ```{marginfigure}
 $$
  \begin{split}
@@ -462,6 +476,8 @@ $$
 ```{marginfigure}
 **Formula 3.5**: Allocation  
 ```
+See the Formula 3.5 on the right to understand the mathematical expression.
+
 ## Covering Models
 A covering model combines resources and coordinates activities. A classic covering application would be what mix of ingredients "covers" the requirements at the lowest possible cost. Typically it has a minimization objective function and greater than or equal to constraints.
 
@@ -479,6 +495,7 @@ $$
 ```{marginfigure}
 **Formula 3.6**: Covering  
 ```
+See the Formula 3.5 on the right to understand the mathematical expression.
 \vspace{12pt}
 
 Consider the case of Trevor's Trail Mix Company.  Trevor creates a variety of custom trail mixes for health food fans.  He can use a variety of ingredients displayed in the table on the right.
@@ -487,14 +504,14 @@ Consider the case of Trevor's Trail Mix Company.  Trevor creates a variety of cu
 ```
 \vspace{12pt}
 
-```{marginfigure, fig.pos="H"}
-|Characteristic |Mix1 |Mix2 |Mix3|Mix4 |Min Req.| 
-|--------------:|:---:|:---:|:--:|:---:|:------:|
-| Cost          | $20 | $14 | $3 | $16 |        |
-| Calcium       |  6  |  2  |  1 |   4 |  1440  |
-| Protein       |  8  |  6  |  1 |   8 |  1440  |
-| Carbohydrates |  6  |  4  |  1 |  25 |  2000  |
-| Calories      |  7  | 10  |  2 |  12 |  1000  |
+```{marginfigure}
+|Charact.  |Mix1 |Mix2 |Mix3|Mix4 |Min Req.| 
+|---------:|:---:|:---:|:--:|:---:|:------:|
+| Cost     | $20 | $14 | $3 | $16 |        |
+| Calcium  |  6  |  2  |  1 |   4 |  1440  |
+| Protein  |  8  |  6  |  1 |   8 |  1440  |
+| Carbohyd.|  6  |  4  |  1 |  25 |  2000  |
+| Calories |  7  | 10  |  2 |  12 |  1000  |
 ```  
 ```{marginfigure}
 **Table 3.10**: Trevor Trail Mix Company ingredients  
@@ -507,7 +524,8 @@ NMix <- 4
 NCharacteristic <- 4
 MixNames <- lapply(list(rep("Mix",NMix)),paste0,1:NMix) 
                  # Mix names: Mix1, Mix2, ... 
-CharNames <-lapply(list(rep("Char",NCharacteristic)),paste0,1:NCharacteristic)
+CharNames <-lapply(list(rep("Char",NCharacteristic)),
+                   paste0,1:NCharacteristic)
                  # Characteristics of each mix
 Cost <- matrix(c(20, 14, 3, 16), 
               ncol=NProd,dimnames=c("Profit",MixNames))
@@ -537,15 +555,16 @@ Now let's build our model.
 
 ```{r trailmix}
 trailmixmodel <- MIPModel() %>%
-  add_variable (x[i], i=1:NMix, type="continuous", lb=0) %>%
-  set_objective (sum_expr(Cost[i] * x[i] , i=1:NMix ), "min") %>%
-  add_constraint (sum_expr(MixChar[j,i]*x[i], i=1:NProd) 
+ add_variable(x[i],i=1:NMix,type="continuous",lb=0) %>%
+ set_objective(sum_expr(Cost[i]*x[i],i=1:NMix ),"min")%>%
+ add_constraint(sum_expr(MixChar[j,i]*x[i],i=1:NProd) 
                   # Left hand side of constraint
                   >= CharMin[j],    
                   # Inequality and Right side of constraint
                   j=1:NCharacteristic)  
                   # Repeat for each resource, j.  
-results.trailmix <-    solve_model(trailmixmodel, with_ROI(solver = "glpk"))
+results.trailmix <- solve_model(trailmixmodel, 
+                                with_ROI(solver = "glpk"))
   
 results.trailmix
 xvalue <- t(get_solution(results.trailmix, x[i])[,3])
@@ -602,21 +621,25 @@ Let's show how to set up a basic implementation of the tranportation problem in 
 
 ```{r transportation, eval=FALSE}
 transportationmodel <- MIPModel() %>%
-  add_variable(x[i, j], type = "continuous", i = 1:NSupply, j = 1:NDest, lb=0) %>%
-  set_objective (sum_expr(Cost[i,j] * x[i,j] , i=1:NSupply, j=1:NDest ), "min") %>%
-    add_constraint (sum_expr(x[i,j], i=1:NSupply) 
-                    # Left hand side of Demand constraints
-                  >= D[j],   
-                    # Inequality and Right side of constraint
-                  j=1:NDest)  %>% # Repeat for each demand node j.  
-  add_constraint (sum_expr(x[i,j], j=1:NDest)
-                  # Left hand side of Supply constraints
-                  <= S[i],    
-                  # Inequality and Right side of constraints
-                  i=1:NSupply)  
-                  # Repeat for each supply node i.  
-results.transportation <- solve_model(transportationmodel, 
-                                      with_ROI(solver = "glpk"))
+ add_variable(x[i, j], type = "continuous", 
+               i = 1:NSupply, 
+               j = 1:NDest, lb=0) %>%
+ set_objective (sum_expr(Cost[i,j] * x[i,j] , 
+                          i=1:NSupply, 
+                          j=1:NDest ), "min") %>%
+ add_constraint (sum_expr(x[i,j], i=1:NSupply) 
+                # Left hand side of Demand constraints
+                >= D[j],   
+                # Inequality and Right side of constraint
+                j=1:NDest)%>% #Repeat for each demand node j.  
+ add_constraint (sum_expr(x[i,j], j=1:NDest)
+                # Left hand side of Supply constraints
+                <= S[i],    
+                # Inequality and Right side of constraints
+                i=1:NSupply)  
+                # Repeat for each supply node i.  
+results.transportation <-solve_model(transportationmodel, 
+                                    with_ROI(solver ="glpk"))
   
 ```
 ## Transhipment Models
@@ -630,7 +653,9 @@ It makes little difference as to whether the objective function is a _min_ or a 
 Lastly is a step where all of the inequalities are replaced by strict equality relations.  The conversion of inequalities to equalities warrants a little further explanation.  This is done by introducing a new, non-negative "slack" variable for each inequality.
 \vspace{12pt}
 
-## Exercises: Transportation
+## Exercises
+```{exercise, name="Transportation"}
+```
 Four manufacturing plants are supplying material for distributors in four regions.  The four supply plants are located in Chicago, Beaverton, Eugene, and Dallas.  The four distributors are in PDX (Portland), SEA (Seattle), MSP(Minneapolis), and ATL (Atlanta).  Each manufacturing plant has a maximum amount that they can produce.  For example, Chicago can produce at most 500.  Similarly, the PDX region can handle at most 700 units.  The cost to transport from Dallas to MSP is three times as high as the cost from Dallas to Atlanta. The table on the right displays the transportation cost between all the cities.
 \vspace{12pt}
 
@@ -651,9 +676,11 @@ Four manufacturing plants are supplying material for distributors in four region
 Formulate an explicit model for the above application that solves this transporation problem to find the lowest cost way of transporting as much as product as we can to distributors.  Hint:  You might choose to define variables based on the first letter of source and destination so *XCP* is the amount to ship from Chicago to PDX.  
 \vspace{12pt}
 
-Implement and solve the model using ompr.  Be sure to discuss the solution as to why it makes it sense.  
+Implement and solve the model using ompr.  Be sure to discuss the solution as to why it makes it sense. \vspace{12pt}
+ 
 
-## Exercise: Explicit Transportation
+```{exercise, name="Explicit Transportation"}
+```
 Formulate a generalized model for the above application that solves this transporation problem to find the lowest cost way of transporting as much as product as we can to distributors. 
 \vspace{12pt}
 
@@ -663,10 +690,12 @@ Formulate a generalized model for the above application that solves this transpo
 ```
 
 Implement and solve the model using ompr.  Be sure to discuss the solution as to why it makes sense.
+\vspace{12pt}
 
-## Exercise: Convert LP to Standard Form
+```{exercise, name="Convert LP to Standard Form"}
+```
 
-Convert the following three variable LP into standard form.
+Convert the three variable LP represented in Table 3.13 into standard form.
 ```{marginfigure}
 $$
  \begin{split}
@@ -685,14 +714,19 @@ $$
 $$
 ```
 ```{marginfigure}
-**Table 3.13**: 
+**Table 3.13**: Base LP Model 
 ```
+\vspace{12pt}
 
-## Excercise: Convert LP to Standard Form
+```{exercise, name="Convert LP to Standard Form"}
+```
 Implement and solve the standard form of the LP using R.  Be sure to interpret the solution and discuss how it compares to the solution from the original model. 
 
-## Exercise: Convert Generalized LP to Standard Form
-Convert our generalized production planning LP, displayed on the right, into standard form.  
+\vspace{12pt}
+```{exercise, name="Convert Generalized LP to Standard Form"}
+```
+
+Convert the generalized production planning LP, displayed on the right in formula 3.7, into standard form.  
 Hint: define a set of variables, $s_j$ to reflect these changes and add it to the following formulation.   
 ```{marginfigure}
 $$
@@ -706,5 +740,5 @@ $$
 $$
 ```
 ```{marginfigure}
-**Table 3.14**: Generalized LP case
+**Formula 3.7**: Generalized LP case
 ```
