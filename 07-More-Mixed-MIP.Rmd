@@ -282,7 +282,7 @@ plot_assignment <- matching %>%
   inner_join(customer_locations, by = c("i" = "id")) %>% 
   inner_join(warehouse_locations, by = c("j" = "id"))
 pander (head(plot_assignment), 
-        caption="XY coordinates for lines to draw for Customer-Warehouse Routes used")
+        caption="XY coordinates to draw Customer-Warehouse Routes")
 ```
 
 Notice that this gives the beginning and ending coordinates of what will soon be lines to show the connections between customers and warehouses.
@@ -291,12 +291,13 @@ Notice that this gives the beginning and ending coordinates of what will soon be
 Now, let's calcuate how many customers each warehouse serves.  
 
 ```{r customer-count}
-customer_count <- matching %>% # Process matching and save result to customer_count
-  group_by(j) %>%              # Group by warehouse
-  summarise(n = n()) %>%       # Summarize count
-  rename(id = j)               # Rename column from j to id
-pander (customer_count, 
-        caption="Count of customers assigned to each operating warehouse")
+customer_count <- matching %>% 
+  # Process matching and save result to customer_count
+  group_by(j) %>%         # Group by warehouse
+  summarise(n = n()) %>%  # Summarize count
+  rename(id = j)          # Rename column from j to id
+pander (customer_count, caption=
+          "Count of customers assigned to each operating warehouse")
 ```
 
 We can see that warehouse 17 has the most customers but that the two warehouses are pretty evenly balanced.
@@ -306,7 +307,8 @@ plot_warehouses <- warehouse_locations %>%
   mutate(costs = fixedcost) %>% 
   inner_join(customer_count, by = "id") %>% 
   filter(id %in% unique(matching$j))
-pander (plot_warehouses, caption = "Table of information about warehouses used")
+pander (plot_warehouses, caption = 
+          "Table of information about warehouses used")
 ```
 
 The `plot_warehouses` data frame[^data_type] is built using `dplyr` functions to create a summary of the important information about the warehouses used:  where they are located, costs, and number of customers served.
@@ -316,10 +318,13 @@ The `plot_warehouses` data frame[^data_type] is built using `dplyr` functions to
 
 ```{r plot_warehouses}
 p + 
-  geom_segment(data = plot_assignment, aes(x = x.y, y = y.y, xend = x.x, yend = y.x)) + 
-  geom_point(data  = plot_warehouses, color = "red", size = 3, shape = 17) +
+  geom_segment(data = plot_assignment, 
+               aes(x = x.y, y = y.y, xend = x.x, yend = y.x)) + 
+  geom_point(data  = plot_warehouses, 
+             color = "red", size = 3, shape = 17) +
   ggrepel::geom_label_repel(data  = plot_warehouses, 
-                            aes(label = paste0("fixed costs:", costs, "; customers: ", n)), 
+                            aes(label = paste0(
+                              "fixed costs:",costs, "; customers: ", n)), 
                             size = 2, nudge_y = 20) + 
   ggtitle(paste0("Cost optimal warehouse locations and customer assignment"),
           "Big red triangles show warehouses that will be built.
@@ -336,10 +341,14 @@ sum(fixedcost[unique(matching$j)])
 The above function cleverly uses the warehouse ID column from  `matching` (`matching$j`), makes the list unique to get rid of duplicates.  Recall that warehouses will be listed 100 times since every customer has a warehouse listed in matching.  Next, it uses these ID numbers to extract fixedcost values and adds them up.  Note that when you see a command such as this in R, it can often work to run them one at time in the console to see how they work.  To demonstrate this, see how each statement builds upon the previous.
 
 ```{r demonstrate_calculation_of_fixed_costs}
-matching$j                          # List the warehouses used by customers
-unique(matching$j)                  # Eliminate duplicate warehouse IDs
-fixedcost[unique(matching$j)]       # Find fixed costs of warehouses used
-sum(fixedcost[unique(matching$j)])  # Add fixed costs of all warehouses used
+matching$j                          
+   # List the warehouses used by customers
+unique(matching$j)                  
+   # Eliminate duplicate warehouse IDs
+fixedcost[unique(matching$j)]       
+   #Find fixed costs of warehouses used
+sum(fixedcost[unique(matching$j)])  
+   # Add fixed costs of all warehouses used
 ```
 
 ## Discussion
@@ -357,7 +366,7 @@ This analysis could be extended in a variety of ways to explore other questions.
 * How often would it be optimal to five or more warehouses?
 * Does decreasing variation in fixed costs affect the number of warehouses used?
 * Does decreasing the mean cost of warehouses affect the number of warehouses used?
-* What is the statistical distribution of warehouses counts when simulated a 1000 times?
+* What is the statistical distribution of warehouses used when simulated a 1000 times?
 
 The model can also be extended in a variety of ways.  
 
@@ -389,7 +398,8 @@ library(tictoc)   # Package used for timing R functions
 
 tic("glpk")        # Start the timer...
 
-result_glpk <-  solve_model(model, with_ROI(solver = "glpk", verbose=TRUE))
+result_glpk <- solve_model(model,
+                           with_ROI(solver = "glpk", verbose=TRUE))
 
 glpktime <- toc()  # End the timer and save results
 
@@ -409,12 +419,14 @@ Let's move on to testing the `symphony` solver.
 
 ```{r timesymphony, cache=TRUE }
 
-library (ROI.plugin.symphony, quietly = TRUE) # Plugin for solving
+library (ROI.plugin.symphony, quietly = TRUE) 
+   # Plugin for solving
 
 tic("symphony")
 
-result_symphony <-  solve_model(model, with_ROI(solver = "symphony",
-                                                verbosity = -1))
+result_symphony <-  solve_model(model, 
+                                with_ROI(solver = "symphony",
+                                         verbosity = -1))
 
 symphonytime <- toc()
 
@@ -436,9 +448,9 @@ The `time_limit` option has a default value of -1 meaning no time limit.  It sho
 
 The `node_limit` option has a default value of -1 meaning no limit on the number of nodes (in an MIP problem, the number of linear programs). It should be an integer to indicate the number of nodes examined before stopping.  
 
-The last option, `first_feasible`, has a default value of FALSE.  If it is set to TRUE, then symphony will stop when it has found a first solution that satisfies all the constraints (including integrality) rather than continuing on to prove optimality.
+The last option, `first_feasible`, has a default value of `FALSE`.  If it is set to `TRUE`, then symphony will stop when it has found a first solution that satisfies all the constraints (including integrality) rather than continuing on to prove optimality.
 
-Let's examine this by passing `first_feasible=TRUE` to see what happens.
+Let's examine the impact of just looking at the first feasible solution found by passing `first_feasible=TRUE` to see what happens.
 
 ```{r timesymphonyfirstfeasible, cache=TRUE }
 
@@ -454,17 +466,18 @@ symphonytimeff <- toc()
 
 print(solver_status(result_symphony_ff))
 
-symphonytimeff <- c("symphony first feas.", symphonytimeff$toc - symphonytimeff$tic,
+symphonytimeff <- c("symphony first feas.", 
+                    symphonytimeff$toc - symphonytimeff$tic,
                    result_symphony_ff$status,
                    result_symphony_ff$objective_value)
 
 ```
 
 Several interesing and important things should be noted here.  First, `ompr` interprets the status message from the solver as not being solved to optimality to indicate that the problem is not feasible.  This is a known issue in `ompr` and `ompr.ROI`as of version 0.8.0.0.  It highlights that "infeasible" status from the `ompr` should be thought of as meaning that an optimal solution was not found for _some_ reason such as being told to terminate after the first feasible solution was found, time limit reached, node limit reached, the MIP was infeasible, the MIP was unbounded, or some other issue.
-
+\vspace{12pt}
 A second thing to note that in my randomly generated instance, the very first feasible solution it found, happens to have the same objective function value as the optimal solution found to optimality earlier by `glpk` and `symphony`. This is similar to the very simple, two variable integer programming problem that we examined using a branch and bound tree in the previous chapter.  Symphony just doesn't have confirmation yet that this first feasible solution is truly optimal yet.  
-
-Thirdly, the time on my computer sometimes took less time to solve to optimality than for when it stopped _early_ with just the initial feasible solution.  This demonstrates the variability of solving time.  
+\vspace{12pt}
+Thirdly, the time on my computer sometimes took less time to solve to optimality than for when it stopped _early_ with just the initial feasible solution.  This demonstrates the variability of solving time. Also, it might be that the code is more tightly optimized for cases of fully solving the LP than for early termination.
 
 ## Performance of lpsolve
 
@@ -475,7 +488,8 @@ library (ROI.plugin.lpsolve, quietly = TRUE) # Plugin for solving
 
 tic("lpsolve")
 
-result_lpsolve <-  solve_model(model, with_ROI(solver = "lpsolve", verbose=TRUE))
+result_lpsolve <-  solve_model(model, 
+                               with_ROI(solver = "lpsolve", verbose=TRUE))
 
 lpsolvetime <- toc()
 
@@ -508,11 +522,11 @@ pander(timeresults, caption="Comparison of Results from Warehouse
 ```
 
 The most important thing to note is that each solver states that it found an optimal solution with the same  objective function value.  While they may vary in how it is achieved if there are multiple optima (in other words, different values for decision variables _x_ and _y_), this means that they all found a correct solution.  It would be a big issue if they differed. Causes for difference could be timing out, satisfying a suboptimality tolerance factor condition, or some error.  
-
+\vspace{12pt}
 Note that time will vary significantly from computer to computer and may also depend upon the other tasks and the amount of memory available.  Also, performance will change for different solver settings and for different problems.  Also, performance time will change for different random instances-simply changing the random number seed will create diferent results.  
-
+\vspace{12pt}
 The ROI package lists 19 different solvers with ROI plugins.  Three commercial solvers, C-Plex, GUROBI, and MOSEK are worth highlighting.  These programs may be substantially faster on large MIP problems and may make versions available for academic use.  Others are for quadratic optimization or special classes of optimization problems.  
-
+\vspace{12pt}
 After running these chunks dozens of times and finding the results to be quite stable across the various solvers tested, I decided to make use of the code chunk option `cache=TRUE`. Caching means that it will save the results unless things are changed.  If it determines that things have changed, it will rerun that chunk. This can save a lot of time in knitting the chapter or rebuilding the book. This is an excellent application area for demonstrating the benefits of using the chunk option for caching. The current application requires 10-15 seconds to do each full size customer warehouse optimization run. Caching just the four runs can save about a minute of knitting time. RStudio and knitr do a sophisticated check for changes which can invalidate the previously cached results and will then rerun the code chunk and save the results for future cached knits as appropriate. More demanding needs can use the granularity of numerical options for caching as compared to simply TRUE/FALSE and additional options. These might be required in detailed performance testing or numerical performance comparisons.  
 
 ## Performance Discussion
@@ -550,7 +564,7 @@ ggplot(pkg_dl_data, aes(end, downloads, group=package, color=package)) +
 ```
 
 Many of these packages are being used directly in other packages. While we can't see packages are being used most often for `ompr`, we can see which ROI plugins are downloaded most often.  
-
+\vspace{12pt}
 We will focus our attention on the ROI packages that emphasize linear programming. This means dropping packages such as `ROI.plugin.nloptr`, `ROI.plugin.qpOASES`, and `ROI.plugin.quadprog`. Also, propreitary packages that are not available on CRAN such as GUROBI and XPress, are not included.  
 
 ```{r ROI_Package_Stats, echo=FALSE}
@@ -596,7 +610,7 @@ ggplot(pkg_dl_data, aes(end, downloads, group=package, color=package)) +
 
 After spending a significant amount of time for a serious industrial application of warehouse optimization, let's take a break with a more lighthearted application.  Again, this is based on an article by Dirk Schumacher.  
 
-> In this vignettes we will solve Sudoku puzzles using MILP. [Sudoku](https://en.wikipedia.org/wiki/Sudoku) in its most popular form is a constraint satisfaction problem and by setting the objective function to $0$ you transform the optimization problem into a pure constraint satistication problem. In this document we will consider Sudokus in a 9x9 grid with 3x3 sub-matrices.  
+> In this vignette we will solve Sudoku puzzles using MILP. [Sudoku](https://en.wikipedia.org/wiki/Sudoku) in its most popular form is a constraint satisfaction problem and by setting the objective function to $0$ you transform the optimization problem into a pure constraint satistication problem. In this document we will consider Sudokus in a 9x9 grid with 3x3 sub-matrices.  
 > Of course you can formulate an objective function as well that directs the solver towards solutions maximizing a certain linear function.  
 
 ## The Sudoku model
@@ -614,8 +628,6 @@ $$\sum\limits_{k=1}^{9}   x_{i,j,k} = 1, \; \forall i,j$$
 ```
 
 \vspace{12pt}
-
-
 We then need to ensure that in each row, $i$, each digit $k$ only appears once.
 
 ```{marginfigure marginsudoku_const2}
@@ -630,7 +642,7 @@ $$\sum\limits_{j=1}^{n}   x_{i,j,k} = 1, \; \forall i,k$$
 
 \vspace{12pt}
 
-Next, we need to create a constraint each 3x3 grouping contains each digit only once. This is more complicated.  Let's consider the top left 3x3 cluster.  For each digit $k$, we need to ensure that only one cell has it.  
+Next, we need to create a constraint for each 3x3 grouping so that it contains each digit only once. This is more complicated.  Let's consider the top left 3x3 cluster.  For each digit $k$, we need to ensure that only one cell has it.  
 \vspace{12pt}
 
 $$
@@ -719,7 +731,11 @@ Sudoku_model <- MIPModel() %>%
 Sudoku_model
 ```
 
-We will use `glpk` to solve the above model. Note that we haven't fixed any numbers to specific values. That means that the solver will find a valid sudoku without any prior hints. I've made a couple of minor changes to Dirk's code chunks. I replaced the `x` variable with `Vx` to avoid R name space collisions with previously defined enviromental variables for `x`. Secondly, I switch the `sx` and `sy` to `r` and `c` to represent moving over by rows and columns. 
+We will use `glpk` to solve the above model. Note that we haven't fixed any numbers to specific values. That means that the solver will find a valid sudoku without any prior hints. 
+
+\vspace{12pt}
+
+I've made a couple of minor changes to Dirk's code chunks. I replaced the `x` variable with `Vx` to avoid R name space collisions with previously defined enviromental variables for `x`. Secondly, I switch the `sx` and `sy` to `r` and `c` to represent moving over by rows and columns. 
 
 ```{r Build_Sudoku_Model, echo=TRUE}
 library(ompr.roi)
@@ -735,7 +751,7 @@ Solution <- Sudoku_result %>%
 ```
 
 If you want to solve a specific sudoku you can fix certain cells to specific values. For example here we solve a sudoku that has the sequence from 1 to 9 in the first 3x3 matrix fixed.
-\vspace{24pt}
+\vspace{12pt}
 
 ```{r Enter_specific_puzzle}
 Sudoku_model_specific <- Sudoku_model %>% 

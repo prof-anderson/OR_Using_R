@@ -596,7 +596,7 @@ $$
 ```{marginfigure}
 **Formula 3.7**: Base Case for Transportation model  
 ```
-If we simply run this model, as is, the minimum cost plan would be to simply not do any thing!  The cost would be zero.  What we want to do is instead determine if the problem is supply limited or demand limited.  This is a simple matter of comparing the net demand vs. the net supply and making sure that the lesser is satisfied completely.
+If we simply run this model, as is, the minimum cost plan would be to just do nothing!  The cost would be zero. In reality, even though we are focused on costs in this application, there is an implied revenue and therefore profit (we hope!) that we aren't directly modeling.  We are likely to instead be wanting to ship all of the product that we can at the lowest possible cost. More precisely, what we want to do is instead determine if the problem is supply limited or demand limited. This is a simple matter of comparing the net demand vs. the net supply and making sure that the lesser is satisfied completely.
 \vspace{12pt}
 
 |If...                           | Then Situation is: | Source Constraints            | Demand Constraints         |

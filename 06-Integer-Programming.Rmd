@@ -452,7 +452,7 @@ Let's explore the impact of binary restrictions.
 6) New interconnect technology  (project E)
 \vspace{12pt}
 
-The key data is described as follows.  N is Net Present Value of the project factoring in costs.  E is the capital expenditures required for each project.  The company has $40 Billion in capital expenditures available.  Let's set up the data as matrices in R.  
+The key data is described as follows.  NPV is Net Present Value of the project factoring in costs.  Exp is the capital expenditures required for each project.  The company has $40 Billion in capital expenditures available.  Let's set up the data as matrices in R.  
 
 ```{r capital_budgeting_data}
 E <- matrix(c(12,24,20,8, 16),ncol=1,dimnames=list(LETTERS[1:5],"Exp"))
