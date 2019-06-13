@@ -486,7 +486,7 @@ $$
  \begin{split}
  \begin{aligned}
     \text{Min:}   &  \sum_{i=1}^3 C_i x_i \\
-    \text{S.t.} & \sum_{i=1}^3 A_{i,j}x_i \geq R_j \forall \; j\\
+    \text{S.t.} & \sum_{i=1}^3 A_{i,j}x_i \geq R_j \; \forall \; j\\
                        & x_i \geq 0  \; \forall \; i
   \end{aligned}
   \end{split}

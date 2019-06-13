@@ -146,8 +146,8 @@ This gives us two sets of constraints along with a restriction of non-negativity
 $$
  \begin{split}
  \begin{aligned}
-    \ & \sum_{j=1}^{N^D} x_{i,j}\lambda_j \leq x_{i,k} \forall \; i\\
-                       & \sum_{j=1}^{N^D} y_{r,j}\lambda_j \geq  y_{r,k} \forall \; r\\
+    \ & \sum_{j=1}^{N^D} x_{i,j}\lambda_j \leq x_{i,k} \; \forall \; i\\
+                       & \sum_{j=1}^{N^D} y_{r,j}\lambda_j \geq  y_{r,k} \; \forall \; r\\
                        & \lambda_j \geq 0  \; \forall \; j
   \end{aligned}
   \end{split}
@@ -175,8 +175,8 @@ $$
  \begin{split}
  \begin{aligned}
     \text{minimize  }   & \theta \\
-    \text{subject to } & \sum_{j=1}^{N^D} x_{i,j}\lambda_j \leq \theta x_{i,k} \forall \; i\\
-                       & \sum_{j=1}^{N^D} y_{r,j}\lambda_j \geq  y_{r,k} \forall \; r\\
+    \text{subject to } & \sum_{j=1}^{N^D} x_{i,j}\lambda_j \leq \theta x_{i,k} \; \forall \; i\\
+                       & \sum_{j=1}^{N^D} y_{r,j}\lambda_j \geq  y_{r,k} \; \forall \; r\\
                        & \lambda_j \geq 0  \; \forall \; j
   \end{aligned}
   \end{split}
@@ -189,8 +189,8 @@ $$
 \begin{split}
 \begin{aligned}
     \text{minimize  }   & \theta \\
-    \text{subject to } & \sum_{j=1}^{N^D} x_{i,j}\lambda_j - \theta x_{i,k} \leq 0 \forall \; i\\
-                       & \sum_{j=1}^{N^D} y_{r,j}\lambda_j \geq  y_{r,k} \forall \; r\\
+    \text{subject to } & \sum_{j=1}^{N^D} x_{i,j}\lambda_j - \theta x_{i,k} \leq 0 \; \forall \; i\\
+                       & \sum_{j=1}^{N^D} y_{r,j}\lambda_j \geq  y_{r,k} \; \forall \; r\\
                        & \lambda_j \geq 0  \; \forall \; j
   \end{aligned}
  \end{split}
@@ -368,8 +368,8 @@ $$
 \begin{aligned}
     \text{minimize  }   & \theta \\
     \text{subject to } & \sum_{j=1}^{n} \lambda_j  = 1\\
-                       & \sum_{j=1}^{n} x_{i,j}\lambda_j - \theta x_{i,k} + s^x_i = 0 \forall \; i\\
-                       & \sum_{j=1}^{n} y_{r,j}\lambda_j - s^y_r =  y_{r,k} \forall \; r\\
+                       & \sum_{j=1}^{n} x_{i,j}\lambda_j - \theta x_{i,k} + s^x_i = 0 \; \forall \; i\\
+                       & \sum_{j=1}^{n} y_{r,j}\lambda_j - s^y_r =  y_{r,k} \; \forall \; r\\
                        & \lambda_j , s^x_i, s^y_r \geq 0  \; \forall i, \; r, \; j
   \end{aligned}
  \end{split}
@@ -635,8 +635,8 @@ $$
 \begin{split}
  \begin{aligned}
     \text{minimize  }   & \theta \\
-    \text{subject to } & \sum_{j=1}^{N^D} x_{i,j}\lambda_j - \theta x_{i,k} + s^x_i = 0 \forall \; i\\
-                       & \sum_{j=1}^{N^D} y_{r,j}\lambda_j - s^y_r =  y_{r,k} \forall \; r\\
+    \text{subject to } & \sum_{j=1}^{N^D} x_{i,j}\lambda_j - \theta x_{i,k} + s^x_i = 0 \; \forall \; i\\
+                       & \sum_{j=1}^{N^D} y_{r,j}\lambda_j - s^y_r =  y_{r,k} \; \forall \; r\\
                        & \lambda_j , s^x_i, s^y_r \geq 0  \; \forall \; j,i,r
   \end{aligned}
    \end{split}
@@ -652,8 +652,8 @@ $$
 \begin{split}
  \begin{aligned}
     \text{minimize  }   & \theta - \epsilon ( \sum_{i} s^x_i + \sum_{r} s^y_r)\\
-    \text{subject to } & \sum_{j=1}^{N^D} x_{i,j}\lambda_j - \theta x_{i,k} + s^x_i = 0 \forall \; i\\
-                       & \sum_{j=1}^{N^D} y_{r,j}\lambda_j - s^y_r =  y_{r,k} \forall \; r\\
+    \text{subject to } & \sum_{j=1}^{N^D} x_{i,j}\lambda_j - \theta x_{i,k} + s^x_i = 0 \; \forall \; i\\
+                       & \sum_{j=1}^{N^D} y_{r,j}\lambda_j - s^y_r =  y_{r,k} \; \forall \; r\\
                        & \lambda_j , s^x_i, s^y_r \geq 0  \; \forall \; j,i,r
   \end{aligned}
  \end{split}
