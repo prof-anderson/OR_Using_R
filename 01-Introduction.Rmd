@@ -1,6 +1,6 @@
 ---
 title: "Introduction to Operations Research"
-author: "Tim Anderson"
+#author: "Tim Anderson" # this heading appears in header of table of content
 date: "11/23/2018"
 header-includes:
 - \usepackage{longtable}
