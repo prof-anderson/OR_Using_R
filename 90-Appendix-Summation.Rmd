@@ -24,8 +24,8 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = F)
 ```
-
-# Appendix: An Introduction to Summation Notation {-}
+# (APPENDIX) Appendix {-}
+# An Introduction to Summation Notation
 
 ## Basic Summation Notation
 
