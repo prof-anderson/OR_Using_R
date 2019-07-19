@@ -469,17 +469,19 @@ Let's create a richer dataset.  For this example, we will use the dataset from K
 This data is a little more complicated so let's make sure that we understand the definitions.  Look at the line for the inputs which we will call XBaker1.  The list of 12 data values has the structure defined as two columns for two separate inputs by use of 'ncol=2'.  This then means that there are 6 rows or DMUs in this dataset.  The six units are given capital letters for names starting with A.  The names of the inputs are hard coded as "x1" and"x2" to represent the _staff hours per day_ and the _supplies per day_ respectively.  
 
 ```{r Multiple_inputs_outputs}
-  XBaker1 <- matrix(c(150, 400, 320, 520, 350, 320, .2, 0.7, 1.2, 2.0, 1.2, 0.7),
+  XBaker1 <- matrix(c(150, 400, 320, 520, 350, 320, .2, 0.7, 
+                      1.2, 2.0, 1.2, 0.7),
                   ncol=2,dimnames=list(LETTERS[1:6],c("x1", "x2")))
 ```
 
 The two outputs of _reimbursed patient-days_ and _privately paid patient-days_ are named "y1" and "y2" but otherwise have the same structure as the inputs.  
 
 ```{r Baker_Data}
-YBaker1 <- matrix(c(14000, 14000, 42000, 28000, 19000, 14000, 3500, 21000, 10500, 
-                    42000, 25000, 15000),
+YBaker1 <- matrix(c(14000, 14000, 42000, 28000, 19000, 14000, 3500, 
+                    21000, 10500, 42000, 25000, 15000),
                   ncol=2,dimnames=list(LETTERS[1:6],c("y1", "y2")))
-ND <- nrow(XBaker1); NX <- ncol(XBaker1); NY <- ncol(YBaker1); # Define data size
+ND <- nrow(XBaker1); NX <- ncol(XBaker1); NY <- ncol(YBaker1); 
+    # Define data size
 pander(cbind(XBaker1,YBaker1))
 ```
 
@@ -518,7 +520,7 @@ dimnames(results.uweight)    <- c(DMUnames,Unames)
 
 We are now ready to do the analysis.  Note that Baker's analysis uses the multiplier model and then from this reads out of the sensitivity report the lambda values.  We will discuss the multiplier model in more detail later.
 
-```{r Baker_example1}
+```{r Baker_example1_CCR}
 RTS<-"CRS"
 for (k in 1:ND) {
   
@@ -549,7 +551,7 @@ The efficiency scores match those reported in Baker, page 176, Figure 5.8.  The 
 In contrast, the second and third column warrant a more careful look.  Both of those columns report very small negative numbers.  These numbers are due to computational issues in the linear programming solvers and should be interpreted as zero.  Rounding the results can make the tables easier for interpretation by the user.  The pander packages makes it easy to round numbers to varying levels of precision.  
 
 ```{r rounded-table}
-pander (cbind(results.efficiency, results.lambda), 
+pander (cbind(results.efficiency, results.lambda), round = 6, 
         caption="Results from Baker's Example (CRS) with Rounded Values")
 ```
 
@@ -558,15 +560,48 @@ The small, nearly zero, values that may appear in DEA calculations can cause som
 
 Let's compare the results from the constant and variable returns to scale cases.
 
+```{r Baker_example1-BCC}
+RTS<-"VRS"
+for (k in 1:ND) {
+  
+  result <- MIPModel() %>%
+    add_variable(vlambda[j], j = 1:ND, type = "continuous", lb = 0) %>%
+    add_variable(vtheta, type = "continuous") %>%
+    set_objective(vtheta, "min") %>%
+    add_constraint(sum_expr(vlambda[j] * xdata[j,i], j = 1:ND) 
+                   <= vtheta * xdata[k,i], i = 1:NX) %>%
+    add_constraint(sum_expr(vlambda[j] * ydata[j,r], j = 1:ND) 
+                   >= ydata[k,r], r = 1:NY) 
+    if (RTS=="VRS") {result <- add_constraint(result, 
+                 sum_expr(vlambda[j],j = 1:ND) == 1) }  #Returns to Scale
+results <-   solve_model(result, with_ROI(solver = "glpk")) 
+    
+    results.efficiency[k] <-  get_solution(results, vtheta)       
+    results.lambda[k,] <- t(as.matrix(as.numeric(
+                     get_solution(results, vlambda[j])[,3] )))
+}
+BakerBCC.Res<-cbind(results.efficiency, results.lambda)
+colnames(BakerBCC.Res)[1] <- "BCC-IO"
+```
+
+
 ```{r Compare_CRS_to_VRS}
-pander(cbind(results.efficiency,BakerCCR.Res), round=6,
+pander(cbind(BakerCCR.Res[,1, drop=FALSE],
+             BakerBCC.Res), round=6,
        caption="Comparison of CRS vs. VRS Efficiency Scores")
+```
+
+```{marginfigure}
+**Hint**: drop=FALSE in the subsetting of BakerCCR.Res enables retaining the original structure of the matrix, which allows the column name to remain.  The default is drop=TRUE which simplifies the data object into a form that doesn't have a column name. 
 ```
 
 A few takeaways from these results:
 \vspace{12pt}
 
-* Switching from CRS to VRS will never hurt the efficiency of a DMU.  From an optimization perspective, think of this as adding a constraint which will increase or leave unchanged the objective function value from a minimization linear program.  makes it _easier_ for a find
+* Switching from CRS to VRS will never hurt the efficiency of a DMU.  From an optimization perspective, think of this as adding a constraint which will increase or leave unchanged the objective function value from a minimization linear program.  
+* Another way to view it is now _easier_ for a DMU to find some way of being _best_ or efficient.  They can do this by now having the largest of any output or the smallest of input as well as many other ways.
+* The number of DMUs that are used for setting performance targets for inefficient units is typically broadened.  This is visible in the non-zero $\lambda$ values.
+* At a simple level, the CCR (CRS) efficiency score can be thought of as a combination of how efficient someone is considering their operational and size efficiency.  The BCC (VRS) efficiency is how efficient they are given their current operating size.  
 
 ## Extracting Multiplier Weights from Envelopment Results
 
@@ -609,15 +644,19 @@ result <-   solve_model(result, with_ROI(solver = "glpk"))
                      get_solution(result, vlambda[j])[,3] )))
     rduals  <- as.matrix(get_row_duals(result))
     results.vweight[k,] <- -1*rduals[1:NX]
-      # Extract first NX row duals assuming first set of constraints for inputs
-      # Multiply input weights by -1 to adjust for inequality direction
+      # Extract first NX row duals 
+      #   Assumes first set of constraints for inputs
+      # Multiply input weights by -1 to adjust for 
+      #   inequality direction
     results.uweight[k,] <- rduals[(NX+1):(NX+NY)]
-      # Extract next NY row duals assuming output constraints follow inputs 
+      # Extract next NY row duals 
+      #   Assumes output constraints follow inputs 
     }
-pander (cbind(results.efficiency, results.lambda, results.vweight, 
+pander (cbind(results.efficiency, results.vweight, 
               results.uweight),round=6, 
         caption="Results from Baker's Example")
 ```
+
 A few things should be noticed with respect the the multiplier weights:
 
 * Multiplier weights can be quite small because in general, they are multiplied by inputs and the product is typically less than one.  They may appear to round to zero but still be significant.
@@ -689,23 +728,31 @@ RTS<-"CRS"
 for (k in 1:ND) {
   
   LPSlack <- MIPModel() %>%
-    add_variable(vlambda[j], j = 1:ND, type = "continuous", lb = 0) %>%
+    add_variable(vlambda[j], j = 1:ND, type = "continuous", 
+                 lb = 0) %>%
     add_variable(vtheta, type = "continuous") %>%
-    add_variable(xslack[i], i = 1:NX, type = "continuous", lb=0) %>%
-    add_variable(yslack[r], r = 1:NY, type = "continuous", lb=0) %>%
+    add_variable(xslack[i], i = 1:NX, type = "continuous", 
+                 lb=0) %>%
+    add_variable(yslack[r], r = 1:NY, type = "continuous", 
+                 lb=0) %>%
     
     set_objective(vtheta, "min") %>%
     
-    add_constraint(sum_expr(vlambda[j] * xdata[j,i]+xslack[i], j = 1:ND) 
+    add_constraint(sum_expr(vlambda[j] * xdata[j,i] + 
+                              xslack[i], j = 1:ND) 
                    - vtheta * xdata[k,i]==0, i = 1:NX) %>%
     
-    add_constraint(sum_expr(vlambda[j] * ydata[j,r]-yslack[r], j = 1:ND) 
+    add_constraint(sum_expr(vlambda[j] * ydata[j,r] -
+                              yslack[r], j = 1:ND) 
                     ==ydata[k,r], r = 1:NY) 
-    if (RTS=="VRS") {LPSlack<-add_constraint(LPSlack, sum_expr(vlambda[j],
-                                j = 1:ND) == 1) }  #Returns to Scale
+    if (RTS=="VRS") {LPSlack<-
+      add_constraint(LPSlack, sum_expr(vlambda[j],
+                                       j = 1:ND) == 1) }  
+  #Returns to Scale
     result <-   solve_model(LPSlack, with_ROI(solver = "glpk")) 
     # The following are the key steps to slack maximization 
-    phase1obj <-  get_solution(result, vtheta)  # Get Phase 1 objective value
+    phase1obj <-  get_solution(result, vtheta)  
+    # Get Phase 1 objective value
     add_constraint(LPSlack, vtheta==phase1obj)   
                      # Passing result from phase 1 to phase 2
     set_objective(LPSlack, sum_expr(
@@ -719,8 +766,8 @@ for (k in 1:ND) {
 }
 rownames(results.efficiency)<-c("A", "B", "C", "D", "E", "F")
 #print (results.efficiency)
-pander(cbind(results.efficiency,xdata,ydata,results.lambda), round=5,
-       caption="Input-oriented Efficiency Results")
+pander(cbind(results.efficiency,xdata,ydata,results.lambda), 
+       round=5, caption="Input-oriented Efficiency Results")
 ```
 The rightmost columns, denoted by "L_" are the resulting lambda values.  
 
@@ -735,32 +782,66 @@ This section covers the second chapter of the book and introduces DEA and R work
 
 ## Exercises
 
-## Exercise: Adding DMU E-Graphically
-Add a fifth unit, E, to the first example that produces 400 units output using 30 units of input.  Graphically evaluate all five units for their efficiency scores and lambda values. Interpret the solution in terms of who is doing well, who is doing poorly, and who should be learning from whom.  _Difficulty: Cup of coffee_
+\vspace{12pt}
+ 
+```{exercise, name="Adding DMU E-Graphically"}
+```
 
-## Exercise: Adding DMU E-Using R
+Add a fifth unit, E, to the first example that produces 400 units output using 30 units of input.  Graphically evaluate all five units for their efficiency scores and lambda values. Interpret the solution in terms of who is doing well, who is doing poorly, and who should be learning from whom.  _Difficulty: Cup of coffee_
+Adding DMU E-Graphically
+
+
+\vspace{12pt}
+ 
+```{exercise, name="Adding DMU E-Using R"}
+```
+
 Examine the new unit, E, using  R. Interpret the solution in terms of who is doing well, who is doing poorly, and who should be learning from whom. _Difficulty: Decaf cup of coffee_
 
-## Exercise: Looping
+
+\vspace{12pt}
+ 
+```{exercise, name="Looping"}
+```
+
 Wrap a for loop around the model to examine every unit.  Discuss results.
 
-## Exercise: Bigger Data
+\vspace{12pt}
+ 
+```{exercise, name="Bigger Data"}
+```
+
 Use a bigger data set and conduct an analysis & interpretation (more inputs, outputs, and units.)  _Difficulty: Cup of coffee_
 
-## Exercise: Test Results
-Check results against a DEA package (ex. DEAMultiplier, TFDEA, Benchmarking, nonparaeff) _Difficulty: Pot of coffee_
+\vspace{12pt}
+ 
+```{exercise, name="Compare Results"}
+```
 
-## Exercise: Slacking
+Check results against a DEA package (ex. DEAMultiplier, TFDEA, Benchmarking, nonparaeff) _Difficulty: Pot of coffee_
+\vspace{12pt}
+ 
+```{exercise, name="Slacking"}
+```
+
 Construct an example where Phase 2 increases positive slacks from Phase 1.  _Difficulty: Pot of coffee_
 
-## Exercise: Graphics
+\vspace{12pt}
+ 
+```{exercise, name="Graphics"}
+```
+
 Create "cool" graphs or plots of results.  _Difficulty: It depends..._
 \vspace{12pt}
 
 To pass the challenges, work on extending my RMarkdown file or using a similar script.  You can use my *.rmd file as a starting point. Others might prefer to create a well documented R script instead of using RMarkdown.  Others might even prefer using LaTeX. If you use RMarkdown or LaTeX, please use section headings to indicate each challenge solved.  
 You can use other packages for graphics or data manipulation but don't use a DEA package.  (Don't worry, we'll get there later.)
 
-## Exercise: DEA Application
+\vspace{12pt}
+ 
+```{exercise, name="A DEA Application"}
+```
+
 
 Conduct a DEA study for an application that you are personally familiar with.  (Pick one for which data is readily available but something that you are passionate about.  It can have scrubbed or anonymized data.  Examples might include your favorite sports league, team salaries, coaching salaries, wins, etc. or it can be USAF related.)
 

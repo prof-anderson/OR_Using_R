@@ -37,6 +37,7 @@ I would like to thank many people for their contributions, collaborations, and a
 * **Alexander Keller,** Co-author of summation introduction appendix
 * **Shahram Khorasanizadeh,** Co-author of summation introduction appendix
 * **Jose Banos,** Contributor of more formatting in the spirit of Tufte 
+* **Dawei Zhang,** Further editorial work on the book 
 
 In addition, several groups have been of tremendous help:
 
