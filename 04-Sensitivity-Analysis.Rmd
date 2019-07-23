@@ -48,12 +48,12 @@ Recall the explicit production planning problem from earlier on Formula 4.1.
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max: } & 20*Chairs+14*Desks+16*Tables \\
+    \text{Max: } & 20Chairs+14Desks+16Tables \\
     \text{s.t.} & \\
-         & 6*Chairs+2*Desks+4*Tables \leq 2000 \\
-         & 8*Chairs+6*Desks+4*Tables \leq 2000 \\
-         & 6*Chairs+4*Desks+8*Tables \leq 1440 \\
-         & 40*Chairs+25*Desks+16*Tables \leq 9600 \\
+         & 6Chairs+2Desks+4Tables \leq 2000 \\
+         & 8Chairs+6Desks+4Tables \leq 2000 \\
+         & 6Chairs+4Desks+8Tables \leq 1440 \\
+         & 40Chairs+25Desks+16Tables \leq 9600 \\
          & Tables \leq 200 \\
          & Chairs,  \; Desks, \; Tables \geq 0  
   \end{aligned}
@@ -120,7 +120,7 @@ dimnames(rduals1)<-list(c("fabrication",
                           "wood", 
                           "demand"), 
                           c("Row Duals"))
-grid.table(rduals1)
+grid.table(format(rduals1,digits=4))
 ```
 ```{marginfigure}
 **Table 4.2**: Shadow Prices of Constrained Resources
@@ -144,12 +144,12 @@ Let's test the numerical results from the Shadow Price table by adding an hour o
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max:  } & 20*Chairs+14*Desks+16*Tables \\
+    \text{Max:  } & 20Chairs+14Desks+16Tables \\
     \text{s.t.} \\
-          & 6*Chairs+2*Desks+4*Tables \leq 2000 \\
-          & 8*Chairs+6*Desks+4*Tables \leq 2000 \\
-          & 6*Chairs+4*Desks+8*Tables \leq 1441 \\
-          & 40*Chairs+25*Desks+16*Tables \leq 9600 \\
+          & 6Chairs+2Desks+4Tables \leq 2000 \\
+          & 8Chairs+6Desks+4Tables \leq 2000 \\
+          & 6Chairs+4Desks+8Tables \leq 1441 \\
+          & 40Chairs+25Desks+16Tables \leq 9600 \\
           & Tables \leq 200 \\
           & Chairs,  \; Desks, \; Tables \geq 0  
   \end{aligned}
@@ -200,9 +200,9 @@ These results confirmed that adding one hour of machining time results in a _new
 
 The Shadow Prices can be very helpful in larger problems where questions might come up of trying to evaluate or prioritize limited resources.  
 
-## Shadow Price of Underutilzed Resources
+## Shadow Prices of Underutilzed Resources
 
-The shadow price on wood is zero (as was also the case for assembly hours).  This means that even a large increase in wood would not affect the maximum profit or the optimal production plan.  Essentially there is plenty of wood, having more would not allow enable a better profit plan to be possible.  Let's confirm this as well with a numerical example by adding _10,000_ more square feet of wood. See formula 4.3. 
+The shadow price on wood is zero (as was also the case for assembly hours).  This means that even a large increase in wood would not affect the maximum profit or the optimal production plan. Essentially there is plenty of wood, having more would not allow enable a better profit plan to be possible.  Let's confirm this as well with a numerical example by adding _10,000_ more square feet of wood. See formula 4.3. 
 ```{marginfigure}
 $$
  \begin{split}
@@ -262,10 +262,12 @@ The demand constraint of 200 is an upper limit only on Tables.  Since far fewer 
 
 ## Reduced Costs of Variables
 
-Next, we move on to the *reduced costs* of variables. This concept often requires rereading  several times.  The mathematical details rely on the structure of linear programming and the simplex algorithm. We won't go into this in detail here.  
+Next, we move on to the *reduced costs* of variables. This concept often requires rereading  several times. The mathematical details rely on the structure of linear programming and the simplex algorithm. We won't go into great detail on the origin of this mathematically in detail here.  
 \vspace{12pt}
 
-Let's start by examining the Chairs.  The reduced cost for Chairs is the per unit marginal profit minus the per unit value (in terms of shadow prices) of the resources used by a unit in production.  
+*Reduced Cost of Chairs*
+
+Let's start by examining the Chairs. The reduced cost for Chairs is the per unit marginal profit minus the per unit value (in terms of shadow prices) of the resources used by a unit in production.  
 \vspace{12pt}
 
 Next, let's discuss the column duals which are often referred to as reduced costs of variables.  Let's extract these from the results just as we did for the shadow prices.
@@ -275,24 +277,23 @@ Next, let's discuss the column duals which are often referred to as reduced cost
 cduals1 <-as.matrix(get_column_duals(Base3VarModel) )
 dimnames(cduals1)<-list(c("Chairs", "Desks", "Tables"), 
                         c("Column Duals"))
-grid.table(cduals1)
+grid.table(format(cduals1,digits=4))
 ```
 ```{marginfigure}
 **Table 4.5**: Reduced Costs of Variables
 ```
-These results are interesting.  The reduced costs of variables that are between simple upper and lower bounds will be zero. The reduced cost of a variable can be thought as the difference between the value of the  resources consumed by the resources and the value of the variable in the objective function.  All of our variables have simple lower bounds of zero and no upper bounds.  The first two (Chairs and Desks) have a zero reduced cost and the last one (Tables) is negative.  
 
-##Let's explore what this means.  
+These results are interesting.  The reduced costs of variables that are between simple upper and lower bounds will be zero. The reduced cost of a variable can be thought as the difference between the value of the  resources consumed by the resources and the value of the variable in the objective function.  All of our variables have simple lower bounds of zero and no upper bounds.  The first two (Chairs and Desks) have a zero reduced cost and the last one (Tables) is negative.  
 
 Let's start by examining the Shadow Prices of the resources along with the number of each resource used in the production of a single chair.  
 
 ```{r Shadow_Price_Single_Chair, fig.margin=TRUE}
 chair_res_used<-cbind(rduals1,c(2,8,6,40,0))
 colnames(chair_res_used)<-c("Row Duals", "Resources Used")
-grid.table(chair_res_used)
+grid.table(format(chair_res_used, digits=4))
 ```
 ```{marginfigure}
-**Table 4.5**: Resources Used by a Chair and their Shadow Prices
+**Table 4.6**: Resources Used by a Chair and their Shadow Prices
 ```
 Taking the product in each row and adding them up will give the marginal value of the resources consumed by an incremental change in production of chairs. In this case, the marginal value is $0+1*8+2*6+0+0=20$.  Since the profit per chair (from the objective function coefficient on Chairs) is also $\$ 20$, they are in balance and the difference between them is zero which is why the reduced cost for Chairs is zero. This can be thought of saying that there is marginal benefit of cost to a very small forced change in the value of the Chairs variable.  The value of the resources used in producing a chair equals that of the profit of a chair.  
 \vspace{12pt}
@@ -302,14 +303,14 @@ We can repeat the same process and calculations for Desks.
 ```{r Shadow_Price_Desks,fig.margin=TRUE }
 desk_res_used<-cbind(rduals1,c(2,6,4,25,0))
 colnames(desk_res_used)<-c("Row Duals", "Resources Used")
-grid.table(desk_res_used)
+grid.table(format(desk_res_used, digits=4))
 ```
 ```{marginfigure}
-**Table 4.6**: Resources Used by a Desk and their Shadow Prices
+**Table 4.7**: Resources Used by a Desk and their Shadow Prices
 ```
 In this case, using the columns from Table 4.6 we can calulate the marginal value as $0+1*6+2*4+0+0=14$.  Since the profit per desk (from the objective function coefficient on Desks) is also $\$ 14$, they are in balance and the difference between them is zero which is why the reduced cost for the _Desks_ variable is also zero.
 
-## Reduced Price of Tables 
+*Reduced Price of Tables*
 
 The situation is more interesting for Tables. The production plan does not call for producing any tables. This means that it is sitting right at the lower bound of zero Tables.  This hints that perhaps we would like to make even less than zero Tables if we could and that being _forced_ to make even one table would be costly. A reduced cost of -4 means that the opportunity cost of resources used in producing a table is $\$4$ more than the profit of producing a single table.  In other words, we would expect that if we force the production of a single table, the over all production plan's profit will go down by $\$4$.
 \vspace{12pt}
@@ -322,7 +323,7 @@ colnames(table_res_used)<-c("Row Duals", "Resources Used")
 grid.table(table_res_used)
 ```
 ```{marginfigure}
-**Table 4.7**: Resources Used by a Table and their Shadow Prices
+**Table 4.8**: Resources Used by a Table and their Shadow Prices
 ```
 Notice that the values based on shadow prices of the resources used by a table are $\$1*4+\$2*8=\$20$. Alas, the profit for each table is just $\$16$ which means that forcing the production of a single table will decrease the production plan's profit by $\$4$. In other words, the impact on the objective function is   $\$-4$ which is the same as the reduced price entry of Tables.  
 \vspace{12pt}
@@ -363,7 +364,7 @@ Table1Model <- MIPModel() %>%
   grid.table(Table1_case_res)
 ```
 ```{marginfigure}
-**Table 4.8**: Production Plan with Table Set to One
+**Table 4.9**: Production Plan with Table Set to One
 ```
 \vspace{12pt}
 Let's compare the results for the new production plan and the original base case looking at the Table 4.9.  
@@ -371,18 +372,18 @@ Let's compare the results for the new production plan and the original base case
 ```{r Base_vs_Forced_Table, fig.margin=TRUE}
 rownames(base_case_res) <- "Base Case"
 Table1_case_res <- cbind(obj_val, xchairs,xdesks,xtables)
-rownames(Table1_case_res) <- "with forced change to Tables"
+rownames(Table1_case_res) <- "After change"
 temp3 <-rbind(base_case_res,Table1_case_res)
 grid.table(temp3)
 ```
 ```{marginfigure}
-**Table 4.9**: Impact of a Forced Change in Tables
+**Table 4.10**: Impact of a Forced Change in Tables
 ```
 As we expected, the forced change of making one additional table resulted in a decrease of the overall profit from  $\$4800$ to  $\$4876$. This occurred because making one table meant that we had fewer of the precious, limited resources. \vspace{12pt}
 
 This meant that the number of chairs and desks were changed resulting lower profit even though a table is on its own profitable.
 
-## Evaluating a New Product Design with Shadow Prices
+* Evaluating a New Product Design with Shadow Prices *
 
 Let's consider a design proposal for a bookcase. The bookcase has a projected profit of $\$35$ each and uses 6 hours of fabrication time, 12 of assembly, and 16 of machining. It uses 80 square feet of wood.
 
@@ -390,7 +391,7 @@ Let's consider a design proposal for a bookcase. The bookcase has a projected pr
 bookcase_res_used<-cbind(rduals1,c(6,12,16,80,0))
 colnames(bookcase_res_used)<-c("Row Duals", 
                                "Resources Used")
-grid.table(bookcase_res_used)
+grid.table(format(bookcase_res_used,digits=4))
 ```
 ```{marginfigure}
 **Table 4.10**: Resources Used by a Bookcase and their Shadow Prices
@@ -401,7 +402,9 @@ Even without adding it to the model, we can check to see if it is worthwhile to 
 We could interpret this as a simple hard stop on the decision to produce bookcases but we could go one step further by setting a target for redesigning the product or its production.  If the machining time could be reduced by 4.5 hours to 11.5 hours, then the value of the resources consumed would be equal to the profit and we would be indifferent to producing some bookcases. 
 \vspace{12pt}
 
-##Exercises 
+
+## Exercises 
+
 
 ```{exercise, name="Adding Frames"}
 ```
