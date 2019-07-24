@@ -215,8 +215,18 @@ pander(rbind(acme_res_lp,acme_res_ip),
        caption="Production Plan-Continuous vs. Integer")
 ```
 
+```{r Fig-LP_Feasible_Region, echo=FALSE, fig.margin=TRUE, }
+knitr::include_graphics("images/Fig06-1-LP_Feasible_Region.PNG")
+
+```
+
 Simply rounding down did not yield an optimal solution.
 Notice that production of product 1 went down while product 2 went up.  The net impact was a profit reduction of almost _10%_.
+
+```{r Fig-IP_Feasible_Region, echo=FALSE, fig.margin=TRUE, }
+knitr::include_graphics("images/Fig06-2-IP_Feasible.PNG")
+
+```
 
 ## The Branch and Bound Algorithm
 
@@ -255,6 +265,10 @@ pander(acme_res_lp,
        on the LP Relaxation")
 ```
 
+```{r Fig-LP_Relaxation, echo=FALSE, fig.margin=TRUE, }
+knitr::include_graphics("images/Fig06-3-LP_Relaxation.PNG")
+
+```
 *Subproblem I*
 
 Alas, this production plan from the LP Relaxation is not feasible from the perspective of the original integer problem because it produces _2.769_ of  product 1 and _1.827_ of product 2.  If both of these variables had been integer we could have declared victory and been satisfied that we had easily (*luckily?*) found the optimal solution to the original integer programming problem so quickly.
@@ -296,9 +310,19 @@ rownames(LPSubI_res) <- ""
 pander(LPSubI_res,
        caption="Production Plan based on Subproblem I")
 ```
+```{r Fig-Subproblem_I, echo=FALSE, fig.margin=TRUE, }
+knitr::include_graphics("images/Fig06-4-Subproblem_I.PNG")
+
+```
 
 Looking over the results, we now get an integer value for $x_1$ but not for $x_2$. We repeat the same process by creating subproblems from subproblem I by branching off of $x_2$.  
 \vspace{12pt}
+
+```{r Fig-Subproblem_Ia, echo=FALSE, fig.margin=TRUE, }
+knitr::include_graphics("images/Fig06-5-Subproblem_Ia.PNG")
+
+```
+
 *Subproblem III*
 
 Choosing which subproblem to examine next is one of the areas that large scale integer programming software and algorithms specialize and provide options. One way to think of it is to focus on searching down a branch and bound tree deeply or to search across the breadth of the tree.  For this example, let's go deep (we'll return to subproblem II later.)  
@@ -324,6 +348,11 @@ LPSubIII_res  <- cbind(x1,x2,obj_val)
 rownames(LPSubIII_res) <- ""
 pander(LPSubIII_res,
        caption="Production Plan based on Subproblem III")
+```
+
+```{r Fig-Subproblem_III_and_II, echo=FALSE, fig.margin=TRUE, }
+knitr::include_graphics("images/Fig06-5-Subproblem_III_and_II.PNG")
+
 ```
 
 This results in integer values for both $x_1$ and $x_2$ so it is feasible with respect to integrality in addition to the production constraints.  It does generate less profit than the LP relaxation.  While it is feasible, it doesn't prove that it is optimal though.  We need to explore the other potential branches.  
@@ -413,6 +442,11 @@ rownames(BandB) <- list("LP Relaxation", "Subproblem I",
                         "Subproblem III", "Subproblem IV", 
                         "Subproblem II")
 pander(BandB, caption="Branch and Bound's Sequence of LPs")
+```
+
+```{r Fig-B_and_B_Summary, echo=FALSE, fig.margin=TRUE, }
+knitr::include_graphics("images/Fig06-6-B_and_B_Summary.PNG")
+
 ```
 
 ## Computational Complexity of Integer Programming
