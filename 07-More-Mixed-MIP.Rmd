@@ -22,7 +22,7 @@ output:
 ```{r setup_chapter7, echo=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = F)
-#knitr::opts_chunk$set(cache = TRUE)
+knitr::opts_chunk$set(cache = TRUE)
 library (tufte)
 library (pander)
 suppressPackageStartupMessages(library (tint, quietly = TRUE))
@@ -205,7 +205,7 @@ Note that I have modified the variables names for _x_ and _y_ to be `Vx` and `Vy
 
 Note that I have modified the variables names for _x_ and _y_ to be `Vx` and `Vy` in the code chunk to remove confusion over x and y representing location or variables.  The prefix of `V` is meant to suggest that it is a variable.
 
-```{r Build_Warehous_Model, message=FALSE}
+```{r Build_Warehouse_Model, message=FALSE}
 library(ompr)
 library(magrittr)
 model <- MIPModel() %>%
@@ -255,7 +255,7 @@ result <- solve_model(model, with_ROI(solver = "glpk",
 We can summarize the information by simply extracting a the objective function value.  This can be done with inline R code.  For example, we can say the following.
 \vspace{12pt}
 
-We solved the problem with an objective value of `r sprintf("%d", objective_value(result))`.
+We solved the problem with an objective value of `r sprintf("%d", ompr::objective_value(result))`.
 \vspace{12pt}
 
 With 2020 variables, it isn't always terribly useful to just list out all of the variables.
@@ -311,7 +311,8 @@ Notice that in the table of raw results, the first six entries (obtained using t
 
 ```{r processed_results_table}
 pander(head( matching), 
-       caption="Subset of Some Customers (i) Assigned to Warehouses (j)")
+       caption=
+   "Subset of Customers (i) Assigned to Warehouses (j)")
 ```
 
 ```{marginfigure}
@@ -332,7 +333,8 @@ plot_assignment <- matching %>%
   inner_join(customer_locations, by = c("i" = "id")) %>% 
   inner_join(warehouse_locations, by = c("j" = "id"))
 pander (head(plot_assignment), 
-        caption="XY coordinates to draw Customer-Warehouse Routes")
+        caption=
+      "XY coordinates to draw Customer-Warehouse Routes")
 ```
 
 Notice that this gives the beginning and ending coordinates of what will soon be lines to show the connections between customers and warehouses.
@@ -347,7 +349,7 @@ customer_count <- matching %>%
   summarise(n = n()) %>%  # Summarize count
   rename(id = j)          # Rename column from j to id
 pander (customer_count, caption=
-          "Count of customers assigned to each operating warehouse")
+  "Count of customers assigned to each operating warehouse")
 ```
 
 We can see that warehouse 17 has the most customers but that the two warehouses are pretty evenly balanced.
@@ -384,7 +386,7 @@ Light red are unused warehouse locations.
 Lines connect customers to their assigned warehouses.")
 ```
 
-The total fixed costs for setting up the `r n_distinct(matching$j)` warehouses is:
+The total fixed costs for setting up the `r dplyr::n_distinct(matching$j)` warehouses is:
 
 ```{r Add_up_Fixed_Costs_of_Used_Warehous}
 sum(fixedcost[unique(matching$j)])
@@ -674,11 +676,29 @@ ggplot(pkg_dl_data, aes(end, downloads, group=package,
 
 ## Solving Sudoku Puzzles using Optimization
 
-After spending a significant amount of time for a serious industrial application of warehouse optimization, let's take a break with a more lighthearted application.  Again, this is based on an article by Dirk Schumacher.    \vspace{12pt}
+> Do you want to play a game?
+
+```{r, echo=FALSE}
+library(sudokuAlt)
+set.seed(1234)
+game1<-makeGame()
+```
+
+```{r First_Sudoku, echo=FALSE, fig.margin=TRUE, fig.height=4}
+plot(game1)
+```
+
+After spending a significant amount of time and CPU cycles on a serious topic of warehouse optimization, let's take a break with a more lighthearted application of the classic Sudoku puzzle game. Feel free to work on this Sudoku puzzle. For those unfamiliar with Sudkoku, the core idea is to use every digit from 1-9 once in each column, once in each row, and once in each 3x3 cluster.  
+\vspace{12pt}
+
+The optimization approach will give you the opportunity to solve this or any other Sudoku model. This section is based on an article by Dirk Schumacher and helper functions from the 'sudokuAlt' package from Bill Venables, one of the Godfathers of R.  Let's start with Dirk's explanation, with permission, of the model.  \vspace{12pt}
+
 > In this vignette we will solve Sudoku puzzles using MILP. [Sudoku](https://en.wikipedia.org/wiki/Sudoku) in its most popular form is a constraint satisfaction problem and by setting the objective function to $0$ you transform the optimization problem into a pure constraint satistication problem. In this document we will consider Sudokus in a 9x9 grid with 3x3 sub-matrices.  
+
 > Of course you can formulate an objective function as well that directs the solver towards solutions maximizing a certain linear function.  
 
 > The idea is to introduce a binary variable $x$ with three indexes $i, j, k$ that is $1$ if and only if the number $k$ is in cell $i, j$.  
+
 
   \vspace{12pt}
 The basic optimization formulation is interesting for a few reasons.    \vspace{12pt}
@@ -687,7 +707,7 @@ First, there isn't a clear objective function.  We are simply trying to find a a
 \vspace{12pt}
 
 We need a constraint to ensure that each cell $(i,j)$ contains a value. 
-```{marginfigure marginsudoku_const1}
+```{marginfigure marginsudoku_const1, echo=TRUE}
 $$\sum\limits_{k=1}^{9}   x_{i,j,k} = 1, \; \forall i,j$$
 ```
 
@@ -850,6 +870,12 @@ Solution_specific <- Sudoku_result_specific %>%
 Solution_specific   # Display solution to Sudoku Puzzle
 ```
 
+Now, let's try printing it nicely using the `sudokuAlt` package from Bill Venables, available from CRAN.
+
+```{r printing_sudoku_solution_margin, echo=TRUE, fig.margin=TRUE, fig.height=4}
+plot(as.sudoku(as.matrix(Solution_specific, colGame="grey")))
+```
+
 Have at it.  Any Sudoku puzzle can be solved using this model as long as there is a feasible solution.  Note that if there are two or more solutions to the puzzle based on the hints, this model will find one of them and does not indicate whether there might be other solutions.
 \vspace{12pt}
 
@@ -906,20 +932,29 @@ Extend the warehouse customer assignment problem to have each warehouse that is 
 \vspace{12pt}
 
 This problem size should not be be run on a cloud or remote server without full understanding of load implications.
-
-##Exercise: Warehouse-Max and Min Customers-Big
+```{exercise, name="Warehouse-Max and Min Customers-Big"}
+```
 
 Extend the warehouse customer assignment problem to have each warehouse that is built be assigned a maximum of 40 customers and a minimum of 15 customers.  Compare the solution to that obtained earlier.  Ensure that your data for customers and warehouses is the same for the two cases.
 \vspace{12pt}
 
 This problem size should not be be run on a cloud or remote server without full understanding of load implications.
+\vspace{12pt}
 
-##Exercise: Warehouse-Simulating Customers - Big
+```{exercise, name="Warehouse-Simulating Customers - Big"}
+```
 
 Run the analysis for the warehouse optimization model 20 times and plot the results in terms of number of warehouses used and the total cost. Discuss and interpret the results.
 \vspace{12pt}
 
 Note that this will be **computationally intensive** and should not be done on the cloud.  Doing it on a personal computer may require on the order of five minutes of processing time.
+
+\vspace{12pt}
+ 
+```{exercise, name="Sudoku-Bottom Row"}
+```
+
+Solve the Sudoku puzzle from the beginning of this section using R.  
 
 \vspace{12pt}
  
@@ -947,25 +982,39 @@ Solve a Sudoku model using optimization where the center 3x3 cluster is made up 
 ```{exercise, name="Find a Sudoku to Solve"}
 ```
 
-Find Sudkoku puzzle from a newspaper or elsewhere and solve it using optimization.  
+Find a Sudoku puzzle from a newspaper or elsewhere and solve it using optimization.  
+\vspace{12pt}
 
+```{exercise, name="Solve a Specific Sudoku"}
+```
+
+Solve the Sudoku problem from the beginning of this section. 
+
+```{marginfigure First_Sudoku-exercise, echo=TRUE, fig.margin=TRUE, fig.height=4}
+plot(game1)
+```
 \vspace{12pt}
  
 ```{exercise, name="Sudoku-Multiple Optima"}
 ```
 
-**Challenge:**  Sudoku puzzles are often created with the intention of having a single solution since the approaches people use to solve them are based on incrementally reasoning out what values each cell must contain.  The result is that the ambiguity of multiple optima may cause problems for people to solve.  While the optimization model can solve these without difficulty, it is only going to find one, arbitrary solution. Simply resolving is likely to give you the same solution even when there are multiple optima.  Consider variations of the above model that would allow you to easily find if there are multiple optimal solutions.
+**Challenge:**  Sudoku puzzles are often created with the intention of having a single solution since the approaches people use to solve them are based on incrementally reasoning out what values each cell must contain.  The result is that the ambiguity of multiple optima may cause problems for people to solve.  While the optimization model can solve these without difficulty, it is only going to find one, arbitrary solution. Simply resolving is likely to give you the same solution even when there are multiple optima.  Consider variations and apply them to find multiple solutions to a problem.  For an example of one with multiple optimal solutions, the most extreme case would be starting with a blank board.
 
 \vspace{12pt}
  
 ```{exercise, name="Sudoku-Infeasible"}
 ```
 
-**Challenge:**  A Sudoku puzzle with only a small numbers shown can be infeasible even though it does not contain any obvious violation of repeated digits.  People building Sudoku puzzles need to ensure that every puzzle is solveable or risk having frustrated customers.  Add a digit one at a time to an existing Sudoku puzzle board that does not immediately violate the repeated digits requirement, test for a valid solution, and repeat, until the Sudkoku game board becomes infeasible.  
+**Challenge:**  A Sudoku puzzle with only a small numbers shown can be infeasible even though it does not contain any obvious violation of repeated digits.  People building Sudoku puzzles need to ensure that every puzzle is solveable or risk having frustrated customers.  Add a digit one at a time to an existing Sudoku puzzle board that does not immediately violate the repeated digits requirement, test for a valid solution, and repeat, until the Sudoku game board becomes infeasible.  
 
 \vspace{12pt}
  
-```{exercise, name="Sudoku-Hexadecimal"}
+```{exercise, name="Sudoku-4x4"}
 ```
 
-**Ultra-Challenge:**  Modify the above formulation for Sudoku to allow for 16 4x4 grids. Use the digits 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, and F. Solve a sample game board with just the digits in order across the top row.
+**Ultra-Challenge:**  Solver the 16 letter Sudoku puzzle using R.  It consists of 4x4 grids and uses the letters starting with A in place of numbers. 
+
+```{r sudoku_exercise_4x4, fig.margin=TRUE, echo=FALSE, fig.height=4}
+set.seed(1234); plot(makeGame(n=4))
+```
+

@@ -449,7 +449,7 @@ knitr::include_graphics("images/Fig06-6-B_and_B_Summary.PNG")
 
 ```
 
-## Computational Complexity of Integer Programming
+## Computational Complexity
 
 As for computational complexity, this was a small problem with only two integer variables but it still required solving the LP Relaxation and four separate LP subproblems for a total of five linear programs in all.  As the number of variables and constraints increases, so do the number of LPs needed to typically find a solution using branch and bound.  Small and medium size problems can generally be solved quickly but worst case scenarios have a combinatorial explosion.  
 \vspace{12pt}
@@ -471,7 +471,7 @@ One option to deal with long solving times is to set early termination condition
 
 In practice, even small suboptimality tolerance factors like 1% can allow big problems to be solved quickly and are often well within the margin of error for model data. In other cases, organizations may be interested in finding *any* feasible solution to large, vexing problems.  
 ```{marginfigure}
-Note that our Acme example only specified digits of accuracy for resource usage and may have only digit of accuracy for profitability per product.
+Note that our Acme example only specified two digits of accuracy for resource usage and may have only one digit of accuracy for profitability per product.
 ```
 
 \vspace{12pt}
@@ -501,9 +501,12 @@ Let's explore the impact of binary restrictions with another example.  The world
 The key data is described as follows.  NPV is Net Present Value of the project factoring in costs.  _Inv_ is the capital expenditures or investment required for each project. The company has $40 Billion in capital available to fund a portfolio of projects.  Let's set up the data as matrices in R.  
 
 ```{r capital_budgeting_data}
-I <- matrix(c(12,24,20,8, 16),ncol=1,dimnames=list(LETTERS[1:5],"Inv"))
-N <- matrix(c(2.0, 3.6, 3.2, 1.6, 2.8), ncol=1,dimnames=list(LETTERS[1:5],"NPV"))
-pander (cbind(I,N), caption="Data for the Outtel In-Class Exercise")
+I <- matrix(c(12,24,20,8, 16), ncol=1, 
+            dimnames=list(LETTERS[1:5],"Inv"))
+N <- matrix(c(2.0, 3.6, 3.2, 1.6, 2.8), ncol=1,
+            dimnames=list(LETTERS[1:5],"NPV"))
+pander (cbind(I,N), 
+        caption="Data for the Outtel Example")
 ```
 
 These projects all carry their own expenses and engineering support. There are limits to both the capital investment and engineering resources available. To start, consider all of these project to be independent.
@@ -947,7 +950,8 @@ fc_bigM_res.tot <- data.frame(c(sum(fc_bigM_res.r1),
                                 sum(fc_bigM_res.r4)))
                #sum each step
 colnames(fc_bigM_res.tot) <- "Total Used"
-fc_bigM_res.avail <- data.frame(c("1000","2000","1000","1500"))
+fc_bigM_res.avail <- data.frame(
+  c("1000","2000","1000","1500"))
                #print available hours for each step
 colnames(fc_bigM_res.avail) <- "Available"
 pander(cbind(rbind(fc_bigM_res.r1,fc_bigM_res.r2,
