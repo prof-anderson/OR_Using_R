@@ -42,7 +42,7 @@ This chapter consists of a collection of rich MILP  models that can be used for 
 
 ## Revisiting the Warehouse Location Problem
 
-Let's start by reviewing Dirk's original description of the warehous location problem.  
+Let's start by reviewing Dirk's original description of the warehouse location problem.  
 
 > In this article we will look at the [Warehouse Location Problem](https://en.wikipedia.org/wiki/Facility_location_problem). Given a set of customers and set of locations to build warehouses, the task is to decide where to build warehouses and from what warehouses goods should be shipped to which customer. 
   
@@ -52,7 +52,7 @@ Let's start by reviewing Dirk's original description of the warehous location pr
 \vspace{12pt}
 > As a practical example: you run the logistics for an NGO and want to regularly distribute goods to people in need. You identified a set of possible locations to set up your distribution hubs, but you are not sure where to build them. Then such a model might help. In practice however you might need to incorporate additional constraints into the model.
 
-Let's start by defining the decision variables.  Each possible location of a warehouse, $j$ can have a warehouse be built or not be built.  We will use $y_j=1$ to indicate that warehouse $j$ is built.  Conversely, $y_j=0$ indicates that we are not building a warehouse at location $j$.  Since a warehous is either built or not built, a binary variable is appropriate for $y_j$.
+Let's start by defining the decision variables.  Each possible location of a warehouse, $j$ can have a warehouse be built or not be built.  We will use $y_j=1$ to indicate that warehouse $j$ is built.  Conversely, $y_j=0$ indicates that we are not building a warehouse at location $j$.  Since a warehouse is either built or not built, a binary variable is appropriate for $y_j$.
 \vspace{12pt}
 
 Similarly, the variable $x_{i,j}$ is the decision of assigning customer $i$ to warehouse $j$.  It also needs to be a binary variable since partial assignments are not allowed.  Therefore, $x_{3,7}=1$ means that customer _3_ is assigned to warehouse _j_ and we would expect $x_{3,8}=0$ since a customer can't be assigned to two warehouses.
@@ -149,7 +149,7 @@ fixedcost <- round(rnorm(m, mean = grid_size * 10,
 
 The fixed costs to set up a warehouse are the following:
 
-```{r Fixedcost-histogram, fig.margin=TRUE}
+```{r Fixedcost-histogram, fig.margin=TRUE, fig.height=3}
 hist(fixedcost, main="Fixed Costs of Warehouses", 
      xlab="Cost")
 ```
@@ -263,7 +263,6 @@ With 2020 variables, it isn't always terribly useful to just list out all of the
 
 At this point, we are really interested in the small minority of non-zero variables.  Only 5% of the _x_ variables are not zero. 
 \vspace{12pt}
-
 
 ```{marginfigure}
 **Challenge**: Do you know why about 5% of the decision variables are non-zero?)
@@ -633,7 +632,7 @@ ggplot(pkg_dl_data, aes(end, downloads, group=package, color=package)) +
 Many of these packages are being used directly in other packages. While we can't see which packages are being specifically used most often for `ompr`, we can see which ROI plugins are downloaded most often which is probably a good proxy.    
 \vspace{12pt}
 
-We will focus our attention on the ROI packages that emphasize linear programming. This means dropping packages such as `ROI.plugin.nloptr`, `ROI.plugin.qpOASES`, and `ROI.plugin.quadprog`. Also, propreitary packages that are not available on CRAN such as GUROBI and XPress, are not included.  \vspace{12pt}
+We will focus our attention on the ROI packages that emphasize linear programming. This means dropping packages such as `ROI.plugin.nloptr`, `ROI.plugin.qpOASES`, and `ROI.plugin.quadprog`. Also, proprietary packages that are not available on CRAN such as GUROBI and XPress, are not included.  \vspace{12pt}
 
 ```{r ROI_Package_Stats, echo=FALSE, fig.width=10, fig.height=6, fig.fullwidth=TRUE}
 
@@ -645,7 +644,7 @@ pkg_dl_data <- cran_stats(packages = ROI_packages)
 
 ggplot(pkg_dl_data, aes(end, downloads, group=package, 
                         color=package)) +
-    geom_line() + geom_point(aes(shape=package)) + 
+    geom_line() + 
     labs(title = "Monthly Downloads of ROI Linear Programming Packages",
        subtitle = "Wide choice of ROI LP packages",
        caption = "Source: CRAN", 
@@ -676,7 +675,8 @@ ggplot(pkg_dl_data, aes(end, downloads, group=package,
 
 ## Solving Sudoku Puzzles using Optimization
 
-> Do you want to play a game?
+> Would you like to play a game?
+> `r tufte::quote_footer('--- Joshua (Wargames-1983)')`
 
 ```{r, echo=FALSE}
 library(sudokuAlt)
@@ -990,7 +990,7 @@ Find a Sudoku puzzle from a newspaper or elsewhere and solve it using optimizati
 
 Solve the Sudoku problem from the beginning of this section. 
 
-```{marginfigure First_Sudoku-exercise, echo=TRUE, fig.margin=TRUE, fig.height=4}
+```{r First_Sudoku-exercise, echo=TRUE, fig.margin=TRUE, fig.height=4}
 plot(game1)
 ```
 \vspace{12pt}
