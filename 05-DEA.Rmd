@@ -291,7 +291,7 @@ colnames(results.efficiency) <- c("CCR-IO")
 results.lambda <- t(omprlambda[3])
    # Takes third column from results and transposes results
    #  to be structured correctly for later viewing
-colnames(results.lambda) <- c("L_A", "L_B", "L_C", "L_D")
+colnames(results.lambda) <- c("$\\lambda_A$", "$\\lambda_B$", "$\\lambda_C$", "$\\lambda_D$")
 pander(cbind(results.efficiency, results.lambda), 
        caption="Input-Oriented Envelopment Analysis for DMU B (CCR-IO)")
 ```
@@ -326,7 +326,7 @@ results.efficiency <- t(omprtheta)
 colnames(results.efficiency) <- c("CCR-IO")
 results.lambda <- t(omprlambda[3])
 
-colnames(results.lambda) <- c("L_A", "L_B", "L_C", "L_D")
+colnames(results.lambda) <- c("$\\lambda_A$", "$\\lambda_B$", "$\\lambda_C$", "$\\lambda_D$")
 pander(cbind(results.efficiency, results.lambda), 
        caption=
          "Input-Oriented Envelopment Analysis for DMU A")
@@ -372,7 +372,7 @@ for (k in 1:ND) {
 Success!  This indicates each of the four linear programs was solved to optimality.  By itself, it doesn't help much though.  We need to now display each column of results. Lambda, $\lambda$, reflects the way that a best target is made for that unit.
 
 ```{r Display_Envelopment_Results}
-Lambdanames <- list("L_A", "L_B", "L_C", "L_D")
+Lambdanames <- list("$\\lambda_A$", "$\\lambda_B$", "$\\lambda_C$", "$\\lambda_D$")
 DMUnames <- list("A", "B", "C", "D")
 dimnames(results.efficiency)<-list(DMUnames,"CCR-IO")
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
@@ -431,7 +431,7 @@ result <- solve_model(result, with_ROI (solver = "glpk"))
     results.lambda[k,] <- t(as.matrix(as.numeric(
               get_solution(result, vlambda[j])[,3] )))
 }  # Repeat for each unit, k
-Lambdanames <- list("L_A", "L_B", "L_C", "L_D")
+Lambdanames <- list("$\\lambda_A$", "$\\lambda_B$", "$\\lambda_C$", "$\\lambda_D$")
 DMUnames <- list("A", "B", "C", "D")
 dimnames(results.efficiency)<-list(DMUnames,"BCC-IO")
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
@@ -484,7 +484,7 @@ result <- solve_model(result, with_ROI(solver = "glpk"))
     results.lambda[k,] <- t(as.matrix(as.numeric(
               get_solution(result, vlambda[j])[,3] )))
 }
-Lambdanames <- list("L_A", "L_B", "L_C", "L_D")
+Lambdanames <- list("$\\lambda_A$", "$\\lambda_B$", "$\\lambda_C$", "$\\lambda_D$")
 DMUnames <- list("A", "B", "C", "D")
 dimnames(results.efficiency)<-list(DMUnames,"BCC-IO")
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
@@ -543,8 +543,8 @@ Vnames      <- lapply(list(rep("v",NX)),paste0,1:NX)
 Unames      <- lapply(list(rep("u",NY)),paste0,1:NY)
 SXnames     <- lapply(list(rep("sx",NX)),paste0,1:NX)
 SYnames     <- lapply(list(rep("sy",NY)),paste0,1:NY)
-Lambdanames <- lapply(list(rep("L_",ND)),
-                      paste0,LETTERS[1:ND])
+Lambdanames <- lapply(list(rep("$\\lambda_",ND)),
+                      paste0,lapply(LETTERS[1:ND],paste0,"$"))
   
 dimnames(xdata)              <- c(DMUnames,Xnames)
 dimnames(ydata)              <- c(DMUnames,Ynames)
@@ -828,7 +828,7 @@ rownames(res.efficiency)<-c("A", "B", "C", "D", "E", "F")
 pander(cbind(res.efficiency,xdata,ydata,res.lambda), 
        round=5, caption="Input-oriented Efficiency Results")
 ```
-The rightmost columns, denoted by "L_" are the resulting lambda values.  
+<!--The rightmost columns, denoted by "L_" are the resulting lambda values.  -->
 
 ## Further Reading
 This section covers the second chapter of the book and introduces DEA and R working through a model and looping through a series of analyses.  The interested reader is referred to the book *DEA Using R* for more information on DEA.  In particular, chapters covers topics such as:
