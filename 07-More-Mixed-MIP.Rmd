@@ -25,6 +25,19 @@ knitr::opts_chunk$set(tidy = F)
 knitr::opts_chunk$set(cache = TRUE)
 library (tufte)
 library (pander)
+library (tidyr)
+library (ggplot2)
+library (ggrepel)
+library(ompr)
+library(magrittr)
+library(ompr.roi)
+library(ROI.plugin.glpk)
+library (tictoc, quietly = TRUE) 
+library (ROI.plugin.lpsolve, quietly = TRUE) 
+library("ggplot2")
+library("dlstats")
+library(sudokuAlt)
+suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library (tint, quietly = TRUE))
     # Loading this last masks margin_note, newthought,
     #    quote_footer, sans_serif from the tufte package.
@@ -182,7 +195,6 @@ pander(head(customer_locations),
 A table of the randomly generated locations is not terribly helpful for understanding the locations of customers or warehouses though. Let's instead build a map by plotting both customers and warehouses together. Black dots are customers and red dots are possible warehouse locations.
 
 ```{r Plot_Map_of_Customers_and_Warehouses}
-library(ggplot2)
 p <- ggplot(customer_locations, aes(x, y)) + 
   geom_point() + 
   geom_point(data = warehouse_locations, color = "red", 
@@ -206,8 +218,6 @@ Note that I have modified the variables names for _x_ and _y_ to be `Vx` and `Vy
 Note that I have modified the variables names for _x_ and _y_ to be `Vx` and `Vy` in the code chunk to remove confusion over x and y representing location or variables.  The prefix of `V` is meant to suggest that it is a variable.
 
 ```{r Build_Warehouse_Model, message=FALSE}
-library(ompr)
-library(magrittr)
 model <- MIPModel() %>%
   # 1 iff i gets assigned to warehouse j
   add_variable(Vx[i, j], i=1:n, j=1:m, type="binary") %>%
@@ -246,8 +256,6 @@ So far, you are unlikely to have noticed an optimization problem cause a visible
 In summary, non-trivial MIP models should be run locally on a computer unless you are certain that your computational loads will not cause a problem for yourself or others.  
 
 ```{r warehouse_glpk_solving}
-library(ompr.roi)
-library(ROI.plugin.glpk)
 result <- solve_model(model, with_ROI(solver = "glpk", 
                                       verbose = TRUE))
 ```
@@ -270,18 +278,11 @@ At this point, we are really interested in the small minority of non-zero variab
 We can do some processing to extract the non-zero _x_ (or `Vx`) variables from those with zero values. In order to do so, Dirk uses the `dplyr` package. This package provides a tremendous number of functions for data management. To illustrate how this is done, let's review line by line how this code chunk works.
 
 ```{r warehouse_parsing_results}
-suppressPackageStartupMessages(library(dplyr))
 matching <- result %>% 
   get_solution(Vx[i,j]) %>%
   filter(value > .9) %>%  
   select(i, j)
 ```
-
-The first line wraps the loading of the library in a function that strips out a lot of messages upon loading that we don't need to worry about for now.[^suppress]
-\vspace{12pt}
-
-[^suppress]: This is a very handy function!  I will have to take note of this to use more oten.
-\vspace{12pt}
 
 The next command  `matching <- result %>%` does a few things. It uses the piping operator `%>%` to pass the `result` object into being used by the following command and then everything that gets done later in this piped sequence will be assigned to `matching`.
 \vspace{12pt}
@@ -478,8 +479,6 @@ Let's move on to testing the `symphony` solver.
 
 ```{r timesymphony, cache=TRUE }
 
-library (ROI.plugin.symphony, quietly = TRUE) 
- 
 tic("symphony")
 
 result_symphony <-  solve_model(
@@ -543,8 +542,6 @@ Thirdly, the time on my computer sometimes took less time to solve to optimality
 The `lpsolve` package has a long history too and is widely used.  Let's test it and see how it performs.
 
 ```{r timelpsolve, cache=TRUE}
-library (ROI.plugin.lpsolve, quietly = TRUE) 
-
 tic("lpsolve")
 
 result_lpsolve <-  solve_model(
@@ -610,9 +607,6 @@ Let's take another look at comparing solvers by examining their popularity. More
 
 ```{r lp_package_download_stats, echo=FALSE, fig.width=10, fig.height=6, fig.fullwidth=TRUE}
 
-library("ggplot2")
-library("dlstats")
-
 optim_packages <- c("alabama",  "DEoptim",  "Rglpk", 
                   "lpSolve", "clpAPI",
                   "scs", "Rsymphony", 
@@ -657,9 +651,6 @@ It is interesting to see that the symphony and glpk ROI plugins were relatively 
 Let's close this with examining the popularity of `ompr` itself.   
 
 ```{r package_download_stats, fig.width=10, fig.height=6, fig.fullwidth=TRUE}
-
-library("ggplot2")
-library("dlstats")
 
 pkg_dl_data <- cran_stats(packages = c("ompr"))
 
@@ -990,7 +981,7 @@ Find a Sudoku puzzle from a newspaper or elsewhere and solve it using optimizati
 
 Solve the Sudoku problem from the beginning of this section. 
 
-```{r First_Sudoku-exercise, echo=TRUE, fig.margin=TRUE, fig.height=4}
+```{r First_Sudoku-exercise, echo=FALSE, fig.margin=TRUE, fig.height=4}
 plot(game1)
 ```
 \vspace{12pt}

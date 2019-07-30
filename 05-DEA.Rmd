@@ -291,9 +291,10 @@ colnames(results.efficiency) <- c("CCR-IO")
 results.lambda <- t(omprlambda[3])
    # Takes third column from results and transposes results
    #  to be structured correctly for later viewing
-colnames(results.lambda) <- c("$\\lambda_A$", "$\\lambda_B$", "$\\lambda_C$", "$\\lambda_D$")
+colnames(results.lambda) <- c("$\\lambda_A$", "$\\lambda_B$", 
+                              "$\\lambda_C$", "$\\lambda_D$")
 pander(cbind(results.efficiency, results.lambda), 
-       caption="Input-Oriented Envelopment Analysis for DMU B (CCR-IO)")
+ caption="Input-Oriented Envelopment Analysis for DMU B (CCR-IO)")
 ```
 
 The above table follows a few convenient conventions.  First, rather than using $\theta$, we label the efficiency score by the model used for the model, in this case the constant returns to scale is labeled as CCR after Charnes, Cooper, and Rhodes.  Later we will cover other models including the variable returns to scale model, labeled BCC after Banker, Charnes, and Cooper. 
@@ -326,7 +327,8 @@ results.efficiency <- t(omprtheta)
 colnames(results.efficiency) <- c("CCR-IO")
 results.lambda <- t(omprlambda[3])
 
-colnames(results.lambda) <- c("$\\lambda_A$", "$\\lambda_B$", "$\\lambda_C$", "$\\lambda_D$")
+colnames(results.lambda) <- c("$\\lambda_A$", "$\\lambda_B$",
+                              "$\\lambda_C$", "$\\lambda_D$")
 pander(cbind(results.efficiency, results.lambda), 
        caption=
          "Input-Oriented Envelopment Analysis for DMU A")
@@ -372,7 +374,8 @@ for (k in 1:ND) {
 Success!  This indicates each of the four linear programs was solved to optimality.  By itself, it doesn't help much though.  We need to now display each column of results. Lambda, $\lambda$, reflects the way that a best target is made for that unit.
 
 ```{r Display_Envelopment_Results}
-Lambdanames <- list("$\\lambda_A$", "$\\lambda_B$", "$\\lambda_C$", "$\\lambda_D$")
+Lambdanames <- list("$\\lambda_A$", "$\\lambda_B$", 
+                    "$\\lambda_C$", "$\\lambda_D$")
 DMUnames <- list("A", "B", "C", "D")
 dimnames(results.efficiency)<-list(DMUnames,"CCR-IO")
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
@@ -431,7 +434,8 @@ result <- solve_model(result, with_ROI (solver = "glpk"))
     results.lambda[k,] <- t(as.matrix(as.numeric(
               get_solution(result, vlambda[j])[,3] )))
 }  # Repeat for each unit, k
-Lambdanames <- list("$\\lambda_A$", "$\\lambda_B$", "$\\lambda_C$", "$\\lambda_D$")
+Lambdanames <- list("$\\lambda_A$", "$\\lambda_B$", 
+                    "$\\lambda_C$", "$\\lambda_D$")
 DMUnames <- list("A", "B", "C", "D")
 dimnames(results.efficiency)<-list(DMUnames,"BCC-IO")
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
@@ -440,6 +444,14 @@ pander (cbind(results.efficiency, results.lambda),
 ```
 
 Notice that the efficiencies have generally increased or stayed the same.  Whereas earlier three out of four DMUs were inefficient, now three out of four are efficient.  Much more could be said about returns to scale.  One way of thinking of returns to scale is whether doubling the inputs should be expected to result in doubling the outputs that should be achieved.  Another way to think of it is whether it is fair to think of scaling up or down an efficient significantly to set a performance target for a much bigger or smaller unit.  For example, would it be _fair_ to compare a small convenience store such as 7-11 to a CostCo store scaled down by a factor of a 100?  
+```{r DEA_VRS_Frontier_Plot, fig.margin=TRUE, fig.height=4}
+library(Benchmarking, quietly=TRUE)
+dea.plot(x, y, RTS="vrs", ORIENTATION="in-out", 
+         txt=LETTERS[1:length(x)], 
+         add=FALSE, wx=NULL, wy=NULL, TRANSPOSE=FALSE, 
+         fex=1, GRID=TRUE, RANGE=FALSE, param=NULL)
+```
+
 \vspace{12pt}
 
 In addition to Constant Returns to Scale (CRS) and Variable Returns to Scale (VRS), two other common approaches are Increasing Returns to Scale (IRS) and Decreasing Returns to Scale (DRS).  Technically, IRS is sometimes more formally referred to as non-decreasing returns to scale.  Similarly, DRS corresponds to non-increasing returns to scale. 
@@ -484,7 +496,8 @@ result <- solve_model(result, with_ROI(solver = "glpk"))
     results.lambda[k,] <- t(as.matrix(as.numeric(
               get_solution(result, vlambda[j])[,3] )))
 }
-Lambdanames <- list("$\\lambda_A$", "$\\lambda_B$", "$\\lambda_C$", "$\\lambda_D$")
+Lambdanames <- list("$\\lambda_A$", "$\\lambda_B$", 
+                    "$\\lambda_C$", "$\\lambda_D$")
 DMUnames <- list("A", "B", "C", "D")
 dimnames(results.efficiency)<-list(DMUnames,"BCC-IO")
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)

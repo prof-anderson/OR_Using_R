@@ -18,7 +18,6 @@ output:
 
 \pagestyle{headings}
 
-
 ```{r setup, include=FALSE}
 library(tufte)
 library(tint)

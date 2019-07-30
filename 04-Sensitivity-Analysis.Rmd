@@ -31,6 +31,7 @@ library (ompr, quietly = TRUE)
 library (ompr.roi, quietly = TRUE)
 library (pander, quietly = TRUE)
 library (gridExtra)
+library (formatR)
 ```
 
 # Linear Programming Sensitivity Analysis

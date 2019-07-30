@@ -377,13 +377,8 @@ LPSubIV_res  <- cbind(x1,x2,obj_val)
 LPSubIV$status
 rownames(LPSubIV_res) <- ""
 pander(LPSubIV_res,
-<<<<<<< HEAD
        caption=
 "Infeasible Production Plan based on Subproblem IV")
-=======
-       caption="Acme's Infeasible Production Plan for LP 
-       Subproblem IV")
->>>>>>> 3a44340e616fabe638dd4a14697ad0106823d9c3
 ```
 
 At first glance, this looks okay but if you look more closely at the value of $x_2$, and the surfactant constraint, $x_1+3x_2\leq 9$, there isn't enough enough surfactant to make three units of the second product.  This means that by inspection we can see that this production plan is infeasible!  What is going on here?  
