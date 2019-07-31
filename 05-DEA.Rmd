@@ -291,10 +291,12 @@ colnames(results.efficiency) <- c("CCR-IO")
 results.lambda <- t(omprlambda[3])
    # Takes third column from results and transposes results
    #  to be structured correctly for later viewing
-colnames(results.lambda) <- c("$\\lambda_A$", "$\\lambda_B$", 
-                              "$\\lambda_C$", "$\\lambda_D$")
+colnames(results.lambda) <- 
+  c("$\\lambda_A$", "$\\lambda_B$",
+    "$\\lambda_C$", "$\\lambda_D$")
 pander(cbind(results.efficiency, results.lambda), 
- caption="Input-Oriented Envelopment Analysis for DMU B (CCR-IO)")
+ caption=
+   "Input-Oriented Envelopment Analysis for DMU B (CCR-IO)")
 ```
 
 The above table follows a few convenient conventions.  First, rather than using $\theta$, we label the efficiency score by the model used for the model, in this case the constant returns to scale is labeled as CCR after Charnes, Cooper, and Rhodes.  Later we will cover other models including the variable returns to scale model, labeled BCC after Banker, Charnes, and Cooper. 
@@ -443,7 +445,7 @@ pander (cbind(results.efficiency, results.lambda),
         caption="Input-Oriented VRS Envelopment Results")
 ```
 
-Notice that the efficiencies have generally increased or stayed the same.  Whereas earlier three out of four DMUs were inefficient, now three out of four are efficient.  Much more could be said about returns to scale.  One way of thinking of returns to scale is whether doubling the inputs should be expected to result in doubling the outputs that should be achieved.  Another way to think of it is whether it is fair to think of scaling up or down an efficient significantly to set a performance target for a much bigger or smaller unit.  For example, would it be _fair_ to compare a small convenience store such as 7-11 to a CostCo store scaled down by a factor of a 100?  
+Notice that the efficiencies have generally increased or stayed the same.  Whereas earlier three out of four DMUs were inefficient, now three out of four are efficient.  Much more could be said about returns to scale.  One way of thinking of returns to scale is whether doubling the inputs should be expected to result in doubling the outputs that should be achieved.  Another way to think of it is whether it is fair to think of scaling up or down an efficient significantly to set a performance target for a much bigger or smaller unit.  For example, would it be _fair_ to compare a small convenience store such as 7-11 to a CostCo store scaled down by a factor of a 100?
 ```{r DEA_VRS_Frontier_Plot, fig.margin=TRUE, fig.height=4}
 library(Benchmarking, quietly=TRUE)
 dea.plot(x, y, RTS="vrs", ORIENTATION="in-out", 
@@ -557,7 +559,8 @@ Unames      <- lapply(list(rep("u",NY)),paste0,1:NY)
 SXnames     <- lapply(list(rep("sx",NX)),paste0,1:NX)
 SYnames     <- lapply(list(rep("sy",NY)),paste0,1:NY)
 Lambdanames <- lapply(list(rep("$\\lambda_",ND)),
-                      paste0,lapply(LETTERS[1:ND],paste0,"$"))
+                      paste0,lapply(LETTERS[1:ND],
+                                    paste0,"$"))
   
 dimnames(xdata)              <- c(DMUnames,Xnames)
 dimnames(ydata)              <- c(DMUnames,Ynames)
