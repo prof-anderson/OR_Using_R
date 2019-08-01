@@ -598,7 +598,7 @@ res <- solve_model(modBakerCCR, with_ROI(solver = "glpk"))
     res.lambda[k,] <- t(as.matrix(as.numeric(
                      get_solution(res, vlambda[j])[,3] )))
 }
-pander (cbind(res.efficiency, results.lambda), 
+pander (cbind(res.efficiency, res.lambda), 
         caption="Results from Baker's Example (CRS)")
 BakerCCR.Res<-cbind(res.efficiency, res.lambda)
 ```
@@ -608,7 +608,7 @@ The efficiency scores match those reported in Baker, page 176, Figure 5.8. The c
 
 In contrast, some values of $\lambda$ warrant a more careful look, in particular, there may be very small positive or negative numbers. These numbers are due to computational issues in the linear programming solvers and should be interpreted as zero.  Rounding the results can make the tables easier for interpretation by the user. The pander packages makes it easy to round numbers to varying levels of precision.  
 
-```{r rounded-table}
+```{r rounded-table, fig.fullwidth = TRUE}
 pander (cbind(res.efficiency, res.lambda), round = 6, 
         caption="Results from Baker's Example (CRS) 
         with Rounded Values")
@@ -648,7 +648,7 @@ BakerBCC.Res<-cbind(res.efficiency, res.lambda)
 colnames(BakerBCC.Res)[1] <- "BCC-IO"
 ```
 
-```{r Compare_CRS_to_VRS}
+```{r Compare_CRS_to_VRS, fig.fullwidth = TRUE}
 pander(cbind(BakerCCR.Res[,1, drop=FALSE],
              BakerBCC.Res), round=6,
        caption=

@@ -19,9 +19,8 @@ bookdown::epub_book:
 bookdown::tufte_html_book:
   toc: yes
   highlight: tango
-  includes:
-    in_header: preamble.tex
   tufte_variant: "envisioned"
+  css: toc.css
 bookdown::tufte_book2:
   toc: yes
   highlight: tango
@@ -31,4 +30,9 @@ bookdown::render_book("index.Rmd"):
   toc: yes
   includes:
     in_header: preamble.tex
-
+msmbstyle::msmb_html_book:
+  toc: TRUE
+  toc_depth: 1
+  split_by: chapter
+  split_bib: no
+  margin_references: FALSE
