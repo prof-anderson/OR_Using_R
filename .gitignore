@@ -3,6 +3,7 @@
 .RData
 .Ruserdata
 _bookdown_files/
+docs/
 *.rds
 *.md
 *.log
