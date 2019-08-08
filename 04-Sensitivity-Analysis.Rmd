@@ -208,12 +208,12 @@ The shadow price on wood is zero (as was also the case for assembly hours).  Thi
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max:  }   & 20*Chairs+14*Desks+16*Tables \\
+    \text{Max:  }   & 20Chairs+14Desks+16Tables \\
     \text{s.t.} & \\
-        & 6*Chairs+2*Desks+4*Tables \leq 2000 \\
-        & 8*Chairs+6*Desks+4*Tables \leq 2000 \\
-        & 6*Chairs+4*Desks+8*Tables \leq 1440 \\
-        & 40*Chairs+25*Desks+16*Tables \leq 19600 \\
+        & 6Chairs+2Desks+4Tables \leq 2000 \\
+        & 8Chairs+6Desks+4Tables \leq 2000 \\
+        & 6Chairs+4Desks+8Tables \leq 1440 \\
+        & 40Chairs+25Desks+16Tables \leq 19600 \\
         & Tables \leq 200 \\
         & Chairs,  \; Desks, \; Tables \geq 0  
   \end{aligned}
