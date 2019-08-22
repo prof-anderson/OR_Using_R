@@ -272,8 +272,8 @@ grid.table(temp2)
 Grabbing the third column is not terribly interesting but operations such as this will often be quite useful.
 
 ```{r Bottom_Right_Element,fig.margin=TRUE}
-temp4 <- as.matrix(b[2,4]) 
-grid.table(temp4)
+temp3 <- as.matrix(b[2,4]) 
+grid.table(temp3)
 ```
 ```{marginfigure}
 **Table 1.7**: Last Element of b
@@ -308,8 +308,8 @@ grid.table(e)
 We could combine all of matrix `b` and matrix `c` together using row binding or column binding. Table 1.10 will bind using columns.
 \vspace{12pt}
 ```{r Row_and_Column_Binding,fig.margin=TRUE}
-temp5<- cbind(b,c)
-grid.table(temp5)
+temp4<- cbind(b,c)
+grid.table(temp4)
 ```
 ```{marginfigure}
 **Table 1.10**: Column Binding of Matrices b and c
@@ -317,10 +317,9 @@ grid.table(temp5)
 
 \vspace{12pt}
 And Table 1.11 will use rows as bidding condition.
-pander(rbind(b,c), caption="Row Binding of Matrices b and c")
+
 ```{r Row_and_Column_Binding2,fig.margin=TRUE}
-temp6 <- rbind(b,c)
-grid.table(temp6)
+temp5 <- rbind(b,c)
 ```
 ```{marginfigure}
 **Table 1.11**: Row Binding of Matrices b and c
