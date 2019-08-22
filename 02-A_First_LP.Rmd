@@ -47,9 +47,9 @@ Making a piece of furniture requires time in fabrication, assembly, and machinin
 | Characteristic | Chairs | Desks |  Available| 
 |---------------:|:-----:|:------:|:----------:|
 |  Profit        |  $20  |   $14  |            |
-|  Fabrication   |   6   |     2  |   1440     |
-|  Assembly      |   8   |     6  |   1440     |
-|  Machining     |   6   |     4  |   2000     |
+|  Fabrication   |   6   |     2  |   2000     |
+|  Assembly      |   8   |     6  |   2000     |
+|  Machining     |   6   |     4  |   1440     |
 |  Wood          |  40   |    25  |   9600     |
 ```
 ```{marginfigure}
@@ -74,7 +74,7 @@ The decision variables are then combined in some way to reflect the performance 
 **Multiple-Objective**: This type of linear programming result when multiple objectives or goals can be accommodated. This will be explored in Chapter 7.
 ```
 
-Lastly, what is limiting the organization from even better performance?  There are typically many limits such as the number of customers, personnel, supplier capacity, etc.  In this case, we focus on a set of resource limits based on staffing in different centers and the supply of raw material (wood).  Since these limitations constrain the possible values of decision variables, they are called constraints.
+Lastly, what is limiting the organization from even better performance?  There are typically many limits such as the number of customers, personnel, supplier capacity, etc.  In this case, we focus on a set of resource limits based on staffing in different centers and the supply of raw material (wood).  Since these limitations constrain the possible values of decision variables, they are called _constraints._
 
 \vspace{12pt}
 Every optimization model can be thought of a collection of:
@@ -85,7 +85,8 @@ Every optimization model can be thought of a collection of:
 
 Let's put things together in the context of this application. In the base case, our objective function is to Maximize Profit. We can't express it though until we define our decision variables. It is good practice to very clearly and precisely define  decision variables. In this case it is straightforward but they can get much more complicated as we move into richer and larger models.     
 \vspace{12pt}
-Let's define them:     
+Let's define them:
+
 * Chairs = # of Chairs to Make     
 * Desks = # of Desks to Make
 
@@ -128,6 +129,8 @@ First, let us load the required libraries.  Then we will move on to the actual i
 ``` {r warning = FALSE, message = FALSE}
 library (pander, quietly = TRUE)   
    # Used for nicely formatted tables
+library (gridExtra, quietly=TRUE)
+   # Another nice option for tables
 library (ROI, quietly = TRUE)      
    # R Optimization Interface
 library (ROI.plugin.glpk, quietly = TRUE) 
@@ -137,21 +140,29 @@ library (ompr, quietly = TRUE)
 library (ompr.roi, quietly = TRUE) 
    # Glue for ompr to solve with ROI
 ```
-Each of these packages plays a role. As we discussed in the earlier chapter, pander makes for nicely formatted tables.  
 
-This brings us to four packages that provide the optimization functions that we be relying on frequently. The ROI package is the R Optimization Interface for for connecting various optimization solvers to R.  The ROI.plugin.glpk provides a connection between the the glpk solver and R through ROI.  While this would be sufficient, we are going to make use of the ompr package by Dirk Schumacher to provide algebraic representations for linear programs. The ompr package also requires a connector to ROI, aptly named ompr.roi.  \vspace{12pt}
+```{marginfigure}
+**quietly=TRUE**: This option will not display standard messages returned when loading libraries.
+```
 
+The first two packages: `pander` and `gridExtra`, provide nice formatting of tables.  
+The following packages provide the optimization functions that we will be relying on frequently. The ROI package is the R Optimization Interface for for connecting various optimization solvers to R.  The ROI.plugin.glpk provides a connection between the the glpk solver and R through ROI.  While this would be sufficient, we are going to make use of the ompr package by Dirk Schumacher to provide algebraic representations for linear programs. The ompr package also requires a connector to ROI, aptly named ompr.roi.  \vspace{12pt}
 
-As noted earlier, if these packages are not preinstalled, you may need to install them using the install.packages function or from the Packages tab in RStudio.  \vspace{12pt}
+```{marginfigure}
+**HINT**: As noted earlier, if these packages are not preinstalled, you may need to install them using the install.packages function or from the Packages tab in RStudio.
+```
 
 Now we move on to implement and solve the linear program. Let's go through it step by step.  \vspace{12pt}
-
 
 ```{r base_case_no_pipes_step_1}
 model0  <- MIPModel()     # Initialize an empty model
 ```
 
 The first line initializes an empty model and stores it in `model0`.  We can see that the model is empty by simply displaying the model summary.
+
+```{marginfigure}
+**MIP**: The term MIP used in the function call is an acronym for Mixed Integer Program. This is a more general case of LP and will be discussed in greater detail later.
+```
 
 ```{r display_empty_model}
 model0
@@ -183,14 +194,14 @@ Now we move on to adding constraints.  \vspace{12pt}
 ```{r base_case_no_pipes_step_4}
 
 model0d<-add_constraint(model0c,6*Chairs+2*Desks<= 2000) 
-#fabrication
+  #fabrication
 model0e<-add_constraint(model0d,8*Chairs+6*Desks<= 2000)  
-#assembly
+  #assembly
 model0f<-add_constraint(model0e,6*Chairs+4*Desks<= 1440)  
-#machining
-model0g<-add_constraint(model0f, 40*Chairs + 25*Desks<= 9600) 
-#wood
-result0<-solve_model(model0g, with_ROI(solver = "glpk"))
+  #machining
+model0g<-add_constraint(model0f, 40*Chairs+25*Desks<= 
+                          9600) 
+  #wood
 
 ```
 
@@ -200,9 +211,8 @@ Notice that we do not need to include non-negativity constraints since they were
 model0g
 ```
 
-Our model has variables, constraints, and an objective function.  Let's go ahead and solve it. The LP can be solved using different LP engines - we'll use `glpk` for now. We'll assign the result of the solved model to `result0`
+Our model has variables, constraints, and an objective function.  Let's go ahead and solve it. The LP can be solved using different LP engines - we'll use `glpk` for now. We'll assign the result of the solved model to `result0`.
 
-nonlinear programming or NLP. NLP is also widely used but has limitations.
 ```{marginfigure}
 **glpk**: "GNU Linear Programming Kit" package is intended for solving large-scale linear programming (LP), mixed integer programming (MIP), and other related problems.
 ```
@@ -318,10 +328,10 @@ Note that we load a new package `magrittr` which gives us the piping function th
 ```{marginfigure}
 **The magrittr package**, offers a set of operators which make your code more readable by:
   
-+structuring sequences of data operations left-to-right (as opposed to from the inside and out),
-+avoiding nested function calls,
-+minimizing the need for local variables and function definitions, and
-+making it easy to add steps anywhere in the sequence of operations.
++ structuring sequences of data operations left-to-right (as opposed to from the inside and out),
++ avoiding nested function calls,
++ minimizing the need for local variables and function definitions, and
++ making it easy to add steps anywhere in the sequence of operations.
 
 ```
 
@@ -352,7 +362,7 @@ print(get_solution(result0, Desks))
 
 We will now extend the previous model to account for a third product, Tables.  The goal is now to find the best product mix of Chairs, Desks, and Tables. See the Table 2 with the summary of the new situation. 
 ```{marginfigure}
-|Characteristic| Chairs| Desks | Tables |Available| 
+| | Chairs| Desks | Tables |Available| 
 |-------------:|:-----:|:-----:|:------:|:-------:|
 |  Profit      |  $20  |  $14  |  $16   |         |
 |  Fabrication |   6   |    2  |    4   |   1440  |

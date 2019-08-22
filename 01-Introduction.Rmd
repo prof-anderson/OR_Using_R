@@ -50,13 +50,9 @@ There are many comprehensive introductions to Operations Research available incl
 
 This book is meant to be a hybrid, both serving as an introduction to R and to Operations Research.  \vspace{12pt}
 
-A quick getting started with R will be helpful.  I strongly recommend using RStudio.  _A Modern Dive_ is a web book on using R and refreshing statistics that is very helpful [@IsmayIntroductionStatisticalData].  I also like books such as R in a Nutshell [@AdlerNutshell2012] or R in Action [@KabacoffActionDataAnalysis2011].  \vspace{12pt}
+You can always access the current version of this book on Github. https://github.com/prof-anderson/OR_Using_R 
 
-I usually find the best way for me to learn a new tool is to roll up my sleeves and jump right in.  Hence the book can be approached in that way and just be ready for a little more experimentation.  This book is available on Github and the R Markdown files are available for use.  Code fragments are shown quite liberally for demonstrating how things work.  While this may be a bit verbose and at times repetitious, it is meant to help people jump in at various points of the book.  \vspace{12pt}
-
-While code fragments can be copied from the R markdown files for this book, it is often best to physically retype many of the code fragments shown as that gives time to reflect on what each statement is doing.  \vspace{12pt}
-
-## Range of Operations Research Techinques
+## Range of Operations Research Techniques
 
 Operations Research covers many different techniques.  They can be classified in a wide range of ways.  Some of the more common approaches are:
 
@@ -101,14 +97,20 @@ I've adopted the following conventions in this book.
 
 * R code fragments, including packages will be denoted using monospaced text such as adding two R data objects `a+b`.  
 * Mathematical symbols and equations will be italicized.  For example, if two variables are mathematical symbols and being added, then it would be _a+b_.  
-* Tables of information and code fragments are provided liberally and at times erring on the side of repetitious to assist in interpretation and reproducing analyses.  
+* Tables of information and code fragments are provided liberally and at times erring on the side of being repetitious to assist in interpretation and reproducing analyses.  
 * There may be more efficient ways of performing operations but the focus is on readability.  
 \vspace{12pt}
 This book is continuing to be updated. Comments, suggestions, and corrections are welcome.
 
 ## Getting Started with R
 
-Let's get started with R and explain some conventions to be used throughout the book.  First, let me be clear, the goal of this section is not to provide a comprehensive introduction to R.  Entire books are written on that subject. My goal here is to simply make sure that everyone can get started productively in the material covered later.
+A quick getting started with R will be helpful.  I strongly recommend using RStudio.  _A Modern Dive_ is a web book on using R and refreshing statistics that is very helpful [@IsmayIntroductionStatisticalData].  I also like books such as _R in a Nutshell_ [@AdlerNutshell2012] or _R in Action_ [@KabacoffActionDataAnalysis2011].  \vspace{12pt}
+
+I usually find the best way for me to learn a new tool is to roll up my sleeves and jump right in.  Hence the book can be approached in that way and just be ready for a little more experimentation.  This book is available on Github and the R Markdown files are available for use.  Code fragments are shown quite liberally for demonstrating how things work.  While this may be a bit verbose and at times repetitious, it is meant to help people jump in at various points of the book.  \vspace{12pt}
+
+While code fragments can be copied from the R markdown files for this book, it is often best to physically retype many of the code fragments shown as that gives time to reflect on what each statement is doing.  \vspace{12pt}
+
+Let's define some conventions to be used throughout the book. First, let me be clear, the goal of this section is not to provide a comprehensive introduction to R. Entire books are written on that subject. My goal here is to simply make sure that everyone can get started productively in the material covered later.
 
 Since this book is focused on using R for operations research, we will focus on the capabilities that are needed for this area and introduce additional features and functions as needed. If you are already comfortable with R, RStudio, and RMarkdown, you may skip the remainder of this section.  \vspace{12pt}
 
@@ -153,13 +155,18 @@ b
 
 Notice that we only needed to tell R that the matrix has four columns and it then knew that there two rows.  We could have set the number of rows to be two for the same result.  \vspace{12pt}
 
-This is still a little boring.  Let's give the rows and columns names.  \vspace{12pt}
+This is still a little ambiguous.  Let's give the rows and columns names.  For now we will simply name them Row and Col.  \vspace{12pt}
 
 ```{r Naming_Rows_and_Columns}
 b<-matrix(c(1,2,3,4,5,6,7,8), ncol=4, 
           dimnames=c(list(c("Row1", "Row2")),
                      list(c("Col1", "Col2","Col3","Col4"))))
 ```
+
+```{marginfigure}
+**HINT**: The RStudio console can save you typing by pressing the up arrow key to view previous command(s) which can then be further edited.
+```
+\vspace{12pt}
 
 Okay, this command has a lot more going on.  The term `dimnames` is a parameter that contain names for rows and columns.  One thing to note is that this line fills up more space than a single line so it rolls over to multiple line.  
 
@@ -174,9 +181,7 @@ b
 This table is still not that "nice" looking.  Let's use a package that does a nicer job of formatting tables.  To do this, we will use an extra package.  Up to this point, everything that we have done just simply uses standard built in functions of R. The package that we will use is `grid.table` but there are plenty of others available such as `pander`, `kable`, `xtable`, and `huxtable`.  Let's start by loading the package.  \vspace{12pt}
 
 ```{r Installing_a_Package}
-# install.packages("gridExtra")
-# Use this command if pander is not installed.
-library(gridExtra)
+library (gridExtra)
 ```
 
 If R indicates that you don't have pander installed on your computer, you can  press the "Install" command under the Packages tab and then type in pander or use the `install.packages` command.  
@@ -191,7 +196,7 @@ Notice the hash symbol is used to mark comment in the above code chunk.  It is a
 ```
 Now, we have several options to draw a table. We could use the `pander` package to work or we can use the grid.table package.  
 
-```{r Using_Pander, fig.margin=TRUE}
+```{r Using_grid_table, fig.margin=TRUE}
 grid.table(b)
 ```
 
@@ -250,15 +255,15 @@ Let's look at the original matrix, b and what we can do with it.  Let's grab the
 
 
 ```{r Extracting_Second_Row,fig.margin=TRUE}
-temp <- as.matrix(b[2,])
-grid.table(temp)
+temp1 <- as.matrix(b[2,])
+grid.table(temp1)
 ```
 ```{marginfigure}
 **Table 1.5**: Second Row of b
 ```
 \vspace{12pt}
 The `as.matrix` function is used to convert the object into a matrix so that pander can display it well.
-Note that I might explore alternatives to `grid.table` such as `pander`or `huxtable` in the future.  Here is a discussion of huxtable and comparison of many different packages for displaying tables https://hughjonesd.github.io/huxtable/design-principles.html 
+Note that I might explore alternatives to `grid.table` such as `pander` or `huxtable` in the future.  Here is a discussion of huxtable and comparison of many different packages for displaying tables https://hughjonesd.github.io/huxtable/design-principles.html 
 \vspace{12pt}
 
 ```{r Extracting_Third_Column,fig.margin=TRUE, fig.width=3}
@@ -272,8 +277,8 @@ grid.table(temp2)
 Grabbing the third column is not terribly interesting but operations such as this will often be quite useful.
 
 ```{r Bottom_Right_Element,fig.margin=TRUE}
-temp4 <- as.matrix(b[2,4]) 
-grid.table(temp4)
+temp3 <- as.matrix(b[2,4]) 
+grid.table(temp3)
 ```
 ```{marginfigure}
 **Table 1.7**: Last Element of b
@@ -289,13 +294,13 @@ pander(c, caption="Matrix c")
 Let's take the first row of `b` and combine it with the second row of `c` to form a new matrix, `e`.  Since these are rows that are going to be combined, we will use a command, `rbind`, to bind these rows together.
 
 ```{r Combined_Matrix,fig.margin=TRUE}
-e<-rbind(b[1,],c[2,])
-grid.table(e)
+temp4 <- rbind(b[1,],c[2,])
+grid.table(temp4)
 ```
 ```{marginfigure}
 **Table 1.8**: Combined Matrix
 ```
-Notice that _e_ has inherited the column names but lost the row names.  Let's set the row names for this matrix.
+Notice that _temp4_ has inherited the column names but lost the row names. Let's set the row names for this matrix.
 
 ```{r Changing_Row_Names,fig.margin=TRUE}
 rownames(e)<-list("From_b", "From_c")
@@ -317,7 +322,7 @@ grid.table(temp5)
 
 \vspace{12pt}
 And Table 1.11 will use rows as bidding condition.
-pander(rbind(b,c), caption="Row Binding of Matrices b and c")
+
 ```{r Row_and_Column_Binding2,fig.margin=TRUE}
 temp6 <- rbind(b,c)
 grid.table(temp6)
