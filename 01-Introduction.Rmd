@@ -303,8 +303,8 @@ grid.table(temp4)
 Notice that _temp4_ has inherited the column names but lost the row names. Let's set the row names for this matrix.
 
 ```{r Changing_Row_Names,fig.margin=TRUE}
-rownames(e)<-list("From_b", "From_c")
-grid.table(e)
+rownames(temp4)<-list("From_b", "From_c")
+grid.table(temp4)
 ```
 ```{marginfigure}
 **Table 1.9**: Combined Matrix with Explanation of Source
