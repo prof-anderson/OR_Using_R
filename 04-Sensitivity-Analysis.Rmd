@@ -5,12 +5,12 @@ header-includes:
 - \usepackage{caption}
 monofont: Times New Roman
 output:
+  tufte::tufte_html: default
   tufte::tufte_handout:
     citation_package: natbib
     latex_engine: xelatex
     toc: TRUE
     number_sections: true
-  tufte::tufte_html: default
   tufte::tufte_book:
     citation_package: natbib
     latex_engine: xelatex
