@@ -10,7 +10,7 @@ bibliography: ["Master4Bookdowns.bib"]
 ---
 # Preface {-}
 
-This book covers using R for doing Operations Research. The current focus is on linear optimization. In the future it may grow to include a broader range of Operations Research methods. 
+This book covers using R for doing Operations Research. The current focus is on linear optimization. In the future it may grow to include a broader range of Operations Research methods. \vspace{12pt}
 
 I would like to thank many people for their contributions, collaborations, and assistance over the years. All errors are my fault though.  
 
@@ -46,3 +46,11 @@ In addition, several groups have been of tremendous help:
 * Past ETM 540/640 Operations Research Group classes, particularly the Fall 2018 and Winter 2019 classes which helped test the early versions of this book.  
 
 Most of all, I would like to also express my appreciation for my family's patience while working on this book with many late nights:  Carrie, Trent, and Paige.
+
+This version of the book was built with files from https://github.com/prof-anderson/OR_Using_R. 
+\vspace{12pt}
+
+> `r tufte::quote_footer('Tim Anderson')`
+
+> `r tufte::quote_footer(Sys.Date())`
+

@@ -60,7 +60,6 @@ Let's start by reviewing Dirk's original description of the warehouse location p
 
 > In this article we will look at the [Warehouse Location Problem](https://en.wikipedia.org/wiki/Facility_location_problem). Given a set of customers and set of locations to build warehouses, the task is to decide where to build warehouses and from what warehouses goods should be shipped to which customer. 
   
-\vspace{12pt}
 > Thus there are two decisions that need to made at once: where and if to build warehouses and the assignment of customers to warehouses. This simple setting also implies that at least one warehouse must be built and that any warehouse is big enough to serve all customers.
   
 \vspace{12pt}
@@ -436,7 +435,7 @@ The same concepts can also be applied to other applications.
 
 ## Solving MIPs with Different Solvers
 
-Up until this point, we have used the `glpk` solver.  One of the big benefits of `glpk` though is that it lets separate the process of formulating the optimization model from that of solving it and thereby let's us easily switch to other solvers.  Now that we have a nontrivial optimization model, the Warehouse Location Model, let's use it.  
+Up until this point, we have used the `glpk` solver.  One of the big benefits of `glpk` is that it separates the process of formulating the optimization model from that of solving it and thereby let's us easily switch to other solvers.  Now that we have a nontrivial optimization model, the Warehouse Location Model, let's use it.  
 \vspace{12pt}
 
 The emphasis in this section is not model building but comparing the use of different solvers.  Since we have the model already defined as an object, simply named `model`, we can easily pass it to the different solvers for optimizing.  There is a large collection of other solvers that can be used with R.[^new_material]
@@ -444,11 +443,9 @@ The emphasis in this section is not model building but comparing the use of diff
 [^new_material]: This topic is not covered in Dirk's vignette or blog post.
 \vspace{12pt}
 
-Let's use the `tictoc` package for examining computation time.  
-\vspace{12pt}
-
 We'll demonstrate the performance for illustration purposes.  Again, do not run the following code chunks in this section on a cloud-based service such as Rstudio.cloud, unless you are certain that imposing a non-trivial computational load is acceptable. 
   \vspace{12pt}
+  
 *Performance of `glpk`*
 
 We have been using `glpk` for all of our earlier examples.  For the sake of comparison, let's start off with it too.  We will use the `tictoc` package to help us collect data on timing.  Note that timing can vary even if the same problem is solved on the same computer twice in rapid succession. 
@@ -665,6 +662,8 @@ ggplot(pkg_dl_data, aes(end, downloads, group=package,
 
 ```
 
+Clearly a wide range of optimization tools can be used.  Let's return 
+
 ## Solving Sudoku Puzzles using Optimization
 
 > Would you like to play a game?
@@ -680,7 +679,7 @@ game1<-makeGame()
 plot(game1)
 ```
 
-After spending a significant amount of time and CPU cycles on a serious topic of warehouse optimization, let's take a break with a more lighthearted application of the classic Sudoku puzzle game. Feel free to work on this Sudoku puzzle. For those unfamiliar with Sudkoku, the core idea is to use every digit from 1-9 once in each column, once in each row, and once in each 3x3 cluster.  
+After spending a significant amount of time and CPU cycles on a serious topic of warehouse optimization, let's take a break with a more lighthearted application of the classic Sudoku puzzle game. For those unfamiliar with Sukoku, the core idea is to use every digit from 1-9 once in each column, once in each row, and once in each 3x3 cluster. Feel free to work on this Sudoku puzzle to the right by hand.  
 \vspace{12pt}
 
 The optimization approach will give you the opportunity to solve this or any other Sudoku model. This section is based on an article by Dirk Schumacher and helper functions from the 'sudokuAlt' package from Bill Venables, one of the Godfathers of R.  Let's start with Dirk's explanation, with permission, of the model.  \vspace{12pt}
