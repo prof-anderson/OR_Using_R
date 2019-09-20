@@ -888,7 +888,7 @@ We do the same thing for the second constraint.
 $$
  \begin{split}
  20x+25y \leq 3300 \\
- y \leq \frac{3300-25x}{25}\\
+ y \leq \frac{3300-20x}{25}\\
   \end{split}
   (\#eq:Constraint2)
 $$
