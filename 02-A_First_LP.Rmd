@@ -429,7 +429,7 @@ model1 <- MIPModel() %>%
   #machining
   add_constraint(40*Chairs + 25*Desks + 16*Tables<=9600)%>% 
   #wood
-  add_constraint(Tables <= 200)  #
+  add_constraint(Tables <= 200)
   
 result1 <-  solve_model(model1, with_ROI(solver="glpk"))
 ```
