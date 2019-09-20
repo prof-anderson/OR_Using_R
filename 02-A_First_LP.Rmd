@@ -480,7 +480,7 @@ $$
     \text{S.t.:} & \\
                   & 6Chairs+2Desks+4Tables \leq 2000 \\
                   & 8Chairs+6Desks+4Tables \leq 2000 \\
-                  & 6Chairs+5Desks+8Tables \leq 1440 \\
+                  & 6Chairs+4Desks+8Tables \leq 1440 \\
                   & 40Chairs+25Desks+16Tables \leq 9600 \\
                   & Tables \leq 200 \\
                   & Chairs \geq 300 \\
@@ -535,10 +535,10 @@ $$
  \begin{aligned}
     \text{Max: } & Profit=20Chairs+10Desks+16Tables \\
     \text{S.t.:} & \\
-                  & 6Chairs+3Desks+4Tables \leq 2000 \\
-                  & 8Chairs+4Desks+4Tables \leq 2000 \\
-                  & 6Chairs+3Desks+8Tables \leq 1440 \\
-                  & 40Chairs+20Desks+16Tables \leq 9600 \\
+                  & 6Chairs+2Desks+4Tables \leq 2000 \\
+                  & 8Chairs+6Desks+4Tables \leq 2000 \\
+                  & 6Chairs+4Desks+8Tables \leq 1440 \\
+                  & 40Chairs+25Desks+16Tables \leq 9600 \\
                   & Tables \leq 200 \\
                   & Chairs, Desks, Tables \geq 0  
   \end{aligned}
@@ -623,7 +623,7 @@ $$
     \text{S.t.:} & \\
                     & 6Chairs+2Desks+4Tables \leq 2000 \\
                     & 8Chairs+6Desks+4Tables \leq 2000 \\
-                    & 6Chairs+5Desks+8Tables \leq 1440 \\
+                    & 6Chairs+4Desks+8Tables \leq 1440 \\
                     & 40Chairs+25Desks+16Tables \leq 9600 \\
                     & Chairs+Desks+Tables \leq 1500 \\
                     & Tables \leq 200 \\
@@ -680,7 +680,7 @@ $$
     \text{S.t.:} & \\
 &6Chairs+2Desks+4Tables \geq 2000 \\
 & 8Chairs+6Desks+4Tables \geq 2000 \\
-& 6Chairs+5Desks+8Tables \geq 1440 \\
+& 6Chairs+4Desks+8Tables \geq 1440 \\
 & 40Chairs+25Desks+16Tables \geq 9600 \\
 & Tables \geq 200 \\
 & Chairs, Desks, Tables \geq 0  
