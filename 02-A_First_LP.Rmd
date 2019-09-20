@@ -988,7 +988,7 @@ At this point we have everything we need to see our results on a graph. There ar
 **ggplot** was written by [Hadley Wickham](http://hadley.nz/) to implement the [_Grammar of Graphics_](https://www.amazon.com/Grammar-Graphics-Statistics-Computing/dp/0387245448). That book is kind of expensive, a more affordable intro would be [Hadley's overview](http://vita.had.co.nz/papers/layered-grammar.pdf).
 ```
 
-In this example we are going to just scratch the surface of ggplot functionality, so know that if you study up a bit you can do much more!
+In this example we are going to just scratch the surface of _ggplot_ functionality, so know that if you study up a bit you can do much more!
 
 ```{r Plotting_Lines, fig.margin=TRUE}
 #make a plot with PSU colors for the lines!
@@ -1009,7 +1009,7 @@ Now let's solve the model for real to see if it's right!
 ```{r Solving_Model}
 result0 <- MIPModel() %>%
   add_variable(R1, type = "continuous", lb = 0) %>%
-  add_variable(R2, type = "continuous",lb = 0) %>%
+  add_variable(R2, type = "continuous", lb = 0) %>%
  
   set_objective(150*R1 + 200*R2, "max") %>%
   
