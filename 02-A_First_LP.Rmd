@@ -641,7 +641,7 @@ Now we can implement the model.
 ```{r Redundant_Constraint_Model}
 model1redund <- add_constraint(model1, 
                           Chairs + Desks + Tables 
-                          >= 300)  
+                          <= 1500)  
           #THIS IS THE NEW CHANGE
 
 ```
