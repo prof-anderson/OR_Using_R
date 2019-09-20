@@ -367,9 +367,9 @@ We will now extend the previous model to account for a third product, Tables.  T
 | | Chairs| Desks | Tables |Available| 
 |-------------:|:-----:|:-----:|:------:|:-------:|
 |  Profit      |  $20  |  $14  |  $16   |         |
-|  Fabrication |   6   |    2  |    4   |   1440  |
-|  Assembly    |   8   |    6  |    8   |   1440  |
-|  Machining   |   6   |    4  |   25   |   2000  |
+|  Fabrication |   6   |    2  |    4   |   2000  |
+|  Assembly    |   8   |    6  |    4   |   2000  |
+|  Machining   |   6   |    4  |    8   |   1440  |
 |  Wood        |  40   |   25  |   16   |   9600  |
 ```
 ```{marginfigure}
