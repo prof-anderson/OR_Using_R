@@ -367,9 +367,9 @@ We will now extend the previous model to account for a third product, Tables.  T
 | | Chairs| Desks | Tables |Available| 
 |-------------:|:-----:|:-----:|:------:|:-------:|
 |  Profit      |  $20  |  $14  |  $16   |         |
-|  Fabrication |   6   |    2  |    4   |   2000  |
-|  Assembly    |   8   |    6  |    4   |   2000  |
-|  Machining   |   6   |    4  |    8   |   1440  |
+|  Fabrication |   6   |    2  |    4   |   1440  |
+|  Assembly    |   8   |    6  |    8   |   1440  |
+|  Machining   |   6   |    4  |   25   |   2000  |
 |  Wood        |  40   |   25  |   16   |   9600  |
 ```
 ```{marginfigure}
@@ -429,7 +429,7 @@ model1 <- MIPModel() %>%
   #machining
   add_constraint(40*Chairs + 25*Desks + 16*Tables<=9600)%>% 
   #wood
-  add_constraint(Tables <= 200)
+  add_constraint(Tables <= 200)  #
   
 result1 <-  solve_model(model1, with_ROI(solver="glpk"))
 ```
@@ -480,7 +480,7 @@ $$
     \text{S.t.:} & \\
                   & 6Chairs+2Desks+4Tables \leq 2000 \\
                   & 8Chairs+6Desks+4Tables \leq 2000 \\
-                  & 6Chairs+4Desks+8Tables \leq 1440 \\
+                  & 6Chairs+5Desks+8Tables \leq 1440 \\
                   & 40Chairs+25Desks+16Tables \leq 9600 \\
                   & Tables \leq 200 \\
                   & Chairs \geq 300 \\
@@ -535,10 +535,10 @@ $$
  \begin{aligned}
     \text{Max: } & Profit=20Chairs+10Desks+16Tables \\
     \text{S.t.:} & \\
-                  & 6Chairs+2Desks+4Tables \leq 2000 \\
-                  & 8Chairs+6Desks+4Tables \leq 2000 \\
-                  & 6Chairs+4Desks+8Tables \leq 1440 \\
-                  & 40Chairs+25Desks+16Tables \leq 9600 \\
+                  & 6Chairs+3Desks+4Tables \leq 2000 \\
+                  & 8Chairs+4Desks+4Tables \leq 2000 \\
+                  & 6Chairs+3Desks+8Tables \leq 1440 \\
+                  & 40Chairs+20Desks+16Tables \leq 9600 \\
                   & Tables \leq 200 \\
                   & Chairs, Desks, Tables \geq 0  
   \end{aligned}
@@ -623,7 +623,7 @@ $$
     \text{S.t.:} & \\
                     & 6Chairs+2Desks+4Tables \leq 2000 \\
                     & 8Chairs+6Desks+4Tables \leq 2000 \\
-                    & 6Chairs+4Desks+8Tables \leq 1440 \\
+                    & 6Chairs+5Desks+8Tables \leq 1440 \\
                     & 40Chairs+25Desks+16Tables \leq 9600 \\
                     & Chairs+Desks+Tables \leq 1500 \\
                     & Tables \leq 200 \\
@@ -641,7 +641,7 @@ Now we can implement the model.
 ```{r Redundant_Constraint_Model}
 model1redund <- add_constraint(model1, 
                           Chairs + Desks + Tables 
-                          <= 1500)  
+                          >= 300)  
           #THIS IS THE NEW CHANGE
 
 ```
@@ -680,7 +680,7 @@ $$
     \text{S.t.:} & \\
 &6Chairs+2Desks+4Tables \geq 2000 \\
 & 8Chairs+6Desks+4Tables \geq 2000 \\
-& 6Chairs+4Desks+8Tables \geq 1440 \\
+& 6Chairs+5Desks+8Tables \geq 1440 \\
 & 40Chairs+25Desks+16Tables \geq 9600 \\
 & Tables \geq 200 \\
 & Chairs, Desks, Tables \geq 0  
@@ -825,9 +825,9 @@ how this affects the results.
 |Characteristic|Chairs|Desks|Frames|Tables|Available| 
 |-------------:|:----:|:---:|:----:|:----:|:-------:|
 | Profit       | $20  | $14 |   $3 |  $16 |         |
-| Fabrication  |   6  |   2 |   1  |    4 |   2000  |
-| Assembly     |   8  |   6 |   1  |    4 |   2000  |
-| Machining    |   6  |   4 |   1  |    8 |   1440  |
+| Fabrication  |   6  |   2 |   1  |    4 |   1440  |
+| Assembly     |   8  |   6 |   1  |    8 |   1440  |
+| Machining    |   6  |   4 |   1  |   25 |   2000  |
 | Painting     |   7  |  10 |   2  |   12 |   1000  |
 | Wood         |  40  |  25 |   5  |   16 |   9600  |
 ```
@@ -888,7 +888,7 @@ We do the same thing for the second constraint.
 $$
  \begin{split}
  20x+25y \leq 3300 \\
- y \leq \frac{3300-20x}{25}\\
+ y \leq \frac{3300-25x}{25}\\
   \end{split}
   (\#eq:Constraint2)
 $$
@@ -988,7 +988,7 @@ At this point we have everything we need to see our results on a graph. There ar
 **ggplot** was written by [Hadley Wickham](http://hadley.nz/) to implement the [_Grammar of Graphics_](https://www.amazon.com/Grammar-Graphics-Statistics-Computing/dp/0387245448). That book is kind of expensive, a more affordable intro would be [Hadley's overview](http://vita.had.co.nz/papers/layered-grammar.pdf).
 ```
 
-In this example we are going to just scratch the surface of _ggplot_ functionality, so know that if you study up a bit you can do much more!
+In this example we are going to just scratch the surface of ggplot functionality, so know that if you study up a bit you can do much more!
 
 ```{r Plotting_Lines, fig.margin=TRUE}
 #make a plot with PSU colors for the lines!
@@ -1009,7 +1009,7 @@ Now let's solve the model for real to see if it's right!
 ```{r Solving_Model}
 result0 <- MIPModel() %>%
   add_variable(R1, type = "continuous", lb = 0) %>%
-  add_variable(R2, type = "continuous", lb = 0) %>%
+  add_variable(R2, type = "continuous",lb = 0) %>%
  
   set_objective(150*R1 + 200*R2, "max") %>%
   
