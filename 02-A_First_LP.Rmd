@@ -822,7 +822,7 @@ to result in a different production plan. Demonstrate
 how this affects the results.
 
 ```{marginfigure, fig.align='left', fig.width = 2}
-|Characteristic|Chairs|Desks|Frames|Tables|Available| 
+| |Chairs|Desks|Frames|Tables|Available| 
 |-------------:|:----:|:---:|:----:|:----:|:-------:|
 | Profit       | $20  | $14 |   $3 |  $16 |         |
 | Fabrication  |   6  |   2 |   1  |    4 |   2000  |
