@@ -442,15 +442,15 @@ resBlending<- solve_model(ModelBlending,
                           with_ROI(solver = "glpk"))
 ```
 ```{r Blending_Results}
-blenders<-cbind(get_solution (resBlending, Chairs),
+blendres<-cbind(get_solution (resBlending, Chairs),
                 get_solution (resBlending, Desks),
                 get_solution (resBlending, Tables))
 ```
 Okay, now let's put both side by side in a table to show the results.
 ```{r Compare_Blending_to_Base_Results, fig.margin=TRUE,fig.width=3}
 rownames(base_case_res)<-"Base Model"
-rownames(blenders)<-"with Constraint"
-comparative <- rbind(base_case_res,round(blenders, 2))
+rownames(blendres)<-"with Constraint"
+comparative <- rbind(base_case_res,round(blendres, 2))
 colnames (comparative) <- c("Chairs","Desks","Tables")
 grid.table(comparative)
 ```
