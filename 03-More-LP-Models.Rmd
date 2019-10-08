@@ -76,7 +76,7 @@ $$
 $$
 ```
 ```{marginfigure}
-**Formula 3.2**: Linear MOdel with 3 products and 4 contraints.
+**Formula 3.2**: Linear Model with 3 products and 4 contraints.
 Not hardcoding the products and constraints.
 ```
 
@@ -114,6 +114,8 @@ NProd <- 4
 NResources <- 5
 ProdNames <- lapply(list(rep("Prod",NProd)),paste0,1:NProd) 
                  # Product names: Prod1, Prod2, ... 
+Profit <- matrix(c(20, 14, 3, 16), 
+              ncol=NProd,dimnames=c("Profit",ProdNames))
 ResNames<- lapply(list(rep("Res",NResources)),
                   paste0,1:NResources) 
                  # Resource names: Res1, Res2, ... 
@@ -187,7 +189,7 @@ library (ompr, quietly = TRUE)
 library (ompr.roi, quietly = TRUE)
 ```
 
-And we will continue wiht the code to build the mode in a generic format.
+And we will continue with the code to build the mode in a generic format.
 
 ```{r Build_Prod_Model}
 prodmodel <- MIPModel() %>%
@@ -205,11 +207,13 @@ prodmodel <- MIPModel() %>%
 prodmodel
 ```
 
+<!-- comment out for this section, which is not finish yet
 Let's walk through what is done line by line.
 
 ```{marginfigure}
 `prodmodel <- MIPModel() %>%`
 ```
+-->
 
 ## Examining the Results
 
@@ -235,7 +239,7 @@ grid.table(format(head(results.products),digits=4))
 **Table 3.5**: Optimal Production Plan
 ```
 
-The table on the right displays the Optimal production plan.
+The table on the right displays the optimal production plan.
 \vspace{12pt}
 
 Let's examine how the resources are consumed.  To do this, we can multiply the amount of each product by the amount of each resource used for that product. For the first product, this would be a term by term sum of each product resulting in ``r Resources[1,]%*%t(results.products)`` which is less than ``r Available[1]``. We can do this manually for each product. Another approach is to use the command, `Resources[1,]%*%t(results.products)`. This command will take the first row of the Resources matrix and multiplies it by the vector of results.  
@@ -244,17 +248,17 @@ Let's examine how the resources are consumed.  To do this, we can multiply the a
 Another thing to take note of in learning how to use RMarkdown is that results from r code can be shown by inserting an inline code chunk.  Inline code chunks can be inserted into text by using a single tick at the beginning and end of the chunk instead of the triple tick mark for regular code chunks.  Also, the inline r code chunk starts with the letter r to indicate that it is an r code code.  A common use for this might be to show the results of an earlier analysis.
 \vspace{12pt}
 
-One thing to note is that the first row of `Resources` is by definition a row vector and `result.products` is also a row vector.  What we want to do is do a row vector multiplied by a column vector.  In order to do this, we need to convert the row vector of results into a column vector.  This is done by doing a _transpose_ which changes the row to a column.  This is done often enough that that the operation is just one letter, `t`.  
+One thing to note is that the first row of `Resources` is by definition a row vector and `result.products` is also a row vector.  What we want to do is do a row vector multiplied by a column vector.  In order to do this, we need to convert the row vector of results into a column vector.  This is done by doing a _transpose_ which changes the row to a column.  This is done often enough that the operation is just one letter, `t`.  
 \vspace{12pt}
 We can go one further step now and multiply the matrix of resources by the column vector of production.
 
 ```{r Calculate_Resources_Used, fig.margin=TRUE}
-Results.Resources <- Resources[]%*%t(results.products)
+results.Resources <- Resources[]%*%t(results.products)
 # Multiply matrix of resources by amount of 
 # products produced
-ResourceSlacks <- cbind (Results.Resources,
+ResourceSlacks <- cbind (results.Resources,
                          Available,
-                         Available-Results.Resources)
+                         Available-results.Resources)
 colnames(ResourceSlacks)<-c("Used", "Available", "Slack")      
 grid.table(format(head(ResourceSlacks),digits=4))
 ```
@@ -325,8 +329,8 @@ The table on the right displays the new Production plan and the optimal distribu
 ```{marginfigure}
 **Note** that the production plan has significantly changed. At this point, we could discuss why this makes sense or not.  
 ```
-
-##Blending Problems
+  
+## Blending Problems
 
 Specific blend limitations arise in many situations.  In our example, we might say that Chairs can make up no more than 10% of the overall product plan.  In our original case, this would be expressed as the following.  
 \vspace{12pt}
@@ -527,7 +531,7 @@ CharNames <-lapply(list(rep("Char",NCharacteristic)),
                    paste0,1:NCharacteristic)
                  # Characteristics of each mix
 Cost <- matrix(c(20, 14, 3, 16), 
-              ncol=NProd,dimnames=c("Profit",MixNames))
+              ncol=NMix,dimnames=c("Profit",MixNames))
 MixChar <- matrix(c( 6, 8, 6, 7, 
                      2, 6, 4, 10, 
                      1, 1, 1, 2,
@@ -556,7 +560,7 @@ Now let's build our model.
 trailmixmodel <- MIPModel() %>%
  add_variable(x[i],i=1:NMix,type="continuous",lb=0) %>%
  set_objective(sum_expr(Cost[i]*x[i],i=1:NMix ),"min")%>%
- add_constraint(sum_expr(MixChar[j,i]*x[i],i=1:NProd) 
+ add_constraint(sum_expr(MixChar[j,i]*x[i],i=1:NMix) 
                   # Left hand side of constraint
                   >= CharMin[j],    
                   # Inequality and Right side of constraint
@@ -669,6 +673,7 @@ Four manufacturing plants are supplying material for distributors in four region
 
 ```  
 ```{marginfigure}
+
 **Table 3.12**: Transportation cost between cities  
 ```
 
