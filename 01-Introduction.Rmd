@@ -321,7 +321,7 @@ grid.table(temp5)
 ```
 
 \vspace{12pt}
-And Table 1.11 will use rows as bidding condition.
+And Table 1.11 will use rows as bindding condition.
 
 ```{r Row_and_Column_Binding2,fig.margin=TRUE}
 temp6 <- rbind(b,c)
