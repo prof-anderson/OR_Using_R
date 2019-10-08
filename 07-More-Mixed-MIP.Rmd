@@ -646,9 +646,7 @@ ggplot(pkg_dl_data, aes(end, downloads, group=package,
 
 It is interesting to see that the symphony and glpk ROI plugins were relatively equal in downloads until about 2015 when glpk started to open a lead in usage.  This of course does not mean that glpk is better than the others but is interesting to note. The spikes in downloads could be driven by other packages that use this particular solver, visibility from vignettes, courses, other publications, or package updates.  \vspace{12pt}
   
-Let's close this with examining the popularity of `ompr` itself.   
-
-```{r package_download_stats, fig.width=10, fig.height=6, fig.fullwidth=TRUE}
+```{r package_download_stats, fig.width=10, fig.height=6, fig.margin=TRUE}
 
 pkg_dl_data <- cran_stats(packages = c("ompr"))
 
@@ -662,7 +660,13 @@ ggplot(pkg_dl_data, aes(end, downloads, group=package,
 
 ```
 
-Clearly a wide range of optimization tools can be used.  Let's return 
+Let's close this with examining the popularity of `ompr` itself.   
+
+\vspace{12pt}
+
+Clearly a wide range of optimization tools can be used.  Let's return to optimization formulations with a more entertaining application.
+
+\vspace{12pt}
 
 ## Solving Sudoku Puzzles using Optimization
 
