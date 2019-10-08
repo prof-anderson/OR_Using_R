@@ -822,14 +822,15 @@ to result in a different production plan. Demonstrate
 how this affects the results.
 
 ```{marginfigure, fig.align='left', fig.width = 2}
-| |Chairs|Desks|Frames|Tables|Available| 
-|-------------:|:----:|:---:|:----:|:----:|:-------:|
-| Profit       | $20  | $14 |   $3 |  $16 |         |
-| Fabrication  |   6  |   2 |   1  |    4 |   2000  |
-| Assembly     |   8  |   6 |   1  |    4 |   2000  |
-| Machining    |   6  |   4 |   1  |    8 |   1440  |
-| Painting     |   7  |  10 |   2  |   12 |   1000  |
-| Wood         |  40  |  25 |   5  |   16 |   9600  |
+
+|Char.|Chairs|Desks|Frames|Tables|Available| 
+|----------:|:----:|:---:|:----:|:----:|:-------:|
+| Prof.     | $20  | $14 |   $3 |  $16 |         |
+| Fabr.     |   6  |   2 |   1  |    4 |   2000  |
+| Asse.     |   8  |   6 |   1  |    4 |   2000  |
+| Mach.     |   6  |   4 |   1  |    8 |   1440  |
+| Pain.     |   7  |  10 |   2  |   12 |   1000  |
+| Wood      |  40  |  25 |   5  |   16 |   9600  |
 ```
 ```{marginfigure}
 **Table 2.7**: Exercise 2.1
@@ -880,7 +881,7 @@ $$
   \end{split}
 $$
 ```{marginfigure}
-**Formula 2.8**: Update formalution for constraint 1. 
+**Formula 2.8**: Update formulation for constraint 1. 
 ```
 We do the same thing for the second constraint.
 
