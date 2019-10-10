@@ -67,7 +67,7 @@ $$
 
 The implementation that we did earlier for production planning was straightforward.
 
-```{r Base3VarModel, fig.margin=TRUE,fig.width=7}
+```{r Base3VarModel, fig.margin=TRUE}
 Base3VarModel <- MIPModel() %>%
   add_variable(Chairs, type ="continuous", lb = 0) %>%
   add_variable(Desks, type ="continuous",lb = 0) %>%
@@ -112,8 +112,7 @@ There are many resources, some are fully used while some are not fully utilized.
 \vspace{12pt}
 
 Let's begin by examining the row duals, also known as shadow prices.
-```{r rduals_3var,fig.margin=TRUE,fig.width=5}
-#rduals1 <-as.matrix(get_row_duals(result1), ncol=5)
+```{r rduals_3var,fig.margin=TRUE}
 rduals1 <-as.matrix(get_row_duals(Base3VarModel))
 dimnames(rduals1)<-list(c("fabrication", 
                           "assembly", 
@@ -121,7 +120,7 @@ dimnames(rduals1)<-list(c("fabrication",
                           "wood", 
                           "demand"), 
                           c("Row Duals"))
-grid.table(format(rduals1,digits=4))
+grid.table(format(rduals1))
 ```
 ```{marginfigure}
 **Table 4.2**: Shadow Prices of Constrained Resources
@@ -321,20 +320,20 @@ Let's go ahead and test this interpretation by again looking at the value of the
 ```{r Shadow_Price_Table, fig.margin=TRUE}
 table_res_used<-cbind(rduals1,c(4,4,8,25,0))
 colnames(table_res_used)<-c("Row Duals", "Resources Used")
-grid.table(table_res_used)
+grid.table(format(table_res_used, digits=4))
 ```
 ```{marginfigure}
 **Table 4.8**: Resources Used by a Table and their Shadow Prices
 ```
 Notice that the values based on shadow prices of the resources used by a table are $\$1*4+\$2*8=\$20$. Alas, the profit for each table is just $\$16$ which means that forcing the production of a single table will decrease the production plan's profit by $\$4$. In other words, the impact on the objective function is   $\$-4$ which is the same as the reduced price entry of Tables.  
 \vspace{12pt}
-
+<!--
 Okay, now let's put both side by side in a table to show the results.
-\vspace{12pt}
+\vspace{12pt}-->
 
 Okay, now let's test it.  We will modify the formulation to set a lower bound on the number of Tables to be 1.  Note that we do this in case by setting the _lb_ option in the *add_variable* to be 1.  Also, the demand constraint for tables could also be accommodated by setting the table variable's upper bound (*ub*) to 200.  
 
-```{r Table1Model, fig.margin=TRUE,fig.width=5}
+```{r Table1Model, fig.margin=TRUE}
 Table1Model <- MIPModel() %>%
   add_variable(Chairs, type = "continuous", lb = 0) %>%
   add_variable(Desks, type = "continuous",lb = 0) %>%
@@ -368,7 +367,7 @@ Table1Model <- MIPModel() %>%
 **Table 4.9**: Production Plan with Table Set to One
 ```
 \vspace{12pt}
-Let's compare the results for the new production plan and the original base case looking at the Table 4.9.  
+Let's compare the results for the new production plan and the original base case looking at the Table 4.10.  
 
 ```{r Base_vs_Forced_Table, fig.margin=TRUE}
 rownames(base_case_res) <- "Base Case"
@@ -384,7 +383,7 @@ As we expected, the forced change of making one additional table resulted in a d
 
 This meant that the number of chairs and desks were changed resulting lower profit even though a table is on its own profitable.
 
-* Evaluating a New Product Design with Shadow Prices *
+* Evaluating a New Product Design with Shadow Prices
 
 Let's consider a design proposal for a bookcase. The bookcase has a projected profit of $\$35$ each and uses 6 hours of fabrication time, 12 of assembly, and 16 of machining. It uses 80 square feet of wood.
 
@@ -395,9 +394,9 @@ colnames(bookcase_res_used)<-c("Row Duals",
 grid.table(format(bookcase_res_used,digits=4))
 ```
 ```{marginfigure}
-**Table 4.10**: Resources Used by a Bookcase and their Shadow Prices
+**Table 4.11**: Resources Used by a Bookcase and their Shadow Prices
 ```
-Even without adding it to the model, we can check to see if it is worthwhile to consider seriously.  The opportunity cost of producing one bookcase would result in the $\$35 - \$1*12  - \$2*16=\$-9 $.  In other words, even though a bookcase has higher profit than any other product, producing one would cost the company nine dollars of overall profit. 
+Even without adding it to the model, we can check to see if it is worthwhile to consider seriously.  The opportunity cost of producing one bookcase would result in the $\$35 - \$1*12  - \$2*16=\$-9$.  In other words, even though a bookcase has higher profit than any other product, producing one would cost the company nine dollars of overall profit. 
 \vspace{12pt}
 
 We could interpret this as a simple hard stop on the decision to produce bookcases but we could go one step further by setting a target for redesigning the product or its production.  If the machining time could be reduced by 4.5 hours to 11.5 hours, then the value of the resources consumed would be equal to the profit and we would be indifferent to producing some bookcases. 
