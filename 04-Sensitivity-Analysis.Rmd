@@ -289,7 +289,7 @@ These results are interesting.  The reduced costs of variables that are between 
 Let's start by examining the Shadow Prices of the resources along with the number of each resource used in the production of a single chair.  
 
 ```{r Shadow_Price_Single_Chair, fig.margin=TRUE}
-chair_res_used<-cbind(rduals1,c(2,8,6,40,0))
+chair_res_used<-cbind(rduals1,c(6,8,6,40,0)) #The numbers dont match with the equation
 colnames(chair_res_used)<-c("Row Duals", "Resources Used")
 grid.table(format(chair_res_used, digits=4))
 ```
@@ -302,7 +302,7 @@ Taking the product in each row and adding them up will give the marginal value o
 We can repeat the same process and calculations for Desks.  
 
 ```{r Shadow_Price_Desks,fig.margin=TRUE }
-desk_res_used<-cbind(rduals1,c(2,6,4,25,0))
+desk_res_used<-cbind(rduals1,c(2,6,4,25,0)) #The numbers dont match with the equation
 colnames(desk_res_used)<-c("Row Duals", "Resources Used")
 grid.table(format(desk_res_used, digits=4))
 ```
@@ -319,7 +319,7 @@ The situation is more interesting for Tables. The production plan does not call 
 Let's go ahead and test this interpretation by again looking at the value of the resources consumed in the production of a table and the number used. 
 
 ```{r Shadow_Price_Table, fig.margin=TRUE}
-table_res_used<-cbind(rduals1,c(4,4,8,25,0))
+table_res_used<-cbind(rduals1,c(4,4,8,16,0))  #The numbers dont match with the equation
 colnames(table_res_used)<-c("Row Duals", "Resources Used")
 grid.table(table_res_used)
 ```
