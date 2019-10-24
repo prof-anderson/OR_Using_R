@@ -586,10 +586,10 @@ rownames(res2a)<-list("Solution 2a")
 grid.table(res2a)
 ```
 ```{marginfigure}
-**Table 2.4**: Results 2a - A First of Multiple Optima
+**Table 2.4**: First Solution of Multiple Optima Case
 ```
 
-Okay.  When I ran it, all the production was focused on Chairs.  I think that there is an alternate solution producing Desks with the same total profit. The LP engine won't necessarily tell you that there is an alternate optimal solution.  Let's see if we can "trick" the LP to show an alternate solution by preventing the use of any chair by adding a constraint, $Chairs=0$ .  
+Okay.  When I ran it, all the production was focused on Chairs. I think that there is an alternate solution producing Desks with the same total profit. The LP engine won't necessarily tell you that there is an alternate optimal solution. Let's see if we can "trick" the LP to show an alternate solution by preventing the use of any chair by adding a constraint, $Chairs=0$ .  
 
 ```{r Show_Second_Solution_from_Multiple_Optima,  fig.margin = T}
 model2b <- add_constraint(model2a, Chairs <= 0) 
@@ -605,10 +605,10 @@ rownames(res2b)<-list("Solution 2b")
 grid.table(res2b)
 ```
 ```{marginfigure}
-**Table 2.5**: Results 2b - A Second of Multiple Optima
+**Table 2.5**: An Alternate Optimal Solution
 ```
 
-Again, only one product is made but now it is Desks instead of Chairs.  The number of Desks made is now double the number of Chairs previously made.  The total profit is the same.  This is an instance of multiple optima.
+Again, only one product is made but now it is Desks instead of Chairs with exactly the same level of profit. This is an instance of multiple optima.
 \vspace{12pt}
 
 Let's try one more situation by adding instead forcing the number of chairs to be 60 and solving.
@@ -626,17 +626,20 @@ colnames(res2c)<-list("Profit","Chairs","Desks","Tables")
 rownames(res2c)<-list("Solution 2c")
 ```
 
-Let's summarize these results more clearly by displaying them in a single table.  
+Let's summarize these results more clearly by displaying them in a single table. 
 
 ```{r Summarize_Results_of_Multiple_Optima, fig.margin =T}
 res2z <- rbind(res2a,res2b,res2c)
 grid.table(res2z)
 ```
 ```{marginfigure}
-**Table 2.6**: Results 2c - Examples of multiple optima
+**Table 2.6**: Examples of Alternate Optimal Solutions
 ```
 
 Notice that all three of these solutions have exactly the same profit but different production plans to generate this profit. Furthermore while we are listing three, there are actually many more solutions. You can force the system to find other solutions by setting the number of Chairs to a number between 0 and 120 or Desks between 0 and 200.  In fact, the number of solutions is infinite if we allow fractional solutions. More generally, when there are two alternate optimal in a linear program with continuous variables, there is actually an infinite number of other optimal solutions between them.  
+\vspace{12pt}
+
+While our first optimization found a solution focused on chairs and our second found a solution that only made desks, this is strictly dependent upon the particular solver's algorithmic implementation. The user can consider this to be relatively arbitrary.
 \vspace{12pt}
 
 Which solution is the best? Within the limits of this problem, we can't distinguish between them and they are equally good. If an application area expert or the end decision maker prefers one solution over the other, there should be extra information that we can use to extend the model.  
