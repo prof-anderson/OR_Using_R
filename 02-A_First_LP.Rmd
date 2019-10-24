@@ -467,7 +467,9 @@ There are several special cases where a linear program does not give the simple 
 \vspace{12pt}
 Now, let's look at how we would modify the earlier formulation to come up with each of these situations.\vspace{12pt}
 
-*Case 1: No Feasible Solution*  \vspace{12pt}
+*Case 1: No Feasible Solution*  
+\vspace{12pt}
+
 Let's assume that the sales manager comes in and says that we have a contractual requirement to deliver 300 Chairs to customers.
 \vspace{12pt}
 
@@ -508,7 +510,7 @@ result1infeas <- solve_model(model1infeas,
 In this case, we are going to simply add the new constraint to `model1` and create a new model, `model1infeas` to solve.  
 \vspace{12pt}
 
-Note that the constraint on the minimum number of chairs could also be implemented by changing the lower bound on the chairs variable to be 300 instead of zero.  Also, the maximum limit on Tables could be set as an upper bound on the Tables variable.
+Note that the constraint on the minimum number of chairs could also be implemented by changing the lower bound on the chairs variable to be 300 instead of zero.  Also, the upper limit on Tables could be set as an upper bound on the Tables variable.
 
 ```{r}
 print(solver_status(result1infeas))
@@ -523,9 +525,9 @@ Notice that since the solver status was infeasible, the values for the decision 
 
 *Case 2: Multiple Optima*
 
-There are a couple of ways of creating situations for multiple optima.  One situation is to have a decision variable be identical or a linear multiple of another variable.  In this case, each table now consumes  exactly half of the resources as a desk and generates half the profit of a desk.
+There are a couple of ways of creating situations for multiple optima. One situation is to have a decision variable be identical or a linear multiple of another variable. In this case, each table now consumes exactly half of the resources as a desk and generates half the profit of a desk.
 \vspace{12pt}
-To clarify the objective function value, I will define a variable for Profit.  Add a constraint to set the value of profit to what had been the objective function, and now simply maximize profit.  This will allow me to find the objective function value by using the `get_solution` for the variable profit.
+To clarify the objective function value, I will define a variable for Profit.  Add a constraint to set the value of profit to what had been the objective function, and now simply maximize profit. This will allow me to find the objective function value by using the `get_solution` for the variable profit.
 \vspace{12pt}
 
 The new LP is shown in the formulation on the right.
@@ -533,7 +535,7 @@ The new LP is shown in the formulation on the right.
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max: } & Profit=20Chairs+10Desks+16Tables \\
+    \text{Max: } & Profit=20Chairs+12.5Desks+8Tables \\
     \text{S.t.:} & \\
                   & 6Chairs+2Desks+4Tables \leq 2000 \\
                   & 8Chairs+6Desks+4Tables \leq 2000 \\
@@ -546,16 +548,29 @@ $$
 $$
 ```
 ```{marginfigure}
-**Formula 2.4**: Optimization model for Multiple Optima solution 
+**Formula 2.4**: Optimization model for Multiple Optima solution. Note that the wood constraint coefficients are half of the objective function. 
 ```
 
 The implementation can be simplified again since we are only changing the objective function, let's change the objective function in `model1` and save it to `model2a`.
 
 ```{r Modify_Model_to_Have_Multiple_Optima}
-model2a <- set_objective(model1, 
-20*Chairs + 10*Desks + 16*Tables, "max") 
-result2a <-  solve_model(model2a, 
-with_ROI(solver = "glpk"))
+model2a <- MIPModel() %>%
+  add_variable(Chairs, type = "continuous", lb = 0) %>%
+  add_variable(Desks, type = "continuous",lb = 0) %>%
+  add_variable(Tables, type = "continuous", lb = 0, ub = 200) %>%
+  
+  set_objective(20*Chairs + 12*Desks + 8*Tables,"max")%>%
+  
+  add_constraint(6*Chairs + 2*Desks + 4*Tables<=2000)%>% 
+  #fabrication
+  add_constraint(8*Chairs + 6*Desks + 4*Tables<=2000)%>% 
+  #assembly
+  add_constraint(6*Chairs + 4*Desks + 8*Tables<=1440)%>% 
+  #machining
+  add_constraint(40*Chairs + 24*Desks + 16*Tables<=4800)
+  #wood
+
+result2a <-  solve_model(model2a, with_ROI(solver="glpk"))
 ```
 
 ```{r Show_First_Solution_from_Multiple_Optima}
@@ -574,7 +589,7 @@ grid.table(res2a)
 **Table 2.4**: Results 2a - A First of Multiple Optima
 ```
 
-Okay.  When I ran it, all the production was focused on Chairs.  I think that there is an alternate solution producing Desks with the same total profit. The LP engine won't necessarily tell you that there is an alternate optimal solution.  Let's see if we can "trick" the LP to show an alternate solution by disallowing the previous solution by setting Chairs=0.  
+Okay.  When I ran it, all the production was focused on Chairs.  I think that there is an alternate solution producing Desks with the same total profit. The LP engine won't necessarily tell you that there is an alternate optimal solution.  Let's see if we can "trick" the LP to show an alternate solution by preventing the use of any chair by adding a constraint, $Chairs=0$ .  
 
 ```{r Show_Second_Solution_from_Multiple_Optima,  fig.margin = T}
 model2b <- add_constraint(model2a, Chairs <= 0) 
@@ -596,20 +611,35 @@ grid.table(res2b)
 Again, only one product is made but now it is Desks instead of Chairs.  The number of Desks made is now double the number of Chairs previously made.  The total profit is the same.  This is an instance of multiple optima.
 \vspace{12pt}
 
-Let's summarize these two results more clearly by displaying them in a single table.  
+Let's try one more situation by adding instead forcing the number of chairs to be 60 and solving.
+
+```{r Find_a_Third_Solution_from_Multiple_Optima,  fig.margin = T}
+model2c <- add_constraint(model2a, Chairs == 60) 
+            # FORCING LP TO FIND A DIFFERENT SOLUTION
+result2c <- solve_model(model2c, with_ROI(solver = "glpk"))
+print(solver_status(result2c))
+res2c <- cbind(objective_value(result2b),
+               get_solution(result2c, Chairs),
+               get_solution(result2c, Desks),
+               get_solution(result2c, Tables))
+colnames(res2c)<-list("Profit","Chairs","Desks","Tables")
+rownames(res2c)<-list("Solution 2c")
+```
+
+Let's summarize these results more clearly by displaying them in a single table.  
 
 ```{r Summarize_Results_of_Multiple_Optima, fig.margin =T}
-res2c <- rbind(res2a,res2b)
-grid.table(res2c)
+res2z <- rbind(res2a,res2b,res2c)
+grid.table(res2z)
 ```
 ```{marginfigure}
-**Table 2.6**: Results 2c - A Second of Multiple Optima
+**Table 2.6**: Results 2c - Examples of multiple optima
 ```
 
-Which solution is the best? Within the limits of this problem, we can't distinguish between them and they are equally good. If an application area expert or the end decision maker prefers one solution over the other, there should be extra information that we can use to extend the model.  
+Notice that all three of these solutions have exactly the same profit but different production plans to generate this profit. Furthermore while we are listing three, there are actually many more solutions. You can force the system to find other solutions by setting the number of Chairs to a number between 0 and 120 or Desks between 0 and 200.  In fact, the number of solutions is infinite if we allow fractional solutions. More generally, when there are two alternate optimal in a linear program with continuous variables, there is actually an infinite number of other optimal solutions between them.  
 \vspace{12pt}
 
-Also, it should be note that when there are two alternate optimal in a linear program with continuous variables, there is actually an infinite number of other optimal solutions between them.  
+Which solution is the best? Within the limits of this problem, we can't distinguish between them and they are equally good. If an application area expert or the end decision maker prefers one solution over the other, there should be extra information that we can use to extend the model.  
 \vspace{12pt}
 
 *Case 3: Redundant Constraint*  \vspace{12pt}

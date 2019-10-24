@@ -201,7 +201,7 @@ These results confirmed that adding one hour of machining time results in a _new
 
 The Shadow Prices can be very helpful in larger problems where questions might come up of trying to evaluate or prioritize limited resources.  
 
-## Shadow Prices of Underutilzed Resources
+## Shadow Prices of Underutilized Resources
 
 The shadow price on wood is zero (as was also the case for assembly hours).  This means that even a large increase in wood would not affect the maximum profit or the optimal production plan. Essentially there is plenty of wood, having more would not allow enable a better profit plan to be possible.  Let's confirm this as well with a numerical example by adding _10,000_ more square feet of wood. See formula 4.3. 
 ```{marginfigure}

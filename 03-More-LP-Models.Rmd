@@ -59,6 +59,8 @@ $$
 ```{marginfigure}
 **Formula 3.1**: Linear MOdel with 3 products and 4 contraints
 ```
+
+
 Similarly, _j=1_ represents fabrication, _j=2_, represents assembly, etc.   Now, let's move on to defining the data.  Let's define the amount to produce of each product, _i_, as $x_i$ and resource _j_ consumed by product _i_ as $R_{i,j}$.  The available resource _j_ is then $A_j$. The profit per product _i_ is then $P_i$. The LP can now be rewritten as showed on the right margin, formula 3.1, if there are three products and four constraints.  
 
 
@@ -107,6 +109,9 @@ grid.table(Profit)
 ```{marginfigure}
 **Table 3.1**: Profit per product
 ```
+
+
+
 We will define the number of products as four and five resource constraints. 
 
 ```{r Product_Planning_4x5, max.width=30}
@@ -677,7 +682,7 @@ Four manufacturing plants are supplying material for distributors in four region
 ```
 
 
-Formulate an explicit model for the above application that solves this transporation problem to find the lowest cost way of transporting as much as product as we can to distributors.  Hint:  You might choose to define variables based on the first letter of source and destination so *XCP* is the amount to ship from Chicago to PDX.  
+Formulate an explicit model for the above application that solves this transportation problem to find the lowest cost way of transporting as much as product as we can to distributors.  Hint:  You might choose to define variables based on the first letter of source and destination so *XCP* is the amount to ship from Chicago to PDX.  
 \vspace{12pt}
 
 Implement and solve the model using ompr.  Be sure to discuss the solution as to why it makes it sense. \vspace{12pt}
