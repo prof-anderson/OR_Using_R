@@ -63,6 +63,7 @@ A simple LP now is to find the production plan of products that results in the m
 * the limitations
 
 Let's start with the goal(s).  In this case, the production manager is simply trying to make as much profit as possible. While cost cutting is also a goal for many organizations, in this case and many applications profit maximization is appropriate. Maximizing profit is the referred to as the *objective* of the model.  \vspace{12pt}
+
 People new to linear programming will often think of the decisions as the amount of each resource to use. Instead, the decisions in this case would be how much to make of each particular product.  This drives the resource usage and the resource usage is a byproduct of these decisions. These decisions can take on a range of values and are therefore called *decision variables*.    \vspace{12pt}
 
 ```{marginfigure}

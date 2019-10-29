@@ -603,6 +603,7 @@ $$
 ```{marginfigure}
 **Formula 3.7**: Base Case for Transportation model  
 ```
+
 If we simply run this model, as is, the minimum cost plan would be to just do nothing! The cost would be zero. In reality, even though we are focused on costs in this application, there is an implied revenue and therefore profit (we hope!) that we aren't directly modeling.  We are likely to instead be wanting to ship all of the product that we can at the lowest possible cost. More precisely, what we want to do is instead determine if the problem is supply limited or demand limited. This is a simple matter of comparing the net demand vs. the net supply and making sure that the lesser is satisfied completely.
 \vspace{12pt}
 
@@ -649,6 +650,7 @@ results.transportation <-solve_model(transportationmodel,
                                     with_ROI(solver ="glpk"))
   
 ```
+
 ## Transhipment Models
 A generalization of the transportation model is that of transhipment where some nodes are intermediate nodes that are neither pure sources or destinations but can have both inflow and outflow.
 
@@ -685,12 +687,11 @@ Four manufacturing plants are supplying material for distributors in four region
 Formulate an explicit model for the above application that solves this transportation problem to find the lowest cost way of transporting as much as product as we can to distributors.  Hint:  You might choose to define variables based on the first letter of source and destination so *XCP* is the amount to ship from Chicago to PDX.  
 \vspace{12pt}
 
-Implement and solve the model using ompr.  Be sure to discuss the solution as to why it makes it sense. \vspace{12pt}
- 
+Implement and solve the model using ompr.  Be sure to interpret and discuss the solution as to why it makes it sense. \vspace{12pt}
 
 ```{exercise, name="Explicit Transportation"}
 ```
-Formulate a generalized model for the above application that solves this transporation problem to find the lowest cost way of transporting as much as product as we can to distributors. 
+Formulate a generalized model for the above application that solves this transportation problem to find the lowest cost way of transporting as much as product as we can to distributors. 
 \vspace{12pt}
 
 
@@ -756,7 +757,7 @@ $$
 ```{exercise, name="Staff Scheduling"}
 ```
 
-Happy Patient Hospital (HPH), has varying needs for nurses throughout the day.  They expect
+Happy Patient Hospital (HPH), has varying needs for nurses throughout the day.  They expect the following numbers of nurses needed over the typical 24 hour period.  Nurses work eight hour shifts, starting at each 4 hour time period specified in the table.  
 
 ```{r, nurse_scheduling, fig.margin=TRUE}
 hph_needs <- matrix (c(50, 140, 260, 140, 100, 80), ncol=1,
@@ -769,6 +770,7 @@ hph_needs <- matrix (c(50, 140, 260, 140, 100, 80), ncol=1,
                                   list(c("Required Nurses"))))
 grid.table (hph_needs)
 ```
+
 
 ```{marginfigure}
 $$
