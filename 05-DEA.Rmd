@@ -22,6 +22,7 @@ output:
 ```{r setup_chapter5, warning=FALSE, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = F)
+knitr::opts_chunk$set(cache = TRUE)
 library (magrittr, quietly = TRUE) #Used for pipes/dplyr
 library (dplyr, quietly = TRUE)
 library (ROI, quietly = TRUE)
@@ -32,6 +33,13 @@ library (pander, quietly = TRUE)
 library (tufte, quietly = TRUE)
 library (tint)
 library (knitr)
+library (TRA)   # Note, may need to install directly from github
+                #       prof-anderson/TRA
+library(DiagrammeRsvg, quietly=TRUE) 
+library(rsvg, quietly=TRUE) 
+library(htmltools, quietly=TRUE)
+     # DiagrammeRsvg, rsvg, htmltools are used for IO diagrams
+
 ```
 
 # Data Envelopment Analysis
@@ -68,12 +76,27 @@ Let's start by defining data.  DEA typically has inputs and outputs.  The input(
 In contrast, outputs are the "good" items that are being produced by the actions of the producers.  Examples of outputs might include automobiles produced, customers served, or graduating students.
 \vspace{12pt}
 
-Let's start by creating a simple dataset. Let's assume that you are a regional manager of a grocery chain.  You have four stores and would like to assess the performance of the store managers using number of employees, _x_, as an input and the weekly sales, _y_, as an output. 
+Let's start by creating a simple dataset - assume that you are a regional manager of a grocery chain. You have four stores and would like to assess the performance of the store managers using number of employees, _x_, as an input and the weekly sales, _y_, as an output. 
 \vspace{12pt}
 
-As the manager responsible for the stores in the region, there are many questions that we may want answered:
+```{r DEA_IO_Plot1, fig.margin=TRUE, fig.height=4}
+# fig.cap="A Simple DEA Model for Store Management"
+Figure <- DrawIOdiagram (c("Employees (FTE)" ), 
+                         c("Sales ($/week)"), 
+                         '"\nStore\n "')
+tmp<-capture.output(rsvg_png(charToRaw(export_svg(Figure)),
+                             'images/DEA_IO_stores.PNG')) 
+knitr::include_graphics("images/DEA_IO_stores.PNG")
 
-* We are interested in questions such as which of these stores are the best?  
+# This follows three steps to work for both HTML & PDF
+#  1. Generate diagram object and save to Figure object
+#  2. Export Figure as image to images directory
+#  3. Display image 
+```
+
+As the manager responsible for the stores in the region, there are many questions that you may want answered:
+
+* Which of these stores are the best?  
 * Which stores are laggards? 
 * For those that are underperforming, are there objective performance targets they should be able to reach?
 * Which stores might be employing best practices that could be adopted by other stores?  
@@ -645,6 +668,17 @@ This data is a little more complicated so let's make sure that we understand the
 ```
 
 The two outputs of _reimbursed patient-days_ and _privately paid patient-days_ are named "y1" and "y2" but otherwise have the same structure as the inputs.  
+
+```{r DEA_IO_Plot_Baker, fig.margin=TRUE, fig.height=4}
+Figure <- DrawIOdiagram (c("staff hours per day", 
+                           "supplies per day"  ), 
+                         c("reimbursed patient-days", 
+                           "privately paid patient-days"),
+                        '"\nNursing\nHome\n "')
+tmp<-capture.output(rsvg_png(charToRaw(export_svg(Figure)),
+                            'images/DEA_Baker_Nursing_Homes.PNG'))
+knitr::include_graphics("images/DEA_Baker_Nursing_Homes.PNG")
+```
 
 ```{r Baker_Data}
 YBaker1 <- matrix(c(14000, 14000, 42000, 28000, 19000, 

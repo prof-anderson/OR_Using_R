@@ -22,6 +22,7 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = F)
+knitr::opts_chunk$set(cache = TRUE)
 suppressPackageStartupMessages(library(magrittr))  # Used for pipes
 suppressPackageStartupMessages(library(dplyr))     # Used for data management
 suppressPackageStartupMessages(library(ROI))
@@ -48,7 +49,7 @@ Unfortunately, there is no such thing as a free lunch-adding integrality can mak
 
 ## Example of Integrality having Little Impact
 
-Let's revisit the earlier example of producing chairs, desks, and tables.  Where we add one extra hour of labor to the machining center.  The resulting LP is shown below.
+Let's revisit the earlier example of producing chairs, desks, and tables.  Where we add one extra hour of labor to the machining center, instead of 1440 hours, we will have 1441 hours.  The resulting LP is shown below.
 
 $$
  \begin{split}
@@ -65,7 +66,7 @@ $$
   (\#eq:ContinuousVars)
 $$
 
-We used the following implementation.  
+We use the following implementation.  
 
 ```{r BaseModelCDT}
 BaseModelCDT <- MIPModel() %>%

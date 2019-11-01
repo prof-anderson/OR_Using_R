@@ -2,6 +2,9 @@
 title: "Operations Research Using R<br />"
 author: "Timothy R. Anderson"
 date: "`r Sys.Date()`"
+github-repo:  "prof-anderson/OR_Using_R"
+cover-image:  "images/OR_Using_R-Book_Cover.png"
+description:  "This book introduces Operations Research usage through R. The current focus is on linear programming (optimization) but may expand in the future.  It does not presume R fluency and teaches some R along the way but does not aim to fully teach R."  
 site: bookdown::bookdown_site
 monofont: Times New Roman
 highlight: monochrome
