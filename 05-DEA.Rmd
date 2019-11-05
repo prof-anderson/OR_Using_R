@@ -80,7 +80,7 @@ Let's start by creating a simple dataset - assume that you are a regional manage
 \vspace{12pt}
 
 ```{r DEA_IO_Plot1, fig.margin=TRUE, fig.height=4}
-# fig.cap="A Simple DEA Model for Store Management"
+# fig.cap='A Simple DEA Model for Store Management'
 Figure <- DrawIOdiagram (c("Employees (FTE)" ), 
                          c("Sales ($/week)"), 
                          '"\nStore\n "')
