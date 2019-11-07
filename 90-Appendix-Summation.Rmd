@@ -1,5 +1,5 @@
 ---
-title: "Appendix Introduction to Summation Notation"
+title: "Appendix Introduction to Math Notation"
 author: "Caroline Blackledge, Alexander Keller, and Shahram Khorasanizadeh"
 header-includes:
 - \usepackage{longtable}
@@ -25,7 +25,7 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = F)
 ```
 # (APPENDIX) Appendix {-}
-# An Introduction to Summation Notation
+# Introduction to Math Notation
 
 ## Basic Summation Notation
 

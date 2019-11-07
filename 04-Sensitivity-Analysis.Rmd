@@ -43,7 +43,7 @@ We can get a lot more than just the objective function value and the decision va
 To demonstrate this, let's revisit our explicit model of production planning.  We will use the explicit version for the sake of clarity and simplicity but the same techniques could be used for the generalized model or other linear programs.  
 \vspace{12pt}
 
-Recall the explicit production planning problem from earlier on Formula 4.1.  
+Recall the explicit production planning problem from earlier on Formulation 4.1.  
 
 ```{marginfigure}
 $$
@@ -62,7 +62,7 @@ $$
 $$
 ```
 ```{marginfigure}
-**Formula 4.1**: Explicit model of production planning
+**formulation 4.1**: Explicit model of production planning
 ```
 
 The implementation that we did earlier for production planning was straightforward.
@@ -138,7 +138,7 @@ This potential for increased profit can't be achieved by simply increasing the r
 
 ## Testing Adding Labor to Machining
 
-Let's test the numerical results from the Shadow Price table by adding an hour of labor to the machining center. The model is represented in the Formula 4.2.  
+Let's test the numerical results from the Shadow Price table by adding an hour of labor to the machining center. The model is represented in the formulation 4.2.  
 
 ```{marginfigure}
 $$
@@ -157,7 +157,7 @@ $$
 $$
 ```
 ```{marginfigure}
-**Formula 4.2**: Explicit model of production planning adding labor to machining
+**formulation 4.2**: Explicit model of production planning adding labor to machining
 ```
 \vspace{12pt}
 And the code is showed in the following chunk, with Table 4.3 showing the optimal model result.
@@ -200,9 +200,9 @@ These results confirmed that adding one hour of machining time results in a _new
 
 The Shadow Prices can be very helpful in larger problems where questions might come up of trying to evaluate or prioritize limited resources.  
 
-## Shadow Prices of Underutilzed Resources
+## Shadow Prices of Underutilized Resources
 
-The shadow price on wood is zero (as was also the case for assembly hours).  This means that even a large increase in wood would not affect the maximum profit or the optimal production plan. Essentially there is plenty of wood, having more would not allow enable a better profit plan to be possible.  Let's confirm this as well with a numerical example by adding _10,000_ more square feet of wood. See formula 4.3. 
+The shadow price on wood is zero (as was also the case for assembly hours).  This means that even a large increase in wood would not affect the maximum profit or the optimal production plan. Essentially there is plenty of wood, having more would not allow enable a better profit plan to be possible.  Let's confirm this as well with a numerical example by adding _10,000_ more square feet of wood. See formulation 4.3. 
 ```{marginfigure}
 $$
  \begin{split}
@@ -220,7 +220,7 @@ $$
 $$
 ```  
 ```{marginfigure}
-**Formula 4.3**: Explicit model for Underutilzed Resources
+**Formulation 4.3**: Explicit model for Underutilzed Resources
 ```
 \vspace{12pt}
 In the same way that it was done in previous point, the next chunk shows how to build in R an underutilized scenario. Table 4.3 contains the result for this model.
@@ -235,11 +235,11 @@ IncWood<- MIPModel() %>%
   
   add_constraint(6*Chairs + 2*Desks + 4*Tables<= 2000)%>% 
   #fabrication
-  add_constraint(8*Chairs + 6*Desks + 4*Tables<= 2000)%>% 
+  add_constraint(8*Chairs+6*Desks + 4*Tables<=2000)%>% 
   #assembly
-  add_constraint(6*Chairs + 4*Desks + 8*Tables<= 1440)%>% 
+  add_constraint(6*Chairs+4*Desks+8*Tables<=1440)%>% 
   #machining
-  add_constraint(40*Chairs + 25*Desks + 16*Tables<= 19600)%>% 
+  add_constraint(40*Chairs+25*Desks+16*Tables<=19600)%>% 
   #wood
   add_constraint(Tables <= 200) %>% #
   solve_model(with_ROI(solver = "glpk"))
@@ -258,7 +258,10 @@ temp2 <- rbind(base_case_res, inc_mc_res, inc_wd_res)
 ```{marginfigure}
 **Table 4.4**: Production Plan with 10,000 More Wood
 ```
-The demand constraint of 200 is an upper limit only on Tables.  Since far fewer than 200 Tables are produced in the optimal production plan, relaxing this constraint also has no impact (shadow price=0).
+
+Increasing wood does not result in any increase in profit or change the production plan.  
+
+Note that another constraint with a zero shadow price was the the demand constraint of 200 on Tables. Since far fewer than 200 Tables are produced in the optimal production plan, relaxing this constraint also has no impact (shadow price=0).  This could also be implemented as a simple upper bound on the *Tables* variable.  
 
 ## Reduced Costs of Variables
 
@@ -283,7 +286,7 @@ grid.table(format(cduals1,digits=4))
 **Table 4.5**: Reduced Costs of Variables
 ```
 
-These results are interesting.  The reduced costs of variables that are between simple upper and lower bounds will be zero. The reduced cost of a variable can be thought as the difference between the value of the  resources consumed by the resources and the value of the variable in the objective function.  All of our variables have simple lower bounds of zero and no upper bounds.  The first two (Chairs and Desks) have a zero reduced cost and the last one (Tables) is negative.  
+These results are interesting.  The reduced costs of variables that are between simple upper and lower bounds will be zero. The reduced cost of a variable can be thought as the difference between the value of the  resources consumed by the product and the value of the product in the objective function.  All of our product's variables have simple lower bounds of zero and no upper bounds.  The first two (Chairs and Desks) have a zero reduced cost and the last one (Tables) is negative.  
 
 Let's start by examining the Shadow Prices of the resources along with the number of each resource used in the production of a single chair.  
 
@@ -309,6 +312,7 @@ grid.table(format(desk_res_used, digits=4))
 **Table 4.7**: Resources Used by a Desk and their Shadow Prices
 ```
 In this case, using the columns from Table 4.6 we can calulate the marginal value as $0+1*6+2*4+0+0=14$.  Since the profit per desk (from the objective function coefficient on Desks) is also $\$ 14$, they are in balance and the difference between them is zero which is why the reduced cost for the _Desks_ variable is also zero.
+\vspace{12pt}
 
 *Reduced Price of Tables*
 
@@ -382,6 +386,7 @@ grid.table(temp3)
 As we expected, the forced change of making one additional table resulted in a decrease of the overall profit from  $\$4800$ to  $\$4876$. This occurred because making one table meant that we had fewer of the precious, limited resources. \vspace{12pt}
 
 This meant that the number of chairs and desks were changed resulting lower profit even though a table is on its own profitable.
+\vspace{12pt}
 
 * Evaluating a New Product Design with Shadow Prices
 
@@ -402,9 +407,7 @@ Even without adding it to the model, we can check to see if it is worthwhile to 
 We could interpret this as a simple hard stop on the decision to produce bookcases but we could go one step further by setting a target for redesigning the product or its production.  If the machining time could be reduced by 4.5 hours to 11.5 hours, then the value of the resources consumed would be equal to the profit and we would be indifferent to producing some bookcases. 
 \vspace{12pt}
 
-
 ## Exercises 
-
 
 ```{exercise, name="Adding Frames"}
 ```

@@ -59,6 +59,8 @@ $$
 ```{marginfigure}
 **Formula 3.1**: Linear MOdel with 3 products and 4 contraints
 ```
+
+
 Similarly, _j=1_ represents fabrication, _j=2_, represents assembly, etc.   Now, let's move on to defining the data.  Let's define the amount to produce of each product, _i_, as $x_i$ and resource _j_ consumed by product _i_ as $R_{i,j}$.  The available resource _j_ is then $A_j$. The profit per product _i_ is then $P_i$. The LP can now be rewritten as showed on the right margin, formula 3.1, if there are three products and four constraints.  
 
 
@@ -107,6 +109,9 @@ grid.table(Profit)
 ```{marginfigure}
 **Table 3.1**: Profit per product
 ```
+
+
+
 We will define the number of products as four and five resource constraints. 
 
 ```{r Product_Planning_4x5, max.width=30}
@@ -598,6 +603,7 @@ $$
 ```{marginfigure}
 **Formula 3.7**: Base Case for Transportation model  
 ```
+
 If we simply run this model, as is, the minimum cost plan would be to just do nothing! The cost would be zero. In reality, even though we are focused on costs in this application, there is an implied revenue and therefore profit (we hope!) that we aren't directly modeling.  We are likely to instead be wanting to ship all of the product that we can at the lowest possible cost. More precisely, what we want to do is instead determine if the problem is supply limited or demand limited. This is a simple matter of comparing the net demand vs. the net supply and making sure that the lesser is satisfied completely.
 \vspace{12pt}
 
@@ -644,6 +650,7 @@ results.transportation <-solve_model(transportationmodel,
                                     with_ROI(solver ="glpk"))
   
 ```
+
 ## Transhipment Models
 A generalization of the transportation model is that of transhipment where some nodes are intermediate nodes that are neither pure sources or destinations but can have both inflow and outflow.
 
@@ -677,15 +684,14 @@ Four manufacturing plants are supplying material for distributors in four region
 ```
 
 
-Formulate an explicit model for the above application that solves this transporation problem to find the lowest cost way of transporting as much as product as we can to distributors.  Hint:  You might choose to define variables based on the first letter of source and destination so *XCP* is the amount to ship from Chicago to PDX.  
+Formulate an explicit model for the above application that solves this transportation problem to find the lowest cost way of transporting as much as product as we can to distributors.  Hint:  You might choose to define variables based on the first letter of source and destination so *XCP* is the amount to ship from Chicago to PDX.  
 \vspace{12pt}
 
-Implement and solve the model using ompr.  Be sure to discuss the solution as to why it makes it sense. \vspace{12pt}
- 
+Implement and solve the model using ompr.  Be sure to interpret and discuss the solution as to why it makes it sense. \vspace{12pt}
 
 ```{exercise, name="Explicit Transportation"}
 ```
-Formulate a generalized model for the above application that solves this transporation problem to find the lowest cost way of transporting as much as product as we can to distributors. 
+Formulate a generalized model for the above application that solves this transportation problem to find the lowest cost way of transporting as much as product as we can to distributors. 
 \vspace{12pt}
 
 
@@ -732,6 +738,40 @@ Implement and solve the standard form of the LP using R.  Be sure to interpret t
 
 Convert the generalized production planning LP, displayed on the right in formula 3.7, into standard form.  
 Hint: define a set of variables, $s_j$ to reflect these changes and add it to the following formulation.   
+```{marginfigure}
+$$
+ \begin{split}
+ \begin{aligned}
+    \text{Maximize  }   &  \sum_{i=1}^3 P_i x_i \\
+    \text{subject to } & \sum_{i=1}^3 R_{i,j}x_i \leq A_j  \; \forall \; j\\
+                       & x_i \geq 0  \; \forall \; i
+  \end{aligned}
+  \end{split}
+$$
+```
+```{marginfigure}
+**Formula 3.7**: Generalized LP case
+```
+
+\vspace{12pt}
+```{exercise, name="Staff Scheduling"}
+```
+
+Happy Patient Hospital (HPH), has varying needs for nurses throughout the day.  They expect the following numbers of nurses needed over the typical 24 hour period.  Nurses work eight hour shifts, starting at each 4 hour time period specified in the table.  
+
+```{r, nurse_scheduling, fig.margin=TRUE}
+hph_needs <- matrix (c(50, 140, 260, 140, 100, 80), ncol=1,
+                     dimnames = c(list(c("midnight - 4 AM",
+                                         "4 AM - 8 AM",
+                                         "8 AM - noon",
+                                         "noon - 4 PM",
+                                         "4 PM - 8 PM",
+                                         "8 PM - midnight")),
+                                  list(c("Required Nurses"))))
+grid.table (hph_needs)
+```
+
+
 ```{marginfigure}
 $$
  \begin{split}

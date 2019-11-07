@@ -605,10 +605,10 @@ Let's take another look at comparing solvers by examining their popularity. More
 
 ```{r lp_package_download_stats, echo=FALSE, fig.width=10, fig.height=6, fig.fullwidth=TRUE}
 
-optim_packages <- c("alabama",  "DEoptim",  "Rglpk", 
-                  "lpSolve", "clpAPI",
-                  "scs", "Rsymphony", 
-                  "lpSolveAPI", "glpkAPI")
+optim_packages <- c("lpSolve", "lpSolveAPI",  "Rglpk", 
+                   "clpAPI",  "DEoptim", "Rsymphony", 
+                   "glpkAPI", "alabama","scs"
+)
 
 pkg_dl_data <- cran_stats(packages = optim_packages)
 
@@ -628,9 +628,9 @@ We will focus our attention on the ROI packages that emphasize linear programmin
 
 ```{r ROI_Package_Stats, echo=FALSE, fig.width=10, fig.height=6, fig.fullwidth=TRUE}
 
-ROI_packages <- c("ROI.plugin.alabama", "ROI.plugin.clp", 
-                  "ROI.plugin.glpk", "ROI.plugin.lpsolve", 
-                  "ROI.plugin.scs",  "ROI.plugin.symphony")
+ROI_packages <- c( "ROI.plugin.glpk",   "ROI.plugin.symphony", 
+                  "ROI.plugin.lpsolve", "ROI.plugin.scs", 
+                  "ROI.plugin.clp",     "ROI.plugin.alabama")
 
 pkg_dl_data <- cran_stats(packages = ROI_packages)
 
