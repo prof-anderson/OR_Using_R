@@ -624,7 +624,7 @@ Similarly, if we try to use equality constraints for both the supply and demand 
 `add_variable(x[i, j], type = "continuous", i = 1:10, j = 1:10, lb=0)`
 ```
 
-Let's show how to set up a basic implementation of the tranportation problem in ompr.  This demonstrates the use of double subscripted variables. Note that I have not defined the data.  Also, you it should be customized for a particular application of being demand or supply constrained but it will give a good running head start.
+Let's show how to set up a basic implementation of the tranportation problem in ompr.  This demonstrates the use of double subscripted variables. Note that I have not defined the data.  Also, it should be customized for a particular application of being demand or supply constrained but it will give a good running head start.
 \vspace{12pt}
 
 ```{r transportation, eval=FALSE}

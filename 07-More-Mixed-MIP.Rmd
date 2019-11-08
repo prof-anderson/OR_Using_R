@@ -241,8 +241,10 @@ model
 ```
 
 The number of _x_ (or `Vx`) variables is $m \cdot n =20 \cdot 100$ or 2000 and the number of _y_ (or `Vy`) variables is $m$ or 20, the total number of variables is 2020 which matches the model summary. A similar calculation can be done on the constraints.  The number of variables and constraints make this a non-trivial sized MIP problem. Fortunately, solving still turns out to be pretty easy on a personal computer but be cautious of solving this on a cloud instance.
+\vspace{12pt}
 
 *Solving the Warehouse Location Problem* 
+\vspace{12pt}
 
 We are now ready to work on solving the model. We will start with using `glpk`.  
 \vspace{12pt}
@@ -447,6 +449,7 @@ We'll demonstrate the performance for illustration purposes.  Again, do not run 
   \vspace{12pt}
   
 *Performance of `glpk`*
+\vspace{12pt}
 
 We have been using `glpk` for all of our earlier examples.  For the sake of comparison, let's start off with it too.  We will use the `tictoc` package to help us collect data on timing.  Note that timing can vary even if the same problem is solved on the same computer twice in rapid succession. 
 \vspace{12pt}
@@ -471,8 +474,10 @@ glpktime1 <- c("glpk", glpktime$toc - glpktime$tic,
 
 The `glpk` solver worked.  We'll take the results and combine them with other shortly
   \vspace{12pt}
+  
 *Performance of `symphony`*
 
+\vspace{12pt}
 Let's move on to testing the `symphony` solver.
 
 ```{r timesymphony, cache=TRUE }

@@ -525,6 +525,8 @@ Notice that since the solver status was infeasible, the values for the decision 
 \vspace{12pt}
 
 *Case 2: Multiple Optima*
+\vspace{12pt}
+
 
 There are a couple of ways of creating situations for multiple optima. One situation is to have a decision variable be identical or a linear multiple of another variable. In this case, each table now consumes exactly half of the resources as a desk and generates half the profit of a desk.
 \vspace{12pt}

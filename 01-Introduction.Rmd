@@ -341,5 +341,3 @@ Assume that your company's product has a demand of 10 widgets on Monday, increas
 ```{exercise, name="Creating a Matrix of Demand for Two Products"} 
 Assume that your company's product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday. Gadgets have a demand of 20 on Monday, increasing by 3 units a day through Sunday. Build a matrix showing each product as a separate row.
 ```
-
-

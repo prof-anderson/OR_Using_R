@@ -209,10 +209,11 @@ library(pander,quietly = TRUE)
 #Load Data Table
 M1<-matrix(c(11,12,13,14,15), ncol=1)
 rownames(M1)<-list("Design", "Materials", 
-                   "Production", "Packaging", "Distribution")
+                   "Production", "Packaging", 
+                   "Distribution")
 colnames(M1)<-list("Product 1")
 pander(M1, 
-       caption="Table 1: Itemized Production Costs for Product 1")
+       caption="Production Costs for Product 1")
 
 ```
 
@@ -234,10 +235,13 @@ Let's say we now have additional products being produced.
 ```{r}
 
 #Load Data Table 2
-M2<-matrix(c(11,12,13,14,15,21,22,23,24,25,31,32,33,34,35), ncol=3)
-rownames(M2)<-list("Design", "Materials", "Production", "Packaging", "Distribution")
+M2<-matrix(c(11,12,13,14,15,21,22,23,24,25,31,32,33,34,35), 
+           ncol=3)
+rownames(M2)<-list("Design", "Materials", "Production", 
+                   "Packaging", "Distribution")
 colnames(M2)<-list("Product 1", "Product 2", "Product 3")
-pander(M2, caption="Table 2: Itemized Production Costs for Three Products")
+pander(M2, caption=
+         "Itemized Production Costs for Three Products")
 
 ```
 
@@ -354,7 +358,8 @@ A.  Write an expression using summation notation to represent the total annual c
 B.  Write a double summation expression to represent the total amount the company pays annually to compensate all its employees if each job title has $n_j$ employees.  
 (Need possible sample expression for A. and B.)
 
-## References
+## Internet Resources for Mathematical Notation
+
 http://www.columbia.edu/itc/sipa/math/summation.html
 https://www.overleaf.com/learn/latex/Integrals,_sums_and_limits#Sums_and_products 
 http://www.u.arizona.edu/~kuchi/Courses/MAT167/Files/LH_LEC.0130.Intro.SummationNotation.pdf
@@ -364,3 +369,4 @@ http://www.statpower.net/Content/310/R%20Stuff/SampleMarkdown.html
 http://www.calvin.edu/~rpruim/courses/m343/F12/RStudio/LatexExamples.html
 http://pages.stat.wisc.edu/~jgillett/371/RStudio/RMarkdown.pdf
 https://www.academia.edu/21823064/Creating_Dynamic_Mathematical_Documents_in_RStudio_by_Unifying_Computing_with_R_and_Typesetting_with_LaTeX
+
