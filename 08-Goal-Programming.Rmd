@@ -1,5 +1,5 @@
 ---
-title: "Getting Started with Goal Programming"
+title: "Goal Programming"
 header-includes:
 - \usepackage{longtable}
 - \usepackage{caption}
@@ -33,7 +33,7 @@ library (tint)
 library (tufte)
 ```
 
-# Goal Programming and Multiple Objectives
+# Goal Programming
 
 Up until this point, we assumed that there would be a single, clear objective function. Often we have more complex situations where there are multiple conflicting objectives.  In our earlier production planning case, we might have additional objectives besides maximizing profit such as minimizing environmental waste or longer term strategic positioning. In the case of our capital budgeting problem, we can envision a range of additional considerations beyond simple unexpected net present value maximization.  
 \vspace{12pt}
@@ -41,7 +41,8 @@ Up until this point, we assumed that there would be a single, clear objective fu
 Let's look at another type of problem, staff scheduling.  The Information Technology Security Institute or ITSI needs to maintain 24x7 staffing to respond to crises in addition to regular workloads. The result is that there is a varying demand over time. For the sake of simplicity, let's treat the schedule as a series of 21 eight hour shifts.   
 \vspace{12pt}
 
-ITSI has a variety of staff with different skill sets, pay rates, preferences, and scheduling requests.  Jane is the Director of ITSI and wants to find a good schedule of workers.  
+ITSI has a variety of staff with different skill sets, pay rates, preferences, and scheduling requests.  Jane is the Director of ITSI and wants to find a good schedule of workers.  \vspace{12pt}
+
 
 ```{r}
 Req <- matrix(c(10,35,30,
@@ -51,19 +52,10 @@ Req <- matrix(c(10,35,30,
 Idea, extend Dirk's class schedule assignment example to include secondary objectives.  
 \vspace{12pt}
 
-```{marginfigure}
-**MORE TO BE ADDED**
-```
+The City of Bartland has a problem with houselessness.  Two ideas have been proposed for dealing with the houselessness problem.  The first option is to build new, government subsidized tiny homes for annual cost of $\$10K$ which would serve one adult 90% of the time and a parent with a child 10% of the time. Another option is to create a rental subsidy program which costs $\$10K$ per year per unit which typically serves a single adult (15%), two adults (20%), an adult with one child (30%), an adult with two children (20%), two adults with one child (10%), and two adults with two children (5%). Bartland's official Chief Economist has estimated that this subsidy program would tend to increase housing prices in a very tight housing market by an average of 0.001%. The Bartland City Council has $\$1000K$ available to reappropriate from elsewhere in the budget and would like to find the _best_ way to use this budget to help with the houselessness problem.  Both programs require staff 10% of a full time equivalent staff member to process paperwork, conduct visits, and other service related activities.  There are seven staff members available to work on these activities.
+\vspace{12pt}
 
-The City of Bartland has a problem with houselessness.  Two ideas have been proposed for dealing with the houselessness problem.  The first option is to build new, government subsidized tiny homes for annual cost of $\$10K$ which would serve one adult 90% of the time and a parent with a child 10% of the time. Another option is to create a rental subsidy program which costs $\$10K$ per year per unit which typically serves a single adult (15%), two adults (20%), an adult with one child (30%), an adult with two children (20%), two adults with one child (10%), and two adults with two children (5%). Bartland's official Chief Economist has estimated that this subsidy program would tend to increase housing prices in a very tight housing market by an average of 0.001%. The Bartland City Council has $\$1000K$ available to reappropriate from elsewhere in the budget and would like to find the _best_ way to use this budget to help with the houselessness problem.
-
-One group on the city council wants to serve as many people (both children and adults) as possible while keeping under the total budget limit.  
-
-The second group wants to save as many children from houselessness as possible.  
-
-Let's create an appropriate model from the perspective of the first group.  
-
-As usual, start by thinking of the decision variables.  In this case, let's define _H_ to be number of tiny homes to be built and _R_ to be the rental housing subsidies provided.
+Let's summarize the data for two programs.  Note that each unit or intervention may deal with a different person in a different situation, expected numbers of people served may be appropriate to model.
 
 | Per unit                      | Tiny Homes (H) | Rent Subsidy (R) |   
 |------------------------------:|:--------:|:------:|
@@ -79,66 +71,257 @@ As usual, start by thinking of the decision variables.  In this case, let's defi
 |  Cost per unit ($\$K$)        |  $\$10$  | $\$25$ |
 |  Staff support per unit       |  0.1     | 0.1    |
 
+One group on the city council wants to serve as many people (both children and adults) as possible while keeping under the total budget limit.  \vspace{12pt}
+
+The second group wants to save as many children from houselessness as possible.  \vspace{12pt}
+
+As usual, start by thinking of the decision variables.  In this case, let's define _H_ to be number of tiny homes to be built and _R_ to be the rental housing subsidies provided.  Of course these should be non-negative variables.  We could use integer variables or continuous variables.    
 \vspace{12pt}
 
+Next let's constraints and formulate them in terms of the decision variables. We have two constraints. The first one for the budget is simply: $20 \cdot H+ 10\cdot R \leq 1000$ 
 
+Now, let's think about our objectives.  The first group wants to serve as many people as possible so the objective function is $$\text {max } 1.1 \cdot H + 2.25 \cdot R$$
+\vspace{12pt}
+
+Similarly, since the second group is focused on children, their objective function is $$\text {max } 0.1\cdot H + 0.9\cdot R$$.  
+
+Let's put this all together in a formulation.
 $$
  \begin{split}
  \begin{aligned}
-    \text{max   } &  1.1 \cdot H + 2.25 \cdot R \\
-    \text{s.t.  } &   20 \cdot H + 10 \cdot R \leq 1000 \\
-    \text{   } & H, R \geq 0  
+    \text{max   } & 1.1 \cdot H + 2.25 \cdot R \\
+    \text{max   } & 0.1 \cdot H + 0.9  \cdot R \\
+    \text{s.t.  } &  20 \cdot H + 10   \cdot R \leq 1000 \\
+                  & 0.1 \cdot H + 0.1  \cdot R \leq 7 \\
+    \ & H, \; R \; \in \{0, 1, 2,  \ldots \}
   \end{aligned}
   \end{split}
 $$
 
-```{r StdModel, echo=FALSE}
+Alas, linear programming models and the Simplex method only allow for a single objective function.  Let's go ahead solve both 
+
+$$
+ \begin{split}
+ \begin{aligned}
+    \text{max   } & 1.1 \cdot H + 2.25 \cdot R \\
+    \text{s.t.  } &  20 \cdot H + 10   \cdot R \leq 1000 \\
+                  & 0.1 \cdot H + 0.1  \cdot R \leq 7 \\
+    \ & H, \; R \; \in \{0, 1, 2,  \ldots \}
+  \end{aligned}
+  \end{split}
+$$
+
+```{r StdModel, echo=TRUE}
 Home1Model <- MIPModel() %>%
  # To avoid name space conflicts, using a prefix of V
  #    for ompr variables.
-  
- add_variable(VH, type = "continuous", lb = 0) %>%
- add_variable(VR, type = "continuous",lb = 0) %>%
-  
- set_objective(1.1*VH + 2.25*VR,"max") %>%
-  
- add_constraint(10*VH + 25*VR <= 1000) %>% 
- add_constraint(0.1*VH + 0.1*VR <= 7) 
+  add_variable(VH, type = "integer", lb = 0) %>%
+  add_variable(VR, type = "integer",lb = 0) %>%
+  set_objective(1.1*VH + 2.25*VR,"max") %>%
+  add_constraint(10*VH + 25*VR <= 1000) %>% 
+  add_constraint(0.1*VH + 0.1*VR <= 7) 
 
-  res_Home1 <- solve_model(Home1Model, 
+res_Home1 <- solve_model(Home1Model, 
                         with_ROI(solver = "glpk"))
-  res_Home1
-  
+
 H  <- get_solution (res_Home1 , VH)
 R  <- get_solution (res_Home1 , VR)
 
-sum_Home1           <- cbind(H, R)
-rownames(sum_Home1) <- "Group 1:  Serve All People"
+sum_Home1           <- cbind(res_Home1$objective_value,H, R)
+colnames(sum_Home1) <- c("Obj. Func. Val.", "H", "R")
+rownames(sum_Home1) <- "Group 1: Max People"
 pander(sum_Home1)
 
 ```
 
 Now, let's examine the group's model that has an objective of maximizing the expected number of children served.  
 
+$$
+ \begin{split}
+ \begin{aligned}
+    \text{max   } & 0.1 \cdot H + 0.9  \cdot R \\
+    \text{s.t.  } &  20 \cdot H + 10   \cdot R \leq 1000 \\
+                  & 0.1 \cdot H + 0.1  \cdot R \leq 7 \\
+    \ & H, \; R \; \in \{0, 1, 2,  \ldots \}
+  \end{aligned}
+  \end{split}
+$$
+
 ```{r}
 Home2Model <- set_objective(Home1Model, 
                             0.1*VH + 0.9*VR,"max")
   res_Home2 <- solve_model(Home2Model, 
                         with_ROI(solver = "glpk"))
-  res_Home2
-  
+
 H  <- get_solution (res_Home2 , VH)
 R  <- get_solution (res_Home2 , VR)
 
-sum_Home2           <- cbind(H, R)
-rownames(sum_Home2) <- "Group 2:  Focus on the Children"
-pander(sum_Home2)
+sum_Home2           <- cbind(res_Home2$objective_value,H, R)
+colnames(sum_Home2) <- c("Obj. Func. Val.", "H", "R")
+rownames(sum_Home2) <- "Group 2: Max Children"
+
+pander(rbind(sum_Home1, sum_Home2))
 ```
 
 So which group has the _better_ model?  The objective function value for group 1's model is higher but it is in different units (people served) versus group 2's model of children served.  
 
-Both group's have admirable goals.  We can view this as a case of goal programming.  
+Both group's have admirable objectives.  We can view this as a case of goal programming.  By definition, we know that these are the best values that can be achieved in terms of that objective function.  Let's treat these optimal values as targets to strive for and measure the amount by which fail to achieve these targets.  We'll define target $T_1 =$ `r res_Home1$objective_value` and $T_2 =$ `r res_Home2$objective_value`.
 
-There are two major ways of accommodating the two goals.  
+In order to do this, we need to use deviational variables.  These are like slack variables from the standard form of linear programs.  Since the deviations can only be one sided in this case, we only need to have deviations in one direction.  We will define $d_1$ as the deviation in goal 1 (Maximizing people served) and $d_1$ as the deviation in in goal 2 (Maximizing children served).
+
+Let's now create the modified formulation.
+
+$$
+ \begin{split}
+ \begin{aligned}
+    \text{min   } & d_1 + d_2 \\
+    \text{s.t.  } & 20 \cdot H + 10   \cdot R \leq 1000 \\
+                  & 0.1 \cdot H + 0.1  \cdot R \leq 7 \\
+                  &  1.1 \cdot H + 2.25 \cdot R - d_1 = T_1 = 100 \\
+                  & 0.1 \cdot H + 0.9  \cdot R - d_2 = T_2 = 36 \\
+                      \ & H, \; R \; \in \{0, 1, 2,  \ldots \} \\
+    \ & d_1, \; d_2 \geq 0
+  \end{aligned}
+  \end{split}
+$$
+
+```{r MinDevModel, echo=FALSE}
+T1 <- res_Home1$objective_value
+T2 <- res_Home2$objective_value
+
+Home3Model <- MIPModel() %>%
+ # To avoid name space conflicts, using a prefix of V
+ #    for ompr variables.
+  add_variable(VH, type = "integer", lb = 0) %>%
+  add_variable(VR, type = "integer",lb = 0) %>%
+  add_variable(Vd1, type = "continuous",lb = 0) %>%
+  add_variable(Vd2, type = "continuous",lb = 0) %>%
+  set_objective(Vd1 + Vd2,"min") %>%
+  add_constraint(1.1*VH + 2.25*VR + Vd1 == 100) %>%
+  add_constraint(0.1*VH + 0.9*VR + Vd2 == 36) %>%
+  add_constraint(10*VH + 25*VR <= 1000) %>% 
+  add_constraint(0.1*VH + 0.1*VR <= 7) 
+
+res_Home3 <- solve_model(Home3Model, 
+                        with_ROI(solver = "glpk"))
+  
+H  <- get_solution (res_Home3 , VH)
+R  <- get_solution (res_Home3 , VR)
+d1  <- get_solution (res_Home3 , Vd1)
+d2  <- get_solution (res_Home3 , Vd2)
+
+sum_Home3           <- cbind(res_Home3$objective_value,H, R, d1, d1/T1, d2, d2/T2)
+colnames(sum_Home3) <- c("Obj. Func. Val.", "H", "R", "d1", "d1%", "d2", "d2%")
+rownames(sum_Home3) <- "Min sum of deviations"
+
+pander(sum_Home3)
+
+```
 
 
+The deviation variables have different units though.  One way to accommodate this would be to minimize the sum of percentages missed.  
+
+$$
+ \begin{split}
+ \begin{aligned}
+    \text{min   } & \frac {d_1} {T_1} + \frac {d_2} {T_2} \\
+    \text{s.t.  } & 20 \cdot H + 10   \cdot R \leq 1000 \\
+                  & 0.1 \cdot H + 0.1  \cdot R \leq 7 \\
+                  &  1.1 \cdot H + 2.25 \cdot R + d_1 = T_1 \\
+                  & 0.1 \cdot H + 0.9  \cdot R + d_2 = T_2  \\
+    \ & H, \; R \; \in \{0, 1, 2,  \ldots \} \\
+    \ & d_1, \; d_2 \geq 0
+  \end{aligned}
+  \end{split}
+$$
+
+
+```{r MinDevPercModel, echo=FALSE}
+Home4Model <- MIPModel() %>%
+ # To avoid name space conflicts, using a prefix of V
+ #    for ompr variables.
+  add_variable(VH, type = "integer", lb = 0) %>%
+  add_variable(VR, type = "integer",lb = 0) %>%
+  add_variable(Vd1, type = "continuous",lb = 0) %>%
+  add_variable(Vd2, type = "continuous",lb = 0) %>%
+  set_objective(Vd1/T1 + Vd2/T2 ,"min") %>%
+  add_constraint(1.1*VH + 2.25*VR + Vd1 == T1) %>%
+  add_constraint(0.1*VH + 0.9*VR + Vd2 == T2) %>%
+  add_constraint(10*VH + 25*VR <= 1000) %>% 
+  add_constraint(0.1*VH + 0.1*VR <= 7) 
+
+res_Home4 <- solve_model(Home4Model, 
+                        with_ROI(solver = "glpk"))
+res_Home4
+  
+H  <- get_solution (res_Home4 , VH)
+R  <- get_solution (res_Home4 , VR)
+d1  <- get_solution (res_Home4 , Vd1)
+d2  <- get_solution (res_Home4 , Vd2)
+
+sum_Home4           <- cbind(res_Home4$objective_value,H, R, d1, d1/T1, d2, d2/T2)
+colnames(sum_Home4) <- c("Obj. Func. Val.", "H", "R", "d1", "d1%", "d2", "d2%")
+rownames(sum_Home4) <- "Min sum of deviation %s"
+
+pander(sum_Home4)
+
+```
+
+Another approach is to minimize the maximum deviation.  This is often abbreviated as a minimax. This is essentially the same as the expression, "a chain is only as strong as its weakest link".  In Japan, there is an expression that the "the nail that sticks up, gets pounded down" and in China, "the tallest blade of grass gets cut down."  We can implement the same idea here by introducing a new variable, _Q_ that must be at least as large as the largest miss.  
+
+$$
+ \begin{split}
+ \begin{aligned}
+    \text{min   } & Q \\
+    \text{s.t.  } & 20 \cdot H + 10   \cdot R \leq 1000 \\
+                  & 0.1 \cdot H + 0.1  \cdot R \leq 7 \\
+                  & 1.1 \cdot H + 2.25 \cdot R + d_1 = T_1 \\
+                  & 0.1 \cdot H + 0.9  \cdot R + d_2 = T_2  \\
+                  & Q \geq \frac {d_1} {T_1} \\
+                  & Q \geq \frac {d_2} {T_2} \\
+                    \ & H, \; R \; \in \{0, 1, 2,  \ldots \} \\
+    \ & d_1, \; d_2 \geq 0
+  \end{aligned}
+  \end{split}
+$$
+
+Let's show the full R implementation of our minimax model.
+
+
+```{r MiniMaxModel, echo=TRUE}
+Home5Model <- MIPModel() %>%
+ # To avoid name space conflicts, using a prefix of V
+ #    for ompr variables.
+  add_variable(Q,  type = "continuous") %>%
+  add_variable(VH, type = "integer", lb = 0) %>%
+  add_variable(VR, type = "integer",lb = 0) %>%
+  add_variable(Vd1, type = "continuous",lb = 0) %>%
+  add_variable(Vd2, type = "continuous",lb = 0) %>%
+  set_objective(Q ,"min") %>%
+  add_constraint(Q>=Vd1/T1) %>%
+  add_constraint(Q>=Vd2/T2) %>%
+  add_constraint(1.1*VH + 2.25*VR + Vd1 == T1) %>%
+  add_constraint(0.1*VH + 0.9*VR + Vd2 == T2) %>%
+  add_constraint(10*VH + 25*VR <= 1000) %>% 
+  add_constraint(0.1*VH + 0.1*VR <= 7) 
+
+res_Home5 <- solve_model(Home5Model, 
+                        with_ROI(solver = "glpk"))
+res_Home5
+  
+H  <- get_solution (res_Home5 , VH)
+R  <- get_solution (res_Home5 , VR)
+d1  <- get_solution (res_Home5 , Vd1)
+d2  <- get_solution (res_Home5 , Vd2)
+
+sum_Home5           <- cbind(res_Home5$objective_value,H, R, d1, d1/T1, d2, d2/T2)
+colnames(sum_Home5) <- c("Obj. Func. Val.", "H", "R", "d1", "d1%", "d2", "d2%")
+rownames(sum_Home5) <- "Minimax"
+
+pander(rbind(sum_Home3, sum_Home4, sum_Home5))
+
+```
+
+The minimax solution finds an alternative that is still Pareto optimal.  
+
+Careful readers may note that children are effectively double counted between the two objective functions when deviations are added.  
