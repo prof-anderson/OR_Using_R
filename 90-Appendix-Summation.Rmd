@@ -250,7 +250,7 @@ We might wish to determine the cost to produce each of the three products from s
 $$\sum_{i=1}^5x_{i,j}\ \; \forall\ j
 $$
 
-This notation indicates that we are summing the cost values in the $i$ rows for each product in column $j$.  Note that the symbol $\forall$ shown in the summation above translates to the phrase"for all."  The summation expression above can be interpreted as "the sum of all values of $x_{i,j}$, starting with an initial value of $i=1$, $for\ all$ values of $j$."  The expression will result in $j$ summations.
+This notation indicates that we are summing the cost values in the $i$ rows for each product in column $j$.  Note that the symbol $\forall$ shown in the summation above translates to the phrase "for all."  The summation expression above can be interpreted as "the sum of all values of $x_{i,j}$, starting with an initial value of $i=1$, $for\ all$ values of $j$."  The expression will result in $j$ summations.
 
 $$
 \begin{split}
@@ -275,7 +275,7 @@ AND\\
 \end{split}
 $$
 
-We can see that the summation expression resulted in three summation values since $j$, the number of products, is equal to three.  These summation values are 65, 115, and 165, representing the total cost from start to finish to produce Product 1, Product 2, and Product 3 respectively.
+We can see that the summation expression resulted in three summation values since $j$, can take on values of 1, 2, or 3. These summation values are 65, 115, and 165, representing the total cost from start to finish to produce Product 1, Product 2, and Product 3 respectively.
 
 ## Double Summation
 

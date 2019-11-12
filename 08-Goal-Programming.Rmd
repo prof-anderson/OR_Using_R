@@ -5,13 +5,13 @@ header-includes:
 - \usepackage{caption}
 monofont: Times New Roman
 output:
+  tufte::tufte_html: default
   tufte::tufte_handout:
     citation_package: natbib
     latex_engine: xelatex
     toc: TRUE
     number_sections: true
     highlight: monochrome
-  tufte::tufte_html: default
   tufte::tufte_book:
     citation_package: natbib
     latex_engine: xelatex
@@ -54,3 +54,91 @@ Idea, extend Dirk's class schedule assignment example to include secondary objec
 ```{marginfigure}
 **MORE TO BE ADDED**
 ```
+
+The City of Bartland has a problem with houselessness.  Two ideas have been proposed for dealing with the houselessness problem.  The first option is to build new, government subsidized tiny homes for annual cost of $\$10K$ which would serve one adult 90% of the time and a parent with a child 10% of the time. Another option is to create a rental subsidy program which costs $\$10K$ per year per unit which typically serves a single adult (15%), two adults (20%), an adult with one child (30%), an adult with two children (20%), two adults with one child (10%), and two adults with two children (5%). Bartland's official Chief Economist has estimated that this subsidy program would tend to increase housing prices in a very tight housing market by an average of 0.001%. The Bartland City Council has $\$1000K$ available to reappropriate from elsewhere in the budget and would like to find the _best_ way to use this budget to help with the houselessness problem.
+
+One group on the city council wants to serve as many people (both children and adults) as possible while keeping under the total budget limit.  
+
+The second group wants to save as many children from houselessness as possible.  
+
+Let's create an appropriate model from the perspective of the first group.  
+
+As usual, start by thinking of the decision variables.  In this case, let's define _H_ to be number of tiny homes to be built and _R_ to be the rental housing subsidies provided.
+
+| Per unit                      | Tiny Homes (H) | Rent Subsidy (R) |   
+|------------------------------:|:--------:|:------:|
+|  1 adult                      |  90%     |   15%  |  
+|  1 adult, 1 child             |  10%     |  30%   | 
+|  1 adult, 2 children          |   0%     |  20%   |  
+|  2 adults                     |   0%     |  20%   |  
+|  2 adults, 1 child            |   0%     |  10%   |  
+|  2 adults, 2 children         |   0%     |   5%   |  
+|  Expected children served     |  0.1     |  0.9   |  
+|  Expected adults served       |  1.0     |  1.35  | 
+|  Expected total people served |  1.1     |  2.25  |
+|  Cost per unit ($\$K$)        |  $\$10$  | $\$25$ |
+|  Staff support per unit       |  0.1     | 0.1    |
+
+\vspace{12pt}
+
+
+$$
+ \begin{split}
+ \begin{aligned}
+    \text{max   } &  1.1 \cdot H + 2.25 \cdot R \\
+    \text{s.t.  } &   20 \cdot H + 10 \cdot R \leq 1000 \\
+    \text{   } & H, R \geq 0  
+  \end{aligned}
+  \end{split}
+$$
+
+```{r StdModel, echo=FALSE}
+Home1Model <- MIPModel() %>%
+ # To avoid name space conflicts, using a prefix of V
+ #    for ompr variables.
+  
+ add_variable(VH, type = "continuous", lb = 0) %>%
+ add_variable(VR, type = "continuous",lb = 0) %>%
+  
+ set_objective(1.1*VH + 2.25*VR,"max") %>%
+  
+ add_constraint(10*VH + 25*VR <= 1000) %>% 
+ add_constraint(0.1*VH + 0.1*VR <= 7) 
+
+  res_Home1 <- solve_model(Home1Model, 
+                        with_ROI(solver = "glpk"))
+  res_Home1
+  
+H  <- get_solution (res_Home1 , VH)
+R  <- get_solution (res_Home1 , VR)
+
+sum_Home1           <- cbind(H, R)
+rownames(sum_Home1) <- "Group 1:  Serve All People"
+pander(sum_Home1)
+
+```
+
+Now, let's examine the group's model that has an objective of maximizing the expected number of children served.  
+
+```{r}
+Home2Model <- set_objective(Home1Model, 
+                            0.1*VH + 0.9*VR,"max")
+  res_Home2 <- solve_model(Home2Model, 
+                        with_ROI(solver = "glpk"))
+  res_Home2
+  
+H  <- get_solution (res_Home2 , VH)
+R  <- get_solution (res_Home2 , VR)
+
+sum_Home2           <- cbind(H, R)
+rownames(sum_Home2) <- "Group 2:  Focus on the Children"
+pander(sum_Home2)
+```
+
+So which group has the _better_ model?  The objective function value for group 1's model is higher but it is in different units (people served) versus group 2's model of children served.  
+
+Both group's have admirable goals.  We can view this as a case of goal programming.  
+
+There are two major ways of accommodating the two goals.  
+
+

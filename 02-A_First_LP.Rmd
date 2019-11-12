@@ -527,7 +527,6 @@ Notice that since the solver status was infeasible, the values for the decision 
 *Case 2: Multiple Optima*
 \vspace{12pt}
 
-
 There are a couple of ways of creating situations for multiple optima. One situation is to have a decision variable be identical or a linear multiple of another variable. In this case, each table now consumes exactly half of the resources as a desk and generates half the profit of a desk.
 \vspace{12pt}
 To clarify the objective function value, I will define a variable for Profit.  Add a constraint to set the value of profit to what had been the objective function, and now simply maximize profit. This will allow me to find the objective function value by using the `get_solution` for the variable profit.
@@ -1020,12 +1019,12 @@ lm(seriesDf$y2~seriesDf$x1))
 head(intersection)
 ```
 
-At this point we have everything we need to see our results on a graph. There are a few ways to build graphs in R but one very popular and powerful library is _ggplot_. 
+At this point we have everything we need to see our results on a graph. There are a few ways to build graphs in R but one very popular and powerful package is `ggplot`. 
 ```{marginfigure}
-**ggplot** was written by [Hadley Wickham](http://hadley.nz/) to implement the [_Grammar of Graphics_](https://www.amazon.com/Grammar-Graphics-Statistics-Computing/dp/0387245448). That book is kind of expensive, a more affordable intro would be [Hadley's overview](http://vita.had.co.nz/papers/layered-grammar.pdf).
+**ggplot** was written by [Hadley Wickham](http://hadley.nz/) to implement Leland Wilkinson's [_Grammar of Graphics_](https://www.amazon.com/Grammar-Graphics-Statistics-Computing/dp/0387245448). Hadley Wickham has written a book specifically for gpplot2 with a publicly available version of the ebook [Hadley's overview](http://vita.had.co.nz/papers/layered-grammar.pdf).
 ```
 
-In this example we are going to just scratch the surface of _ggplot_ functionality, so know that if you study up a bit you can do much more!
+In this example we are going to just scratch the surface of `ggplot2` functionality, so know that if you study up a bit you can do much more!
 
 ```{r Plotting_Lines, fig.margin=TRUE}
 #make a plot with PSU colors for the lines!

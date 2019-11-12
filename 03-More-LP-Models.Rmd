@@ -84,12 +84,17 @@ Not hardcoding the products and constraints.
 
 ## Tips and Conventions for Algebraic Models
 
-The symbol, $\forall$, is read as "for all" and can be interpreted to mean "repeat this line substituting in a value for this subscript **for all** possible values of this subscript."  In other words, given that i is used consistently for the three products, then $x_i \geq 0  \; \forall \; i$ is equivalent to $x_i \geq 0  \;,i=1,2,3$ or even $x_1 \geq 0, \; x_2 \geq 0, \; x_3 \geq 0$.  The result is that the $\forall$ symbol can simplify the description of complex models when index ranges are clear.  
+Learning how to read and write mathematical models is an important skill.  In this section we will provide a quick overview. More information is provided in _Appendix A_.
+
+The symbol, $\forall$, is read as "for all" and can be interpreted to mean "repeat this line substituting in a value for this subscript **for all** possible values of this subscript."  In other words, given that _i_ is used consistently for the three products, then $x_i \geq 0  \; \forall \; i$ is equivalent to $x_i \geq 0  \;,i=1,2,3$ or even $x_1 \geq 0, \; x_2 \geq 0, \; x_3 \geq 0$.  The result is that the $\forall$ symbol can simplify the description of complex models when index ranges are clear.
 \vspace{12pt}
+
 Also, another good practice is to use a mnemonic to help suggest the meaning of data. That is why I chose "R" for Resource, "P" for Profit, and "A" for Available resources. 
 \vspace{12pt}
+
 Another helpful convention is to use capital letters for data and lower case letters for variables.  (Some people will swap this around and use capital letters for variables and lower case letters for data - it doesn't really matter as long as a model is consistent.)  
 \vspace{12pt}
+
 More complex models often run out of letters that make sense.  A common approach in these models is to use a superscript. For example, perhaps labor cost for each worker, _w_, could have different values for both normal and overtime rates.  Rather than separate data terms for such closely related concepts, we might denote regular hourly labor cost for worker _w_ as $C^R_w$ and for overtime as $C^O_w$.  Again, it is very important to clearly define all the data and variables used in the model.  
 \vspace{12pt}
 
@@ -97,6 +102,7 @@ More complex models often run out of letters that make sense.  A common approach
 
 This concise, algebraic representation can be easily scaled to any number of products and resources. Let's write this as the following.  I'll expand the names of data slightly for making the R code more readable but this is meant to be consistent with the above formulation.  
 \vspace{12pt}
+
 ```{r, fig.margin=TRUE, echo=FALSE}
 NProd <- 4
 NResources <- 5
@@ -109,8 +115,6 @@ grid.table(Profit)
 ```{marginfigure}
 **Table 3.1**: Profit per product
 ```
-
-
 
 We will define the number of products as four and five resource constraints. 
 
@@ -142,11 +146,10 @@ grid.table(Resources)
 On the right side we can see the data. This should match the data that we hard coded into the R linear programming model in the previous chapter.  
 
 ```{marginfigure}
-**cbind function**: This function join 2 tables using the columns as binding element between tables.
+**cbind function**: This function joins tables in column-wise orientation by aligning the tables side by side.
 
-**rbind function**: Same concept as previous one, but in this case using rows as binding element.
+**rbind function**: Same concept as cbind but in this case uses rows binding element to stack tables on top of each other.
 ```
-
 
 Similarly, we can display the resources used by each product and the amount of each resource available. See both tables on the right. Table 3.2 displays the resources used by each product and Table 3.3 the amount of resources available from each product.   
 
@@ -171,8 +174,13 @@ grid.table(Combined)
 \vspace{12pt}
 On the right table, we can see the resources used and available in a single table.  We have used the _cbind_ function to do a column binding of the data. In this way the representation is more visually intuitive. 
 
-To ensure that we know how to access the data, if we want to see how the amount of the first resource used by the second product, you can enter _Resources[1,2]_ in R Studio's console which is `r Resources[1,2]`.  
+To ensure that we know how to access the data, if we want to see how the amount of the first resource used by the second product, you can enter `Resources[1,2]` in R Studio's console which is then evaluated as `r Resources[1,2]`.  
 \vspace{12pt}
+
+```{marginfigure}
+Using inline code is a great part of RMarkdown.  In the text of your RMarkdown, anything enclosed by a pair of single tick marks will be shown as a code chunk.  If it starts with the letter r, it will be passed instead to R for evaluation. This allows for both discussing reproducible results.
+```
+
 Now, let's begin building our optimization model.  
 \vspace{12pt}
 
@@ -224,6 +232,7 @@ Let's walk through what is done line by line.
 
 Displaying the object of `prodmodel` only shows a simple summary of the results of the analysis.  It indicates whether the model was solved to optimality (and it was!) and the objective function value (profit).  
 \vspace{12pt}
+
 This is useful to know but we are really interested in how to generate this profit.  To do this, we need to extract the values of the variables.  
 
 ```{r Display_Results, fig.margin=TRUE}
@@ -250,11 +259,14 @@ The table on the right displays the optimal production plan.
 Let's examine how the resources are consumed.  To do this, we can multiply the amount of each product by the amount of each resource used for that product. For the first product, this would be a term by term sum of each product resulting in ``r Resources[1,]%*%t(results.products)`` which is less than ``r Available[1]``. We can do this manually for each product. Another approach is to use the command, `Resources[1,]%*%t(results.products)`. This command will take the first row of the Resources matrix and multiplies it by the vector of results.  
 \vspace{12pt}
 
-Another thing to take note of in learning how to use RMarkdown is that results from r code can be shown by inserting an inline code chunk.  Inline code chunks can be inserted into text by using a single tick at the beginning and end of the chunk instead of the triple tick mark for regular code chunks.  Also, the inline r code chunk starts with the letter r to indicate that it is an r code code.  A common use for this might be to show the results of an earlier analysis.
+```{marginfigure}
+Note how we used both an inline r expression and an inline executable r code chunk.  Inline code chunks can be inserted into text by using a single tick at the beginning and end of the chunk instead of the triple tick mark for regular code chunks.  Also, the inline r code chunk starts with the letter r to indicate that it is an r code code.  A common use for this might be to show the results of an earlier analysis.
+```
 \vspace{12pt}
 
-One thing to note is that the first row of `Resources` is by definition a row vector and `result.products` is also a row vector.  What we want to do is do a row vector multiplied by a column vector.  In order to do this, we need to convert the row vector of results into a column vector.  This is done by doing a _transpose_ which changes the row to a column.  This is done often enough that the operation is just one letter, `t`.  
+One thing to note is that the first row of `Resources` is by definition a row vector and `result.products` is also a row vector.  What we want to do is do a row vector multiplied by a column vector.  In order to do this, we need to convert the row vector of results into a column vector.  This is done by doing a _transpose_ which changes the row to a column.  This is done often enough that the function is just a single letter, `t`.  
 \vspace{12pt}
+
 We can go one further step now and multiply the matrix of resources by the column vector of production.
 
 ```{r Calculate_Resources_Used, fig.margin=TRUE}
@@ -339,21 +351,19 @@ The table on the right displays the new Production plan and the optimal distribu
 
 Specific blend limitations arise in many situations.  In our example, we might say that Chairs can make up no more than 10% of the overall product plan.  In our original case, this would be expressed as the following.  
 \vspace{12pt}
+$$
+ \begin{split}
+ \begin{aligned}
+   \frac {Chairs} {Chairs + Desks + Tables} \leq 0.40
+  \end{aligned}
+  \end{split}
+$$
 
-Blending constraints can appear as nonlinear constraints but can be readily linearized. We can see the formulation on the right side.  
 ```{marginfigure}
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max  } \\
-               & 20Chairs+14Desks+16Tables \\
-    \text{S.t.} \\
-                       & 6Chairs+2Desks+4Tables \leq 2000 \\
-                       & 8Chairs+6Desks+4Tables \leq 2000 \\
-                       & 6Chairs+4Desks+8Tables \leq 1440 \\
-                       & 40Chairs+25Desks+16Tables \leq 9600 \\
-                       & Tables \leq 200 \\
-                       & Chairs,  \; Desks, \; Tables \geq 0  
+   frac {Chairs} {Chairs + Desks + Tables} \leq 0.40
   \end{aligned}
   \end{split}
 $$
@@ -361,8 +371,10 @@ $$
 ```{marginfigure}
 **Formula 3.3**: Chairs can make up no more than 10% of the overall  
 ```
-      
-```{r Base3VarModel, fig.margin=TRUE}
+
+Blending constraints can appear as nonlinear constraints but can be readily linearized. We can see the formulation on the right side.  
+
+```{r Base3VarModel, echo=FALSE}
 Base3VarModel <- MIPModel() %>%
  add_variable(Chairs, type = "continuous", lb = 0) %>%
  add_variable(Desks, type = "continuous",lb = 0) %>%
@@ -403,19 +415,19 @@ Effectively, we are saying that $\frac{Chairs}{Chairs+Desks+Tables} \leq 0.40$
 Alas, this is not a linear function so we need to clear the denominator.
 \vspace{12pt}
 
-$Chairs \leq 0.40 * (Chairs+Desks+Tables)$
+$Chairs \leq 0.40  \cdot  (Chairs+Desks+Tables)$
 \vspace{12pt}
 
 We like to get all the variables on the left side so let's move them over.
 \vspace{12pt}
 
-$Chairs - 0.4*Chairs-0.4*Desks-0.4 *Tables \leq 0$
+$Chairs - 0.4 \cdot Chairs-0.4 \cdot Desks-0.4 \cdot Tables \leq 0$
 \vspace{12pt}
 
 Let's simplify this a little, which gives us the following:
 \vspace{12pt}
 
-$0.6*Chairs-0.4*Desks-0.4*Tables \leq 0$
+$0.6 \cdot Chairs-0.4 \cdot Desks-0.4 \cdot Tables \leq 0$
 
 The result is displayed as a formula on the right.
 ```{marginfigure}
@@ -423,13 +435,13 @@ $$
  \begin{split}
  \begin{aligned}
     \text{Max:} & \\
-                & 20Chairs+14Desks+16Tables \\
+                & 20 \cdot Chairs+14 \cdot Desks+16 \cdot Tables \\
     \text{S.t.} & \\
-                       & 6Chairs+2Desks+4Tables \leq 2000 \\
-                       & 8Chairs+6Desks+4Tables \leq 2000 \\
-                       & 6Chairs+4Desks+8Tables \leq 1440 \\
-                       & 40Chairs+25Desks+16Tables \leq 9600 \\
-                       & 0.6Chairs-0.4Desks-0.4*Tables \leq 0 \\
+                       & 6 \cdot Chairs+2 \cdot Desks+4 \cdot Tables \leq 2000 \\
+                       & 8 \cdot Chairs+6 \cdot Desks+4 \cdot Tables \leq 2000 \\
+                       & 6 \cdot Chairs+4 \cdot Desks+8 \cdot Tables \leq 1440 \\
+                       & 40 \cdot Chairs+25Desks+16Tables \leq 9600 \\
+                       & 0.6 \cdot Chairs-0.4 \cdot Desks-0.4 \cdot Tables \leq 0 \\
                        & Tables \leq 200 \\
                        & Chairs,  \; Desks, \; Tables \geq 0  
   \end{aligned}
@@ -439,7 +451,9 @@ $$
 ```{marginfigure}
 **Formula 3.4**: Three constraints  
 ```
-
+\vspace{12pt}
+We can simply add a constraint to an existing `ompr` model of our 3 variable base case.  
+\vspace{12pt}
 ```{r Blending}
 ModelBlending<- add_constraint(Base3VarModel,
                 0.6*Chairs -0.4*Desks - 0.4*Tables <= 0) 
@@ -451,7 +465,11 @@ blendres<-cbind(get_solution (resBlending, Chairs),
                 get_solution (resBlending, Desks),
                 get_solution (resBlending, Tables))
 ```
-Okay, now let's put both side by side in a table to show the results.
+\vspace{12pt}
+
+Okay, now let's put both side by side in a table to show the results.  
+\vspace{12pt}
+
 ```{r Compare_Blending_to_Base_Results, fig.margin=TRUE,fig.width=3}
 rownames(base_case_res)<-"Base Model"
 rownames(blendres)<-"with Constraint"
@@ -462,11 +480,14 @@ grid.table(comparative)
 ```{marginfigure}
 **Table 3.9**: Compare Baseline and Production Plan due to a Blending Constraint
 ```
+
 As a summary, we can see on the table on the right a comparative between the baseline case and the new production plan with the blending constraint.
-
-
+\vspace{12pt}
 
 ## Allocation Models
+
+\vspace{12pt}
+
 An allocation model divides resources and assigns them to competing activities. Typically has a maximization objective with less than or equal to constraints. 
 ```{marginfigure}
 $$
@@ -652,17 +673,84 @@ results.transportation <-solve_model(transportationmodel,
 ```
 
 ## Transhipment Models
+
 A generalization of the transportation model is that of transhipment where some nodes are intermediate nodes that are neither pure sources or destinations but can have both inflow and outflow.
 
 ## Standard Form
+
 Any linear program in inequality constraints can be converted into what is referred to as standard form.  First, all strictly numerical terms are collected or moved to the right hand side and all variables are on the left hand side.
+
 It makes little difference as to whether the objective function is a _min_ or a _max_ function since a min objective function can be converted to a max objective function by multiplying everything a negative one.  The converse is also true.
 \vspace{12pt}
 
-Lastly is a step where all of the inequalities are replaced by strict equality relations.  The conversion of inequalities to equalities warrants a little further explanation.  This is done by introducing a new, non-negative "slack" variable for each inequality.
+Lastly is a step where all of the inequalities are replaced by strict equality relations.  The conversion of inequalities to equalities warrants a little further explanation.  This is done by introducing a new, non-negative "slack" variable for each inequality.  If the inequality is a $\leq$, then the slack variable can be thought of as filling the left hand side to make it equal to the right hand side so the slack variable is added to the left hand side.  If the inequality is $\geq$, then the slack variable is the amount that must be absorbed from the left hand side to make it equal the right hand side.  
 \vspace{12pt}
 
+Let's demonstrate with a two variable example.
+
+$$
+ \begin{split}
+ \begin{aligned}
+    \text{max  }   &  2 \cdot x + 3 \cdot y \\
+    \text{subject to } &  10 \cdot x + 2 \cdot y \leq 110 \\
+                       & 2 \cdot x + 10 \cdot y \geq 50 \\
+                       & 2 \cdot x = 4 \cdot y  \\
+                       & x,y \geq 0  
+  \end{aligned}
+  \end{split}
+$$
+This can be then transformed to standard form by rearranging terms in the third constraint and adding two non-negative slack variables to the first two constraints.
+
+$$
+ \begin{split}
+ \begin{aligned}
+    \text{max  }   &  2 \cdot x + 3 \cdot y \\
+    \text{subject to } &  10 \cdot x + 2 \cdot y + s_1 = 110 \\
+                       & 2 \cdot x + 10 \cdot y -s_2 = 50 \\
+                       & 2 \cdot x - 4 \cdot y = 0 \\
+                       & x,y, s_1, s_2 \geq 0  
+  \end{aligned}
+  \end{split}
+$$
+The standard form now consists of a system of equations, generally with far more variables (both regular and slack) than equations. The simplex algorithm makes use of the fact that a system of equations and unknowns can be solved efficiently.  The Simplex algorithm solves for as many variables (termed basic variables) as there are equations and sets the remaining variables to zero (non-basic variables).  It then systematically swaps a variable from the set of basic variables and non-basic variables until it can no longer find an improvement.  The actual algorithm for the Simplex algorithm is beyond the scope of what we will cover this in book.  
+
+Let's examine the solution to our example though.
+
+```{r StdModel, echo=FALSE}
+StdModel <- MIPModel() %>%
+ # To avoid name space conflicts, using a prefix of V
+ #    for ompr variables.
+  
+ add_variable(Vx, type = "continuous", lb = 0) %>%
+ add_variable(Vy, type = "continuous",lb = 0) %>%
+ add_variable(Vs1, type = "continuous", lb = 0) %>%
+ add_variable(Vs2, type = "continuous", lb = 0) %>%
+  
+ set_objective(2*Vx + 3*Vy,"max") %>%
+  
+ add_constraint(10*Vx + 2*Vy + Vs1==110) %>%
+ add_constraint(2*Vx + 10*Vy - Vs2==50) %>% 
+ add_constraint(2*Vx - 4*Vy == 0) 
+
+  resStd <- solve_model(StdModel, 
+                        with_ROI(solver = "glpk"))
+  resStd
+  
+x  <- get_solution (resStd , Vx)
+y  <- get_solution (resStd , Vy)
+s1 <- get_solution (resStd , Vs1)
+s2 <- get_solution (resStd , Vs2)
+
+base_case_res           <- cbind(x, y, s1, s2)
+rownames(base_case_res) <- "Optimal Values"
+pander(base_case_res)
+grid.table(base_case_res)
+```
+
+Notice that we had three equations and four variables (both regular and slack variables.)  This meant that at every iteration of the simplex algorithm, it would set one variable equal to zero and solve for the other three variables because solving three equations with three unknowns is very easy.  This is consistent with our solution, where $s_1$ is zero and the other three variables all had values.
+
 ## Exercises
+
 ```{exercise, name="Transportation"}
 ```
 Four manufacturing plants are supplying material for distributors in four regions.  The four supply plants are located in Chicago, Beaverton, Eugene, and Dallas.  The four distributors are in PDX (Portland), SEA (Seattle), MSP(Minneapolis), and ATL (Atlanta).  Each manufacturing plant has a maximum amount that they can produce.  For example, Chicago can produce at most 500.  Similarly, the PDX region can handle at most 700 units.  The cost to transport from Dallas to MSP is three times as high as the cost from Dallas to Atlanta. The table on the right displays the transportation cost between all the cities.
@@ -675,7 +763,7 @@ Four manufacturing plants are supplying material for distributors in four region
 |  Beaverton  |   6  |   7  |  18  | 24   | **500**  |
 |  Eugene     |   8  |  10  |  22  | 28   | **500**  |
 |  Dallas     |  16  |  26  |  15  |  5   | **600**  |
-|**Capacity** | *700*| *500*| *500*| *600*|          |
+|**Capacity** | **700**| **500**| **500**| **600**|          |
 
 ```  
 ```{marginfigure}
@@ -757,7 +845,7 @@ $$
 ```{exercise, name="Staff Scheduling"}
 ```
 
-Happy Patient Hospital (HPH), has varying needs for nurses throughout the day.  They expect the following numbers of nurses needed over the typical 24 hour period.  Nurses work eight hour shifts, starting at each 4 hour time period specified in the table.  
+Happy Patient Hospital (HPH), has varying needs for nurses throughout the day.  They expect the following numbers of nurses to be needed over the typical 24 hour period.  Nurses work eight hour shifts, starting at each 4 hour time period specified in the table.  
 
 ```{r, nurse_scheduling, fig.margin=TRUE}
 hph_needs <- matrix (c(50, 140, 260, 140, 100, 80), ncol=1,

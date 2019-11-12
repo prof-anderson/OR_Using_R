@@ -33,8 +33,8 @@ library (pander, quietly = TRUE)
 library (tufte, quietly = TRUE)
 library (tint)
 library (knitr)
-library (TRA)   # Note, may need to install directly from github
-                #       prof-anderson/TRA
+library (TRA) # Note, may need to install directly from github
+              # devtools::install_github("prof-anderson/TRA")
 library(DiagrammeRsvg, quietly=TRUE) 
 library(rsvg, quietly=TRUE) 
 library(htmltools, quietly=TRUE)
@@ -446,6 +446,21 @@ eff.crs <- results.efficiency
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
 pander (cbind(results.efficiency, results.lambda),
         caption="Input-Oriented Efficiency Results")
+```
+
+Next, let's demonstrate the use of a small helper function, `poscol` from the `TRA` package.  This package covers miscellaneous support functions and data sets from Technology, Research, and Analytics.  It is posted on github rather than CRAN.  The result is that you will need to install it using `devtools`.
+
+```{r, eval=FALSE}
+library(devtools)
+install_github(prof-anderson/TRA)
+```
+
+The poscol function simply filters out any column of all zero.  
+
+```{r}
+pander(cbind(results.efficiency, poscol(results.lambda)), 
+       caption=
+         "Input-Oriented Envelopment Analysis with Inefficient DMU Columns Removed.")
 ```
 
 The results match those observed graphically but let's discuss them.  These results indicate that only DMU _C_ is efficient.  Rescaled versions of _C_ could produce the same level of output of _A_, _B_, or _D_, while using just 25%, 50%, and 20% less input respectively.  The targets of performance for _A_ and _B_ are constructed by scaling down unit _C_ to a much smaller size, as shown by the the values of $\lambda$. In contrast, _D_'s performance is surpassed by a 33% larger version of _C_.

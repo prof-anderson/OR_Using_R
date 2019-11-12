@@ -5,16 +5,16 @@ header-includes:
 - \usepackage{caption}
 monofont: Times New Roman
 output:
+  tufte::tufte_book:
+    citation_package: natbib
+    latex_engine: xelatex
+  tufte::tufte_html: default
   tufte::tufte_handout:
     citation_package: natbib
     latex_engine: xelatex
     toc: TRUE
     number_sections: true
     highlight: monochrome
-  tufte::tufte_html: default
-  tufte::tufte_book:
-    citation_package: natbib
-    latex_engine: xelatex
 ---
 
 \pagestyle{headings}
@@ -409,8 +409,9 @@ sum(fixedcost[unique(matching$j)])
 \vspace{12pt}
 
 *Discussion*
+\vspace{12pt}
 
-This warehouse customer assignment problem was discussed in detail for a variety of reasons.
+This warehouse customer assignment problem was discussed in detail for multiple reasons.
 
 * It demonstrates a large, classic, and common industrial application of optimization.
 * The application uses simulated data to feed into an optimization model.
@@ -437,7 +438,7 @@ The same concepts can also be applied to other applications.
 
 ## Solving MIPs with Different Solvers
 
-Up until this point, we have used the `glpk` solver.  One of the big benefits of `glpk` is that it separates the process of formulating the optimization model from that of solving it and thereby let's us easily switch to other solvers.  Now that we have a nontrivial optimization model, the Warehouse Location Model, let's use it.  
+One of the big benefits of `ompr` is that it separates the process of formulating the optimization model from that of solving it and thereby let's us easily switch to other solvers. Up until this point, we have used the `glpk` solver. Now that we have a nontrivial optimization model, the Warehouse Location Model, let's use it.  
 \vspace{12pt}
 
 The emphasis in this section is not model building but comparing the use of different solvers.  Since we have the model already defined as an object, simply named `model`, we can easily pass it to the different solvers for optimizing.  There is a large collection of other solvers that can be used with R.[^new_material]
