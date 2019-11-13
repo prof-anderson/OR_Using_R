@@ -38,18 +38,7 @@ library (tufte)
 Up until this point, we assumed that there would be a single, clear objective function. Often we have more complex situations where there are multiple conflicting objectives.  In our earlier production planning case, we might have additional objectives besides maximizing profit such as minimizing environmental waste or longer term strategic positioning. In the case of our capital budgeting problem, we can envision a range of additional considerations beyond simple unexpected net present value maximization.  
 \vspace{12pt}
 
-Let's look at another type of problem, staff scheduling.  The Information Technology Security Institute or ITSI needs to maintain 24x7 staffing to respond to crises in addition to regular workloads. The result is that there is a varying demand over time. For the sake of simplicity, let's treat the schedule as a series of 21 eight hour shifts.   
-\vspace{12pt}
-
-ITSI has a variety of staff with different skill sets, pay rates, preferences, and scheduling requests.  Jane is the Director of ITSI and wants to find a good schedule of workers.  \vspace{12pt}
-
-
-```{r}
-Req <- matrix(c(10,35,30,
-                15,30,30),ncol=1,dimnames=list(LETTERS[1:6],"x"))
-```
-
-Idea, extend Dirk's class schedule assignment example to include secondary objectives.  
+Let's use an example that is a pressing issue for many cities - homelessness or as it is often better worded as houselesness.  
 \vspace{12pt}
 
 The City of Bartland has a problem with houselessness.  Two ideas have been proposed for dealing with the houselessness problem.  The first option is to build new, government subsidized tiny homes for annual cost of $\$10K$ which would serve one adult 90% of the time and a parent with a child 10% of the time. Another option is to create a rental subsidy program which costs $\$10K$ per year per unit which typically serves a single adult (15%), two adults (20%), an adult with one child (30%), an adult with two children (20%), two adults with one child (10%), and two adults with two children (5%). Bartland's official Chief Economist has estimated that this subsidy program would tend to increase housing prices in a very tight housing market by an average of 0.001%. The Bartland City Council has $\$1000K$ available to reappropriate from elsewhere in the budget and would like to find the _best_ way to use this budget to help with the houselessness problem.  Both programs require staff 10% of a full time equivalent staff member to process paperwork, conduct visits, and other service related activities.  There are seven staff members available to work on these activities.
@@ -287,7 +276,6 @@ $$
 
 Let's show the full R implementation of our minimax model.
 
-
 ```{r MiniMaxModel, echo=TRUE}
 Home5Model <- MIPModel() %>%
  # To avoid name space conflicts, using a prefix of V
@@ -314,8 +302,12 @@ R  <- get_solution (res_Home5 , VR)
 d1  <- get_solution (res_Home5 , Vd1)
 d2  <- get_solution (res_Home5 , Vd2)
 
-sum_Home5           <- cbind(res_Home5$objective_value,H, R, d1, d1/T1, d2, d2/T2)
-colnames(sum_Home5) <- c("Obj. Func. Val.", "H", "R", "d1", "d1%", "d2", "d2%")
+sum_Home5  <- cbind(
+  res_Home5$objective_value, H, R, 
+  d1, d1/T1, d2, d2/T2)
+colnames(sum_Home5) <- 
+  c("Obj. Func. Val.", "H", 
+     "R", "d1", "d1%", "d2", "d2%")
 rownames(sum_Home5) <- "Minimax"
 
 pander(rbind(sum_Home3, sum_Home4, sum_Home5))
@@ -325,3 +317,7 @@ pander(rbind(sum_Home3, sum_Home4, sum_Home5))
 The minimax solution finds an alternative that is still Pareto optimal.  
 
 Careful readers may note that children are effectively double counted between the two objective functions when deviations are added.  
+
+This example can be expanded much further in the future with additional policy interventions, other stakeholders, and other characteristics, such as policies on drug addiction treatment, policing practices, and more.  We did not factor in the Chief Economist's impact on housing prices.  
+
+We'll leave these issues to future work.  

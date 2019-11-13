@@ -234,6 +234,7 @@ model <- MIPModel() %>%
   # every customer needs to be assigned to a warehouse
   add_constraint(sum_expr(Vx[i, j], j=1:m)==1, i=1:n) %>% 
   
+  add_constraint(sum_expr(Vx[i, j], i = 1:n) <= 4, j = 1:m) %>% 
   # if a customer is assigned to a warehouse, 
   #    then this warehouse must be built
   add_constraint(Vx[i,j] <= Vy[j], i = 1:n, j = 1:m)

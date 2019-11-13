@@ -57,12 +57,11 @@ $$
 $$
 ```
 ```{marginfigure}
-**Formula 3.1**: Linear MOdel with 3 products and 4 contraints
+**Formula 3.1**: A production planning LP with 3 products and 4 contraints.
 ```
 
 
-Similarly, _j=1_ represents fabrication, _j=2_, represents assembly, etc.   Now, let's move on to defining the data.  Let's define the amount to produce of each product, _i_, as $x_i$ and resource _j_ consumed by product _i_ as $R_{i,j}$.  The available resource _j_ is then $A_j$. The profit per product _i_ is then $P_i$. The LP can now be rewritten as showed on the right margin, formula 3.1, if there are three products and four constraints.  
-
+Similarly, _j=1_ represents fabrication, _j=2_, represents assembly, etc.   Now, let's move on to defining the data.  Let's define the amount to produce of each product, _i_, as $x_i$ and resource _j_ consumed by product _i_ as $R_{i,j}$.  The available resource _j_ is then $A_j$. The profit per product _i_ is then $P_i$. The LP can now be rewritten as showed on the right margin, formula 3.1, if there are three products and four constraints.   \vspace{12pt}
 
 We could further generalize this by instead of hard coding the number of products and resource constraints, we instead define the number of products and resources as NProd and NResources respectively.  We can then rewrite the above formulation as the following. 
 
@@ -78,8 +77,7 @@ $$
 $$
 ```
 ```{marginfigure}
-**Formula 3.2**: Linear Model with 3 products and 4 contraints.
-Not hardcoding the products and constraints.
+**Formula 3.2**: A production planning LP for any number of products and constraints.
 ```
 
 ## Tips and Conventions for Algebraic Models
@@ -178,7 +176,7 @@ To ensure that we know how to access the data, if we want to see how the amount 
 \vspace{12pt}
 
 ```{marginfigure}
-Using inline code is a great part of RMarkdown.  In the text of your RMarkdown, anything enclosed by a pair of single tick marks will be shown as a code chunk.  If it starts with the letter r, it will be passed instead to R for evaluation. This allows for both discussing reproducible results.
+Using inline code is a great part of RMarkdown.  In the text of your RMarkdown, anything enclosed by a pair of single tick marks will be shown as a code chunk.  If it starts with the letter r, it will be passed instead to R for evaluation. This allows for discussing reproducible results in a reproducible manner.  Rather than discussing the result giving a value of 47.1 in the text and a later rerun of the analysis has an updated table of results showing the result to be 47.2, by using inline code evaluation, it will always show the up to date result, in this case, 47.2
 ```
 
 Now, let's begin building our optimization model.  
@@ -508,6 +506,7 @@ See the Formula 3.5 on the right to understand the mathematical expression.
 
 ## Covering Models
 A covering model combines resources and coordinates activities. A classic covering application would be what mix of ingredients "covers" the requirements at the lowest possible cost. Typically it has a minimization objective function and greater than or equal to constraints.
+\vspace{12pt}
 
 ```{marginfigure}
 $$
@@ -713,8 +712,10 @@ $$
   \end{split}
 $$
 The standard form now consists of a system of equations, generally with far more variables (both regular and slack) than equations. The simplex algorithm makes use of the fact that a system of equations and unknowns can be solved efficiently.  The Simplex algorithm solves for as many variables (termed basic variables) as there are equations and sets the remaining variables to zero (non-basic variables).  It then systematically swaps a variable from the set of basic variables and non-basic variables until it can no longer find an improvement.  The actual algorithm for the Simplex algorithm is beyond the scope of what we will cover this in book.  
+\vspace{12pt}
 
 Let's examine the solution to our example though.
+\vspace{12pt}
 
 ```{r StdModel, echo=FALSE}
 StdModel <- MIPModel() %>%
@@ -748,6 +749,49 @@ grid.table(base_case_res)
 ```
 
 Notice that we had three equations and four variables (both regular and slack variables.)  This meant that at every iteration of the simplex algorithm, it would set one variable equal to zero and solve for the other three variables because solving three equations with three unknowns is very easy.  This is consistent with our solution, where $s_1$ is zero and the other three variables all had values.
+\vspace{12pt}
+
+## Vector and Matrix Forms of LPs
+
+One of the benefits of using an algebraic modeling approach for linear programming such as `ompr` is that it provides a direct mapping from the mathematical model of the application to the implementation.  The actual solver used such as `glpk,` `symphony,` or `gurobi` take the linear program in a different form though and `ompr` processes it into a form they can handle.  In general, the solver thinks of the problem in terms of a vector of coefficients for the objective function, _C_, a vector of right hand side constraint values, _B_, a matrix of data, _A_, and a vector of variables, _x_.  The result is that any linear program can be thought of in a form such as the following.
+
+$$
+ \begin{split}
+ \begin{aligned}
+    \text{max  }   &  C \cdot x \\
+    \text{subject to } &  A \cdot x \leq B \\
+                       & x \geq 0  
+  \end{aligned}
+  \end{split}
+$$
+
+Let's demonstrate this by extracting data from a model, `Base3VarModel` that we have previously built in `ompr`.  Simply typing in the name of the unsolved model will give a summary of the model characteristics. This was a problem with three variable and five constraints.  
+\vspace{12pt}
+
+```{r}
+Base3VarModel
+```
+
+When we build the model in `ompr`, it builds a representation of _A, B, C,_ and _x_.  Now, let's examine the the data structures inside the model.
+
+```{r}
+objective_function(Base3VarModel)
+```
+
+This describes the objective function with a constant term added of zero.
+\vspace{12pt}
+
+Similarly, we can extract the constraint data.
+
+```{r}
+extract_constraints(Base3VarModel)
+```
+
+Notice this gives us the _A_ matrix (aptly named `matrix` by `ompr`).  The set of right hand side values of the constraints (the _B_ vector) is named `rhs` by `ompr`.  Lastly, the equality or type of inequality constraint is stored in a vector named `sense`.
+\vspace{12pt}
+
+The benefit of `ompr` and algebraic modeling more generally is highlighted as models get more complex with multiple subscripted variables (especially double or triple subscripted variables), and lots of constraints. Creating the Operations Research analyst could be build the _A_ matrix on their own, keeping track of which row corresponds to a particular variable becomes very difficult. For an example of how this can be done, see the _DEA Using R_ book's chapter on a matrix implementation of DEA.
+\vspace{12pt}
 
 ## Exercises
 
