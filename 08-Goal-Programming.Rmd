@@ -41,7 +41,7 @@ Up until this point, we assumed that there would be a single, clear objective fu
 Let's use an example that is a pressing issue for many cities - homelessness or as it is often better worded as houselesness.  
 \vspace{12pt}
 
-The City of Bartland has a problem with houselessness.  Two ideas have been proposed for dealing with the houselessness problem.  The first option is to build new, government subsidized tiny homes for annual cost of $\$10K$ which would serve one adult 90% of the time and a parent with a child 10% of the time. Another option is to create a rental subsidy program which costs $\$10K$ per year per unit which typically serves a single adult (15%), two adults (20%), an adult with one child (30%), an adult with two children (20%), two adults with one child (10%), and two adults with two children (5%). Bartland's official Chief Economist has estimated that this subsidy program would tend to increase housing prices in a very tight housing market by an average of 0.001%. The Bartland City Council has $\$1000K$ available to reappropriate from elsewhere in the budget and would like to find the _best_ way to use this budget to help with the houselessness problem.  Both programs require staff 10% of a full time equivalent staff member to process paperwork, conduct visits, and other service related activities.  There are seven staff members available to work on these activities.
+The City of Bartland has a problem with houselessness.  Two ideas have been proposed for dealing with the houselessness problem.  The first option is to build new, government subsidized tiny homes for annual cost of $\$10K$ which would serve one adult 90% of the time and a parent with a child 10% of the time. Another option is to create a rental subsidy program which costs $\$25K$ per year per unit which typically serves a single adult (15%), two adults (20%), an adult with one child (30%), an adult with two children (20%), two adults with one child (10%), and two adults with two children (5%). Bartland's official Chief Economist has estimated that this subsidy program would tend to increase housing prices in a very tight housing market by an average of 0.001%. The Bartland City Council has $\$1000K$ available to reappropriate from elsewhere in the budget and would like to find the _best_ way to use this budget to help with the houselessness problem.  Both programs require staff 10% of a full time equivalent staff member to process paperwork, conduct visits, and other service related activities.  There are seven staff members available to work on these activities.
 \vspace{12pt}
 
 Let's summarize the data for two programs.  Note that each unit or intervention may deal with a different person in a different situation, expected numbers of people served may be appropriate to model.
@@ -67,7 +67,7 @@ The second group wants to save as many children from houselessness as possible. 
 As usual, start by thinking of the decision variables.  In this case, let's define _H_ to be number of tiny homes to be built and _R_ to be the rental housing subsidies provided.  Of course these should be non-negative variables.  We could use integer variables or continuous variables.    
 \vspace{12pt}
 
-Next let's constraints and formulate them in terms of the decision variables. We have two constraints. The first one for the budget is simply: $20 \cdot H+ 10\cdot R \leq 1000$ 
+Next let's constraints and formulate them in terms of the decision variables. We have two constraints. The first one for the budget is simply: $10 \cdot H+ 25\cdot R \leq 1000$ 
 
 Now, let's think about our objectives.  The first group wants to serve as many people as possible so the objective function is $$\text {max } 1.1 \cdot H + 2.25 \cdot R$$
 \vspace{12pt}
@@ -80,7 +80,7 @@ $$
  \begin{aligned}
     \text{max   } & 1.1 \cdot H + 2.25 \cdot R \\
     \text{max   } & 0.1 \cdot H + 0.9  \cdot R \\
-    \text{s.t.  } &  20 \cdot H + 10   \cdot R \leq 1000 \\
+    \text{s.t.  } &  10 \cdot H + 25   \cdot R \leq 1000 \\
                   & 0.1 \cdot H + 0.1  \cdot R \leq 7 \\
     \ & H, \; R \; \in \{0, 1, 2,  \ldots \}
   \end{aligned}
@@ -93,7 +93,7 @@ $$
  \begin{split}
  \begin{aligned}
     \text{max   } & 1.1 \cdot H + 2.25 \cdot R \\
-    \text{s.t.  } &  20 \cdot H + 10   \cdot R \leq 1000 \\
+    \text{s.t.  } &  10 \cdot H + 25   \cdot R \leq 1000 \\
                   & 0.1 \cdot H + 0.1  \cdot R \leq 7 \\
     \ & H, \; R \; \in \{0, 1, 2,  \ldots \}
   \end{aligned}
@@ -129,7 +129,7 @@ $$
  \begin{split}
  \begin{aligned}
     \text{max   } & 0.1 \cdot H + 0.9  \cdot R \\
-    \text{s.t.  } &  20 \cdot H + 10   \cdot R \leq 1000 \\
+    \text{s.t.  } &  10 \cdot H + 25   \cdot R \leq 1000 \\
                   & 0.1 \cdot H + 0.1  \cdot R \leq 7 \\
     \ & H, \; R \; \in \{0, 1, 2,  \ldots \}
   \end{aligned}
@@ -164,7 +164,7 @@ $$
  \begin{split}
  \begin{aligned}
     \text{min   } & d_1 + d_2 \\
-    \text{s.t.  } & 20 \cdot H + 10   \cdot R \leq 1000 \\
+    \text{s.t.  } & 10 \cdot H + 25   \cdot R \leq 1000 \\
                   & 0.1 \cdot H + 0.1  \cdot R \leq 7 \\
                   &  1.1 \cdot H + 2.25 \cdot R - d_1 = T_1 = 100 \\
                   & 0.1 \cdot H + 0.9  \cdot R - d_2 = T_2 = 36 \\
@@ -214,7 +214,7 @@ $$
  \begin{split}
  \begin{aligned}
     \text{min   } & \frac {d_1} {T_1} + \frac {d_2} {T_2} \\
-    \text{s.t.  } & 20 \cdot H + 10   \cdot R \leq 1000 \\
+    \text{s.t.  } & 10 \cdot H + 25    \cdot R \leq 1000 \\
                   & 0.1 \cdot H + 0.1  \cdot R \leq 7 \\
                   &  1.1 \cdot H + 2.25 \cdot R + d_1 = T_1 \\
                   & 0.1 \cdot H + 0.9  \cdot R + d_2 = T_2  \\
@@ -262,7 +262,7 @@ $$
  \begin{split}
  \begin{aligned}
     \text{min   } & Q \\
-    \text{s.t.  } & 20 \cdot H + 10   \cdot R \leq 1000 \\
+    \text{s.t.  } & 10 \cdot H + 25  \cdot R \leq 1000 \\
                   & 0.1 \cdot H + 0.1  \cdot R \leq 7 \\
                   & 1.1 \cdot H + 2.25 \cdot R + d_1 = T_1 \\
                   & 0.1 \cdot H + 0.9  \cdot R + d_2 = T_2  \\
