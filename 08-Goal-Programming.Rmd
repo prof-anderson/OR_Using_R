@@ -406,7 +406,8 @@ Mail1
 ```{r}
 res_Mail1 <- solve_model(Mail1, 
                         with_ROI(solver = "symphony",
-                   verbosity=-1, first_feasible=TRUE))
+                   verbosity=-1, gap_limit=1.5))
+#                   verbosity=-1, first_feasible=TRUE))
 #                   verbosity=-1))
 
 #                        with_ROI(solver = "glpk"))
@@ -419,12 +420,4 @@ res_Mail1
 
 Note that the the messages from Symphony indicate that the solution found was feasible while `ompr` interprets the status as `infeasible.`  
 
-```{r}
-res_Mail1 <- solve_model(Mail1, 
-                        with_ROI(solver = "symphony",
-                   verbosity=0, gap_limit=0.01))
-#                   verbosity=-1))
 
-#                        with_ROI(solver = "glpk"))
-
-```

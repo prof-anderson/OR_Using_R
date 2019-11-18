@@ -64,7 +64,6 @@ Let's start by reviewing Dirk's original description of the warehouse location p
   
 \vspace{12pt}
 > As a practical example: you run the logistics for an NGO and want to regularly distribute goods to people in need. You identified a set of possible locations to set up your distribution hubs, but you are not sure where to build them. Then such a model might help. In practice however you might need to incorporate additional constraints into the model.
-
 Let's start by defining the decision variables.  Each possible location of a warehouse, $j$ can have a warehouse be built or not be built.  We will use $y_j=1$ to indicate that warehouse $j$ is built.  Conversely, $y_j=0$ indicates that we are not building a warehouse at location $j$.  Since a warehouse is either built or not built, a binary variable is appropriate for $y_j$.
 \vspace{12pt}
 
@@ -109,12 +108,10 @@ Rather than typing in fixed data or loading it from data file, Dirk simply gener
 \vspace{12pt}
 
 > The first thing we need is the data. In this article we will simply generate artificial data.
-
 \vspace{12pt}
 
 > We assume the **customers** are located in a grid with Euclidian distances.
 Let's explain the functions used for this data generation. The first command sets the random number seed. In general, computers don't actually generate random numbers, they generate what is called pseudo random numbers according to a particular algorithm in a sequence. The starting point will set a sequence that appears to be random and behaves in a relatively random way. Much more can be said but this is setting as the first random number, 1234. It could just as easily have been 4321 or any other integer.  
-
 Let's unpack this further.  
 \vspace{12pt}
 
@@ -149,7 +146,6 @@ customer_locations <- data.frame(
 
 > The **warehouses** are also randomly placed on the grid. The fixed cost for the warehouses are randomly generated as well with mean cost of 10,000.
 Notice that in this case, the fixedcost is generated using a normal random variable function, with a mean of 10 times the grid size or 10,000 and a standard deviation of 5000.
-
 ```{r Create-Warehouse-Data}
 warehouse_locations <- data.frame(
   id = 1:m,
@@ -234,8 +230,9 @@ model <- MIPModel() %>%
   # every customer needs to be assigned to a warehouse
   add_constraint(sum_expr(Vx[i, j], j=1:m)==1, i=1:n) %>% 
   
-  add_constraint(sum_expr(Vx[i, j], i = 1:n) <= 4, j = 1:m) %>% 
-  # if a customer is assigned to a warehouse, 
+#  add_constraint(sum_expr(Vx[i, j], i = 1:n) <= 4, j = 1:m) %>% 
+
+    # if a customer is assigned to a warehouse, 
   #    then this warehouse must be built
   add_constraint(Vx[i,j] <= Vy[j], i = 1:n, j = 1:m)
 model
@@ -259,8 +256,7 @@ So far, you are unlikely to have noticed an optimization problem cause a visible
 In summary, non-trivial MIP models should be run locally on a computer unless you are certain that your computational loads will not cause a problem for yourself or others.  
 
 ```{r warehouse_glpk_solving}
-result <- solve_model(model, with_ROI(solver = "glpk", 
-                                      verbose = TRUE))
+result <- solve_model(model, with_ROI(solver = "symphony"))
 ```
 
 We can summarize the information by simply extracting a the objective function value.  This can be done with inline R code.  For example, we can say the following.
@@ -458,20 +454,14 @@ We have been using `glpk` for all of our earlier examples.  For the sake of comp
 
 ```{r timeglpk, cache=TRUE }
 library(tictoc)   # Package used for timing R functions
-
 tic("glpk")        # Start the timer...
-
 result_glpk <- solve_model(
   model, with_ROI(solver = "glpk", verbose=TRUE))
-
 glpktime <- toc()  # End the timer and save results
-
 print(solver_status(result_glpk))
-
 glpktime1 <- c("glpk", glpktime$toc - glpktime$tic, 
                result_glpk$status, 
                result_glpk$objective_value)
-
 ```
 
 The `glpk` solver worked.  We'll take the results and combine them with other shortly
@@ -483,21 +473,15 @@ The `glpk` solver worked.  We'll take the results and combine them with other sh
 Let's move on to testing the `symphony` solver.
 
 ```{r timesymphony, cache=TRUE }
-
 tic("symphony")
-
 result_symphony <-  solve_model(
   model, with_ROI(solver = "symphony", verbosity = -1))
-
 symphonytime <- toc()
-
 print(solver_status(result_symphony))
-
 symphonytime1 <- c("symphony", 
                    symphonytime$toc - symphonytime$tic,
                    result_symphony$status,
                    result_symphony$objective_value)
-
 ```
 
 Again, `symphony` successfully solved the optimization problem.  \vspace{12pt}
@@ -515,22 +499,16 @@ The last option, `first_feasible`, has a default value of `FALSE`.  If it is set
 Let's examine the impact of just looking at the first feasible solution found by passing `first_feasible=TRUE` to see what happens.  \vspace{12pt}
 
 ```{r timesymphonyfirstfeasible, cache=TRUE }
-
 tic("symphony")
-
 result_symphony_ff <- solve_model(
   model, with_ROI(solver = "symphony",
                   verbosity = -1, first_feasible=TRUE))
-
 symphonytimeff <- toc()
-
 print(solver_status(result_symphony_ff))
-
 symphonytimeff <- c("symphony first feas.", 
                     symphonytimeff$toc - symphonytimeff$tic,
                    result_symphony_ff$status,
                    result_symphony_ff$objective_value)
-
 ```
 
 Several interesing and important things should be noted here.  First, `ompr` interprets the status message from the solver as not being solved to optimality to indicate that the problem is not feasible.  This is a known issue in `ompr` and `ompr.ROI`as of version 0.8.0.0.  It highlights that "infeasible" status from the `ompr` should be thought of as meaning that an optimal solution was not found for _some_ reason such as being told to terminate after the first feasible solution was found, time limit reached, node limit reached, the MIP was infeasible, the MIP was unbounded, or some other issue.
@@ -548,19 +526,14 @@ The `lpsolve` package has a long history too and is widely used.  Let's test it 
 
 ```{r timelpsolve, cache=TRUE}
 tic("lpsolve")
-
 result_lpsolve <-  solve_model(
   model, with_ROI(solver = "lpsolve", verbose=TRUE))
-
 lpsolvetime <- toc()
-
 print(solver_status(result_lpsolve))
-
 lpsolvetime1 <- c("lpsolve", 
                   lpsolvetime$toc - lpsolvetime$tic,
                    result_lpsolve$status,
                    result_lpsolve$objective_value)
-
 ```
 
 We can see that `lpsolve` was also successful.
@@ -570,18 +543,13 @@ We can see that `lpsolve` was also successful.
 Now let's compare how they each did.  
 
 ```{r comparetimes}
-
 timeresults <- rbind(glpktime1, symphonytime1, 
                      symphonytimeff, lpsolvetime1)
-
 colnames (timeresults) <- c("Solver", "Time (Sec)", 
                             "Status", 
                             "Obj. Func. Value")
-
 rownames (timeresults) <- NULL
-
 panderOptions('round', 2)
-
 pander(timeresults, 
     caption="Comparison of Results from Warehouse 
        Customer Assignment Across Solvers", digits=2)
@@ -611,21 +579,17 @@ Significant computer time can be used for large models but a variety of question
 Let's take another look at comparing solvers by examining their popularity. More precisely, let's examine the download logs of CRAN for a variety of linear programming solvers.  
 
 ```{r lp_package_download_stats, echo=FALSE, fig.width=10, fig.height=6, fig.fullwidth=TRUE}
-
 optim_packages <- c("lpSolve", "lpSolveAPI",  "Rglpk", 
                    "clpAPI",  "DEoptim", "Rsymphony", 
                    "glpkAPI", "alabama","scs"
 )
-
 pkg_dl_data <- cran_stats(packages = optim_packages)
-
 ggplot(pkg_dl_data, aes(end, downloads, group=package, color=package)) +
     geom_line()  + 
     labs(title = "Monthly Downloads of Optimization Packages",
        subtitle = "Wide choice of Optimization packages",
        caption = "Source: CRAN", 
        x = "Month", y = "Downloads") 
-
 ```
 
 Many of these packages are being used directly in other packages. While we can't see which packages are being specifically used most often for `ompr`, we can see which ROI plugins are downloaded most often which is probably a good proxy.    
@@ -634,13 +598,10 @@ Many of these packages are being used directly in other packages. While we can't
 We will focus our attention on the ROI packages that emphasize linear programming. This means dropping packages such as `ROI.plugin.nloptr`, `ROI.plugin.qpOASES`, and `ROI.plugin.quadprog`. Also, proprietary packages that are not available on CRAN such as GUROBI and XPress, are not included.  \vspace{12pt}
 
 ```{r ROI_Package_Stats, echo=FALSE, fig.width=10, fig.height=6, fig.fullwidth=TRUE}
-
 ROI_packages <- c( "ROI.plugin.glpk",   "ROI.plugin.symphony", 
                   "ROI.plugin.lpsolve", "ROI.plugin.scs", 
                   "ROI.plugin.clp",     "ROI.plugin.alabama")
-
 pkg_dl_data <- cran_stats(packages = ROI_packages)
-
 ggplot(pkg_dl_data, aes(end, downloads, group=package, 
                         color=package)) +
     geom_line() + 
@@ -648,15 +609,12 @@ ggplot(pkg_dl_data, aes(end, downloads, group=package,
        subtitle = "Wide choice of ROI LP packages",
        caption = "Source: CRAN", 
        x = "Month", y = "Downloads") 
-
 ```
 
 It is interesting to see that the symphony and glpk ROI plugins were relatively equal in downloads until about 2015 when glpk started to open a lead in usage.  This of course does not mean that glpk is better than the others but is interesting to note. The spikes in downloads could be driven by other packages that use this particular solver, visibility from vignettes, courses, other publications, or package updates.  \vspace{12pt}
   
 ```{r package_download_stats, fig.width=10, fig.height=6, fig.margin=TRUE}
-
 pkg_dl_data <- cran_stats(packages = c("ompr"))
-
 ggplot(pkg_dl_data, aes(end, downloads, group=package, 
                         color=package)) +
     geom_line()  + 
@@ -664,7 +622,6 @@ ggplot(pkg_dl_data, aes(end, downloads, group=package,
        subtitle = "Optimization Modelling Package for R",
        caption = "Source: CRAN", 
        x = "Month", y = "Downloads") 
-
 ```
 
 Let's close this with examining the popularity of `ompr` itself.   
@@ -679,7 +636,6 @@ Clearly a wide range of optimization tools can be used.  Let's return to optimiz
 
 > Would you like to play a game?
 > `r tufte::quote_footer('--- Joshua (Wargames-1983)')`
-
 ```{r, echo=FALSE}
 library(sudokuAlt)
 set.seed(1234)
@@ -696,11 +652,8 @@ After spending a significant amount of time and CPU cycles on a serious topic of
 The optimization approach will give you the opportunity to solve this or any other Sudoku model. This section is based on an article by Dirk Schumacher and helper functions from the 'sudokuAlt' package from Bill Venables, one of the Godfathers of R.  Let's start with Dirk's explanation, with permission, of the model.  \vspace{12pt}
 
 > In this vignette we will solve Sudoku puzzles using MILP. [Sudoku](https://en.wikipedia.org/wiki/Sudoku) in its most popular form is a constraint satisfaction problem and by setting the objective function to $0$ you transform the optimization problem into a pure constraint satistication problem. In this document we will consider Sudokus in a 9x9 grid with 3x3 sub-matrices.  
-
 > Of course you can formulate an objective function as well that directs the solver towards solutions maximizing a certain linear function.  
-
 > The idea is to introduce a binary variable $x$ with three indexes $i, j, k$ that is $1$ if and only if the number $k$ is in cell $i, j$.  
-
 
   \vspace{12pt}
 The basic optimization formulation is interesting for a few reasons.    \vspace{12pt}
