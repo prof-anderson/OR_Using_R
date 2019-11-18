@@ -125,8 +125,10 @@ Next we set the number of customers to be 100 and the number of warehouses to be
 ```{r Prepare-for-Data-Generation}
 set.seed(1234)      # Set random number seed
 grid_size <- 1000   # Horizontal and vertical axis ranges 
-n <- 100 ; m <- 20 # Set number of customers and warehouses
+n <- 200 ; m <- 40 # Set number of customers and warehouses
         # Select 100 and 20 for local computer runs
+# n <- 100 ; m <- 20 # Set number of customers and warehouses
+        # 100 and 20 for local computer runs is a moderate size
 #n <- 10 ; m <- 3  # Safer problem size for cloud services
         # Text discussion is for the larger size
 ```
@@ -636,6 +638,7 @@ Clearly a wide range of optimization tools can be used.  Let's return to optimiz
 
 > Would you like to play a game?
 > `r tufte::quote_footer('--- Joshua (Wargames-1983)')`
+
 ```{r, echo=FALSE}
 library(sudokuAlt)
 set.seed(1234)
