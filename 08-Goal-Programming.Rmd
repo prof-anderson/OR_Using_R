@@ -26,6 +26,7 @@ library (magrittr, quietly = TRUE) #Used for pipes/dplyr
 library (dplyr, quietly = TRUE)
 library (ROI, quietly = TRUE)
 library (ROI.plugin.glpk, quietly = TRUE)
+library (ROI.plugin.symphony, quietly = TRUE)
 library (ompr, quietly = TRUE)
 library (ompr.roi, quietly = TRUE)
 library (pander, quietly = TRUE)
@@ -34,6 +35,8 @@ library (tufte)
 ```
 
 # Goal Programming
+
+## Policies for Houselessness
 
 Up until this point, we assumed that there would be a single, clear objective function. Often we have more complex situations where there are multiple conflicting objectives.  In our earlier production planning case, we might have additional objectives besides maximizing profit such as minimizing environmental waste or longer term strategic positioning. In the case of our capital budgeting problem, we can envision a range of additional considerations beyond simple unexpected net present value maximization.  
 \vspace{12pt}
@@ -321,3 +324,107 @@ Careful readers may note that children are effectively double counted between th
 This example can be expanded much further in the future with additional policy interventions, other stakeholders, and other characteristics, such as policies on drug addiction treatment, policing practices, and more.  We did not factor in the Chief Economist's impact on housing prices.  
 
 We'll leave these issues to future work.  
+
+## Mass Mailings
+
+Let's take a look at another example. We have an outreach campaign across the fifty states to do in the next eight weeks. You have $C_s$ customers in each state.  Since the statewide campaign needs to be coordinated, each state should be done in a single week but different states can be done in different weeks. You want to create a model to have the workload on in terms of numbers of customers to be as balanced as possible across the eight weeks.   
+\vspace{12pt}
+
+As an exercise, pause to think of how you would set this up.  
+\vspace{12pt}
+
+What are your decision variables?  
+\vspace{12pt}
+
+What are your constraints?  
+\vspace{12pt}
+
+What is the objective function?
+\vspace{12pt}
+
+Try to give some thoughts as to how to set this up before moving on to seeing our formulation.  Hint:  Defining the data as $C_s$ gives a good headstart on building the model.
+
+To provide some space before we discuss the formulation, let's show the data.  Rather than providing a data table that must be retyped, let's use a dataset already available in R so you can simply load the state data.  Note that you can grab the population in 1977 in terms of thousands.  
+
+```{r}
+data(state)
+Customers <- state.x77[,1]
+pander(head (Customers), caption="Number of customers for first six states.")
+```
+
+_Formulating the Model_
+
+Presumably you have created your own formulation. If so, your model will likely differ from what follows in some ways such as naming conventions for variables or subscripts.  That is fine.  The process of trying to build a model is important.  
+\vspace{12pt}
+
+Let's start by defining our decision variables, $x_s,w$ as a binary variable to indicate whether we are going to send a mailing to state _s_ in week _w_.  
+\vspace{12pt}
+
+Now, we need to ensure that every state is mailed to in one of the eight weeks. We simply need to add up the variable for each state's decision to mail in week 1, 2, 3, ..., up to 8.  Mathematically, this would be $\sum\limits_{w=1}^{8}   x_{s,w} = 1, \; \forall w$.  
+\vspace{12pt}
+
+It is useful to take a momement to reflect on why $\sum\limits_{s=1}^{50} \sum\limits_{w=1}^{8}   x_{s,w} = 50$ is not sufficient to ensure that all 50 states get mailed to it some point.  
+\vspace{12pt}
+
+Combined with the variable $x_s,w$ being defined to be binary, this is sufficient to ensure that we have a _feasible_ answer but not necessarily a well-balanced solution across the eight weeks. We could easily calcuate the amount of material to mail each as a function of $x_s,w$  and $C_s$.  For week 1, it would be $\sum\limits_{s=1}^{50}   C_s \cdot x_{s,1}$  For week 2, it would be $\sum\limits_{s=1}^{50}   C_s \cdot x_{s,2}$, etcetera.  This could be generalized as $\sum\limits_{s=1}^{50}   C_s \cdot x_{s,w} \; \forall \; w$.  
+\vspace{12pt}
+
+Creating a balanced schedule can be done in multiple ways. Let's start by using the _minimax_ approach discussed earlier. To do this, we add a new variable _Q_ and constrain it to be at least as large as each week.  Therefore, for week 1, $Q \geq \sum\limits_{s=1}^{50}   C_s \cdot x_{s,1}$ and for week 2, $Q \geq \sum\limits_{s=1}^{50}   C_s \cdot x_{s,12}$.  Again, to generalize for all eight weeks, we could write $Q \geq \sum\limits_{s=1}^{50}   C_s \cdot x_{s,w} \; \forall \; w$
+\vspace{12pt}
+
+we can then use our minimax objective function of simply minimizing _Q_.  
+
+Let's now move on to implement this model in R.  
+
+```{r}
+States <- 50  # Options to shrink problem for testing
+Weeks <- 8
+  
+Mail1 <- MIPModel()
+     # 1 iff state s gets assigned to week w
+Mail1 <- add_variable(Mail1, Vx[s, w], s=1:States, w=1:Weeks, type="binary") 
+  
+Mail1 <- add_variable(Mail1, VQ, type = "continuous")
+  
+Mail1 <-   set_objective(Mail1, VQ, "min")    # maximize the preferences
+
+# every state  needs to be assigned to a week
+Mail1 <- add_constraint(Mail1, sum_expr(Vx[s, w], 
+                          w=1:Weeks)==1, s=1:States) 
+Mail1 <- add_constraint(Mail1, sum_expr(Customers [s]*Vx[s, w-1], 
+                              s=1:States) >=
+               sum_expr(Customers [s]*Vx[s, w], 
+                              s=1:States), 
+               w = 2:Weeks)
+Mail1 <-   add_constraint(Mail1, VQ >= sum_expr(Customers [s]*Vx[s, w], 
+                                s=1:States), w = 1:Weeks) 
+  
+Mail1
+
+```
+
+```{r}
+res_Mail1 <- solve_model(Mail1, 
+                        with_ROI(solver = "symphony",
+                   verbosity=-1, first_feasible=TRUE))
+#                   verbosity=-1))
+
+#                        with_ROI(solver = "glpk"))
+
+```
+
+```{r}
+res_Mail1
+```
+
+Note that the the messages from Symphony indicate that the solution found was feasible while `ompr` interprets the status as `infeasible.`  
+
+```{r}
+res_Mail1 <- solve_model(Mail1, 
+                        with_ROI(solver = "symphony",
+                   verbosity=0, gap_limit=0.01))
+#                   verbosity=-1))
+
+#                        with_ROI(solver = "glpk"))
+
+```
