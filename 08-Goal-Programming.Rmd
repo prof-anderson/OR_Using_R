@@ -30,7 +30,8 @@ library (ROI.plugin.symphony, quietly = TRUE)
 library (ompr, quietly = TRUE)
 library (ompr.roi, quietly = TRUE)
 library (pander, quietly = TRUE)
-library (tint)
+library (dplyr)
+library (tint)  
 library (tufte)
 ```
 
@@ -202,8 +203,10 @@ R  <- get_solution (res_Home3 , VR)
 d1  <- get_solution (res_Home3 , Vd1)
 d2  <- get_solution (res_Home3 , Vd2)
 
-sum_Home3           <- cbind(res_Home3$objective_value,H, R, d1, d1/T1, d2, d2/T2)
-colnames(sum_Home3) <- c("Obj. Func. Val.", "H", "R", "d1", "d1%", "d2", "d2%")
+sum_Home3           <- cbind(res_Home3$objective_value,
+                             H, R, d1, d1/T1, d2, d2/T2)
+colnames(sum_Home3) <- c("Obj. Func. Val.", "H", "R", 
+                         "d1", "d1%", "d2", "d2%")
 rownames(sum_Home3) <- "Min sum of deviations"
 
 pander(sum_Home3)
@@ -251,8 +254,10 @@ R  <- get_solution (res_Home4 , VR)
 d1  <- get_solution (res_Home4 , Vd1)
 d2  <- get_solution (res_Home4 , Vd2)
 
-sum_Home4           <- cbind(res_Home4$objective_value,H, R, d1, d1/T1, d2, d2/T2)
-colnames(sum_Home4) <- c("Obj. Func. Val.", "H", "R", "d1", "d1%", "d2", "d2%")
+sum_Home4           <- cbind(res_Home4$objective_value,
+                             H, R, d1, d1/T1, d2, d2/T2)
+colnames(sum_Home4) <- c("Obj. Func. Val.", "H", "R", 
+                         "d1", "d1%", "d2", "d2%")
 rownames(sum_Home4) <- "Min sum of deviation %s"
 
 pander(sum_Home4)
@@ -382,21 +387,25 @@ Weeks <- 8
   
 Mail1 <- MIPModel()
      # 1 iff state s gets assigned to week w
-Mail1 <- add_variable(Mail1, Vx[s, w], s=1:States, w=1:Weeks, type="binary") 
+Mail1 <- add_variable(Mail1, Vx[s, w], 
+                      s=1:States, w=1:Weeks, type="binary") 
   
 Mail1 <- add_variable(Mail1, VQ, type = "continuous")
   
-Mail1 <-   set_objective(Mail1, VQ, "min")    # maximize the preferences
+Mail1 <-   set_objective(Mail1, VQ, "min")
+     # maximize the preferences
 
 # every state  needs to be assigned to a week
 Mail1 <- add_constraint(Mail1, sum_expr(Vx[s, w], 
                           w=1:Weeks)==1, s=1:States) 
-Mail1 <- add_constraint(Mail1, sum_expr(Customers [s]*Vx[s, w-1], 
+Mail1 <- add_constraint(Mail1, 
+                        sum_expr(Customers [s]*Vx[s, w-1], 
                               s=1:States) >=
                sum_expr(Customers [s]*Vx[s, w], 
                               s=1:States), 
                w = 2:Weeks)
-Mail1 <-   add_constraint(Mail1, VQ >= sum_expr(Customers [s]*Vx[s, w], 
+Mail1 <-   add_constraint(Mail1, VQ >= 
+                            sum_expr(Customers [s]*Vx[s, w], 
                                 s=1:States), w = 1:Weeks) 
   
 Mail1
@@ -419,5 +428,61 @@ res_Mail1
 ```
 
 Note that the the messages from Symphony indicate that the solution found was feasible while `ompr` interprets the status as `infeasible.`  
+
+```{r}
+assigned <- res_Mail1 %>% 
+ get_solution(Vx[s,w]) %>%
+ filter(value >.9) %>%
+ select (s,w)
+rownames(assigned)<-c(names(Customers[assigned[,1]]))
+
+head(assigned)
+```
+
+That is just for six states in the first week though.  
+
+```{r Build_Table_of_Results}
+ assigned2 <- tibble::rownames_to_column(assigned)
+table_results<-""
+weeksmail<-""
+for (week_counter in 1:Weeks) {
+  weeksmail<- assigned2 %>%
+  filter(w==week_counter) %>%
+  select(rowname)
+colnames(weeksmail)<-paste0("Week ",week_counter)
+table_results <- append(table_results,weeksmail)
+}
+```
+
+```{r Display_weekly_Mailings}
+pander (table_results, caption="Mailing Results by Week")
+```
+
+Since this is state level data, let's look at a map of the schedule.  
+
+```{r Map_of_Mailing_Results}
+library (ggplot2)
+library (maps)
+mapx = data.frame(region=tolower(rownames(assigned)), 
+    week=assigned[,"w"], 
+    stringsAsFactors=F)
+
+states_map <- map_data("state")
+ggplot(mapx, aes(map_id = region)) + 
+    geom_map(aes(fill = week, colour = "white"), 
+             map = states_map) +
+scale_fill_viridis_c(option = "C")+
+expand_limits(x = states_map$long, y = states_map$lat)
+```
+
+Note that this leaves off Alaska and Hawaii for visualization.  For completeness, Alaska is in week `r assigned["Alaska",] [,2]` and Hawaii is in week `r assigned["Alaska",] [,2]`.
+ 
+This problem can be adjusted to fit a wide variety of other situations such as:
+
+* Setting a maximum or minimum number of states per week
+* Having a maximum and/or minimum number of customers to mail per week.
+* Trying to "frontload" the workload so that week 1 is at least as busy as week 2; week 2 is at least as busy as week 3, _etc._
+* Incorporating a secondary goal of finishing the mailing in as few weeks as possible.
+* Applying this approach to other applications such as assigning customers to warehouses.
 
 

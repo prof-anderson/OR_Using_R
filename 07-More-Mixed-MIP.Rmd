@@ -22,7 +22,7 @@ output:
 ```{r setup_chapter7, echo=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = F)
-knitr::opts_chunk$set(cache = TRUE)
+knitr::opts_chunk$set(cache = FALSE)
 library (tufte)
 library (pander)
 library (tidyr)
@@ -454,7 +454,7 @@ We'll demonstrate the performance for illustration purposes.  Again, do not run 
 We have been using `glpk` for all of our earlier examples.  For the sake of comparison, let's start off with it too.  We will use the `tictoc` package to help us collect data on timing.  Note that timing can vary even if the same problem is solved on the same computer twice in rapid succession. 
 \vspace{12pt}
 
-```{r timeglpk, cache=TRUE }
+```{r timeglpk }
 library(tictoc)   # Package used for timing R functions
 tic("glpk")        # Start the timer...
 result_glpk <- solve_model(
@@ -474,7 +474,7 @@ The `glpk` solver worked.  We'll take the results and combine them with other sh
 \vspace{12pt}
 Let's move on to testing the `symphony` solver.
 
-```{r timesymphony, cache=TRUE }
+```{r timesymphony }
 tic("symphony")
 result_symphony <-  solve_model(
   model, with_ROI(solver = "symphony", verbosity = -1))
@@ -500,7 +500,7 @@ The last option, `first_feasible`, has a default value of `FALSE`.  If it is set
 
 Let's examine the impact of just looking at the first feasible solution found by passing `first_feasible=TRUE` to see what happens.  \vspace{12pt}
 
-```{r timesymphonyfirstfeasible, cache=TRUE }
+```{r timesymphonyfirstfeasible }
 tic("symphony")
 result_symphony_ff <- solve_model(
   model, with_ROI(solver = "symphony",
@@ -526,7 +526,7 @@ Thirdly, the time on my computer sometimes took less time to solve to optimality
 
 The `lpsolve` package has a long history too and is widely used.  Let's test it and see how it performs.
 
-```{r timelpsolve, cache=TRUE}
+```{r timelpsolve}
 tic("lpsolve")
 result_lpsolve <-  solve_model(
   model, with_ROI(solver = "lpsolve", verbose=TRUE))
