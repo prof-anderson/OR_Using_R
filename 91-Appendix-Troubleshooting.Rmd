@@ -195,6 +195,7 @@ I often find that I discover how to fix it myself while creating this simplified
 \vspace{12pt}
 
 Using simplified variable names may help make it more readable and shorter.  Again, the reader doesn't really care about your specific model.  Of course, this might cause (or fix?) name conflicts or collisions.  
+\vspace{12pt}
 
 A detailed discussion of how to create good reproducible examples can be found online.  
 https://reprex.tidyverse.org/articles/reprex-dos-and-donts.html

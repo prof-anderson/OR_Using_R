@@ -1,10 +1,10 @@
 ---
-title: "Operations Research Using R<br />"
+title: "Optimization Modeling Using R<br />"
 author: "Timothy R. Anderson"
 date: "`r Sys.Date()`"
 github-repo:  "prof-anderson/OR_Using_R"
-cover-image:  "images/OR_Using_R-Book_Cover.png"
-description:  "This book introduces Operations Research usage through R. The current focus is on linear programming (optimization) but may expand in the future.  It does not presume R fluency and teaches some R along the way but does not aim to fully teach R."  
+cover-image:  "images/Book_Cover-Optimization_Modeling_Using_R.png"
+description:  "This book introduces optimization using R. The current focus is on linear and mixed integer programming but may expand in the future.  It does not presume R fluency and teaches some R along the way but does not aim to fully teach R."  
 site: bookdown::bookdown_site
 monofont: Times New Roman
 highlight: monochrome
@@ -13,7 +13,26 @@ bibliography: ["Master4Bookdowns.bib"]
 ---
 # Preface {-}
 
-This book covers using R for doing Operations Research. The current focus is on linear optimization. In the future it may grow to include a broader range of Operations Research methods. \vspace{12pt}
+This book covers using R for doing optimization, a key area of operations research, which has been applied to virtually every industry. The current focus is on linear and mixed integer optimization. In the future it may grow to include a broader range of Operations Research methods. \vspace{12pt}
+
+Pedagogically, since the late 1990s, I had been a proponent of teaching introductory optimization using spreadsheets as a way to bridge the barrier between data and applications as well as teaching better spreadsheet practices.  While this worked well, the disconnect with algebraic modeling was always a problem.  Excel add-ins enabling algebraic tools were rich but not seamless.  In 2018, I decided to switch to R for a variety of reasons:
+
+* With the rapid rise of interest in data analytics, it became important to introduce a data analytics platform.
+* Working technology and business professionals should have an awareness of the tools and langauge of data analytis to deal with consultants, data scientists, and others.
+* New software and extensions reduced the barrier to entry for people to start using data analytics tools.
+
+This book has been used multiple times for a ten week graduate course on operations research emphasizing optimization.  It can be used for graduate and undergraduate courses for people without a background in optimization and varying levels of mathematical backgrounds. The focus is on applications (formulating, implementing, and interpreting rather than algorithms.  The book could be used as a supplement in a more theoretical or algorithm-oriented class. Key principles in the development of the book include the following:
+
+* An assumption of people using R and getting their hands dirty with experimenting
+* Providing and explaining code, sometimes repeated in different places so that examples are relatively clear and self-contained.
+* Creating algebraic formulations before implementing
+* An emphasis on application rather than algorithmic details
+* Embodying the philosophy of reproducible research - the book is regularly rebuilt with all analyses automatically rerun and most tables and figures rebuilt.
+* Contributing to the open source community - all materials are available on the author's github repository.
+* Demonstrating common debugging practices with a troubleshooting emphasis specific to optimization using R.  
+* Providing code chunks liberally that readers can adopt and adapt to their own applications.
+
+\vspace{12pt}
 
 I would like to thank many people for their contributions, collaborations, and assistance over the years. All errors are my fault though.  
 
@@ -39,7 +58,8 @@ I would like to thank many people for their contributions, collaborations, and a
 * **Caroline Blackledge,** co-author of summation introduction appendix
 * **Alexander Keller,** co-author of summation introduction appendix
 * **Shahram Khorasanizadeh,** co-author of summation introduction appendix
-* **Jose Banos,** contributor of more formatting in the spirit of Tufte 
+* **Jose Banos,** contributor of more formatting in the spirit of Tufte
+* **Jon Syverson,** frequent and thoughtful feedback on early drafts
 * **Dawei Zhang,** further editorial work on the book 
 
 In addition, several groups have been of tremendous help:

@@ -892,14 +892,14 @@ $$
 Happy Patient Hospital (HPH), has varying needs for nurses throughout the day.  They expect the following numbers of nurses to be needed over the typical 24 hour period.  Nurses work eight hour shifts, starting at each 4 hour time period specified in the table.  
 
 ```{r, nurse_scheduling, fig.margin=TRUE}
-hph_needs <- matrix (c(50, 140, 260, 140, 100, 80), ncol=1,
-                     dimnames = c(list(c("midnight - 4 AM",
-                                         "4 AM - 8 AM",
-                                         "8 AM - noon",
-                                         "noon - 4 PM",
-                                         "4 PM - 8 PM",
-                                         "8 PM - midnight")),
-                                  list(c("Required Nurses"))))
+hph_needs <- matrix (c(50, 140, 260, 140, 100, 80), ncol=1, 
+    dimnames = c(list(c("midnight - 4 AM",
+                        "4 AM - 8 AM",
+                        "8 AM - noon",
+                        "noon - 4 PM",
+                        "4 PM - 8 PM",
+                        "8 PM - midnight")),
+                 list(c("Required Nurses"))))
 grid.table (hph_needs)
 ```
 
