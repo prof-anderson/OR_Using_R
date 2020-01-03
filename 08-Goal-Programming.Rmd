@@ -550,6 +550,33 @@ Notice that then the workload in week 1 would essentially be the same as _Q_. In
 
 Solving times are also hard to predict in advance.  The symmetry breaking constraint appears to have caused slowed down the solving signficantly as it spends a lot of time early on with a gap of 10.34%.  This suggests that perhaps symphony's algorithms do a better job on this problem than the simple symmetry breaking constraints that we added.  This warrants future attention or experimentation.
 
+Next, let's try running this using powerful commercial solver.  
+
+```{r, echo=FALSE}
+library(ROI.plugin.gurobi)
+res_Mail3 <- solve_model(Mail2, 
+                        with_ROI(solver = "gurobi"))
+
+assigned3 <- res_Mail3 %>% 
+ get_solution(Vx[s,w]) %>%
+ filter(value >.9) %>%
+ select (s,w)
+rownames(assigned3)<-c(names(Customers[assigned3[,1]]))
+
+assigned3a <- tibble::rownames_to_column(assigned32)
+table_results3<-""
+weeksmail3a<-""
+for (week_counter in 1:Weeks) {
+  weeksmail3a<- assigned3a %>%
+  filter(w==week_counter) %>%
+  select(rowname)
+colnames(weeksmail3a)<-paste0("Week ",week_counter)
+table_results3 <- append(table_results3,weeksmail3a)
+}
+pander (table_results3[-1],   # Removes first item
+       caption="Results from Gurobi")
+```
+
 This application and model can be adjusted to fit a wide variety of other situations such as:
 
 * Setting a maximum or minimum number of states per week

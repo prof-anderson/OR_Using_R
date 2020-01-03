@@ -35,6 +35,7 @@ library(ROI.plugin.glpk)
 library (tictoc, quietly = TRUE) 
 library (ROI.plugin.lpsolve, quietly = TRUE) 
 library (ROI.plugin.symphony, quietly = TRUE)
+library(ROI.plugin.gurobi, quietly = TRUE)
 library("ggplot2")
 library("dlstats")
 library(sudokuAlt)
@@ -148,6 +149,7 @@ customer_locations <- data.frame(
 
 > The **warehouses** are also randomly placed on the grid. The fixed cost for the warehouses are randomly generated as well with mean cost of 10,000.
 Notice that in this case, the fixedcost is generated using a normal random variable function, with a mean of 10 times the grid size or 10,000 and a standard deviation of 5000.
+
 ```{r Create-Warehouse-Data}
 warehouse_locations <- data.frame(
   id = 1:m,
@@ -230,14 +232,15 @@ model <- MIPModel() %>%
                 "min") %>%
   
   # every customer needs to be assigned to a warehouse
-  add_constraint(sum_expr(Vx[i, j], j=1:m)==1, i=1:n) %>% 
+  add_constraint(sum_expr(Vx[i, j], j=1:m)==1, i=1:n) %>%  
   
 #  add_constraint(sum_expr(Vx[i, j], i = 1:n) <= 4, j = 1:m) %>% 
 
     # if a customer is assigned to a warehouse, 
   #    then this warehouse must be built
   add_constraint(Vx[i,j] <= Vy[j], i = 1:n, j = 1:m)
-model
+
+ # model
 ```
 
 The number of _x_ (or `Vx`) variables is $m \cdot n =20 \cdot 100$ or 2000 and the number of _y_ (or `Vy`) variables is $m$ or 20, the total number of variables is 2020 which matches the model summary. A similar calculation can be done on the constraints.  The number of variables and constraints make this a non-trivial sized MIP problem. Fortunately, solving still turns out to be pretty easy on a personal computer but be cautious of solving this on a cloud instance.
@@ -524,8 +527,9 @@ Thirdly, the time on my computer sometimes took less time to solve to optimality
   
 *Performance of `lpsolve`*
 
+  \vspace{12pt}
 The `lpsolve` package has a long history too and is widely used.  Let's test it and see how it performs.
-
+  \vspace{12pt}
 ```{r timelpsolve}
 tic("lpsolve")
 result_lpsolve <-  solve_model(
@@ -540,13 +544,49 @@ lpsolvetime1 <- c("lpsolve",
 
 We can see that `lpsolve` was also successful.
 
+*Performance of `gurobi`*
+
+  \vspace{12pt}
+Gurobi is a comprehensive commercial optimization solver and is generally considered to be the fastest mixed integer programming solver.  It is widely used for large scale commercial applications such as Amazon, Starbucks, and others.  It can be run through a variety of platforms including C, Python, AMPL, GAMS, and other platforms.  It is also available through R but requires more work than the open solvers that have previously used.  To use Gurobi in R, do the following:
+
+1. Get a license to gurobi (free licenses are available for academic use)
+2. Download and install the gurobi software
+3. Follow directions to have software access license key
+4. Install gurobi's R package.  Note that the package file is not in CRAN and will need to be installed directly from the gurobi installed files on your local computer.  (For example in my windows install, it it was in `C:\\gurobi900\win64\R` directory.)
+5. Install the `roi.plugin.gurobi` package.  Note that this may need to be installed from a github account as it is not officially supported by Gurobi.  
+
+  \vspace{12pt}
+```{r timegurobi}
+tic("gurobi")
+result_gurobi <-  solve_model(
+  model, with_ROI(solver = "gurobi"))
+gurobitime <- toc()
+print(solver_status(result_gurobi))
+gurobitime1 <- c("gurobi", 
+                  gurobitime$toc - gurobitime$tic,
+                   result_gurobi$status,
+                   result_lpsolve$objective_value)
+```
+
+The respective `ROI.plugin` for each solver does not in general accept all parameters that a solver can use.  This may mean some trial and error is involved.  The [Gurobi documentation](https://www.gurobi.com/documentation/9.0/refman/parameters.html#sec:Parameters) provides a comprehensive list of parameters.  I've tested and the following commonly used parameters appear to work.
+
+* *TimeLimit* terminates solving based on seconds, (usage: `TimeLimit=40.0`)
+* *SolutionLimit* , limits the number of MIP feasible solutions, (usage:  `SolutionLimit=20`)
+* *NodeLimit* , limits the number of MIP nodes, only used in MIP, (usage: `NodeLimit=200`)
+* *BestObjStop* , stops when a solution is as good as value, (usage: `BestObjStop=50000.0`)
+* *BestBdStop* , stops when best bound is as good as value (usage: `BestBdStop=50000.0`)
+* *MIPGap*, stops based on relative gap between best bound and current solution.  Note that the default is $10^-4$ rather than 0. A value of 0.1 effectively means that a solution is accepted and solving terminated if it is known that no solution is possible that is 10% better. (usage: `MIPGap=0.1`)
+* *MIPGapAbs*, stops based on absolute gap between best bound and current solution. For example if the objective function is in dollars, a value of 1000.0  means that a solution is accepted and solving terminated if it is known that no solution is possible is more $\$1000$ better. (usage: `MIPGap=1000.0`)
+
+The gurobi solver has far more capabilities than are presented here.  
+
 ## Comparing Results across Solvers
 
 Now let's compare how they each did.  
 
 ```{r comparetimes}
 timeresults <- rbind(glpktime1, symphonytime1, 
-                     symphonytimeff, lpsolvetime1)
+                     symphonytimeff, lpsolvetime1, gurobitime1)
 colnames (timeresults) <- c("Solver", "Time (Sec)", 
                             "Status", 
                             "Obj. Func. Value")
@@ -557,10 +597,10 @@ pander(timeresults,
        Customer Assignment Across Solvers", digits=2)
 ```
 
-The most important thing to note is that each solver states that it found an optimal solution with the same  objective function value.  While they may vary in how it is achieved if there are multiple optima (in other words, different values for decision variables _x_ and _y_), this means that they all found a correct solution.  It would be a big issue if they differed. Causes for difference could be timing out, satisfying a suboptimality tolerance factor condition, or some error.  
+The most important thing to note is that each solver states that it found the same value for an objective function.  While they may vary in how it is achieved if there are multiple optima (in other words, different values for decision variables _x_ and _y_), this means that they all found a correct solution.  It would be a big issue if they differed. Causes for difference could be timing out, satisfying a suboptimality tolerance factor condition, or some error.  
 \vspace{12pt}
 
-Note that time will vary significantly from computer to computer and may also depend upon the other tasks and the amount of memory available. Performance will change for different solver settings and for different problems.  Also, performance time will change for different random instances---simply changing the random number seed will create diferent run-time results.  
+Note that time will vary significantly from computer to computer and may also depend upon the other tasks and the amount of memory available. Performance will change for different solver settings and for different problems.  Also, performance time will change for different random instances---simply changing the random number seed will create diferent run-time results.  This problem is probably too small to show off the advantages of gurobi and running gurobi through the ROI 
 \vspace{12pt}
 
 The ROI package lists 19 different solvers with ROI plugins. Three commercial solvers, C-Plex, GUROBI, and MOSEK are worth highlighting. These programs may be substantially faster on large MIP problems and may make versions available for academic use.  Others are for quadratic optimization or special classes of optimization problems.  
@@ -575,6 +615,24 @@ Significant computer time can be used for large models but a variety of question
 * How do various modeling parameters affect solution speed?  
 
   \vspace{12pt}
+
+```{r Demo_Gurobi_Solver, eval=FALSE, echo=FALSE}
+# Code fragment is only used for testing gurobi
+#    and parameter passing for gurobi.
+
+gmodel <- MIPModel() %>%
+  add_variable(Vx, type = "integer", lb=0, ub=8) %>%
+  add_variable(Vy, type = "continuous", lb = 0, ub=4) %>%
+  set_objective(Vx + Vy, "max") %>%
+  add_constraint(Vx + Vy == 11.25)
+  
+gres <- solve_model(gmodel, with_ROI(solver = "gurobi", TimeLimit=20))
+
+get_solution(gres, Vx)
+get_solution(gres, Vy)
+gres$status
+
+```
 
 ## Popularity of LP Solvers
 
