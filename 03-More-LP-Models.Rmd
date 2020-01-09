@@ -744,8 +744,7 @@ s2 <- get_solution (resStd , Vs2)
 
 base_case_res           <- cbind(x, y, s1, s2)
 rownames(base_case_res) <- "Optimal Values"
-pander(base_case_res)
-grid.table(base_case_res)
+pander(base_case_res, caption="Solution to Standard Form")
 ```
 
 Notice that we had three equations and four variables (both regular and slack variables.)  This meant that at every iteration of the simplex algorithm, it would set one variable equal to zero and solve for the other three variables because solving three equations with three unknowns is very easy.  This is consistent with our solution, where $s_1$ is zero and the other three variables all had values.
@@ -793,11 +792,54 @@ Notice this gives us the _A_ matrix (aptly named `matrix` by `ompr`).  The set o
 The benefit of `ompr` and algebraic modeling more generally is highlighted as models get more complex with multiple subscripted variables (especially double or triple subscripted variables), and lots of constraints. Creating the Operations Research analyst could be build the _A_ matrix on their own, keeping track of which row corresponds to a particular variable becomes very difficult. For an example of how this can be done, see the _DEA Using R_ book's chapter on a matrix implementation of DEA.
 \vspace{12pt}
 
+## Production and Inventory
+
+A common application is production planning and inventory management planning over time.  Let's assume a company has a manufacturing cost for product _p_ in time period _t_ of $C^M_{p,t}$.  The cost to carry a unit of product _p_ in inventory from period _t_ to _t+1_ is $C^I_{p,t}$.  Demand of $D_{p,t}$ must be met each period.  The maximum production in any period can vary and is denoted as $M_{p,t}$.  The beginning inventory for each product is $B_{p}$.  The goal of the manager is to find a production plan that minimizes cost.  
+
+We can start by defining our decision variables.  We will need a set of decision variables for the amount to produce of each product _p_ in each period _t_.  Let's define that as $x_{p,t}$.  
+
+Similarly, we will define a variable for the inventory at the end of each period, $i_{p,t}.  
+
+The production cost is simply cost per product multiplied by the number of products produced or $\sum_{p} \sum_{t} C^M_{p,t} x_{p,t}$.
+
+The inventory carrying cost follows the same format, $\sum_{p} \sum_{t} ( C^I_{p,t} y_{p,t}$
+
+We can then combine them as $\sum_{p} \sum_{t} ( C^M_{p,t} x_{p,t} + C^I_{p,t} y_{p,t})$
+
+At this point, it is important to look at the relationship between inventory, production, and sales. 
+
+Sometimes care must be taken for the "boundary conditions" of the first or last time period.  In our case, we have a value defined the beginning inventory of $B_p$.  For product 1, we would have $B_1 + x_{1,1} - D_{1,1} = y_{1,1}$.  For product 2, it would be $B_2 + x_{2,1} - D_{2,1} = y_{2,1}$ and so on for other products.  We would generalize this then as $B_p + x_{p,1} - D_{p,1} = y_{p,1}$.
+
+For periods after the first $(t>1)$) Essentially the ending inventory is equal to the beginning inventory plus the inflow (production) minus the outflow (demand).  For product _p_ in time period _t_, this then becomes $y_{p,t-1} + x_{p,t} - D_{p,t} = y_{p,t}$
+
+Of course we would need to ensure appropriate upper and lower bounds on the decision variables.  
+
+Let's wrap it all together in the follow formulation.
+
+$$
+ \begin{split}
+ \begin{aligned}
+    \text{Minimize  }   &  \sum_{p} \sum_{t} ( C^M_{p,t} x_{p,t} + C^I_{p,t} y_{p,t}) \\
+    \text{subject to: } & B_{p} + x_{p,1} - D_{p,1} = y_{p,1}   \; \forall \; p,  \\
+            & y_{p,t-1} + x_{p,t} - D_{p,t} = y_{p,t}   \; \forall \; p, \; t > 1 \\
+            & 0 \leq x_{p,t} \leq M_{p,t} \; \forall \; p, t\\
+            & y_{p,t} \geq 0 \; \forall \; p, t\\
+  \end{aligned}
+  \end{split}
+$$
+
+This model illustrates the basic dynamics of relating production, inventory, and demand. Each application often requires tailoring to address specific needs.  For example:
+
+* Some companies require safety stocks levels to maintained which could be done by setting minimum inventory levels
+* Sometimes all the demand cannot be met in a period - this can be modeled by separating sales from demand with a separate variable for sales in each period.
+* Allowing backlogged demand that can be met in the following period - again modeled with an additional variable.  
+
+
 ## Exercises
 
 ```{exercise, name="Transportation"}
 ```
-Four manufacturing plants are supplying material for distributors in four regions.  The four supply plants are located in Chicago, Beaverton, Eugene, and Dallas.  The four distributors are in PDX (Portland), SEA (Seattle), MSP(Minneapolis), and ATL (Atlanta).  Each manufacturing plant has a maximum amount that they can produce.  For example, Chicago can produce at most 500.  Similarly, the PDX region can handle at most 700 units.  The cost to transport from Dallas to MSP is three times as high as the cost from Dallas to Atlanta. The table on the right displays the transportation cost between all the cities.
+Four manufacturing plants are supplying material for distributors in four regions.  The four supply plants are located in Chicago, Beaverton, Eugene, and Dallas.  The four distributors are in PDX (Portland), SEA (Seattle), MSP (Minneapolis), and ATL (Atlanta).  Each manufacturing plant has a maximum amount that they can produce.  For example, Chicago can produce at most 500.  Similarly, the PDX region can handle at most 700 units.  The cost to transport from Dallas to MSP is three times as high as the cost from Dallas to Atlanta. The table on the right displays the transportation cost between all the cities.
 \vspace{12pt}
 
 ```{marginfigure}

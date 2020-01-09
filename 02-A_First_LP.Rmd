@@ -1145,10 +1145,10 @@ Here are a collection of tips and tricks that have confounded past students.
 
 ## `ompr` Related Tips and Tricks
 
-* `ompr` will complain if you use the same variable name a data object in R and in `ompr`. For example, if you have variables _x_ and y in a formulation, then build an `ompr` model with `x` and `y` variables.  You might then assign the results to `x` and `y` objects in R, and run it again. You will then get a notification of a name space conflict from `ompr`. One work around is to prefix the `ompr` variables with a V to indicate variable thereby using `Vx` and `Vy` in `ompr` for is assigned to x and y in r.  
-* Typos can happen easily in piped models being built but are not typically localized.  Try commenting and in and lines until the problem goes away.  This will help to identify where the problem is.
+* `ompr` will complain if you use the same variable name for a data object in R and in `ompr`. For example, if you have variables _x_ and y in a formulation, then build an `ompr` model with `x` and `y` variables.  You might then assign the results to `x` and `y` objects in R, and run it again. You will then get a notification of a name space conflict from `ompr`. One work around is to prefix the `ompr` variables with a V to indicate variable thereby using `Vx` and `Vy` in `ompr` for is assigned to x and y in r.  
+* Typos can happen easily in piped models being built but are not typically localized.  Try commenting in and out lines until the problem goes away.  This will help to identify where the problem is.
 * Check for ompr updates.  It is under active development. You may find versions on the author's github repository that are not yet available through CRAN.
-* `ompr` is featuring a much faster form of model building with a different syntax using `MILPmodel` rather than "MIPmodel".  If you are running into delays running ompr but not solving the problem, this may be worth investigating.
+* The author of `ompr` is testing a much faster form of model building with a different syntax using `MILPmodel` rather than "MIPmodel".  If you are running into delays building an ompr model but not solving the problem, this may be worth investigating.
 
 ## RMD Tips and Tricks
 

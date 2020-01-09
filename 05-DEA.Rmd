@@ -33,8 +33,6 @@ library (pander, quietly = TRUE)
 library (tufte, quietly = TRUE)
 library (tint)
 library (knitr)
-library (TRA) # Note, may need to install directly from github
-              # devtools::install_github("prof-anderson/TRA")
 library(DiagrammeRsvg, quietly=TRUE) 
 library(rsvg, quietly=TRUE) 
 library(htmltools, quietly=TRUE)
@@ -49,28 +47,27 @@ library(htmltools, quietly=TRUE)
 Data envelopment analysis or DEA is a powerful tool for conducting studies of efficiency and has been used in thousands of publications since its inception in the 1970s.[^Source]
 \vspace{12pt}
 
-[^Source]: This chapter is drawn from an introduction chapter in the book, DEA Using R by the same author.  More details on DEA are available from that book.
+[^Source]: This chapter is drawn from an introduction chapter in the book, _Data Envelopment Analysis Using R_ by the same author.  More details on DEA are available from that book.  This book is also available via github at <https://github.com/prof-anderson>[github.com/prof-anderson]
 
-While tools exist for conducting the evaluations, it is important to understand how the tools work. Many DEA studies have been conducted and published by authors with only a superficial understanding of the technique.  This is equivalent to having a house built by carpenters that only (barely?) understand how to use a hammer.  The purpose of this document is to show how DEA works, what it means, and how to use R for getting started with DEA.  In order to keep things simple, this first step only looks at the input-oriented envelopment model with constant returns to scale.  We will consider other models soon.  
+While tools exist for conducting the evaluations, it is important to understand how the tools work. Many DEA studies have been conducted and published by authors with only a superficial understanding of the technique.  This is equivalent to having a house built by carpenters that only (barely?) understand how to use a hammer.  The purpose of this document is to show how DEA works, what it means, and how to use R for getting started with DEA.  In order to keep things simple, this first step only looks at the input-oriented envelopment model with constant returns to scale. We introduce other models at the end of this chapter.  
 \vspace{12pt}
 
 This chapter walks through how DEA works and then shows how to implement the model in R using two very different approaches.  Over the years, I have built DEA models in many languages and platforms:  Pascal, LINDO, LINGO, Excel Macros, Excel VBA, GAMS, AMPL, XPress-MOSEL, and GLPK among others. 
 \vspace{12pt}
 
-Recently, my research group at PSU adopted the R platform based on the following strengths:
+In this chapter, we will use a few functions from an R package, TRA, that I have created.  This package is for doing a range of functions related to Technology, Research, and Analytics.  It is not posted on CRAN but is instead available from github.  You can download a current version from github.
 
-* Open-source so that people can dive as deep as they need and no risk of future vendor lock-in
-* Freely available so it does not strain research budgets
-* Extensive collection of numerical add-in packages (over 10000 at CRAN) to build upon
-* Robust distribution of add-in packages could help improve distribution of our own contributions
-* Multiple linear programming packages to choose from among
-* Widespread usage and acceptance in the research and analytics communities
-* No arbitrary capacity limits
-* One platform that combines optimization and statistical analysis
+```{r load_TRA_from_github, eval=FALSE}
+
+library(devtools)
+devtools::install_github("prof-anderson/TRA")
+library (TRA)
+
+```
 
 ## Creating the Data
 
-Let's start by defining data.  DEA typically has inputs and outputs.  The input(s) are typically resources that are consumed in the production of output(s).  Inputs are referred to as "bads" in that higher levels at the same level of output is considered worse.  Similarly, holding everything else constant, an increase in any single output is laudable.  Examples of inputs might include capital, labor, or number of machines.
+Let's start by defining data.  DEA applications can have multiple inputs and outputs. The input(s) are typically resources that are consumed in the production of output(s). Inputs are referred to as "bads" in that higher levels at the same level of output is considered worse.  Similarly, holding everything else constant, an increase in any single output is laudable.  Examples of inputs might include capital, labor, or number of machines.
 \vspace{12pt}
 
 In contrast, outputs are the "good" items that are being produced by the actions of the producers.  Examples of outputs might include automobiles produced, customers served, or graduating students.
@@ -80,9 +77,12 @@ Let's start by creating a simple dataset - assume that you are a regional manage
 \vspace{12pt}
 
 ```{r DEA_IO_Plot1, fig.margin=TRUE, fig.height=4}
+library (TRA) # Note, may need to install directly from github
+              # devtools::install_github("prof-anderson/TRA")
+
 # fig.cap='A Simple DEA Model for Store Management'
-Figure <- DrawIOdiagram (c("Employees (FTE)" ), 
-                         c("Sales ($/week)"), 
+Figure <- DrawIOdiagram (c("Employees\n(FTE)" ), 
+                         c("Sales\n($/week)"), 
                          '"\nStore\n "')
 tmp<-capture.output(rsvg_png(charToRaw(export_svg(Figure)),
                              'images/DEA_IO_stores.PNG')) 
@@ -162,7 +162,7 @@ The same steps can be followed for analyzing stores _A_, _C_, and _D_ resulting 
 The graphical approach is intuitive but accuracy is limited to that of drawing tools.  More importantly, it does not scale to more complex models with multiple inputs and outputs.  Let's frame this topic mathematically so that we can proceed systematically. Furthermore, benchmarking of stores is only one application area of literally thousands so rather than limiting ourselves to stores, we will refer to them as _decision making units_ (DMUs) or units for short.   
 \vspace{12pt}
 
-A key way to begin the mathematical development of the envelopment model is to ask, can you find a combination of units that produces a target with at least as much output using less input? The blend of other units is described by a vector $\lambda$.  Another way to denote this is $\lambda_j$ is the specific amount of a unit _j_ used in setting the target for performance for the unit being studied, _k_.  In this case, _k=B_ since we are analyzing store B.  Furthermore, we can state that we want to find how much input our target for B needs compared what B actually used. This value for input usage is a unitless variable, $\theta$ where $\theta =1$ indicates that a reduction cannot occur for each input while maintaing B's level of output.  Similarly, a value of $\theta =0.9$ indicates a 10% reduction in input usage could be obtained.     
+A key way to begin the mathematical development of the envelopment model is to ask, can you find a combination of units that produces a target with at least as much output using less input? The blend of other units is described by a vector $\lambda$.  Another way to denote this is $\lambda_j$ which is the specific amount of a unit _j_ used in setting the target for performance for the unit being studied, _k_.  In this case, _k=2_ since we are analyzing the second store, B.  Furthermore, we can state that we want to find how much input our target for B needs compared with what B actually used. This value for input usage is a unitless variable, $\theta$ where $\theta =1$ indicates that a reduction cannot occur for each input while maintaining B's level of output.  Similarly, a value of $\theta =0.9$ indicates a 10% reduction in input usage could be obtained.     
 \vspace{12pt}
 
 We could express the evaluation of store B as a linear program as follows.  
@@ -191,7 +191,7 @@ $$
 
 Implementing this formulation in `ompr` or another system is straightforward and similar to the production planning linear programs examined in earlier chapters. \vspace{12pt} 
 
-To solve for other stores, we would simply change the values on the right hand side of the constraints and solve. This means that we solve as many linear programs as there are units to evaluate.  We are in effect iterating for _k=1,...,Number of Units_.
+To solve for other stores, we would simply change the values on the right hand side of the constraints and solve again. This means that we solve as many linear programs as there are units to evaluate.  We are in effect iterating for _k=1,...,Number of Units_ or with the four store case, _k=1,...,4_
 
 \vspace{12pt}
 
@@ -225,11 +225,13 @@ This is not yet a linear program because it is missing an objective function.  I
 The two most common approaches to finding the best target are the input-oriented and output-oriented models. In the output-oriented model, the first (input) constraint is satisfied while trying to _exceed_ the second constraint (output) by as much possible.  This focus on increasing the output is then called an _output orientation_.
 \vspace{12pt}
 
-In this chapter, we will focus on satisfying the second constraint while trying to improve upon the first by as much as possible.  In other words, we will satisfy the second (output) constraint but try to form a target that uses as little input as possible.
+In this chapter, we will focus on satisfying the second constraint while trying to improve upon the first by as much as possible.  In other words, we will satisfy the second (output) constraint but try to form a target that uses as little input as possible. The focus on reducing inputs gives it the name of the input-oriented model.
 \vspace{12pt}
 
 In fact, we will go one step further and say that we want to find the maximum  possible input reduction in k's input or conversely, the minimum amount of the input that could be used by the target while still producing the same or more output.  We do this by adding a new variable, $\theta$, which is the radial reduction in the amount of DMU k's input.  We want to find how low we can drive this by _minimizing_ $\theta$. Let's define the proportion of the studied unit's input needed by the target as $\theta$. A value of $\theta=1$ then means no input reduction can be found in order to produce that unit's level of output. 
-This gives us the following linear program, often abbreviated as an LP.
+\vspace{12pt}
+
+This gives us the following linear program.
 
 $$
  \begin{split}
@@ -243,7 +245,7 @@ $$
   (\#eq:LPCCRIOE-NoSlack-Simple)
 $$
 
-Expressing the target on the left and the actual unit's value and radial reduction on the right is conceptually straightforward to understand.   Unfortunately, optimization software typically requires collecting all the variables on the left and putting constants on the right hand side of the inequalities. This is easily done.  
+Expressing the target on the left and the actual unit's value and radial reduction on the right is conceptually straightforward to understand.   Some optimization software requires collecting all the variables on the left and putting constants on the right hand side of the inequalities. This is easily done and shown in the following linear program for completeness but a benefit of `ompr` is that we leave it in the original format.  
 
 $$
 \begin{split}
@@ -307,7 +309,7 @@ Let's define some data structures for holding our data and results.
   dimnames(results.yslack)<-c(DMUnames,SYnames)
 ```
 
-We're going to use our data from earlier but first we will load a collection of libraries to be used later.  The ompr package is for optimization and serves as a general human readable format of optimization models that can then interface with a variety of solver engines.  The ROI.plugin.glpk package is for the specific solver engine, glpk, that we used.  Other LP solving engines are available and can be used instead.  
+We're going to use our data from earlier but first we will load a collection of libraries to be used later.  The ompr package is for optimization and serves as a general human readable format of optimization models that can then interface with a variety of solver engines.  The `ROI.plugin.glpk` package is for the specific solver engine, `glpk`, that we used.  Other LP solving engines are available and can be used instead.  We demonstrate other solvers in chapter 7.  
 
 ```{r loading_packages, message=FALSE, warning=FALSE}
 library(dplyr, quietly=TRUE)           
