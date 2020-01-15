@@ -21,7 +21,8 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(tidy = F)
+knitr::opts_chunk$set(tidy = FALSE)
+knitr::opts_chunk$set(cache = TRUE)
 library (magrittr, quietly = TRUE) #Used for pipes/dplyr
 library (dplyr, quietly = TRUE)
 library (ROI, quietly = TRUE)
@@ -333,7 +334,7 @@ We'll leave these issues to future work.    \vspace{12pt}
 
 ## Mass Mailings
 
-Let's take a look at another example. We have an outreach campaign across the fifty states to do in the next eight weeks. You have $C_s$ customers in each state.  Since the statewide campaign needs to be coordinated, each state should be done in a single week but different states can be done in different weeks. You want to create a model to have the workload on in terms of numbers of customers to be as balanced as possible across the eight weeks.   
+Let's take a look at another example. We have a mailing outreach campaign across the fifty states to do in the next eight weeks. You have $C_s$ customers in each state.  Since the statewide campaign needs to be coordinated, each state should be done in a single week but different states can be done in different weeks. You want to create a model to have the workload, in terms of numbers of customers, to be as balanced as possible across the eight weeks.   
 \vspace{12pt}
 
 As an exercise, pause to think of how you would set this up.  
@@ -348,7 +349,7 @@ What are your constraints?
 What is the objective function?
 \vspace{12pt}
 
-Try to give some thoughts as to how to set this up before moving on to seeing our formulation.  Hint:  Defining the data as $C_s$ gives a good headstart on building the model.  \vspace{12pt}
+Try to give some thoughts as to how to set this up before moving on to seeing our formulation.  \vspace{12pt}
 
 To provide some space before we discuss the formulation, let's show the data.  Rather than providing a data table that must be retyped, let's use a dataset already available in R so you can simply load the state data.  Note that you can grab the population in 1977 in terms of thousands.    \vspace{12pt}
 
@@ -356,24 +357,30 @@ To provide some space before we discuss the formulation, let's show the data.  R
 ```{r loading_mailing_data}
 data(state)
 Customers <- state.x77[,1]
-pander(head (Customers), caption="Number of customers for first six states.")
+pander(head (Customers), 
+       caption="Number of customers for first six states.")
 ```
+\vspace{12pt}
 
 _Formulating the Model_
+\vspace{12pt}
 
 Presumably you have created your own formulation. If so, your model will likely differ from what follows in some ways such as naming conventions for variables or subscripts.  That is fine.  The process of trying to build a model is important.  
 \vspace{12pt}
 
-Let's start by defining our decision variables, $x_s,w$ as a binary variable to indicate whether we are going to send a mailing to state _s_ in week _w_.  
+Let's start by defining our decision variables, $x_{s,w}$ as a binary variable to indicate whether we are going to send a mailing to state _s_ in week _w_.  
 \vspace{12pt}
 
 Now, we need to ensure that every state is mailed to in one of the eight weeks. We simply need to add up the variable for each state's decision to mail in week 1, 2, 3, ..., up to 8.  Mathematically, this would be $\sum\limits_{w=1}^{8}   x_{s,w} = 1, \; \forall \; s$.  
 \vspace{12pt}
 
-It is useful to take a momement to reflect on why $\sum\limits_{s=1}^{50} \sum\limits_{w=1}^{8}   x_{s,w} = 50$ is not sufficient to ensure that all 50 states get mailed to it some point.  
+It is useful to take a momement to reflect on why $\sum\limits_{s=1}^{50} \sum\limits_{w=1}^{8}   x_{s,w} = 50$ is not sufficient to ensure that all 50 states get mailed to during the eight week planning period.
 \vspace{12pt}
 
-Combined with the variable $x_s,w$ being defined to be binary, this is sufficient to ensure that we have a _feasible_ answer but not necessarily a well-balanced solution across the eight weeks. We could easily calcuate the amount of material to mail each as a function of $x_s,w$  and $C_s$.  For week 1, it would be $\sum\limits_{s=1}^{50}   C_s \cdot x_{s,1}$  For week 2, it would be $\sum\limits_{s=1}^{50}   C_s \cdot x_{s,2}$, etcetera.  This could be generalized as $\sum\limits_{s=1}^{50}   C_s \cdot x_{s,w} \; \forall \; w$.  
+Combined with the variable $x_{s,w}$ being defined to be binary, this is sufficient to ensure that we have a _feasible_ answer but not necessarily a well-balanced solution across the eight weeks.  
+\vspace{12pt}
+
+We could easily calculate the amount of material to mail each as a function of $x_s,w$  and $C_s$.  For week 1, it would be $\sum\limits_{s=1}^{50}   C_s \cdot x_{s,1}$  For week 2, it would be $\sum\limits_{s=1}^{50}   C_s \cdot x_{s,2}$, and so on.  This could be generalized as $\sum\limits_{s=1}^{50}   C_s \cdot x_{s,w} \; \forall \; w$.  
 \vspace{12pt}
 
 Creating a balanced schedule can be done in multiple ways. Let's start by using the _minimax_ approach discussed earlier. To do this, we add a new variable _Q_ and constrain it to be at least as large as each week.  Therefore, for week 1, $Q \geq \sum\limits_{s=1}^{50}   C_s \cdot x_{s,1}$ and for week 2, $Q \geq \sum\limits_{s=1}^{50}   C_s \cdot x_{s,12}$.  Again, to generalize for all eight weeks, we could write $Q \geq \sum\limits_{s=1}^{50}   C_s \cdot x_{s,w} \; \forall \; w$
@@ -436,9 +443,9 @@ res_Mail1 <- solve_model(Mail1,
 res_Mail1
 ```
 
-Note that the the messages from Symphony indicate that the solution found was feasible while `ompr` interprets the status as `infeasible.`  This is a bug that we have discussed earlier.  Turning on an option for more messages from the solver such as 'verbose=TRUE' for `'glpk` or 'verbosity=0` for `symphony` can give confirmation that the final status is *not* infeasible.  \vspace{12pt}
+Note that the the messages from Symphony indicate that the solution found was feasible while `ompr` interprets the status as `infeasible.`  This is a bug that we have discussed earlier.  Turning on an option for more messages from the solver such as `verbose=TRUE` for `verbose=TRUE` or `verbosity=0` for `symphony` can give confirmation that the final status is *not* infeasible.  \vspace{12pt}
 
-Another useful to thing to note is that solving this problem to optimality can take a long time despite having fewer binary variables than some of our earlier examples.  Using 'glpk' with  'verbose=FALSE' means that the MIP is solved with no progress information displayed and makes it look like the solver is hung.  Turning on more information (increasing the verbosity) helps explain that the Solver is working, it is just taking a while, on my computer I let it run 20 minutes without making further progress than a feasible solution it had found quickly.  \vspace{12pt}
+Another useful to thing to note is that solving this problem to optimality can take a long time despite having fewer binary variables than some of our earlier examples.  Using `glpk` with  `verbose=FALSE` means that the MIP is solved with no progress information displayed and makes it look like the solver is hung.  Turning on more information (increasing the verbosity) helps explain that the Solver is working, it is just taking a while, on my computer I let it run 20 minutes without making further progress than a feasible solution it had found quickly.  \vspace{12pt}
 
 In fact, I realized that the feasible solution found was very close to the best remaining branches so perhaps this solution was optimal but it was taking a very long time to prove that it was optimal.  In any case, it is probably good enough.  Often data may only be accurate to $\pm5\%$ so spending extensive time trying to get significantly more accurate results is not very productive.  This suggests  setting stopping options such as a time limit, number of LPs, or a _good enough_ setting.  For this problem, I chose the latter option.  \vspace{12pt}
 
@@ -478,7 +485,7 @@ pander (table_results1[-1],   # Removes first item
 ```
 
 Since this is state level data, let's look at a map of the schedule.  
-
+  \vspace{12pt}
 ```{r Map_of_Mailing_Results}
 library (ggplot2)
 library (maps)
@@ -494,11 +501,11 @@ scale_fill_viridis_c(option = "C") +
 expand_limits(x = states_map$long, y = states_map$lat)
 ```
 
-Note that this leaves off Alaska and Hawaii for visualization.  For completeness, Alaska is in week `r assigned1a["Alaska",] [,2]` and Hawaii is in week `r assigned1a["Hawaii",] [,2]`.
+Note that this leaves off Alaska and Hawaii for visualization.  For completeness, Alaska is in week `r assigned1a["Alaska",] [,2]` and Hawaii is in week `r assigned1a["Hawaii",] [,2]`.  \vspace{12pt}
 
-This formulation generates solutions that have high symmetry.  Essentially it would be feasible and have the same objective function value if we simply swap any two weeks of assignments.  For example, if we all of the states assigned to week 1 and week 2, it would still be feasible and have exactly the same objective function value.  This would result in a high number of alternate optimal solutions.  The numbering by week is essentially arbitrary since the weeks don't make a difference.  
+This formulation generates solutions that have high symmetry.  Essentially it would be feasible and have the same objective function value if we simply swap any two weeks of assignments.  For example, if we all of the states assigned to week 1 and week 2, it would still be feasible and have exactly the same objective function value.  This would result in a high number of alternate optimal solutions.  The numbering by week is essentially arbitrary since the weeks don't make a difference.    \vspace{12pt}
 
-When there exists a high degree of symmetry, it may be useful to implement one or more constraints to _break_ the symmetry by differentiating between solutions.  One approach to doing this is to require a particular ordering of weeks.  For example, we could require that weeks get progressively lighter in terms of workload.  
+When there exists a high degree of symmetry, it may be useful to implement one or more constraints to _break_ the symmetry by differentiating between solutions.  One approach to doing this is to require a particular ordering of weeks.  For example, we could require that weeks get progressively lighter in terms of workload.    \vspace{12pt}
 
 $$
  \begin{split}
@@ -507,8 +514,8 @@ $$
   \end{aligned}
   \end{split}
 $$
-
-We could then extend our `ompr` model, `Mail1` with the additional constraints.
+  \vspace{12pt}
+We could then extend our `ompr` model, `Mail1` with the additional constraints.  \vspace{12pt}
 
 ```{r}
 Mail2 <- add_constraint(Mail1, 
@@ -518,9 +525,9 @@ Mail2 <- add_constraint(Mail1,
                               s=1:States), 
                w = 2:Weeks)
 ```
-
+  \vspace{12pt}
 To speed up the solution time, I'll set the gap_limit to $15\%$.
-
+  \vspace{12pt}
 ```{r break_symmetry, echo=FALSE}
 res_Mail2 <- solve_model(Mail2, 
                         with_ROI(solver = "symphony",
@@ -545,12 +552,12 @@ table_results2 <- append(table_results2,weeksmail2a)
 pander (table_results2[-1],   # Removes first item
        caption="Results with symmetry breaking")
 ```
+  \vspace{12pt}
+Notice that then the workload in week 1 would essentially be the same as _Q_. In other words, the _Q_ minimax variable and constraints could be removed and still give the equivalent model.  This highlights that in mixed integer optimization, there are often many different ways to implement models for the same application.  \vspace{12pt}
 
-Notice that then the workload in week 1 would essentially be the same as _Q_. In other words, the _Q_ minimax variable and constraints could be removed and still give the equivalent model.  This highlights that in mixed integer optimization, there are often many different ways to implement models for the same application.
+Solving times are also hard to predict in advance.  The symmetry breaking constraint appears to have caused slowed down the solving signficantly as it spends a lot of time early on with a gap of 10.34%.  This suggests that perhaps symphony's algorithms do a better job on this problem than the simple symmetry breaking constraints that we added.  This warrants future attention or experimentation.  \vspace{12pt}
 
-Solving times are also hard to predict in advance.  The symmetry breaking constraint appears to have caused slowed down the solving signficantly as it spends a lot of time early on with a gap of 10.34%.  This suggests that perhaps symphony's algorithms do a better job on this problem than the simple symmetry breaking constraints that we added.  This warrants future attention or experimentation.
-
-Next, let's try running this using powerful commercial solver.  
+Next, let's try running this using powerful commercial solver.    \vspace{12pt}
 
 ```{r solve_using_gurobi, echo=FALSE}
 library(ROI.plugin.gurobi)

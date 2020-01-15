@@ -119,7 +119,8 @@ $$
   (\#eq:IntegerProdPlan)
 $$
 
-The ompr implementation has a similar, straightforward change. In the declaration of variables (add_variable function), we simply set the type to be integer rather than continuous.
+The `ompr` implementation has a similar, straightforward change. In the declaration of variables (add_variable function), we simply set the type to be integer rather than continuous.
+\vspace{12pt}
 
 ```{r IntegerModelCDT}
 IntModelCDT <- MIPModel() %>%
@@ -150,6 +151,7 @@ pander(IntModelCDTres,
 ```
 
 Notice that in this case, there was a small adjustment to the production plan and a small decrease to the optimal objective function value.  This is not always the case, sometimes the result can be unchanged.  In other cases, it may be changed in a very large way.  In still others, the problem may in fact even become infeasible.
+\vspace{12pt}
 
 ## Example of Integality having a Large Impact
 
@@ -240,11 +242,13 @@ At its core, the basic problem is that the simplex method and linear programming
 Another way to visualize integer solutions for general systems of inequalities is to think of the two equation and two unknown (*x* and *y*) case. Finding a solution is the same as finding where two lines intersect in two dimensional space.  The odds of getting lucky and having the two lines intersect at an integer solution is small.  Even if we limit ourselves to x and y both being between 0 and 10, this means that there are $11^2=121$ possible integer valued points in this space such as (0,0), (0,3), and (10,10). In contrast, the set of all points, including non-integers, in this region includes all of the above points as well as (0,0.347) and (4.712, 7.891) among infinitely more. The result is that if you think of this as a target shooting, the probability of finding an integer solution by blind luck is  $\frac{121}{\infty}\approx 0$.
 \vspace{12pt}
 
-What we need to do is an algorithm around the simplex method to accomplish this. A basic and common and approach often used for solving integer variable linear programming problems is called branch and bound.  We start with a solution that has presumably continuous valued variables.  We then branch (create subproblems) off of this result and add bounds (additional constraints) to rule out the fractional value of that variable.
+What we need to do is an algorithm around the simplex method to accomplish this. A basic and common and approach often used for solving integer variable linear programming problems is called branch and bound.  We start with a solution that has presumably continuous valued variables.  We then branch (create subproblems) off of this result and add bounds (additional constraints) to rule out the fractional value of that variable.  
+\vspace{12pt}
 
 *The LP Relaxation*
 
 To solve this using branch and bound, we *relax* the integrality requirements and solve what is called the LP Relaxation. To do this, we simply remove the integrality requirement.
+\vspace{12pt}
 
 $$
  \begin{split}
@@ -259,6 +263,7 @@ $$
 $$
 
 This is a problem that we **can** solve using linear programming so let's go ahead do it!  Well, we already did so let's just review the results for what is now called the LP Relaxation because we are _relaxing_ the integrality requirements.
+\vspace{12pt}
 
 ```{r SolveLPRelaxation}
 pander(acme_res_lp,
@@ -270,7 +275,11 @@ pander(acme_res_lp,
 knitr::include_graphics("images/Fig06-3-LP_Relaxation.PNG")
 
 ```
+\vspace{12pt} 
+
 *Subproblem I*
+
+\vspace{12pt}
 
 Alas, this production plan from the LP Relaxation is not feasible from the perspective of the original integer problem because it produces _2.769_ of  product 1 and _1.827_ of product 2.  If both of these variables had been integer we could have declared victory and been satisfied that we had easily (*luckily?*) found the optimal solution to the original integer programming problem so quickly.
 \vspace{12pt}
@@ -323,8 +332,10 @@ Looking over the results, we now get an integer value for $x_1$ but not for $x_2
 knitr::include_graphics("images/Fig06-5-Subproblem_Ia.PNG")
 
 ```
+\vspace{12pt}
 
 *Subproblem III*
+\vspace{12pt}
 
 Choosing which subproblem to examine next is one of the areas that large scale integer programming software and algorithms specialize and provide options. One way to think of it is to focus on searching down a branch and bound tree deeply or to search across the breadth of the tree.  For this example, let's go deep (we'll return to subproblem II later.)  
 \vspace{12pt}
@@ -360,6 +371,7 @@ This results in integer values for both $x_1$ and $x_2$ so it is feasible with r
 \vspace{12pt}
 
 *Subproblem IV*
+\vspace{12pt}
 
 Next, let's look at Subproblem IV.  This problem adds the bound of $x_2\ge3.0$ to subproblem I.  Notice that in the MIPModel, the variable for $x_1$ has an upperbound (ub) of 2 in order to implement bounding constraint for subproblem I and the lower bound on $x_2$ of 3 in the variable declarations.
 
@@ -395,6 +407,7 @@ The returned status value of this solved LP indicates that this tell us that sub
 \vspace{12pt}
 
 *Subproblem II*
+\vspace{12pt}
 
 Now, we have searched down all branches or subproblems except for subproblem II.  Let's go back and do that problem.  We do that by simply adding one new bound to the LP Relaxation.  That is $x_1\ge 3.0$.
 
@@ -431,6 +444,7 @@ Before this, we could only say that it was feasible solution and candidate to be
 \vspace{12pt}
 
 Let's summarize the results of the series of LPs solved.
+\vspace{12pt}
 
 ```{r create_table_of_subproblem_results}
 LPSubIV_res <- c("-", "-", "Infeasible")
@@ -450,6 +464,7 @@ pander(BandB, caption="Branch and Bound's Sequence of LPs")
 knitr::include_graphics("images/Fig06-6-B_and_B_Summary.PNG")
 
 ```
+\vspace{12pt}
 
 ## Computational Complexity
 
@@ -491,6 +506,7 @@ The important thing is is that binary variables give us a lot of rich opportunit
 \vspace{12pt}
 
 Examples include assigning people to projects, go-no go decisions on projects, and much more.  
+\vspace{12pt}
 
 Let's explore the impact of binary restrictions with another example.  The world famous semiconductor company, Outtel has a choice of five major R&D projects:   
 1) Develop processor architecture for autonomous vehicles (project A)
@@ -766,7 +782,7 @@ What we need is a way to connect, associate, or dare I say "link" the $W_1$ and 
 
 ## Linking Constraints with "Big M"
 
-I like to think of the linking constraint as the following:  $W_1 \leq M*Y_1$.  The value $M$ is a big value that is so large that it does not prematurely limit the production for widget 1.  Whatever value of $M$ is used, $W_1$ can never exceed that value.  
+I like to think of the linking constraint as the following:  $W_1 \leq M \cdot Y_1$.  The value $M$ is a big value that is so large that it does not prematurely limit the production for widget 1.  Whatever value of $M$ is used, $W_1$ can never exceed that value.  
 \vspace{12pt}
 
 Our linking constraints force our new values to 0 or 1. If $W_1 > 0$, then this constraint forces the associated $Y_1$ to be equal to 1. If $W_1 = 0$, then this constraint allows $Y_1$ to be either 0 or 1.  However, our objective function will cause Solver to avoid paying a setup by setting $Y_1=0$.
@@ -786,10 +802,10 @@ More formally, using the non-negative lower bounds on widget production, we can 
 $$
  \begin{split}
  \begin{aligned}
-      2W_1+1*0+4*0 \leq 1000 \\
-      1W_1+5*0+2*0 \leq 2000 \\
-      2W_1+1*0+1*0 \leq 1000 \\
-      3W_1+2*0+1*0 \leq 1500 \\
+      2W_1+1 \cdot 0+4 \cdot 0 \leq 1000 \\
+      1W_1+5 \cdot 0+2 \cdot 0 \leq 2000 \\
+      2W_1+1 \cdot 0+1 \cdot 0 \leq 1000 \\
+      3W_1+2 \cdot 0+1 \cdot 0 \leq 1500 \\
       W_1 \leq 500 \\
       0 \leq 1000 \\
       0 \leq 750 \\

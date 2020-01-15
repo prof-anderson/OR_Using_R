@@ -204,11 +204,11 @@ And we will continue with the code to build the mode in a generic format.
 
 ```{r Build_Prod_Model}
 prodmodel <- MIPModel() %>%
-  add_variable (x[i], i=1:NProd, 
+  add_variable (Vx[i], i=1:NProd, 
                 type="continuous", lb=0) %>%
-  set_objective (sum_expr(Profit[i] * x[i], 
+  set_objective (sum_expr(Profit[i] * Vx[i], 
                           i=1:NProd ), "max") %>%
-  add_constraint (sum_expr(Resources[j,i]*x[i], 
+  add_constraint (sum_expr(Resources[j,i]*Vx[i], 
                            i=1:NProd)
                   <= Available[j],
                   j=1:NResources) %>% 
@@ -237,7 +237,7 @@ This is useful to know but we are really interested in how to generate this prof
 results.products <- matrix (rep(-1.0,NProd), 
                             nrow = NProd, ncol=1,
                             dimnames=c(ProdNames,c("x")))
-temp <- get_solution (prodmodel, x[i]) 
+temp <- get_solution (prodmodel, Vx[i]) 
    # Extracts optimal values of variables   
 results.products <- t(temp [,3] )      
    #Extracts third column
@@ -302,11 +302,11 @@ Now we will rebuild the the optimization model.
 
 ```{r Rebuild_and_Solve_Model}
 prodmodel <- MIPModel() %>%
-  add_variable (x[i], i=1:NProd, 
+  add_variable (Vx[i], i=1:NProd, 
                 type="continuous", lb=0) %>%
-  set_objective (sum_expr(Profit[i] * x[i] , 
+  set_objective (sum_expr(Profit[i] * Vx[i] , 
                           i=1:NProd ), "max") %>%
-  add_constraint (sum_expr(Resources[j,i]*x[i], 
+  add_constraint (sum_expr(Resources[j,i]*Vx[i], 
                            i=1:NProd) 
                   # Left hand side of constraint
                   <= Available[j],    
@@ -325,7 +325,7 @@ results.products <- matrix (rep(-1.0,NProd),
                             nrow = NProd, 
                             ncol=1,
                             dimnames=c(ProdNames,c("x")))
-temp <- get_solution (prodmodel, x[i]) 
+temp <- get_solution (prodmodel, Vx[i]) 
    # Extracts optimal values of variables   
 results.products <- t(temp [,3] )      
    # Extracts third column

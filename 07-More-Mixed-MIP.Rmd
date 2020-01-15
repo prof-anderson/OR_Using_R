@@ -21,7 +21,7 @@ output:
 
 ```{r setup_chapter7, echo=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(tidy = F)
+knitr::opts_chunk$set(tidy = FALSE)
 knitr::opts_chunk$set(cache = FALSE)
 library (tufte)
 library (pander)
@@ -139,7 +139,7 @@ Next we create the customer data as a dataframe. The runif function generates a 
 ```{r Create-Customer-Data}
 customer_locations <- data.frame(      
   id = 1:n,                         
-     # Create column with ID numbers from 1 to 100
+     # Create column with ID numbers from 1 to n
   x = round(runif(n) * grid_size),  
      # Create 100 x-coordinate values in next column
   y = round(runif(n) * grid_size)   

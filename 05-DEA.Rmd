@@ -55,14 +55,13 @@ While tools exist for conducting the evaluations, it is important to understand 
 This chapter walks through how DEA works and then shows how to implement the model in R using two very different approaches.  Over the years, I have built DEA models in many languages and platforms:  Pascal, LINDO, LINGO, Excel Macros, Excel VBA, GAMS, AMPL, XPress-MOSEL, and GLPK among others. 
 \vspace{12pt}
 
-In this chapter, we will use a few functions from an R package, TRA, that I have created.  This package is for doing a range of functions related to Technology, Research, and Analytics.  It is not posted on CRAN but is instead available from github.  You can download a current version from github.
+In this chapter, we will use a few functions from an R package, TRA, that I have created.  This package is for doing a range of functions related to Technology, Research, and Analytics.  It is not posted on CRAN but is instead available from github.  You can download a current version from github. The result is that you will need to install it using `devtools`.
+\vspace{12pt}
 
-```{r load_TRA_from_github, eval=FALSE}
-
+```{r load_TRA_from_github, eval=TRUE}
 library(devtools)
 devtools::install_github("prof-anderson/TRA")
 library (TRA)
-
 ```
 
 ## Creating the Data
@@ -73,7 +72,7 @@ Let's start by defining data.  DEA applications can have multiple inputs and out
 In contrast, outputs are the "good" items that are being produced by the actions of the producers.  Examples of outputs might include automobiles produced, customers served, or graduating students.
 \vspace{12pt}
 
-Let's start by creating a simple dataset - assume that you are a regional manager of a grocery chain. You have four stores and would like to assess the performance of the store managers using number of employees, _x_, as an input and the weekly sales, _y_, as an output. 
+Let's start by creating a simple dataset - assume that you are a regional manager of a grocery chain. You have four stores and would like to assess the performance of the store managers using number of employees, _x_, as an input and the weekly sales, _y_, as an output.  The function `DrawIOdiagram` is from the `TRA` package and allows for creating a nicely formatted input-output diagram.  
 \vspace{12pt}
 
 ```{r DEA_IO_Plot1, fig.margin=TRUE, fig.height=4}
@@ -131,9 +130,9 @@ Can you tell which stores represent the best tradeoff between inputs and outputs
 
 ## Graphical Analysis
 
-Let's start by doing a simple plot of the data.  For now, I'm going to make use of a function in Peter Bogetoft and Lars Otto's Benchmarking package which provides a very handy two-dimensional  plot in the format often used for showing production. 
+Let's start by doing a simple plot of the data.  For now, I'm going to make use of a function in Peter Bogetoft and Lars Otto's Benchmarking package which provides a very handy and nicely formatted two-dimensional plot in the format often used for showing production. Many of the functions in the package are also described in their book.
 
-```{r DEA_Isoquant_Plot, fig.margin=TRUE, fig.height=4}
+```{r DEA_Isoquant_Plot, fig.margin=TRUE, fig.height=4, fig.cap="1-Input, 1-Output Isoquant for Store Benchmarking Example"}
 library(Benchmarking, quietly=TRUE)
 dea.plot(x, y, RTS="crs", ORIENTATION="in-out", 
          txt=LETTERS[1:length(x)], 
@@ -162,7 +161,7 @@ The same steps can be followed for analyzing stores _A_, _C_, and _D_ resulting 
 The graphical approach is intuitive but accuracy is limited to that of drawing tools.  More importantly, it does not scale to more complex models with multiple inputs and outputs.  Let's frame this topic mathematically so that we can proceed systematically. Furthermore, benchmarking of stores is only one application area of literally thousands so rather than limiting ourselves to stores, we will refer to them as _decision making units_ (DMUs) or units for short.   
 \vspace{12pt}
 
-A key way to begin the mathematical development of the envelopment model is to ask, can you find a combination of units that produces a target with at least as much output using less input? The blend of other units is described by a vector $\lambda$.  Another way to denote this is $\lambda_j$ which is the specific amount of a unit _j_ used in setting the target for performance for the unit being studied, _k_.  In this case, _k=2_ since we are analyzing the second store, B.  Furthermore, we can state that we want to find how much input our target for B needs compared with what B actually used. This value for input usage is a unitless variable, $\theta$ where $\theta =1$ indicates that a reduction cannot occur for each input while maintaining B's level of output.  Similarly, a value of $\theta =0.9$ indicates a 10% reduction in input usage could be obtained.     
+A key way to begin the mathematical development of the envelopment model is to ask, can you find a combination of units that produces a target with at least as much output using less input? The blend of other units is described by a vector $\lambda$.  Another way to denote this is $\lambda_j$ which is the specific amount of a unit _j_ used in setting the target for performance for the unit being studied, _k_.  In this case, _k=2_ since we are analyzing the second store, B.  Furthermore, we can state that we want to find how much less input our target for B needs compared with what B actually used. This value for input usage is a unitless variable, $\theta$ where $\theta =1$ indicates that a reduction cannot occur for each input while maintaining B's level of output.  Similarly, a value of $\theta =0.9$ indicates a 10% reduction in input usage could be obtained.     
 \vspace{12pt}
 
 We could express the evaluation of store B as a linear program as follows.  
@@ -197,7 +196,7 @@ To solve for other stores, we would simply change the values on the right hand s
 
 *A Generalized Linear Program for DEA*
 
-This can be easily expanded to the multiple input and multiple output case by defining $x_{i,j}$ to be the amount of the _i_'th input used by unit _j_ and $y_{r,j}$ to be the amount of the _r_'th output produced by unit _j_. For simplicity, this example will focus on the one input and one output case rather than the _m_ input and _s_ output case but the R code explicitly allows for $m,s>1$.  To make the code more readable, I will use a slightly different convention $N^X$ or NX instead of _m_ to refer to the number of inputs (x's) and $N^Y$ or NY to be the number of outputs (y's) instead of _s_. Also, the normal mathematical convention is to use _n_ to denote the number of Decision Making Units (DMUs) so I will use $N^D$ or ND to indicate that in the R code.  
+This can be easily expanded to the multiple input and multiple output case by defining $x_{i,j}$ to be the amount of the _i_'th input used by unit _j_ and $y_{r,j}$ to be the amount of the _r_'th output produced by unit _j_. For simplicity, this example will focus on the one input and one output case rather than the _m_ input and _s_ output case but the R code explicitly allows for $m,s>1$.  To make the code more readable, I will use a slightly different convention $N^X$ or `NX` instead of _m_ to refer to the number of inputs (x's) and $N^Y$ or `NY` to be the number of outputs (y's) instead of _s_. Also, the normal mathematical convention is to use _n_ to denote the number of Decision Making Units (DMUs) so I will use $N^D$ or `ND` to indicate that in the R code.  
 \vspace{12pt}
 
 Rather than jumping straight to the linear program, let's take a step back and focus on the construction of the target of performance.
@@ -245,7 +244,7 @@ $$
   (\#eq:LPCCRIOE-NoSlack-Simple)
 $$
 
-Expressing the target on the left and the actual unit's value and radial reduction on the right is conceptually straightforward to understand.   Some optimization software requires collecting all the variables on the left and putting constants on the right hand side of the inequalities. This is easily done and shown in the following linear program for completeness but a benefit of `ompr` is that we leave it in the original format.  
+Expressing the target on the left and the actual unit's value and radial reduction on the right is conceptually straightforward to understand.   Some optimization software requires collecting all the variables on the left and putting constants on the right hand side of the inequalities. This is easily done and shown in the following linear program for completeness but a benefit of `ompr` is that we can specify the model in the original format.  
 
 $$
 \begin{split}
@@ -264,7 +263,7 @@ $$
 There are two fundamentally different approaches to setting up linear programs for solving.  The first approach is to define data structures to pass vectors for the objective function coefficients and constraint right hand sides along with a matrix of data describing the constraints.  This requires careful setting up of the linear programs and is a big cognitive step away from the mathematical representation.  Another approach is to use algebraic modeling languages.  Standalone algebraic optimization modeling languages include LINGO, AMPL, GAMS, GMPL, and others.  
 \vspace{12pt}
 
-Until recently, R did not have the ability to do algebraic modeling optimization but recently a few efforts have provided support for this. A new package, _ompr_, provides an algebraic perspective that matches closely to the summation representation of a linear program shown earlier.  Don't worry, if you want to see the data structure format approach, that is covered in the *DEA Using R* book.
+Until recently, R did not have the ability to do algebraic modeling optimization but a few new packages have provided support for this. In paricular, _ompr_, provides an algebraic perspective that matches closely to the summation representation of a linear program shown earlier.  Don't worry, if you want to see the data structure format approach, that is covered in the *DEA Using R* book.
 \vspace{12pt}
 
 Let's define some data structures for holding our data and results.
@@ -328,6 +327,7 @@ Now that we have loaded all of the packages that we use as building blocks, we c
 \vspace{12pt}
 
 We are going to start by building a model for just one DMU, in this case, the second DMU (B).
+\vspace{12pt}
 
 ```{r first_ompr_model}
 k<-2    # DMU to analyze.  
@@ -373,7 +373,7 @@ Another convention is to use "L" in place of the Greek symbol $\lambda$ due to c
 The results in the table indicate that DMU _B_ has an efficiency score of 50%.  The target of performance is made of DMU _C_ scaled down by a factor of 0.33. These results match the graphical results from earlier.
 \vspace{12pt}
 
-Let's now extend it to handle multiple inputs, *NX,* and outputs, *NY.*  Of course this doesn't have any impact on our results just yet since we are still only using a single input and output but we now have the structure to accommodate the more general case.  To provide a little variety, we'll change it to the first DMU, A, to give a little more variety.  
+Let's now extend it to handle multiple inputs, *NX,* and outputs, *NY.*  Of course this doesn't have any impact on our results just yet since we are still only using a single input and output but we now have the structure to accommodate the more general case of DEA.  To provide a little variety, we'll change it to the first DMU, A, to give a little more variety.  
 
 ```{r ompr_mult_IO, message=FALSE}
 k<-1    # Analyze first unit, DMU A.
@@ -392,6 +392,8 @@ omprlambda <-  get_solution(result, vlambda[j])
 results.efficiency <- t(omprtheta)
 colnames(results.efficiency) <- c("CCR-IO")
 results.lambda <- t(omprlambda[3])
+
+# Note the use of LaTeX formatting in column names.
 
 colnames(results.lambda) <- c("$\\lambda_A$", "$\\lambda_B$",
                               "$\\lambda_C$", "$\\lambda_D$")
@@ -450,27 +452,20 @@ pander (cbind(results.efficiency, results.lambda),
         caption="Input-Oriented Efficiency Results")
 ```
 
-Next, let's demonstrate the use of a small helper function, `poscol` from the `TRA` package.  This package covers miscellaneous support functions and data sets from Technology, Research, and Analytics.  It is posted on github rather than CRAN.  The result is that you will need to install it using `devtools`.
+Next, let's demonstrate the use of a small helper function, `poscol` from the `TRA` package. The `poscol` function simply filters out any column of all zero. For standard DEA models, the columns for inefficient DMUs will be zero.  The result is that if only 10% of DMUs are efficient, 90% of the columns are zero and not informative.  This function does a simple filter of the columns to eliminate those that are zero.  
 
-```{r, eval=FALSE}
-library(devtools)
-install_github(prof-anderson/TRA)
-```
-
-The poscol function simply filters out any column of all zero.  
-
-```{r}
+```{r, echo=FALSE}
 pander(cbind(results.efficiency, poscol(results.lambda)), 
        caption=
-         "Input-Oriented Envelopment Analysis with Inefficient DMU Columns Removed.")
+"Results with Inefficient DMU Columns Removed.")
 ```
 
 The results match those observed graphically but let's discuss them.  These results indicate that only DMU _C_ is efficient.  Rescaled versions of _C_ could produce the same level of output of _A_, _B_, or _D_, while using just 25%, 50%, and 20% less input respectively.  The targets of performance for _A_ and _B_ are constructed by scaling down unit _C_ to a much smaller size, as shown by the the values of $\lambda$. In contrast, _D_'s performance is surpassed by a 33% larger version of _C_.
 \vspace{12pt}
 
-It is an important step of any DEA study to carefully examine the results. In this case, it might be argued that for certain applications, _C_'s business practices do not scale linearly and therefore could not be assumed to operate at a much smaller or larger size. Recall our original application of stores. It might be that practices employed by store C, Trader Carrie's, do not easily scale to larger or smaller operations. Al's Pantry (store A) is a much smaller operation and just trying to keep the store in operation with just ten employees may be a major challenge.  Perhaps all of the stores offer 24 hour a day operation.  During the slow time after midnight, Trader Carrie's could have just one employee working.  Meanwhile Al's Pantry could not stay in business with one third of an employee working at 3 AM!  
+It is an important step of any DEA study to carefully examine the results. In this case, it might be argued that for certain applications, _C_'s business practices do not readily scale and therefore could not be assumed to operate at a much smaller or larger size. Recall our original application of stores. It might be that practices employed by store C, Trader Carrie's, do not easily scale to larger or smaller operations. Al's Pantry (store A) is a much smaller operation and just trying to keep the store in operation with ten employees may be a major challenge.  Perhaps all of the stores offer 24 hour a day operation.  During the slow time after midnight, Trader Carrie's could have just one employee working.  Meanwhile Al's Pantry could not stay in business with one third of an employee working at 3 AM!  
 
-Similarly, Trader Carrie's may not scale to larger operations.  In a mid-sized store, employees may feel more comfortable with all parts of the store but in a larger store, people work in separate departments such as the produce department and the meat department.  This separation by departments by yield benefits or disbenefits.   
+Similarly, Trader Carrie's may not scale to larger operations.  In a mid-sized store, employees may feel more comfortable with all parts of the store but in a larger store, people work in separate departments such as the produce department and the meat department.  This separation by departments may yield benefits or disbenefits.   
 
 Up until this point, we have assumed constant returns to scale but there are other versions of returns to scale to better fit the needs of each application.  Next, let's incorporate modeling returns to scale.  
 
@@ -493,7 +488,7 @@ $$
 
 To incorporate this, we can add another constraint to our previous model and solve it.  Let's define a parameter, "RTS" to describe which returns to scale assumption we are using and only add the VRS constraint when RTS="VRS".  
 
-The other very common returns to scale option is constant returns to scale or CRS which is what you used up to this point. For CRS, you can delete the VRS constraint but it may be helpful in some implementations to maintain a consistent model size for reading out sensitivity information.  To maintain the number of rows (constraints) we can make it a redundant constraint by constraining the sum of $\lambda$ to be greater than or equal to zero, $\sum_{j=1}^{n} \lambda_j \geq 0$ Since $\lambda$'s are by definition non-negative, the sum of $\lambda$'s is also non-negative and therefore the constraint is superfluous or redundant.
+The other very common returns to scale option is constant returns to scale or CRS which is what we have used up to this point. For CRS, you can delete the VRS constraint but it may be helpful in some implementations to maintain a consistent model size for reading out sensitivity information.  To maintain the number of rows (constraints) we can make it a redundant constraint by constraining the sum of $\lambda$ to be greater than or equal to zero, $\sum_{j=1}^{n} \lambda_j \geq 0$ Since $\lambda$'s are by definition non-negative, the sum of $\lambda$'s is also non-negative and therefore the constraint is superfluous or redundant.
 
 ```{r Adding_VRS}
 RTS<-"VRS"
@@ -520,9 +515,6 @@ result <- solve_model(result, with_ROI (solver = "glpk"))
     results.lambda[k,] <- t(as.matrix(as.numeric(
               get_solution(result, vlambda[j])[,3] )))
 }  # Repeat for each unit, k
-Lambdanames <- list("$\\lambda_A$", "$\\lambda_B$", 
-                    "$\\lambda_C$", "$\\lambda_D$")
-DMUnames <- list("A", "B", "C", "D")
 dimnames(results.efficiency)<-list(DMUnames,"BCC-IO")
 eff.vrs <- results.efficiency
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
@@ -587,15 +579,12 @@ result <- solve_model(result, with_ROI(solver = "glpk"))
     results.lambda[k,] <- t(as.matrix(as.numeric(
               get_solution(result, vlambda[j])[,3] )))
 }
-Lambdanames <- list("$\\lambda_A$", "$\\lambda_B$", 
-                    "$\\lambda_C$", "$\\lambda_D$")
-DMUnames <- list("A", "B", "C", "D")
 dimnames(results.efficiency)<-list(DMUnames,"DRS-IO")
 eff.drs <- results.efficiency
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
 pander (cbind(results.efficiency, results.lambda), 
-        caption="Input-Oriented BCC Model with Option 
-        of Alternate Returns to Scale")
+        caption="Input-Oriented Model with  
+        Decreasing Returns to Scale")
 ```
 
 ```{r stores_IRS, echo=FALSE}
@@ -635,7 +624,8 @@ dimnames(results.efficiency)<-list(DMUnames,"IRS-IO")
 eff.irs <- results.efficiency
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
 pander (cbind(results.efficiency, results.lambda), 
-        caption="Input-Oriented Increasing Returns to Scale Model Results")
+        caption="Input-Oriented Increasing Returns 
+        to Scale Model Results")
 ```
 
 ```{r DEA_IRS_Frontier_Plot, echo=FALSE, fig.margin=TRUE, fig.height=4}
@@ -663,8 +653,8 @@ dea.plot(x, y, RTS="drs", ORIENTATION="in-out",
 
 ```{r}
 pander(cbind(eff.crs, eff.vrs, eff.drs, eff.irs), 
-       caption="Comparison of Efficiency under Alternate Returns to Scale Assumptions")
-
+       caption="Comparison of Efficiency under 
+       Alternate Returns to Scale Assumptions")
 ```
 
 ## Multiple Inputs and Multiple Ouptuts
@@ -692,9 +682,11 @@ Figure <- DrawIOdiagram (c("staff hours per day",
                          c("reimbursed patient-days", 
                            "privately paid patient-days"),
                         '"\nNursing\nHome\n "')
-tmp<-capture.output(rsvg_png(charToRaw(export_svg(Figure)),
-                            'images/DEA_Baker_Nursing_Homes.PNG'))
-knitr::include_graphics("images/DEA_Baker_Nursing_Homes.PNG")
+tmp<-capture.output(rsvg_png(
+  charToRaw(export_svg(Figure)),
+  'images/DEA_Baker_Nursing_Homes.PNG'))
+knitr::include_graphics(
+  "images/DEA_Baker_Nursing_Homes.PNG")
 ```
 
 ```{r Baker_Data}
@@ -841,10 +833,12 @@ A few takeaways from these results:
 * Switching from CRS to VRS will never hurt the efficiency of a DMU.  From an optimization perspective, think of this as adding a constraint which will increase or leave unchanged the objective function value from a minimization linear program.  
 * Another way to view the impact of adding a returns to scale assumption is that this makes it _easier_ for a DMU to find some way of being _best_ or efficient.  They can do this by now having the largest of any output or the smallest of input as well as many other ways.
 * At a simple level, the CCR (CRS) efficiency score can be thought of as a combination of how efficient someone is considering their operational and size efficiency.  The BCC (VRS) efficiency is how efficient they are given their current operating size.  
+\vspace{12pt}
 
-## Extracting Multiplier Weights from Envelopment Results
+## Extracting Multiplier Weights from Sensitivity Analysis
 
-The following process can be used for extracting the row duals from the linear program results.  This extraction is based upon knowing the structure of the model that was built.  
+The following process can be used for extracting the row duals from the linear program results.  This extraction is based upon knowing the structure of the model that was built.  \vspace{12pt}
+ 
 
 ```{r Multiplier_Weights_from_Env_Model}
 rduals <- as.matrix(get_row_duals(res))
@@ -864,6 +858,7 @@ These results are for just the last unit examined.
 \vspace{12pt}
 
 Let's now wrap this into the full series of linear programs so as to calculate the multiplier weights for each unit.  
+\vspace{12pt}
 
 ```{r Baker_example_w_mult_weight}
 RTS<-"CRS"
@@ -905,7 +900,7 @@ pander (cbind(res.efficiency, res.vweight,
         caption="Results from Baker's Example")
 ```
 
-A few things should be noticed with respect the the multiplier weights:
+A few things should be noticed with respect to the multiplier weights:
 
 * Multiplier weights can be quite small because in general, they are multiplied by inputs and the product is typically less than one.  They may appear to round to zero but still be significant.
 * Multiplier weights are not unique for strongly efficient DMUs.  This is explored in more detail in the multiplier chapter of *DEA Using R* and in other DEA specific publications.
@@ -914,7 +909,7 @@ A few things should be noticed with respect the the multiplier weights:
 
 ## Slack Maximization
 
-Situations can arise where units may appear to be radially efficient but can still find opportunities to improve one or more inputs or outputs.  This is defined as weakly efficient.  
+Situations can arise where units may appear to be radially efficient but can still find opportunities to improve one or more inputs or outputs.  This is defined as being weakly efficient.  
 \vspace{12pt}
 
 In order to accommodate this, we need to extend the simple radial model by adding variables to reflect nonradial slacks. We do this by converting the model's input and output constraints from inequalities into equalities by explicitly defining slack variables.  
@@ -948,7 +943,7 @@ $$
   (\#eq:LPCCRIOE-Two-Phase)
 $$
 
-A common mistake in implementing DEA is to use a finite approximation for $\epsilon$ such as $10^{-6}$.  Any finite value can cause distortions in $\theta$.  For example, an application comparing companies using revenue and expenses might have inputs and outputs on the order of millions or billions.  In this case, non-radial slacks could also be on the order of $10^{6}$.  Multiplying the two  results in a value similar in magnitude to the maximum possible efficiency score ($10^{-6}10^{6}=1$) which would then potentially overwhelm the radial efficiency, $\theta$, part of the objective function and lead to distorted results.
+A common mistake in implementing DEA is to use a finite approximation for $\epsilon$ such as $10^{-6}$.  Any finite value can cause distortions in $\theta$.  For example, an application comparing companies using revenue and expenses might have inputs and outputs on the order of millions or billions.  In this case, non-radial slacks could also be on the order of $10^{6}$.  Multiplying the two  results in a value similar in magnitude to the maximum possible efficiency score ($10^{-6} \cdot 10^{6}=1$) which would then potentially overwhelm the radial efficiency, $\theta$, part of the objective function and lead to distorted results.
 \vspace{12pt}
 
 The proper way to implement slack maximization is to treat it as a preemptive goal programming problem. The primary goal is to minimize $\theta$ in a first phase linear program and the second goal, holding the level of $\theta$ fixed from the first phase, is to then maximize the sum of the slacks.  
@@ -1029,11 +1024,11 @@ pander(cbind(res.efficiency,xdata,ydata,res.lambda),
 
 At its simplest, the analyst should try to build a model that reflects the most important resources used in the production of the unit's most important outputs.  No DEA input-model is perfect and they all represent tradeoffs between data availability, accuracy, and other issues.
 
-The subject of DEA model building is involved and arguably as much an art as it is a science.  Economists will argue (correctly) that the production function axioms that underlie theoretical foundations of DEA require that inputs can have tradeoffs between them in the production of the outputs and that outputs also have tradeoffs between them. Also, that all inputs contribute to all outputs.  In other words, a benchmarking study of hospitals that had as one one of the inputs heart surgeons and as one of the outputs heart transplants performed along with more general high level hospital inputs and outputs like number of beds and total number of procedures performed might be problematic.
+The subject of DEA model building is involved and arguably as much an art as it is a science.  Economists will argue (correctly) that the production function axioms that underlie theoretical foundations of DEA require that inputs can have tradeoffs between them in the production of the outputs and that outputs also have tradeoffs between them. Also, that all inputs contribute to all outputs.  In other words, a benchmarking study of hospitals that had as one one of the inputs heart surgeons and as one of the outputs heart transplants performed but another output such as kidney transplants could be problematic.
 
 Data Envelopment Analysis is by its very name data driven.  This highlights the fact that data is needed for conducting the analysis.  Unlike multiple regression in which the need for more observations as a function of the number of independent variables is well known, there is no simple sufficiency test for DEA models.  Common heuristics of needing at least three times as many DMUs as the input-output model complexity is generally helpful.  (Note that model complexity is sometimes interpreted as number of inputs plus the number of outputs or as the product of the number of inputs and outputs.)  
 
-Since DMUs can be efficient by being the best on any ratio of an output to an input, the higher the number of inputs and outputs, the less _discrimination_ between DMUs is typically found.  This _curse of dimensionality_ means that that highly complex models may find most or all DMUs to be efficient.  Forced fixes to adjust for this often lead to difficulties.  
+Since DMUs can be efficient by being the best on any ratio of an output to an input, the higher the number of inputs and outputs, the less _discrimination_ between DMUs is typically found.  This _curse of dimensionality_ means that highly complex models may find most or all DMUs to be efficient.  Forced fixes to adjust for this often lead to difficulties.  
 
 Correlations among inputs and correlations among outputs do not generally affect the efficiency score. In effect, two highly correlated inputs tend to behave like one and do not increase the _curse of dimensionality_ although they might have unintended consequences elsewhere and violate production economics ideas.  Also, they may cause multiplier weights to be less interpretable.  
 
@@ -1050,7 +1045,7 @@ There is no detailed statistical test for the validity of a DEA model and result
 Lastly, it is always helpful to look to the literature. With over 10,000 published DEA papers since 1977, you can almost always find a paper in the same or similar application area.  Look at the authors' choices of inputs and output as well as the particulars of the DEA model being used.  This can serve as a starting point for building an even better paper. 
 
 ```{marginfigure}
-A recent presentation at a major international conference highlights that previous studies are not always great examples.  The authors conducted a benchmarking study of hospitals. The inputs were relatively traditional such as number of nurses and hospital beds.  The outputs were also consistent with past literature such as the number of patients served.  What stood out was one output, "number of deaths" - yes, the route to efficiency for inefficient hospitals was to increase the number of deaths!  
+A recent presentation at a major international conference highlights that previous studies are not always great examples.  The authors conducted a benchmarking study of hospitals. The inputs were relatively traditional such as number of nurses and hospital beds.  Outputs included traditional measures such as the number of patients served but one output was unique, *number of deaths* - yes, the route to efficiency for inefficient hospitals was to increase the number of deaths!
 ```
 
 ## Further Reading
