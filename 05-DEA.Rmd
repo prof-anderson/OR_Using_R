@@ -132,7 +132,8 @@ Can you tell which stores represent the best tradeoff between inputs and outputs
 
 Let's start by doing a simple plot of the data.  For now, I'm going to make use of a function in Peter Bogetoft and Lars Otto's Benchmarking package which provides a very handy and nicely formatted two-dimensional plot in the format often used for showing production. Many of the functions in the package are also described in their book.
 
-```{r DEA_Isoquant_Plot, fig.margin=TRUE, fig.height=4, fig.cap="1-Input, 1-Output Isoquant for Store Benchmarking Example"}
+```{r DEA_Isoquant_Plot, fig.margin=TRUE, fig.height=4}
+#fig.cap="1-Input, 1-Output Isoquant for Store Benchmarking Example"
 library(Benchmarking, quietly=TRUE)
 dea.plot(x, y, RTS="crs", ORIENTATION="in-out", 
          txt=LETTERS[1:length(x)], 
