@@ -23,10 +23,10 @@ Pedagogically, since the late 1990s, I had been a proponent of teaching introduc
 
 This book has been used multiple times for a ten week graduate course on operations research emphasizing optimization.  It can be used for graduate and undergraduate courses for people without a background in optimization and varying levels of mathematical backgrounds. The focus is on applications (formulating, implementing, and interpreting rather than algorithms.  The book could be used as a supplement in a more theoretical or algorithm-oriented class. Key principles in the development of the book include the following:
 
-* An assumption of people using R and getting their hands dirty with experimenting
+* An assumption the reader is willing to use R and getting their hands dirty with experimenting.
 * Providing and explaining code, sometimes repeated in different places so that examples are relatively clear and self-contained.
-* Creating algebraic formulations before implementing
-* An emphasis on application rather than algorithmic details
+* Creating algebraic formulations before implementing.
+* An emphasis on application rather than algorithmic details.
 * Embodying the philosophy of reproducible research - the book is regularly rebuilt with all analyses automatically rerun and most tables and figures rebuilt.
 * Contributing to the open source community - all materials are available on the author's github repository.
 * Demonstrating common debugging practices with a troubleshooting emphasis specific to optimization using R.  

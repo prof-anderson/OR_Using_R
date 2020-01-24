@@ -34,7 +34,7 @@ library (gridExtra)
 library (formatR)
 ```
 
-# Linear Programming Sensitivity Analysis
+# Sensitivity Analysis
 
 We can get a lot more than just the objective function value and the decision variable from a solved linear program.  In particular, we can potentially explore the impact of changes in constrained resources, changes in the objective function, forced changes in decision variables, and the introduction of additional decision variables.  
 
@@ -262,7 +262,7 @@ temp2 <- rbind(base_case_res, inc_mc_res, inc_wd_res)
 
 Increasing wood does not result in any increase in profit or change the production plan.  
 
-Note that another constraint with a zero shadow price was the the demand constraint of 200 on Tables. Since far fewer than 200 Tables are produced in the optimal production plan, relaxing this constraint also has no impact (shadow price=0).  This could also be implemented as a simple upper bound on the *Tables* variable.  
+Note that another constraint with a zero shadow price was the demand constraint of 200 on Tables. Since far fewer than 200 Tables are produced in the optimal production plan, relaxing this constraint also has no impact (shadow price=0).  This could also be implemented as a simple upper bound on the `Tables` variable.  
 
 ## Reduced Costs of Variables
 
