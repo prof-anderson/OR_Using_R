@@ -788,7 +788,7 @@ I like to think of the linking constraint as the following:  $W_1 \leq M \cdot Y
 Our linking constraints force our new values to 0 or 1. If $W_1 > 0$, then this constraint forces the associated $Y_1$ to be equal to 1. If $W_1 = 0$, then this constraint allows $Y_1$ to be either 0 or 1.  However, our objective function will cause Solver to avoid paying a setup by setting $Y_1=0$.
 \vspace{12pt}
 
-It might be tempting to select a very large number such as a billion 10^10^ but picking excessively large numbers, can result in poor computational performance.  As we've discussed large, real-world optimization problems are hard enough, let's not make it any harder. Albert Einstein once said "A model should be as simple as possible, but no simpler."  Essentially, a value for M should be as small as possible, but no smaller.  
+It might be tempting to select a very large number such as a billion 10^10 but picking excessively large numbers, can result in poor computational performance.  As we've discussed large, real-world optimization problems are hard enough, let's not make it any harder. Albert Einstein once said "A model should be as simple as possible, but no simpler."  Essentially, a value for M should be as small as possible, but no smaller.  
 \vspace{12pt}
 
 Since $M$ serves to impose an upper bound on $W_1$, this might suggest how we can use this information to pick an appropriate value for M and that we can do so for each product separately, using a separate value $M_i$ for each widget.
@@ -979,7 +979,21 @@ pander(cbind(rbind(fc_bigM_res.r1,fc_bigM_res.r2,
        caption = "Manufacturing Resource Usage")
 ```
 
-As can be seen, we used all of our Pre-processing hours, Assembly hours, and Quality Assurance hours. There is a significant about of time available in Machining though.
+As can be seen, we used all of our Pre-processing hours, Assembly hours, and Quality Assurance hours. There is a significant amount of time available in Machining though.
 \vspace{12pt}
 
 Further analysis could examine alternatives such as redesigning widget 2 and 3 to be less resource instensive in production to see at what point we would choose to produce them.  
+
+\vspace{12pt}
+
+```{exercise, name="Redesign Widget 3"}
+```
+
+How much would you produce of Widget 3 if there were no setup (fixed) cost for production of Widget 3?  Experiment with the above model to find the lowest setup cost for Widget 3 where you still choose to not produce any of Widget 3. 
+
+```{exercise, name="Reducing Fixed Costs"}
+```
+
+How would production change if the setups costs were cut in half due to implementing lean production approaches?
+
+

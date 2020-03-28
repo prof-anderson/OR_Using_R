@@ -5,15 +5,15 @@ header-includes:
 - \usepackage{caption}
 monofont: Times New Roman
 output:
-  tufte::tufte_html: default
+  tufte::tufte_book:
+    citation_package: natbib
+    latex_engine: xelatex
   tufte::tufte_handout:
     citation_package: natbib
     latex_engine: xelatex
     toc: TRUE
     number_sections: true
-  tufte::tufte_book:
-    citation_package: natbib
-    latex_engine: xelatex
+  tufte::tufte_html: default
 ---
 
 \pagestyle{headings}
@@ -224,6 +224,7 @@ $$
 **Formulation 4.3**: Explicit model for Underutilzed Resources
 ```
 \vspace{12pt}
+
 In the same way that it was done in previous point, the next chunk shows how to build in R an underutilized scenario. Table 4.3 contains the result for this model.
 
 ```{r IncWood, fig.margin=TRUE}
@@ -271,7 +272,7 @@ Next, we move on to the *reduced costs* of variables. This concept often require
 
 *Reduced Cost of Chairs*
 
-Let's start by examining the Chairs. The reduced cost for Chairs is the per unit marginal profit minus the per unit value (in terms of shadow prices) of the resources used by a unit in production.  
+Let's start by examining the Chairs. The reduced cost for *Chairs* is the per unit marginal profit minus the per unit value (in terms of shadow prices) of the resources used by a unit in production.  
 \vspace{12pt}
 
 Next, let's discuss the column duals which are often referred to as reduced costs of variables.  Let's extract these from the results just as we did for the shadow prices.
