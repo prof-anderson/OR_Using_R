@@ -552,9 +552,10 @@ Gurobi is a comprehensive commercial optimization solver and is generally consid
 1. Get a license to gurobi (free licenses are available for academic use)
 2. Download and install the gurobi software
 3. Follow directions to have software access license key
-4. Install gurobi's R package.  Note that the package file is not in CRAN and will need to be installed directly from the gurobi installed files on your local computer.  (For example in my windows install, it it was in `C:\\gurobi900\win64\R` directory.)
+4. Install gurobi's R package.  Note that the package file is not in CRAN and will need to be installed directly from the gurobi installed files on your local computer.  (For example in my windows install, it was in `C:\\gurobi900\win64\R` directory.)
 5. Install the `roi.plugin.gurobi` package.  Note that this may need to be installed from a github account as it is not officially supported by Gurobi.  
 
+A code chunk is provided without ex
   \vspace{12pt}
 ```{r timegurobi, eval=FALSE}
 tic("gurobi")
@@ -568,7 +569,7 @@ gurobitime1 <- c("gurobi",
                    result_lpsolve$objective_value)
 ```
 
-The respective `ROI.plugin` for each solver does not in general accept all parameters that a solver can use.  This may mean some trial and error is involved.  The [Gurobi documentation](https://www.gurobi.com/documentation/9.0/refman/parameters.html#sec:Parameters) provides a comprehensive list of parameters.  I've tested and the following commonly used parameters appear to work.
+The `ROI.plugin` for each respective solver general accepts a subset of all the parameters or options that a solver can use.  This may mean some trial and error is involved.  The [Gurobi documentation](https://www.gurobi.com/documentation/9.0/refman/parameters.html#sec:Parameters) provides a comprehensive list of parameters.  I've tested and the following commonly used parameters appear to work.
 
 * *TimeLimit* terminates solving based on seconds, (usage: `TimeLimit=40.0`)
 * *SolutionLimit* , limits the number of MIP feasible solutions, (usage:  `SolutionLimit=20`)
