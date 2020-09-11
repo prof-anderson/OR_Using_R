@@ -35,7 +35,7 @@ library(ROI.plugin.glpk)
 library (tictoc, quietly = TRUE) 
 library (ROI.plugin.lpsolve, quietly = TRUE) 
 library (ROI.plugin.symphony, quietly = TRUE)
-library(ROI.plugin.gurobi, quietly = TRUE)
+#library(ROI.plugin.gurobi, quietly = TRUE)
 library("ggplot2")
 library("dlstats")
 library(sudokuAlt)
@@ -556,7 +556,7 @@ Gurobi is a comprehensive commercial optimization solver and is generally consid
 5. Install the `roi.plugin.gurobi` package.  Note that this may need to be installed from a github account as it is not officially supported by Gurobi.  
 
   \vspace{12pt}
-```{r timegurobi}
+```{r timegurobi, eval=FALSE}
 tic("gurobi")
 result_gurobi <-  solve_model(
   model, with_ROI(solver = "gurobi"))
@@ -586,7 +586,7 @@ Now let's compare how they each did.
 
 ```{r comparetimes}
 timeresults <- rbind(glpktime1, symphonytime1, 
-                     symphonytimeff, lpsolvetime1, gurobitime1)
+                     symphonytimeff, lpsolvetime1)
 colnames (timeresults) <- c("Solver", "Time (Sec)", 
                             "Status", 
                             "Obj. Func. Value")
