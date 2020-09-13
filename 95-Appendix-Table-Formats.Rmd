@@ -1,0 +1,49 @@
+---
+title: "Appendix: Table Formats"
+author: "Timothy R. Anderson"
+header-includes:
+- \usepackage{longtable}
+- \usepackage{caption}
+monofont: Times New Roman
+output:
+  tufte::tufte_handout:
+    citation_package: natbib
+    latex_engine: xelatex
+    toc: TRUE
+    number_sections: true
+    highlight: monochrome
+  tufte::tufte_html: default
+  tufte::tufte_book:
+    citation_package: natbib
+    latex_engine: xelatex
+---
+
+\pagestyle{headings}
+
+```{r Ch95setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(tidy = F)
+library (tufte)
+library (pander)
+library (tidyr)
+library (ggplot2)
+library (ggrepel)
+library(ompr)
+library(magrittr)
+library(ompr.roi)
+library(ROI.plugin.glpk)
+library(sudokuAlt)
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library (tint, quietly = TRUE))
+    # Loading this last masks margin_note, newthought,
+    #    quote_footer, sans_serif from the tufte package.
+```
+
+# Table Formats
+
+## Overview
+
+Displaying of tables is critical in quantitative work such as optimization and more generally analytics.  The goal of this Appendix is to demonstrate some of the common packages for displaying tables, in one place as a part of the book within the context of its own formatting.  
+
+
+
