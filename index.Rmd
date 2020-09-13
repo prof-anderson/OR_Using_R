@@ -42,13 +42,13 @@ I would like to thank many people for their contributions, collaborations, and a
 * **Dr. Janice Forrester,** application of DEA to the energy industry
 * **Dr. Scott Leavengood,** application of DEA to wood products
 * **Dr. Oliver (Lane) Inman,** early work on TFDEA
+* **Dr. Maoloud Dabab,** , many suggestions over time
 * **Dr. K. Louis Luangkesorn,** author of the first vignette on using `glpk` in R
 * **Dr. Chester Ismay,** contributions to the Portland and broader R community
 * **Dr. Jili Hu,** rich interactions during his sabbatical in Portland
 * **Tom Shott,** primary author of the `TFDEA` package
 * **Nina Chaichi, PhD student,** many suggestions over time
 * **Aurobindh Kalathil Kumar,** PhD student, many suggestions over time
-* **Maoloud Dabab,** PhD student, many suggestions over time
 * **Kevin van Blommestein,** earlier DEA & R work
 * **William (Ike) Eisenhauer,** LaTeX formulation improvements
 * **Andey Nunes,** coding improvements

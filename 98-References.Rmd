@@ -20,7 +20,7 @@ output:
 
 \pagestyle{headings}
 
-```{r setup, include=FALSE}
+```{r Ch98setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = F)
 library (tufte)

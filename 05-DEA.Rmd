@@ -19,7 +19,7 @@ output:
 
 \pagestyle{headings}
 
-```{r setup_chapter5, warning=FALSE, include=FALSE}
+```{r Ch5setup, warning=FALSE, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = F)
 knitr::opts_chunk$set(cache = TRUE)
@@ -671,7 +671,7 @@ dea.plot(x, y, RTS="drs", ORIENTATION="in-out",
 **Table 5.4**: Decreasing  (Non-Increasing) Returns to Scale Efficiency Frontier
 ```
 
-```{r}
+```{r Compare_RTS_Results}
 pander(cbind(eff.crs, eff.vrs, eff.drs, eff.irs), 
        caption="Comparison of Efficiency under 
        Alternate Returns to Scale Assumptions")

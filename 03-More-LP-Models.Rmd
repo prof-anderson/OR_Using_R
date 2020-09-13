@@ -18,7 +18,7 @@ output:
 
 \pagestyle{headings}
 
-```{r setup, include=FALSE}
+```{r Ch3setup, include=FALSE}
 library(tufte)
 library(tint)
 library(knitr)
@@ -767,13 +767,13 @@ $$
 Let's demonstrate this by extracting data from a model, `Base3VarModel` that we have previously built in `ompr`.  Simply typing in the name of the unsolved model will give a summary of the model characteristics. This was a problem with three variable and five constraints.  
 \vspace{12pt}
 
-```{r}
+```{r Display_3Var_Model}
 Base3VarModel
 ```
 
 When we build the model in `ompr`, it builds a representation of _A, B, C,_ and _x_.  Now, let's examine the the data structures inside the model.
 
-```{r}
+```{r Display_3Var_Objective_Function}
 objective_function(Base3VarModel)
 ```
 
@@ -782,7 +782,7 @@ This describes the objective function with a constant term added of zero.
 
 Similarly, we can extract the constraint data.
 
-```{r}
+```{r Extract_3Var_Constraints}
 extract_constraints(Base3VarModel)
 ```
 

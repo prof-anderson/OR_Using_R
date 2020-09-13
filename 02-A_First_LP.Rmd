@@ -19,7 +19,7 @@ output:
 \pagestyle{headings}
 
 
-```{r setup, include=FALSE}
+```{r ch2setup, include=FALSE}
 library(tufte)
 library(tint)
 library(knitr)
@@ -513,7 +513,7 @@ In this case, we are going to simply add the new constraint to `model1` and crea
 
 Note that the constraint on the minimum number of chairs could also be implemented by changing the lower bound on the chairs variable to be 300 instead of zero.  Also, the upper limit on Tables could be set as an upper bound on the Tables variable.
 
-```{r}
+```{r Infeasible_Results}
 print(solver_status(result1infeas))
 get_solution(result1infeas, Chairs)
 get_solution(result1infeas, Desks)
@@ -584,7 +584,7 @@ res2a <- cbind(objective_value (result2a),
 colnames(res2a)<-list("Profit","Chairs","Desks","Tables")
 rownames(res2a)<-list("Solution 2a")
 ```
-```{r, fig.margin = T}
+```{r First_Solution_Multiple_Optima, fig.margin = T}
 grid.table(res2a)
 ```
 ```{marginfigure}

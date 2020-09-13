@@ -18,7 +18,7 @@ output:
 
 \pagestyle{headings}
 
-```{r setup, warning=FALSE, include=FALSE}
+```{r Ch4setup, warning=FALSE, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = F)
 knitr::opts_chunk$set(cache = TRUE)
