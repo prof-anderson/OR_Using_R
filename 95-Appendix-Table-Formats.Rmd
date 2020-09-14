@@ -26,13 +26,7 @@ knitr::opts_chunk$set(tidy = F)
 library (tufte)
 library (pander)
 library (tidyr)
-library (ggplot2)
-library (ggrepel)
-library(ompr)
 library(magrittr)
-library(ompr.roi)
-library(ROI.plugin.glpk)
-library(sudokuAlt)
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library (tint, quietly = TRUE))
     # Loading this last masks margin_note, newthought,
@@ -44,6 +38,92 @@ suppressPackageStartupMessages(library (tint, quietly = TRUE))
 ## Overview
 
 Displaying of tables is critical in quantitative work such as optimization and more generally analytics.  The goal of this Appendix is to demonstrate some of the common packages for displaying tables, in one place as a part of the book within the context of its own formatting.  
+
+For data, let's download data on current Covid-19 infections.
+
+```{r}
+library(coronavirus)
+data(coronavirus)
+require(dplyr)
+# Get top confirmed cases by state
+coronavirus %>%
+  filter(type == "confirmed") %>%
+  group_by(country) %>%
+  summarise(total = sum(cases)) %>%
+  arrange(-total) %>%
+  head(20)
+
+refresh_coronavirus_jhu()
+
+coronavirus %>%
+  filter(type == "confirmed") %>%
+  group_by(country) %>%
+  summarise(total = sum(cases)) %>%
+  arrange(-total) %>%
+  head(20)
+
+```
+
+
+```{r}
+# Get the number of recovered cases in China by province
+coronavirus %>%
+filter(type == "recovered", country == "US") %>%
+group_by(province) %>%
+summarise(total = sum(cases)) %>%
+arrange(-total)
+
+```
+
+```{r}
+library (tidycovid19)
+library (tidyverse)
+
+df <- download_jhu_csse_covid19_data(
+  type = "us_county", silent = TRUE, cached = TRUE
+)
+df1<-df %>%
+  dplyr::filter(!is.na(state)) %>%
+  dplyr::group_by(state) %>%
+  dplyr::summarise( deaths = max(deaths, na.rm = TRUE)) %>%
+  dplyr::arrange(-deaths) %>%
+  dplyr::top_n(10)
+
+# Calculate Cumulative totals by state
+df2<-df %>%            # Calculate Cumulative totals by state
+  dplyr::filter(!is.na(state)) %>%
+  dplyr::group_by(county, state) %>%
+  dplyr::summarise(deaths = max(deaths, na.rm = TRUE), 
+                   confirmed = max(confirmed, na.rm = TRUE)) %>%
+  dplyr::arrange(-deaths) 
+
+df3<-df2 %>%
+  dplyr::group_by(state) %>%
+  dplyr::summarise(deaths = sum(deaths, na.rm = TRUE), 
+                   confirmed = sum(confirmed, na.rm = TRUE)) %>%
+  dplyr::arrange(-deaths)
+
+
+df4<-df3 %>%   # Convert State name to format used by poliscidata package
+  mutate(state=str_replace(state, "New Hampshire", "NewHampshire")) %>%
+  mutate(state=str_replace(state, "New Jersey", "NewJersey")) %>%
+  mutate(state=str_replace(state, "New Mexico", "NewMexico")) %>%
+  mutate(state=str_replace(state, "New York", "NewYork")) %>%
+  mutate(state=str_replace(state, "North Carolina", "NorthCarolina")) %>%
+  mutate(state=str_replace(state, "South Carolina", "SouthCarolina")) %>%
+  mutate(state=str_replace(state, "North Dakota", "NorthDakota")) %>%
+  mutate(state=str_replace(state, "South Dakota", "SouthDakota")) %>%
+  mutate(state=str_replace(state, "West Virgina", "WestVirgina"))
+  
+head(df4)
+
+# Remove non-states from dataset
+df5 <- df4[!(df4$state %in% c("Puerto Rico", "District of Columbia", "Guam","Virgin Islands", "Grand Princess", "Northern Mariana Islands", "American Samoa", "Diamond Princess" )),]
+
+head(df5)
+
+left_join (tbl_states, df5,by=c("state"))
+```
 
 
 
