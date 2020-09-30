@@ -130,8 +130,6 @@ For the sake of simplicity, we will implement our first R LP model using explici
 First, let us load the required libraries.  Then we will move on to the actual implementation.
 
 ``` {r warning = FALSE, message = FALSE}
-library (pander, quietly = TRUE)   
-   # Used for nicely formatted tables
 library (gridExtra, quietly=TRUE)
    # Another nice option for tables
 library (ROI, quietly = TRUE)      
@@ -148,7 +146,7 @@ library (ompr.roi, quietly = TRUE)
 **quietly=TRUE**: This option will not display standard messages returned when loading libraries.
 ```
 
-The first two packages: `pander` and `gridExtra`, provide nice formatting of tables.  \vspace{12pt}
+The first line `gridExtra`, provide nice formatting of tables.  \vspace{12pt}
 The following packages provide the optimization functions that we will be relying on frequently. The ROI package is the R Optimization Interface for for connecting various optimization solvers to R.  The ROI.plugin.glpk provides a connection between the the glpk solver and R through ROI.  While this would be sufficient, we are going to make use of the ompr package by Dirk Schumacher to provide algebraic representations for linear programs. The ompr package also requires a connector to ROI, aptly named ompr.roi.  \vspace{12pt}
 
 ```{marginfigure}
@@ -814,7 +812,7 @@ Here we are talking about abstracting the model in terms of variable names and n
 * Always show your LP.  It is best to show it algebraically as the problems get bigger.  This will also pay off for most projects where the models become larger.  
 * Discussion of results does not need to be long but this can be an interesting part of any paper.
   
-## Comments specific to R
+## Comments Specific to R
 
 * Using the LaTeX equations and rendering it in rmarkdown is helpful.  Getting the first one written is sometimes tricky but then it is just a matter of cut and paste.
 * Installing LaTeX allows knitting to PDF which may be good for readability and turning in but please be sure to also turn in the .rmd file.
@@ -831,10 +829,8 @@ In particular, you might want to look over this document with respect to:
 ```{marginfigure}
 **ompr**, Model mixed integer linear programs in an algebraic way directly in R. The model is solver-independent and thus offers the possibility to solve a model with different solvers. It currently only supports linear constraints and objective functions. See the 'ompr' website <https://dirkschumacher.github.io/ompr> for more information, documentation and examples
 ```
-* Organizing information in Desks for display is helpful. Raw output can be verbose.  I hard coded a table at the beginning that works for simple data in explicit LPs.  For richer data models and nicer Desks, see Chapter 2 again.  The pander package makes it easy to display matrices and data Desks nicely in HTML and PDF outputs.
+* Organizing information in Desks for display is helpful. Raw output can be verbose.  I hard coded a table at the beginning that works for simple data in explicit LPs.  For richer data models and nicer Desks, see Chapter 2 again.  The `gridExtra` package makes it easy to display matrices and data Desks nicely in HTML and PDF outputs.
 * Use of section and subsection headings to organize your writeups.
-
-
 
 
 ```{exercise, name="Adding Frames"}

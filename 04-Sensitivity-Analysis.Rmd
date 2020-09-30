@@ -5,7 +5,7 @@ header-includes:
 - \usepackage{caption}
 monofont: Times New Roman
 output:
-  tufte::tufte_book2:
+  tufte::tufte_book:
     citation_package: natbib
     latex_engine: xelatex
   tufte::tufte_handout:

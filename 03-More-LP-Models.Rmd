@@ -347,7 +347,7 @@ The table on the right displays the new Production plan and the optimal distribu
   
 ## Blending Problems
 
-Specific blend limitations arise in many situations.  In our example, we might say that Chairs can make up no more than 10% of the overall product plan.  In our original case, this would be expressed as the following.  
+Specific blend limitations arise in many situations.  In our example, we might say that Chairs can make up no more than 40% of the overall product plan.  In our original case, this would be expressed as the following.  
 \vspace{12pt}
 $$
  \begin{split}
@@ -357,18 +357,6 @@ $$
   \end{split}
 $$
 
-```{marginfigure}
-$$
- \begin{split}
- \begin{aligned}
-   frac {Chairs} {Chairs + Desks + Tables} \leq 0.40
-  \end{aligned}
-  \end{split}
-$$
-```
-```{marginfigure}
-**Formula 3.3**: Chairs can make up no more than 10% of the overall  
-```
 
 Blending constraints can appear as nonlinear constraints but can be readily linearized. We can see the formulation on the right side.  
 
@@ -396,16 +384,15 @@ xdesks  <- get_solution (res3base , Desks)
 xtables <- get_solution (res3base , Tables)
 base_case_res           <- cbind(xchairs,xdesks,xtables)
 rownames(base_case_res) <- "Amount to Produce"
-grid.table(base_case_res)
 ```
 ```{marginfigure}
+grid.table(base_case_res)
 **Table 3.8**: Production Plan for Base Case
 ```
-The table on the right displays the optimal production plan for the formulation described in Formula 3.3. 
+The table on the right displays the optimal production plan for the original formulation without the limit on production of chairs. 
 \vspace{12pt}
 
-Let's add a constraint that chairs can't make up more than 40% of the total production.  Also, Desks can't be more than 50% of total production.  Lastly, let's say that Tables can't be more more than 40% of total production.  
-\vspace{12pt}
+Let's add the constraint that chairs can't make up more than 40% of the total production.  \vspace{12pt}
 
 Effectively, we are saying that $\frac{Chairs}{Chairs+Desks+Tables} \leq 0.40$
 \vspace{12pt}
@@ -427,7 +414,10 @@ Let's simplify this a little, which gives us the following:
 
 $0.6 \cdot Chairs-0.4 \cdot Desks-0.4 \cdot Tables \leq 0$
 
+\vspace{12pt}
+
 The result is displayed as a formula on the right.
+
 ```{marginfigure}
 $$
  \begin{split}
@@ -795,24 +785,34 @@ The benefit of `ompr` and algebraic modeling more generally is highlighted as mo
 ## Production and Inventory
 
 A common application is production planning and inventory management planning over time.  Let's assume a company has a manufacturing cost for product _p_ in time period _t_ of $C^M_{p,t}$.  The cost to carry a unit of product _p_ in inventory from period _t_ to _t+1_ is $C^I_{p,t}$.  Demand of $D_{p,t}$ must be met each period.  The maximum production in any period can vary and is denoted as $M_{p,t}$.  The beginning inventory for each product is $B_{p}$.  The goal of the manager is to find a production plan that minimizes cost.  
+\vspace{12pt}
 
 We can start by defining our decision variables.  We will need a set of decision variables for the amount to produce of each product _p_ in each period _t_.  Let's define that as $x_{p,t}$.  
+\vspace{12pt}
 
 Similarly, we will define a variable for the inventory at the end of each period, $i_{p,t}.  
+\vspace{12pt}
 
 The production cost is simply cost per product multiplied by the number of products produced or $\sum_{p} \sum_{t} C^M_{p,t} x_{p,t}$.
+\vspace{12pt}
 
 The inventory carrying cost follows the same format, $\sum_{p} \sum_{t} ( C^I_{p,t} y_{p,t}$
+\vspace{12pt}
 
 We can then combine them as $\sum_{p} \sum_{t} ( C^M_{p,t} x_{p,t} + C^I_{p,t} y_{p,t})$
+\vspace{12pt}
 
 At this point, it is important to look at the relationship between inventory, production, and sales. 
+\vspace{12pt}
 
 Sometimes care must be taken for the "boundary conditions" of the first or last time period.  In our case, we have a value defined the beginning inventory of $B_p$.  For product 1, we would have $B_1 + x_{1,1} - D_{1,1} = y_{1,1}$.  For product 2, it would be $B_2 + x_{2,1} - D_{2,1} = y_{2,1}$ and so on for other products.  We would generalize this then as $B_p + x_{p,1} - D_{p,1} = y_{p,1}$.
+\vspace{12pt}
 
 For periods after the first $(t>1)$) Essentially the ending inventory is equal to the beginning inventory plus the inflow (production) minus the outflow (demand).  For product _p_ in time period _t_, this then becomes $y_{p,t-1} + x_{p,t} - D_{p,t} = y_{p,t}$
+\vspace{12pt}
 
 Of course we would need to ensure appropriate upper and lower bounds on the decision variables.  
+\vspace{12pt}
 
 Let's wrap it all together in the follow formulation.
 
@@ -834,6 +834,7 @@ This model illustrates the basic dynamics of relating production, inventory, and
 * Sometimes all the demand cannot be met in a period - this can be modeled by separating sales from demand with a separate variable for sales in each period.
 * Allowing backlogged demand that can be met in the following period - again modeled with an additional variable.  
 
+\vspace{12pt}
 
 ## Exercises
 
