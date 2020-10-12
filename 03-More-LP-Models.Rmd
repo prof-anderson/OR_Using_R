@@ -44,7 +44,9 @@ In this chapter, we will examine a range of classic applications of linear progr
 
 In the previous chapter, we examined situations with only a few products and constraints.  In general, most companies have many more products and we won't be wanting to name each product explicilty and uniquely.  Instead, we use sets of products and resources.  
 \vspace{12pt}
+
 We could also reframe the model more algebraically. Let's use subscripts to differentiate between products and resources. We can define that _i=1_ represents Chairs, _i=2_ represents Desks, and _i=3_ represents Tables. 
+
 ```{marginfigure}
 $$
  \begin{split}
@@ -59,7 +61,7 @@ $$
 ```{marginfigure}
 **Formula 3.1**: A production planning LP with 3 products and 4 contraints.
 ```
-
+\vspace{12pt}
 
 Similarly, _j=1_ represents fabrication, _j=2_, represents assembly, etc.   Now, let's move on to defining the data.  Let's define the amount to produce of each product, _i_, as $x_i$ and resource _j_ consumed by product _i_ as $R_{i,j}$.  The available resource _j_ is then $A_j$. The profit per product _i_ is then $P_i$. The LP can now be rewritten as showed on the right margin, formula 3.1, if there are three products and four constraints.   \vspace{12pt}
 
@@ -349,6 +351,7 @@ The table on the right displays the new Production plan and the optimal distribu
 
 Specific blend limitations arise in many situations.  In our example, we might say that Chairs can make up no more than 40% of the overall product plan.  In our original case, this would be expressed as the following.  
 \vspace{12pt}
+
 $$
  \begin{split}
  \begin{aligned}
@@ -357,10 +360,11 @@ $$
   \end{split}
 $$
 
+\vspace{12pt}
 
-Blending constraints can appear as nonlinear constraints but can be readily linearized. We can see the formulation on the right side.  
+Let's rebuild our three variable production plan from Chapter 2. 
 
-```{r Base3VarModel, echo=FALSE}
+```{r Base3VarModel, echo=TRUE}
 Base3VarModel <- MIPModel() %>%
  add_variable(Chairs, type = "continuous", lb = 0) %>%
  add_variable(Desks, type = "continuous",lb = 0) %>%
@@ -385,6 +389,7 @@ xtables <- get_solution (res3base , Tables)
 base_case_res           <- cbind(xchairs,xdesks,xtables)
 rownames(base_case_res) <- "Amount to Produce"
 ```
+
 ```{marginfigure}
 grid.table(base_case_res)
 **Table 3.8**: Production Plan for Base Case
@@ -437,7 +442,7 @@ $$
 $$
 ```
 ```{marginfigure}
-**Formula 3.4**: Three constraints  
+**Formula 3.4**: Three variable base case model with a blending constraint.  
 ```
 \vspace{12pt}
 We can simply add a constraint to an existing `ompr` model of our 3 variable base case.  
@@ -476,7 +481,8 @@ As a summary, we can see on the table on the right a comparative between the bas
 
 \vspace{12pt}
 
-An allocation model divides resources and assigns them to competing activities. Typically has a maximization objective with less than or equal to constraints. 
+An allocation model divides resources and assigns them to competing activities. Typically it has a maximization objective with less than or equal to constraints. Note that our production planning problem from Chapter 2 is an allocation model.
+
 ```{marginfigure}
 $$
  \begin{split}
@@ -495,6 +501,7 @@ $$
 See the Formula 3.5 on the right to understand the mathematical expression.
 
 ## Covering Models
+
 A covering model combines resources and coordinates activities. A classic covering application would be what mix of ingredients "covers" the requirements at the lowest possible cost. Typically it has a minimization objective function and greater than or equal to constraints.
 \vspace{12pt}
 
@@ -545,7 +552,7 @@ CharNames <-lapply(list(rep("Char",NCharacteristic)),
                    paste0,1:NCharacteristic)
                  # Characteristics of each mix
 Cost <- matrix(c(20, 14, 3, 16), 
-              ncol=NMix,dimnames=c("Profit",MixNames))
+              ncol=NMix,dimnames=c("Cost",MixNames))
 MixChar <- matrix(c( 6, 8, 6, 7, 
                      2, 6, 4, 10, 
                      1, 1, 1, 2,
@@ -564,17 +571,16 @@ grid.table(TTMix)
 ```
 
 ```{marginfigure}
-**Hint**: You might need to add a total amount to make!   Modify the numbers until it runs...
+**Hint**: You might need to add a total amount to make! Modify the numbers until it runs...
 ```
-
 
 Now let's build our model.  
 
 ```{r trailmix}
 trailmixmodel <- MIPModel() %>%
- add_variable(x[i],i=1:NMix,type="continuous",lb=0) %>%
- set_objective(sum_expr(Cost[i]*x[i],i=1:NMix ),"min")%>%
- add_constraint(sum_expr(MixChar[j,i]*x[i],i=1:NMix) 
+ add_variable(Vx[i],i=1:NMix,type="continuous",lb=0) %>%
+ set_objective(sum_expr(Cost[i]*Vx[i],i=1:NMix ),"min")%>%
+ add_constraint(sum_expr(MixChar[j,i]*Vx[i],i=1:NMix) 
                   # Left hand side of constraint
                   >= CharMin[j],    
                   # Inequality and Right side of constraint
@@ -584,7 +590,7 @@ results.trailmix <- solve_model(trailmixmodel,
                                 with_ROI(solver = "glpk"))
   
 results.trailmix
-xvalue <- t(get_solution(results.trailmix, x[i])[,3])
+xvalue <- t(get_solution(results.trailmix, Vx[i])[,3])
 ```
 
 We'll leave it to the reader to clean up the output of results.
@@ -639,18 +645,18 @@ Let's show how to set up a basic implementation of the tranportation problem in 
 
 ```{r transportation, eval=FALSE}
 transportationmodel <- MIPModel() %>%
- add_variable(x[i, j], type = "continuous", 
+ add_variable(Vx[i, j], type = "continuous", 
                i = 1:NSupply, 
                j = 1:NDest, lb=0) %>%
- set_objective (sum_expr(Cost[i,j] * x[i,j] , 
+ set_objective (sum_expr(Cost[i,j] * Vx[i,j] , 
                           i=1:NSupply, 
                           j=1:NDest ), "min") %>%
- add_constraint (sum_expr(x[i,j], i=1:NSupply) 
+ add_constraint (sum_expr(Vx[i,j], i=1:NSupply) 
                 # Left hand side of Demand constraints
                 >= D[j],   
                 # Inequality and Right side of constraint
                 j=1:NDest)%>% #Repeat for each demand node j.  
- add_constraint (sum_expr(x[i,j], j=1:NDest)
+ add_constraint (sum_expr(Vx[i,j], j=1:NDest)
                 # Left hand side of Supply constraints
                 <= S[i],    
                 # Inequality and Right side of constraints
@@ -688,6 +694,7 @@ $$
   \end{aligned}
   \end{split}
 $$
+
 This can be then transformed to standard form by rearranging terms in the third constraint and adding two non-negative slack variables to the first two constraints.
 
 $$
@@ -707,7 +714,7 @@ The standard form now consists of a system of equations, generally with far more
 Let's examine the solution to our example though.
 \vspace{12pt}
 
-```{r StdModel, echo=FALSE}
+```{r StdModel, echo=TRUE}
 StdModel <- MIPModel() %>%
  # To avoid name space conflicts, using a prefix of V
  #    for ompr variables.

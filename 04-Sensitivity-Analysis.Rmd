@@ -401,7 +401,7 @@ colnames(bookcase_res_used)<-c("Row Duals",
 grid.table(format(bookcase_res_used,digits=4))
 ```
 ```{marginfigure}
-**Table 4.10**: Resources Used by a Bookcase and their Shadow Prices
+**Table 4.11**: Resources Used by a Bookcase and their Shadow Prices
 ```
 Even without adding it to the model, we can check to see if it is worthwhile to consider seriously.  The opportunity cost of producing one bookcase would result in the $\$35 - \$1*12  - \$2*16=\$-9 $.  In other words, even though a bookcase has higher profit than any other product, producing one would cost the company nine dollars of overall profit. 
 \vspace{12pt}
