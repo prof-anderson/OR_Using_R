@@ -797,13 +797,13 @@ A common application is production planning and inventory management planning ov
 We can start by defining our decision variables.  We will need a set of decision variables for the amount to produce of each product _p_ in each period _t_.  Let's define that as $x_{p,t}$.  
 \vspace{12pt}
 
-Similarly, we will define a variable for the inventory at the end of each period, $i_{p,t}.  
+Similarly, we will define a variable for the inventory at the end of each period, $y_{p,t}$.  
 \vspace{12pt}
 
 The production cost is simply cost per product multiplied by the number of products produced or $\sum_{p} \sum_{t} C^M_{p,t} x_{p,t}$.
 \vspace{12pt}
 
-The inventory carrying cost follows the same format, $\sum_{p} \sum_{t} ( C^I_{p,t} y_{p,t}$
+The inventory carrying cost follows the same structure, $\sum_{p} \sum_{t} ( C^I_{p,t} y_{p,t}$
 \vspace{12pt}
 
 We can then combine them as $\sum_{p} \sum_{t} ( C^M_{p,t} x_{p,t} + C^I_{p,t} y_{p,t})$
