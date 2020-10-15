@@ -865,17 +865,15 @@ Four manufacturing plants are supplying material for distributors in four region
 **Table 3.12**: Transportation cost between cities  
 ```
 
-
 Formulate an explicit model for the above application that solves this transportation problem to find the lowest cost way of transporting as much as product as we can to distributors.  Hint:  You might choose to define variables based on the first letter of source and destination so *XCP* is the amount to ship from Chicago to PDX.  
 \vspace{12pt}
 
 Implement and solve the model using ompr.  Be sure to interpret and discuss the solution as to why it makes it sense. \vspace{12pt}
 
-```{exercise, name="Explicit Transportation"}
+```{exercise, name="Generalized Transportation Model"}
 ```
-Formulate a generalized model for the above application that solves this transportation problem to find the lowest cost way of transporting as much as product as we can to distributors. 
+Formulate a generalized model for the above application that solves this transportation problem to find the lowest cost way of transporting as much product as we can to distributors. 
 \vspace{12pt}
-
 
 ```{marginfigure}
 **Hint**: Feel free to use my LaTeX formulation for the general transportation model and make change(s) to reflect your case.
@@ -953,18 +951,6 @@ hph_needs <- matrix (c(50, 140, 260, 140, 100, 80), ncol=1,
 grid.table (hph_needs)
 ```
 
+Create an appropriate optimization model to minimize the number of nurses needed to cover the requirements.  
 
-```{marginfigure}
-$$
- \begin{split}
- \begin{aligned}
-    \text{Maximize  }   &  \sum_{i=1}^3 P_i x_i \\
-    \text{subject to } & \sum_{i=1}^3 R_{i,j}x_i \leq A_j  \; \forall \; j\\
-                       & x_i \geq 0  \; \forall \; i
-  \end{aligned}
-  \end{split}
-$$
-```
-```{marginfigure}
-**Formula 3.7**: Generalized LP case
-```
+Implement and solve the model in R.  Discuss and explain your solution.  
