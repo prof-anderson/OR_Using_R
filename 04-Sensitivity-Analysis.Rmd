@@ -62,7 +62,7 @@ $$
 $$
 ```
 ```{marginfigure}
-**formulation 4.1**: Explicit model of production planning
+**Formulation 4.1**: Explicit model of production planning
 ```
 
 The implementation that we did earlier for production planning was straightforward.
@@ -158,7 +158,7 @@ $$
 $$
 ```
 ```{marginfigure}
-**formulation 4.2**: Explicit model of production planning adding labor to machining
+**Formulation 4.2**: Explicit model of production planning adding labor to machining
 ```
 \vspace{12pt}
 And the code is showed in the following chunk, with Table 4.3 showing the optimal model result.
@@ -390,7 +390,7 @@ As we expected, the forced change of making one additional table resulted in a d
 This meant that the number of chairs and desks were changed resulting lower profit even though a table is on its own profitable.
 \vspace{12pt}
 
-* Evaluating a New Product Design with Shadow Prices *
+## Evaluating a New Product Design with Shadow Prices 
 
 Let's consider a design proposal for a bookcase. The bookcase has a projected profit of $\$35$ each and uses 6 hours of fabrication time, 12 of assembly, and 16 of machining. It uses 80 square feet of wood.
 
@@ -403,7 +403,7 @@ grid.table(format(bookcase_res_used,digits=4))
 ```{marginfigure}
 **Table 4.11**: Resources Used by a Bookcase and their Shadow Prices
 ```
-Even without adding it to the model, we can check to see if it is worthwhile to consider seriously.  The opportunity cost of producing one bookcase would result in the $\$35 - \$1*12  - \$2*16=\$-9 $.  In other words, even though a bookcase has higher profit than any other product, producing one would cost the company nine dollars of overall profit. 
+Even without adding it to the model, we can check to see if it is worthwhile to consider seriously.  The opportunity cost of producing one bookcase would result in the $\$35 - \$ 1 \cdot 12  - \$2  \cdot 16 = \$ - 9 $.  In other words, even though a bookcase has higher profit than any other product, producing one would cost the company nine dollars of overall profit. 
 \vspace{12pt}
 
 We could interpret this as a simple hard stop on the decision to produce bookcases but we could go one step further by setting a target for redesigning the product or its production.  If the machining time could be reduced by 4.5 hours to 11.5 hours, then the value of the resources consumed would be equal to the profit and we would be indifferent to producing some bookcases. 
