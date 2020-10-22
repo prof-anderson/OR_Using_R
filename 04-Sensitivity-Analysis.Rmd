@@ -403,7 +403,7 @@ grid.table(format(bookcase_res_used,digits=4))
 ```{marginfigure}
 **Table 4.11**: Resources Used by a Bookcase and their Shadow Prices
 ```
-Even without adding it to the model, we can check to see if it is worthwhile to consider seriously.  The opportunity cost of producing one bookcase would result in the $\$35 - \$ 1 \cdot 12  - \$2  \cdot 16 = \$ - 9 $.  In other words, even though a bookcase has higher profit than any other product, producing one would cost the company nine dollars of overall profit. 
+Even without adding it to the model, we can check to see if it is worthwhile to consider seriously.  The opportunity cost of producing one bookcase would result in the $\$35-\$1\cdot12-\$2\cdot16=\$-9$.  In other words, even though a bookcase has higher profit than any other product, producing one would cost the company nine dollars of overall profit. 
 \vspace{12pt}
 
 We could interpret this as a simple hard stop on the decision to produce bookcases but we could go one step further by setting a target for redesigning the product or its production.  If the machining time could be reduced by 4.5 hours to 11.5 hours, then the value of the resources consumed would be equal to the profit and we would be indifferent to producing some bookcases. 

@@ -585,6 +585,7 @@ rownames(res2a)<-list("Solution 2a")
 ```{r First_Solution_Multiple_Optima, fig.margin = T}
 grid.table(res2a)
 ```
+
 ```{marginfigure}
 **Table 2.4**: First Solution of Multiple Optima Case
 ```
