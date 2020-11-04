@@ -33,9 +33,9 @@ library (pander, quietly = TRUE)
 library (tufte, quietly = TRUE)
 library (tint)
 library (knitr)
-library(DiagrammeRsvg, quietly=TRUE) 
-library(rsvg, quietly=TRUE) 
-library(htmltools, quietly=TRUE)
+library (DiagrammeRsvg, quietly=TRUE) 
+library (rsvg, quietly=TRUE) 
+library (htmltools, quietly=TRUE)
      # DiagrammeRsvg, rsvg, htmltools are used for IO diagrams
 
 ```
@@ -58,8 +58,8 @@ This chapter walks through how DEA works and then shows how to implement the mod
 In this chapter, we will use a few functions from an R package, TRA, that I have created.  This package is for doing a range of functions related to Technology, Research, and Analytics.  It is not posted on CRAN but is instead available from github.  You can download a current version from github. The result is that you will need to install it using `devtools`.
 \vspace{12pt}
 
-```{r load_TRA_from_github, eval=TRUE}
-library(devtools)
+```{r load_TRA_from_github, eval=FALSE}
+library (devtools)
 devtools::install_github("prof-anderson/TRA")
 library (TRA)
 ```
