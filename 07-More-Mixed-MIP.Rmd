@@ -52,8 +52,8 @@ suppressPackageStartupMessages(library (tint, quietly = TRUE))
 This chapter consists of a collection of rich MILP  models that can be used for inspiration on products.  Some of these cases are expansions of Dirk Schumacher's ompr vignettes.  These make for excellent resouces demonstrating a variety of features such as creation of simulated data and visualization of results.  I strongly recommend reading the original.  These vignettes can be viewed from the package documentation, Dirk's github web [site](https://dirkschumacher.github.io/ompr/articles/index.html),  or downloading his github repository.
 
 * All text from Dirk Schumacher's articles are set in block quotes.  
-* All code chunks are from Dirk Schumacher's articles unless stated otherwise.
-* The LaTeX formulations are based on Dirk Schumacher's LaTeX with some modifications to support LaTeX environments.
+* Code chunks are generally based on Dirk Schumacher's articles unless stated otherwise.
+* The LaTeX formulations are generally based on Dirk Schumacher's LaTeX with some modifications to support LaTeX environments.
 
 ## Revisiting the Warehouse Location Problem
 
@@ -68,7 +68,7 @@ Let's start by reviewing Dirk's original description of the warehouse location p
 Let's start by defining the decision variables.  Each possible location of a warehouse, $j$ can have a warehouse be built or not be built.  We will use $y_j=1$ to indicate that warehouse $j$ is built.  Conversely, $y_j=0$ indicates that we are not building a warehouse at location $j$.  Since a warehouse is either built or not built, a binary variable is appropriate for $y_j$.
 \vspace{12pt}
 
-Similarly, the variable $x_{i,j}$ is the decision of assigning customer $i$ to warehouse $j$.  It also needs to be a binary variable since partial assignments are not allowed.  Therefore, $x_{3,7}=1$ means that customer _3_ is assigned to warehouse _j_ and we would expect $x_{3,8}=0$ since a customer can't be assigned to two warehouses.
+Similarly, the variable $x_{i,j}$ is the decision of assigning customer $i$ to warehouse $j$.  It also needs to be a binary variable since partial assignments are not allowed.  Therefore, $x_{3,7}=1$ means that customer _3_ is assigned to warehouse _7_ and we would expect $x_{3,8}=0$ since a customer can't be assigned to two warehouses.
 
 \vspace{12pt}
 
@@ -134,16 +134,16 @@ n <- 200 ; m <- 40 # Set number of customers and warehouses
         # Text discussion is for the larger size
 ```
 
-Next we create the customer data as a dataframe. The runif function generates a uniform random number between 0.0 and 1.0 such as perhaps 0.327216. This would be multiplied by our grid size multipler resulting in 327.216.  This is then rounded to 327.  
+Next we create the customer data as a dataframe. The `runif` function generates a uniform random number between 0.0 and 1.0 such as perhaps 0.327216. This would be multiplied by our grid size multiplier of 1,000 resulting in 327.216.  This is then rounded to 327.  Let's now see how this is implemented for customers.  
 
 ```{r Create-Customer-Data}
 customer_locations <- data.frame(      
   id = 1:n,                         
      # Create column with ID numbers from 1 to n
   x = round(runif(n) * grid_size),  
-     # Create 100 x-coordinate values in next column
+     # Create n x-coordinate values in next column
   y = round(runif(n) * grid_size)   
-     # Create 100 y-coordinate values in last column
+     # Create n y-coordinate values in last column
 )
 ```
 
@@ -225,7 +225,7 @@ model <- MIPModel() %>%
   # 1 iff warehouse j is built
   add_variable(Vy[j], j = 1:m, type = "binary") %>%
   
-  # maximize the preferences
+  # minimize cost
   set_objective(sum_expr(transportcost(i, j) * Vx[i, j], 
                          i = 1:n, j = 1:m) + 
                   sum_expr(fixedcost[j] * Vy[j], j = 1:m), 
@@ -234,16 +234,14 @@ model <- MIPModel() %>%
   # every customer needs to be assigned to a warehouse
   add_constraint(sum_expr(Vx[i, j], j=1:m)==1, i=1:n) %>%  
   
-#  add_constraint(sum_expr(Vx[i, j], i = 1:n) <= 4, j = 1:m) %>% 
-
-    # if a customer is assigned to a warehouse, 
+  # if a customer is assigned to a warehouse, 
   #    then this warehouse must be built
   add_constraint(Vx[i,j] <= Vy[j], i = 1:n, j = 1:m)
 
- # model
+model
 ```
 
-The number of _x_ (or `Vx`) variables is $m \cdot n =20 \cdot 100$ or 2000 and the number of _y_ (or `Vy`) variables is $m$ or 20, the total number of variables is 2020 which matches the model summary. A similar calculation can be done on the constraints.  The number of variables and constraints make this a non-trivial sized MIP problem. Fortunately, solving still turns out to be pretty easy on a personal computer but be cautious of solving this on a cloud instance.
+The number of _x_ (or `Vx`) variables is $m \cdot n =40 \cdot 200$ or 8000 and the number of _y_ (or `Vy`) variables is $m$ or 20, the total number of variables is 8040 which matches the model summary. A similar calculation can be done on the constraints.  The number of variables and constraints make this a non-trivial sized MIP problem. Fortunately, solving still turns out to be pretty easy on a personal computer but be cautious of solving this on a cloud instance.
 \vspace{12pt}
 
 *Solving the Warehouse Location Problem* 
@@ -261,23 +259,26 @@ So far, you are unlikely to have noticed an optimization problem cause a visible
 In summary, non-trivial MIP models should be run locally on a computer unless you are certain that your computational loads will not cause a problem for yourself or others.  
 
 ```{r warehouse_glpk_solving}
-result <- solve_model(model, with_ROI(solver = "symphony"))
+result <- solve_model(model, with_ROI(solver = "glpk"))
+
+result
 ```
 
+We can see that the result was solved to optimality and the objective function value of 
 We can summarize the information by simply extracting a the objective function value.  This can be done with inline R code.  For example, we can say the following.
 \vspace{12pt}
 
 We solved the problem with an objective value of `r sprintf("%d", ompr::objective_value(result))`.
 \vspace{12pt}
 
-With 2020 variables, it isn't always terribly useful to just list out all of the variables.
+With `r sprintf("%d", NROW(result$solution))` variables, it isn't always terribly useful to just list out all of the variables.
 \vspace{12pt}
 
-At this point, we are really interested in the small minority of non-zero variables.  Only 5% of the _x_ variables are not zero. 
+At this point, we are really interested in the small minority of non-zero variables.  Only a small percentage of the _x_ variables are not zero. 
 \vspace{12pt}
 
 ```{marginfigure}
-**Challenge**: Do you know why about 5% of the decision variables are non-zero?)
+**Challenge**: Do you know why about approximately $\frac{1}{m}$ of the decision variables are non-zero?
 ```
 We can do some processing to extract the non-zero _x_ (or `Vx`) variables from those with zero values. In order to do so, Dirk uses the `dplyr` package. This package provides a tremendous number of functions for data management. To illustrate how this is done, let's review line by line how this code chunk works.
 
@@ -323,7 +324,7 @@ pander(head( matching),
 Example of some of the processed results for variable x from matching.
 ```
 
-The processed results table shows that the `matching` object  simply lists six customers and to which warehouse it is assigned. It has cut out the 95% of rows that would be zero.  
+The processed results table shows that the `matching` object  simply lists six customers and to which warehouse it is assigned. It has cut out the vast majority of rows (decision variables) with zero values.  
 \vspace{12pt}
 
 This clean and simple listing from `matching` is interesting and will then be used for adding lines to the earlier `ggplot` model.
@@ -356,7 +357,7 @@ pander (customer_count, caption=
   "Count of customers assigned to each operating warehouse")
 ```
 
-We can see that warehouse 17 has the most customers but that the two warehouses are pretty evenly balanced.
+We can see that warehouses selected to be built serve different numbers of customers.  Let's gather more information to examine the fixed cost of the selected.  How does this compare with the histogram of fixed costs?  
 
 ```{r prepare_to_plot_warehouses}
 plot_warehouses <- warehouse_locations %>% 
@@ -555,7 +556,8 @@ Gurobi is a comprehensive commercial optimization solver and is generally consid
 4. Install gurobi's R package.  Note that the package file is not in CRAN and will need to be installed directly from the gurobi installed files on your local computer.  (For example in my windows install, it was in `C:\\gurobi900\win64\R` directory.)
 5. Install the `roi.plugin.gurobi` package.  Note that this may need to be installed from a github account as it is not officially supported by Gurobi.  
 
-A code chunk is provided without ex
+A code chunk is provided without evaluation in order to avoid issue of reproducibility.  Also, performance testing of gurobi under these circumstances might not do justice to the performance benefits of gurobi on much more complex optimization problems.
+
   \vspace{12pt}
 ```{r timegurobi, eval=FALSE}
 tic("gurobi")
@@ -569,7 +571,7 @@ gurobitime1 <- c("gurobi",
                    result_lpsolve$objective_value)
 ```
 
-The `ROI.plugin` for each respective solver general accepts a subset of all the parameters or options that a solver can use.  This may mean some trial and error is involved.  The [Gurobi documentation](https://www.gurobi.com/documentation/9.0/refman/parameters.html#sec:Parameters) provides a comprehensive list of parameters.  I've tested and the following commonly used parameters appear to work.
+The `ROI.plugin` for each respective solver general accepts a subset of all the parameters or options that a solver can use.  This may mean some trial and error is involved.  The [Gurobi documentation](https://www.gurobi.com/documentation/9.0/refman/parameters.html#sec:Parameters) provides a comprehensive list of parameters.  I've tested  the following commonly used parameters with Gurobi and can confirm that they appear to work.
 
 * *TimeLimit* terminates solving based on seconds, (usage: `TimeLimit=40.0`)
 * *SolutionLimit* , limits the number of MIP feasible solutions, (usage:  `SolutionLimit=20`)
