@@ -1,5 +1,5 @@
 ---
-title: "Optimization Modeling Using R<br />"
+title: "Optimization Modeling Using R"
 author: "Timothy R. Anderson"
 date: "`r Sys.Date()`"
 github-repo:  "prof-anderson/OR_Using_R"
