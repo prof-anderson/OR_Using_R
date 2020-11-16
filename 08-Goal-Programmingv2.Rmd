@@ -162,7 +162,7 @@ So which group has the _better_ model?  The objective function value for group 1
 
 Both group's have admirable objectives.  We can view this as a case of goal programming.  By definition, we know that these are the best values that can be achieved in terms of that objective function.  Let's treat these optimal values as targets to strive for and measure the amount by which fail to achieve these targets.  We'll define target $T_1 =$ `r res_Home1$objective_value` and $T_2 =$ `r res_Home2$objective_value`.  \vspace{12pt}
 
-In order to do this, we need to use deviational variables.  These are like slack variables from the standard form of linear programs.  Since the deviations can only be one sided in this case, we only need to have deviations in one direction.  We will define $d_1$ as the deviation in goal 1 (Maximizing people served) and $d_1$ as the deviation in in goal 2 (Maximizing children served).  \vspace{12pt}
+In order to do this, we need to use deviational variables.  These are like slack variables from the standard form of linear programs.  Since the deviations can only be one sided in this case, we only need to have deviations in one direction.  We will define $d_1$ as the deviation in goal 1 (Maximizing people served) and $d_2$ as the deviation in goal 2 (Maximizing children served).  \vspace{12pt}
 
 Let's now create the modified formulation.  \vspace{12pt}
 
