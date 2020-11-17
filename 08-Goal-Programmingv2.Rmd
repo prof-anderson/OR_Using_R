@@ -72,9 +72,9 @@ The second group feels that adults are responsible for their own situation but w
 As usual, start by thinking of the decision variables.  In this case, let's define _H_ to be number of tiny homes to be built and _R_ to be the rental housing subsidies provided.  Of course these should be non-negative variables.  We could use integer variables or continuous variables.    
 \vspace{12pt}
 
-Next let's look at our constraints and formulate them in terms of the decision variables. We have two constraints. The first one for the budget is simply: $10 \cdot H+ 25\cdot R \leq 1000$.  The second is to ensure we have sufficient staff support, $0.1 \cdot H + 0.1  \cdot R \leq 7 $.  
+Next let's look at our constraints and formulate them in terms of the decision variables. We have two constraints. The first one for the budget is simply: $10 \cdot H+ 25\cdot R \leq 1000$.  The second is to ensure we have sufficient staff support, $0.1 \cdot H+ 0.1\cdot R \leq 7$.  
 
-Now, let's think about our objectives.  The first group wants to serve as many people as possible so the objective function is $$\text {max } 1.1 \cdot H + 2.25 \cdot R$$
+Now, let's think about our objectives.  The first group wants to serve as many people as possible so the objective function is $\text {max } 1.1 \cdot H + 2.25 \cdot R$.
 \vspace{12pt}
 
 Similarly, since the second group is focused on children, their objective function is $$\text {max } 0.1\cdot H + 0.9\cdot R$$.    \vspace{12pt}
@@ -375,7 +375,7 @@ Let's start by defining our decision variables, $x_{s,w}$ as a binary variable t
 Now, we need to ensure that every state is mailed to in one of the eight weeks. We simply need to add up the variable for each state's decision to mail in week 1, 2, 3, ..., up to 8.  Mathematically, this would be $\sum\limits_{w=1}^{8}   x_{s,w} = 1, \; \forall \; s$.  
 \vspace{12pt}
 
-It is useful to take a momement to reflect on why $\sum\limits_{s=1}^{50} \sum\limits_{w=1}^{8}   x_{s,w} = 50$ is not sufficient to ensure that all 50 states get mailed to during the eight week planning period.
+It is useful to take a moment to reflect on why $\sum\limits_{s=1}^{50} \sum\limits_{w=1}^{8}   x_{s,w} = 50$ is not sufficient to ensure that all 50 states get mailed to during the eight week planning period.
 \vspace{12pt}
 
 Combined with the variable $x_{s,w}$ being defined to be binary, this is sufficient to ensure that we have a _feasible_ answer but not necessarily a well-balanced solution across the eight weeks.  
@@ -384,7 +384,7 @@ Combined with the variable $x_{s,w}$ being defined to be binary, this is suffici
 We could easily calculate the amount of material to mail each as a function of $x_s,w$  and $C_s$.  For week 1, it would be $\sum\limits_{s=1}^{50}   C_s \cdot x_{s,1}$  For week 2, it would be $\sum\limits_{s=1}^{50}   C_s \cdot x_{s,2}$, and so on.  This could be generalized as $\sum\limits_{s=1}^{50}   C_s \cdot x_{s,w} \; \forall \; w$.  
 \vspace{12pt}
 
-Creating a balanced schedule can be done in multiple ways. Let's start by using the _minimax_ approach discussed earlier. To do this, we add a new variable _Q_ and constrain it to be at least as large as each week.  Therefore, for week 1, $Q \geq \sum\limits_{s=1}^{50}   C_s \cdot x_{s,1}$ and for week 2, $Q \geq \sum\limits_{s=1}^{50}   C_s \cdot x_{s,12}$.  Again, to generalize for all eight weeks, we could write $Q \geq \sum\limits_{s=1}^{50}   C_s \cdot x_{s,w} \; \forall \; w$
+Creating a balanced schedule can be done in multiple ways. Let's start by using the _minimax_ approach discussed earlier. To do this, we add a new variable _Q_ and constrain it to be at least as large as each week.  Therefore, for week 1, $Q \geq \sum\limits_{s=1}^{50}   C_s \cdot x_{s,1}$ and for week 2, $Q \geq \sum\limits_{s=1}^{50}   C_s \cdot x_{s,2}$.  Again, to generalize for all eight weeks, we could write $Q \geq \sum\limits_{s=1}^{50}   C_s \cdot x_{s,w} \; \forall \; w$
 \vspace{12pt}
 
 we can then use our minimax objective function of simply minimizing _Q_.    \vspace{12pt}
