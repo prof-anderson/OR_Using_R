@@ -46,10 +46,13 @@ Up until this point, we assumed that there would be a single, clear objective fu
 Let's use an example that is a pressing issue for many cities - homelessness.  Note that is often better characterized as houselesness and the term will be used interchangeably for the sake of this illustration.  
 \vspace{12pt}
 
-The City of Bartland has a problem with houselessness.  Two ideas have been proposed for dealing with the houselessness problem.  The first option is to build new, government subsidized tiny homes for annual cost of $\$10K$ which would serve one adult 90% of the time and a parent with a child 10% of the time. Another option is to create a rental subsidy program which costs $\$25K$ per year per unit which typically serves a single adult (15%), two adults (20%), an adult with one child (30%), an adult with two children (20%), two adults with one child (10%), and two adults with two children (5%). Bartland's official Chief Economist has estimated that this subsidy program would tend to increase housing prices in a very tight housing market by an average of 0.001%. The Bartland City Council has $\$1000K$ available to reappropriate from elsewhere in the budget and would like to find the _best_ way to use this budget to help with the houselessness problem.  Both programs require staff 10% of a full time equivalent staff member to process paperwork, conduct visits, and other service related activities.  There are seven staff members available to work on these activities.
+The City of Bartland has a problem with houselessness.  Two ideas have been proposed for dealing with the houselessness problem.  The first option is to build new, government subsidized tiny homes for annual cost of $\$10K$ which would serve one adult 90% of the time and a parent with a child 10% of the time. Another option is to create a rental subsidy program which costs $\$25K$ per year per unit which typically serves a single adult (15%), two adults (20%), an adult with one child (30%), an adult with two children (20%), two adults with one child (10%), and two adults with two children (5%). 
 \vspace{12pt}
 
-Let's summarize the data for two programs.  Note that each unit or intervention may deal with a different person in a different situation, expected numbers of people served may be appropriate to model.  \vspace{12pt}
+Bartland's official Chief Economist has estimated that this subsidy program would tend to increase housing prices in a very tight housing market by an average of 0.001%. The Bartland City Council has $\$1000K$ available to reappropriate from elsewhere in the budget and would like to find the _best_ way to use this budget to help with the houselessness problem.  Both programs require staff support - in particular 10% of a full time equivalent staff member to process paperwork, conduct visits, and other service related activities.  There are seven staff members available to work on these activities.
+\vspace{12pt}
+
+Let's summarize the data for two programs.  Let's focus on expected numbers of people served for each policy intervention.  \vspace{12pt}
 
 | Per unit                      | Tiny Homes (H) | Rent Subsidy (R) |   
 |------------------------------:|:--------:|:------:|
@@ -73,7 +76,7 @@ As usual, start by thinking of the decision variables.  In this case, let's defi
 \vspace{12pt}
 
 Next let's look at our constraints and formulate them in terms of the decision variables. We have two constraints. The first one for the budget is simply: $10 \cdot H+ 25\cdot R \leq 1000$.  The second is to ensure we have sufficient staff support, $0.1 \cdot H+ 0.1\cdot R \leq 7$.  
-
+  \vspace{12pt}
 Now, let's think about our objectives.  The first group wants to serve as many people as possible so the objective function is $\text {max } 1.1 \cdot H + 2.25 \cdot R$.
 \vspace{12pt}
 
