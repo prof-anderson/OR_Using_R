@@ -1,26 +1,4 @@
----
-title: "Chapter 6: Integer Programming"
-header-includes:
-- \usepackage{longtable}
-- \usepackage{caption}
-monofont: Times New Roman
-output:
-  tufte::tufte_handout:
-    citation_package: natbib
-    latex_engine: xelatex
-    toc: TRUE
-    number_sections: true
-    highlight: monochrome
-  tufte::tufte_html: default
-  tufte::tufte_book:
-    citation_package: natbib
-    latex_engine: xelatex
-editor_options: 
-  markdown: 
-    wrap: sentence
----
-
-\pagestyle{headings}
+# Mixed Integer Optimization
 
 ```{r Ch6setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -38,7 +16,6 @@ library (tufte)
 library (knitr)
 ```
 
-# Mixed Integer Optimization
 
 Up until this point, we have always assumed that variables could take on fractional (or non-integer) values.
 In other words, they were continuous variables.

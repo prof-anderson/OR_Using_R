@@ -1,22 +1,4 @@
----
-title: 'Chapter 3: More LP Models'
-header-includes:
-- \usepackage{longtable}
-- \usepackage{caption}
-monofont: Times New Roman
-output:
-  tufte::tufte_handout:
-    citation_package: natbib
-    latex_engine: xelatex
-    toc: TRUE
-    number_sections: true
-  tufte::tufte_html: default
-  tufte::tufte_book:
-    citation_package: natbib
-    latex_engine: xelatex
----
-
-\pagestyle{headings}
+# More Linear Programming Models
 
 ```{r Ch3setup, include=FALSE}
 library(tufte)
@@ -32,9 +14,6 @@ knitr::opts_chunk$set(cache = TRUE)
 knitr::opts_chunk$set(width = 30)
 #knitr::opts_chunk$set(fig.lp='fig:')
 ```
-
-
-# More Linear Programming Models
 
 ## Types of LP Models
 

@@ -2,15 +2,19 @@
 title: "Optimization Modeling Using R"
 author: "Timothy R. Anderson"
 date: "`r Sys.Date()`"
-github-repo:  "prof-anderson/OR_Using_R"
-cover-image:  "images/Book_Cover-Optimization_Modeling_Using_R.png"
-description:  "This book introduces optimization using R. The current focus is on linear and mixed integer programming but may expand in the future.  It does not presume R fluency and teaches some R along the way but does not aim to fully teach R."  
+output: pdf_document
+cover-image: images/Book_Cover-Optimization_Modeling_Using_R.png
+description: This book introduces optimization using R. The current focus is on linear
+  and mixed integer programming but may expand in the future.  It does not presume
+  R fluency and teaches some R along the way but does not aim to fully teach R.
 site: bookdown::bookdown_site
 monofont: Times New Roman
 highlight: monochrome
 documentclass: book
-bibliography: ["Master4Bookdowns.bib"]
+bibliography: Master4Bookdowns.bib
+github-repo: prof-anderson/OR_Using_R
 ---
+
 # Preface {-}
 
 This book covers using R for doing optimization, a key area of operations research, which has been applied to virtually every industry. The current focus is on linear and mixed integer optimization. In the future it may grow to include a broader range of Operations Research methods. \vspace{12pt}

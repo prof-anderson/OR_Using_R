@@ -1,22 +1,4 @@
----
-title: "Chapter 4: Sensitivity Analysis"
-header-includes:
-- \usepackage{longtable}
-- \usepackage{caption}
-monofont: Times New Roman
-output:
-  tufte::tufte_book:
-    citation_package: natbib
-    latex_engine: xelatex
-  tufte::tufte_handout:
-    citation_package: natbib
-    latex_engine: xelatex
-    toc: TRUE
-    number_sections: true
-  tufte::tufte_html: default
----
-
-\pagestyle{headings}
+# Sensitivity Analysis
 
 ```{r Ch4setup, warning=FALSE, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -33,8 +15,6 @@ library (pander, quietly = TRUE)
 library (gridExtra)
 library (formatR)
 ```
-
-# Sensitivity Analysis
 
 We can get a lot more than just the objective function value and the decision variable from a solved linear program.  In particular, we can potentially explore the impact of changes in constrained resources, changes in the objective function, forced changes in decision variables, and the introduction of additional decision variables.  
 

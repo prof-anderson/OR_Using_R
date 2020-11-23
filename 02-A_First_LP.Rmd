@@ -1,23 +1,4 @@
----
-title: "Chapter 2: A First Linear Program"
-header-includes:
-- \usepackage{longtable}
-- \usepackage{caption}
-monofont: Times New Roman
-output:
-  tufte::tufte_html: default
-  tufte::tufte_handout:
-    citation_package: natbib
-    latex_engine: xelatex
-    toc: TRUE
-    number_sections: true
-  tufte::tufte_book:
-    citation_package: natbib
-    latex_engine: xelatex
----
-
-\pagestyle{headings}
-
+# Introduction to Linear Programming
 
 ```{r ch2setup, include=FALSE}
 library(tufte)
@@ -30,8 +11,6 @@ knitr::opts_chunk$set(cache = TRUE)
 knitr::opts_chunk$set(width = 30)
 #knitr::opts_chunk$set(fig.lp='fig:')
 ```
-
-# Introduction to Linear Programming
 
 ## What is Linear Programming
 

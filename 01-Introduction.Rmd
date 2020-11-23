@@ -1,26 +1,4 @@
----
-title: "Introduction to Operations Research"
-author: "Tim Anderson"
-date: "11/23/2018"
-header-includes:
-- \usepackage{longtable}
-- \usepackage{caption}
-monofont: Times New Roman
-output:
-  tufte::tufte_book:
-    citation_package: natbib
-    latex_engine: xelatex
-  tufte::tufte_html: default
-  tufte::tufte_handout:
-    citation_package: natbib
-    latex_engine: xelatex
-    toc: TRUE
-    number_sections: true
-    highlight: monochrome
----
-
-\pagestyle{headings}
-
+# Introduction 
 
 ```{r Ch1setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -31,8 +9,6 @@ library(tint)
 library(knitr)
 library(pander)
 ```
-
-# Introduction 
 
 ## What is Operations Research
 

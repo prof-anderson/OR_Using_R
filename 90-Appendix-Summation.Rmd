@@ -1,31 +1,10 @@
----
-title: "Appendix Introduction to Math Notation"
-author: "Caroline Blackledge, Alexander Keller, and Shahram Khorasanizadeh"
-header-includes:
-- \usepackage{longtable}
-- \usepackage{caption}
-monofont: Times New Roman
-output:
-  tufte::tufte_handout:
-    citation_package: natbib
-    latex_engine: xelatex
-    toc: TRUE
-    number_sections: true
-    highlight: monochrome
-  tufte::tufte_html: default
-  tufte::tufte_book:
-    citation_package: natbib
-    latex_engine: xelatex
----
-
-\pagestyle{headings}
+# (APPENDIX) Appendix {-}
+# Introduction to Math Notation
 
 ```{r Ch90setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = F)
 ```
-# (APPENDIX) Appendix {-}
-# Introduction to Math Notation
 
 ## Basic Summation Notation
 
