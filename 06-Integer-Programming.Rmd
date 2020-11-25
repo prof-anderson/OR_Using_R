@@ -14,6 +14,7 @@ suppressPackageStartupMessages(library(pander))    # Used for nice tables
 library (tint)
 library (tufte)
 library (knitr)
+library (png)
 ```
 
 
@@ -78,7 +79,8 @@ xdesks  <- get_solution (BaseModelCDT, Desks)
 xtables <- get_solution (BaseModelCDT, Tables)
 inc_mc_res  <- cbind(xchairs,xdesks,xtables,obj_val)
 rownames(inc_mc_res) <- ""
-colnames(inc_mc_res) <- c("Chairs", "Desks", "Tables", "Obj. Function Value")
+colnames(inc_mc_res) <- c("Chairs", "Desks", "Tables", 
+                          "Obj. Function Value")
 pander(inc_mc_res,
        caption="Production Plan with Continuous Variables")
 ```
@@ -140,7 +142,8 @@ xdesks  <- get_solution (IntModelCDT, Desks)
 xtables <- get_solution (IntModelCDT, Tables)
 IntModelCDTres  <- cbind(xchairs,xdesks,xtables,obj_val)
 rownames(IntModelCDTres) <- ""
-colnames(IntModelCDTres) <- c("Chairs", "Desks", "Tables", "Obj. Function Value")
+colnames(IntModelCDTres) <- c("Chairs", "Desks", "Tables", 
+                              "Obj. Function Value")
 pander(IntModelCDTres,
        caption="Production Plan with Integer Variables")
 ```
@@ -221,7 +224,7 @@ pander(rbind(acme_res_lp,acme_res_ip),
        caption="Production Plan-Continuous vs. Integer")
 ```
 
-```{r Fig-LP_Feasible_Region, echo=FALSE, fig.margin=TRUE, }
+```{r Fig-LP_Feasible_Region, echo=FALSE, fig.margin=TRUE, out.width="2in"}
 knitr::include_graphics("images/Fig06-1-LP_Feasible_Region.PNG")
 
 ```
@@ -230,7 +233,7 @@ Simply rounding down did not yield an optimal solution.
 Notice that production of product 1 went down while product 2 went up.
 The net impact was a profit reduction of almost *10%*.
 
-```{r Fig-IP_Feasible_Region, echo=FALSE, fig.margin=TRUE, }
+```{r Fig-IP_Feasible_Region, echo=FALSE, fig.margin=TRUE, out.width="2in"}
 knitr::include_graphics("images/Fig06-2-IP_Feasible.PNG")
 
 ```
@@ -297,7 +300,7 @@ pander(acme_res_lp,
        on the LP Relaxation")
 ```
 
-```{r Fig-LP_Relaxation, echo=FALSE, fig.margin=TRUE, }
+```{r Fig-LP_Relaxation, echo=FALSE, fig.margin=TRUE, out.width="2in"}
 knitr::include_graphics("images/Fig06-3-LP_Relaxation.PNG")
 
 ```
@@ -352,7 +355,7 @@ pander(LPSubI_res,
        caption="Production Plan based on Subproblem I")
 ```
 
-```{r Fig-Subproblem_I, echo=FALSE, fig.margin=TRUE, }
+```{r Fig-Subproblem_I, echo=FALSE, fig.margin=TRUE, out.width="2in"}
 knitr::include_graphics("images/Fig06-4-Subproblem_I.PNG")
 
 ```
@@ -361,7 +364,7 @@ Looking over the results, we now get an integer value for $x_1$ but not for $x_2
 We repeat the same process by creating subproblems from subproblem I by branching off of $x_2$.\
 \vspace{12pt}
 
-```{r Fig-Subproblem_Ia, echo=FALSE, fig.margin=TRUE, }
+```{r Fig-Subproblem_Ia, echo=FALSE, fig.margin=TRUE, out.width="2in"}
 knitr::include_graphics("images/Fig06-5-Subproblem_Ia.PNG")
 
 ```
@@ -398,7 +401,7 @@ pander(LPSubIII_res,
        caption="Production Plan based on Subproblem III")
 ```
 
-```{r Fig-Subproblem_III_and_II, echo=FALSE, fig.margin=TRUE, }
+```{r Fig-Subproblem_III_and_II, echo=FALSE, fig.margin=TRUE, out.width="2in"}
 knitr::include_graphics("images/Fig06-5-Subproblem_III_and_II.PNG")
 
 ```
@@ -509,7 +512,7 @@ rownames(BandB) <- list("LP Relaxation", "Subproblem I",
 pander(BandB, caption="Branch and Bound's Sequence of LPs")
 ```
 
-```{r Fig-B_and_B_Summary, echo=FALSE, fig.margin=TRUE, }
+```{r Fig-B_and_B_Summary, echo=FALSE, fig.margin=TRUE, out.width="2in"}
 knitr::include_graphics("images/Fig06-6-B_and_B_Summary.PNG")
 
 ```

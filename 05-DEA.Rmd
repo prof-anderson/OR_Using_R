@@ -54,7 +54,7 @@ In contrast, outputs are the "good" items that are being produced by the actions
 Let's start by creating a simple dataset - assume that you are a regional manager of a grocery chain. You have four stores and would like to assess the performance of the store managers using number of employees, _x_, as an input and the weekly sales, _y_, as an output.  The function `DrawIOdiagram` is from the `TRA` package and allows for creating a nicely formatted input-output diagram.  
 \vspace{12pt}
 
-```{r DEA_IO_Plot1, fig.margin=TRUE, fig.height=4}
+```{r DEA_IO_Plot1, fig.margin=TRUE, out.width="2in"}
 library (TRA) # Note, may need to install directly from github
               # devtools::install_github("prof-anderson/TRA")
 
@@ -91,10 +91,11 @@ x <- matrix(c(10,20,30,50),ncol=1,
 y <- matrix(c(75,100,300,400),ncol=1,
             dimnames=list(LETTERS[1:4],"y"))
 
-storenames<- c("Al's Pantry", "Bob's Mill", "Trader Carrie's", "Dilbertson's")
+storenames<- c("Al's Pantry", "Bob's Mill", 
+               "Trader Carrie's", "Dilbertson's")
 temp<-cbind(storenames,x,y)
-colnames(temp)<-c("Store Name", "Employees (x)", "Sales (y)")
-
+colnames(temp)<-c("Store Name", "Employees (x)", 
+                  "Sales (y)")
 ```
 
 ```{r first_dataset_table, fig.margin=TRUE}
@@ -675,7 +676,7 @@ This data is a little more complicated so let's make sure that we understand the
 
 The two outputs of _reimbursed patient-days_ and _privately paid patient-days_ are named "y1" and "y2" but otherwise have the same structure as the inputs.  
 
-```{r DEA_IO_Plot_Baker, fig.margin=TRUE, fig.height=4}
+```{r DEA_IO_Plot_Baker, fig.margin=TRUE, out.width="2in"}
 Figure <- DrawIOdiagram (c("staff hours per day", 
                            "supplies per day"  ), 
                          c("reimbursed patient-days", 

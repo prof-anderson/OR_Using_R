@@ -129,7 +129,8 @@ $$
     \text{s.t.} \\
           & 6Chairs+2Desks+4Tables \leq 2000 \\
           & 8Chairs+6Desks+4Tables \leq 2000 \\
-          & 6Chairs+4Desks+8Tables \leq 1441 \\
+          & 6Chairs+4Desks+8Tables \leq 
+                        \textcolor{red}{1441} \\
           & 40Chairs+25Desks+16Tables \leq 9600 \\
           & Tables \leq 200 \\
           & Chairs,  \; Desks, \; Tables \geq 0  
@@ -193,7 +194,8 @@ $$
         & 6Chairs+2Desks+4Tables \leq 2000 \\
         & 8Chairs+6Desks+4Tables \leq 2000 \\
         & 6Chairs+4Desks+8Tables \leq 1440 \\
-        & 40Chairs+25Desks+16Tables \leq 19600 \\
+        & 40Chairs+25Desks+16Tables \leq 
+                        \textcolor{red}{19600} \\
         & Tables \leq 200 \\
         & Chairs,  \; Desks, \; Tables \geq 0  
   \end{aligned}
