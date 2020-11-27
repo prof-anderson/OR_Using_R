@@ -1,13 +1,13 @@
 # More Linear Programming Models
 
 ```{r Ch3setup, include=FALSE}
-library(tufte)
-library(tint)
-library(knitr)
-library(gridExtra)
-library(kableExtra)
-library(pander)
-library(magrittr)
+library (tufte)
+library (tint)
+library (knitr)
+library (gridExtra)
+library (kableExtra)
+library (pander)
+library (magrittr)
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = F)
 knitr::opts_chunk$set(cache = TRUE)

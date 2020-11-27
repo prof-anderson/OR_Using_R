@@ -677,10 +677,10 @@ This data is a little more complicated so let's make sure that we understand the
 The two outputs of _reimbursed patient-days_ and _privately paid patient-days_ are named "y1" and "y2" but otherwise have the same structure as the inputs.  
 
 ```{r DEA_IO_Plot_Baker, fig.margin=TRUE, out.width="2in"}
-Figure <- DrawIOdiagram (c("staff hours per day", 
+Figure <- DrawIOdiagram (c("staff hours\nper day", 
                            "supplies per day"  ), 
-                         c("reimbursed patient-days", 
-                           "privately paid patient-days"),
+                         c("reimbursed\npatient-days", 
+                           "privately paid\npatient-days"),
                         '"\nNursing\nHome\n "')
 tmp<-capture.output(rsvg_png(
   charToRaw(export_svg(Figure)),
@@ -767,9 +767,7 @@ res <- solve_model(modBakerCCR, with_ROI(solver = "glpk"))
 pander (cbind(res.efficiency, res.lambda), 
         caption="Results from Baker's Example (CRS)")
 BakerCCR.Res<-cbind(res.efficiency, res.lambda)
-
 ```
-
 
 The efficiency scores match those reported in Baker, page 176, Figure 5.8. The columns to the right of the efficiency score are the lambdas. The lambdas for facility 5, (E), are given on page 177 of Baker and match the fifth row of our results.
 \vspace{12pt}

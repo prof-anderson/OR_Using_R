@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # Sensitivity Analysis
 
 ```{r Ch4setup, warning=FALSE, include=FALSE}
@@ -282,7 +287,7 @@ grid.table(format(chair_res_used, digits=4))
 ```{marginfigure}
 **Table 4.6**: Resources Used by a Chair and their Shadow Prices
 ```
-Taking the product in each row and adding them up will give the marginal value of the resources consumed by an incremental change in production of chairs. In this case, the marginal value is $0+1*8+2*6+0+0=20$.  Since the profit per chair (from the objective function coefficient on Chairs) is also $\$ 20$, they are in balance and the difference between them is zero which is why the reduced cost for Chairs is zero. This can be thought of saying that there is marginal benefit of cost to a very small forced change in the value of the Chairs variable.  The value of the resources used in producing a chair equals that of the profit of a chair.  
+Taking the product in each row and adding them up will give the marginal value of the resources consumed by an incremental change in production of chairs. In this case, the marginal value is $0+1\cdot 8+2\cdot6+0+0=20$.  Since the profit per chair (from the objective function coefficient on Chairs) is also $\$ 20$, they are in balance and the difference between them is zero which is why the reduced cost for Chairs is zero. This can be thought of saying that there is marginal benefit of cost to a very small forced change in the value of the Chairs variable.  The value of the resources used in producing a chair equals that of the profit of a chair.  
 \vspace{12pt}
 
 We can repeat the same process and calculations for Desks.  
@@ -295,7 +300,7 @@ grid.table(format(desk_res_used, digits=4))
 ```{marginfigure}
 **Table 4.7**: Resources Used by a Desk and their Shadow Prices
 ```
-In this case, using the columns from Table 4.6 we can calulate the marginal value as $0+1*6+2*4+0+0=14$.  Since the profit per desk (from the objective function coefficient on Desks) is also $\$ 14$, they are in balance and the difference between them is zero which is why the reduced cost for the _Desks_ variable is also zero.
+In this case, using the columns from Table 4.6 we can calulate the marginal value as $0+1\cdot6+2\cdot4+0+0=14$.  Since the profit per desk (from the objective function coefficient on Desks) is also $\$ 14$, they are in balance and the difference between them is zero which is why the reduced cost for the _Desks_ variable is also zero.
 \vspace{12pt}
 
 *Reduced Price of Tables*
