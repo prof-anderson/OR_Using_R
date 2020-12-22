@@ -7,3 +7,5 @@ docs/
 *.rds
 *.md
 *.log
+*.tex
+*.pdf

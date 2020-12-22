@@ -22,9 +22,9 @@ Neither term, Operations Research nor Management Science is perfect. Operations 
 
 ## Purpose of this Book
 
-There are many comprehensive introductions to Operations Research available including classics from Hillier and Lieberman, Winston, and others. The goal of this book is to provide a timely introduction to Operations Research using a powerful open source tool, R. It was written to support the ETM 540/640 Operations Research course at Portland State University which is taught on a quarter basis for people without a background in Operations Research or R. As such the current scope is limited to what can be readily accomplished in a 10 week quarter.  There are many other Operations Research tools available.  \vspace{12pt}
+There are many comprehensive introductions to Operations Research available including classics from Hillier and Lieberman, Winston, and others. The goal of this book is to provide a timely introduction to Operations Research using a powerful open source tool, R. It was written to support the ETM 540/640 Operations Research course at Portland State University which is taught on a quarter basis for people without a background in Operations Research or R. As such the current scope is limited to what can be readily accomplished in a 10 week quarter, giving an introduction to the tools and methods available.  There are many other Operations Research tools available besides R.  \vspace{12pt}
 
-This book is meant to be a hybrid, both serving as an introduction to R and to Operations Research.  \vspace{12pt}
+This book is meant to be a hybrid, both serving as an introduction to R and to Operations Research in the context of optimization. \vspace{12pt}
 
 You can always access the current version of this book on Github. https://github.com/prof-anderson/OR_Using_R 
 
@@ -51,7 +51,7 @@ The field of Operations Research significantly predates that of the term analyti
 
 ## Why R?
 
-This book adopts the platform of R for doing operations research and analytics. R is a popular, open source programming language developed by statisticians, originally as an open source alternative to the statistics language S.  As such, it has very strong numerical methods implementations.  Given the open source nature, it has been popular for researchers and many of these researchers have written their own packages to extend the functionality of R. These packages cover a tremendously broad range of topics and well over 10,000 are available from CRAN (the Comprehensive R Archive Network).  \vspace{12pt}
+This book adopts the platform of R for doing operations research and analytics. R is a popular, open source programming language developed by statisticians, originally as an open source alternative to the statistics language S.  As such, it has very strong numerical methods implementations.  Given the open source nature, it has been popular for researchers and many of these researchers have written their own packages to extend the functionality of R. These packages cover a tremendously broad range of topics and well over 16,000 are available from CRAN (the Comprehensive R Archive Network) as of December, 2020.  \vspace{12pt}
 
 In about 2012, my Extreme Technology Analytics Research Group was facing a decision.  We had been using proprietary analytics tools for years but had problems with software licensing and the limited range of specialized languages.  We wanted a single platform that could do both statistics and optimization, was freely available with no ongoing license renewal, and was readily extensible.  \vspace{12pt}
 
@@ -59,7 +59,7 @@ In the end, we debated between Python and R. While R grew out from statisticians
 
 Python had some advantages from the optimization side while R had advantages from the statistical side. In the end, we chose R because Python's numerical methods capabilities were not quite as rich. Since that time, both R and Python have significantly matured.  \vspace{12pt}
 
-As time has gone by, R has developed robust toolsets such as RStudio to making it more powerful and easier to use. R's extensive package community has become so diverse and powerful that proprietary statistics software such as SPSS and JMP now promote that they can use R packages. The result is that R is still a great choice for analysts and code developed for R should be usable for a long time.  \vspace{12pt}
+As time has gone by, R has developed robust toolsets such as RStudio making it more powerful and easier to use. R's extensive package community has become so diverse and powerful that proprietary statistics software such as SPSS and JMP now promote that they can use R packages. The result is that R is still a great choice for analysts and code developed for R should be usable for a long time.  \vspace{12pt}
 
 As should be expected, new tools continue to arise. In particular, Julia is a new, modern language developed around numerical analysis. Industry adoption of Julia is far behind R and Python given their head start of multiple decades. Even if Julia or some other environment does someday become more popular, skills developed using R will be readily transferable and provide an excellent foundation for learning new languages.  \vspace{12pt}
 
