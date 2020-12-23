@@ -905,7 +905,7 @@ $$
   (\#eq:Constraint2)
 $$
 ```{marginfigure}
-**Formula 2.9**: Update formalation for constraint 2. 
+**Formula 2.9**: Update formulation for constraint 2. 
 ```
 Next we can turn those into functions. Rather than inequalities, treat them as equalities so that we can find the edge defined by this constraint.  
 
@@ -920,7 +920,7 @@ r2y <- function(x) 3300 / 25 - 20 / 25 * x
 
 Secondly we will create an artificial series for x to plug into our functions, then create a data frame with a column for each series.  Let's populate the data frame of possible plans of xbots `x1`.  The `seq` function is very handy here in that it will generate a sequence of values from _0_ to _200_ xbots.  
 
-```{r Create_a_Series, fig.margin=T}
+```{r Create_a_Series, fig.margin=TRUE}
 # create the series
 x1 = seq(0,200)
 tablex1 <- head(as.matrix(x1))
@@ -932,7 +932,7 @@ grid.table(tablex1)
 
 The next statement takes a little unpacking to fully understand and illustrates another strength of R.  Now, we would like to evaluate each of these 201 values for `x1` using the functions for the two constraints that we just defined.  We could use a `for-next loop` if we were using a language such as BASIC but R handles these operations more smoothly and efficiently.  We can pass the data frame for `x1` into the function and R is smart enough to return the results in the same size data frame, `y1`. Of course we do the same thing for the second function (constraint).  
 
-```{r Creating_More_Data, fig.margin=T}
+```{r Creating_More_Data, fig.margin=TRUE}
 # 2 constraints in this equation so there are 2 y variables, 
 # y1 and y2.  
 # If you have more constraints you can just keep adding them 
