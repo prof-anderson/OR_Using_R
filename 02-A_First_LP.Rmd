@@ -127,7 +127,7 @@ $$
 & 3\cdot Ants + 4 \cdot Bats \leq 1000 \\
 & 2\cdot Ants + 3 \cdot Bats \leq 720 \\
 & 3\cdot Ants + 5 \cdot Bats \leq 1200 \\
-& Ants, Bats, Cats \geq 0  
+& Ants, Bats \geq 0  
   \end{aligned}
   \end{split}
 $$
@@ -441,12 +441,12 @@ See the table to the right with a summary of the new situation.
 
 ```{marginfigure}
 | | Ants| Bats | Cats |Available| 
-|-------------:|:-----:|:-----:|:------:|:-------:|
-|  Profit      |  $20  |  $14  |  $16   |         |
-|  Fabrication |   6   |    2  |    4   |   2000  |
-|  Assembly    |   8   |    6  |    4   |   2000  |
-|  Machining   |   6   |    4  |    8   |   1440  |
-|  Wood        |  40   |   25  |   16   |   9600  |
+|-------------:|:-----:|:----:|:------:|:-------:|
+|  Profit      |  $7   | $10  |  $8   |         |
+|  Fabrication |   1   |   3  |    2   |  1000  |
+|  Assembly    |   3   |   4  |    2   |  1000  |
+|  Machining   |   2   |   3  |    4   |   720  |
+|  Wood        |   3   |   5  |    2   |  1200  |
 ```
 
 ```{marginfigure}
@@ -470,16 +470,15 @@ Our objective function and constraints can now be written as the optimization mo
 
 ```{marginfigure}
 $$
-\begin{split}
-\begin{aligned}
-\text{Max:  }  & 20Ants+14Bats+16Cats \\
-\text{S.t.: } & \\
-  & 6Ants+2Bats+4Cats \leq 2000 \\
-  & 8Ants+6Bats+4Cats \leq 2000 \\
-  & 6Ants+4Bats+8Cats \leq 1440 \\
-  & 40Ants+25Bats+16Cats \leq 9600 \\
-  & Cats \leq 200 \\
-  & Ants, Bats, Cats \geq 0  
+ \begin{split}
+ \begin{aligned}
+    \text{Max  }   & 7\cdot Ants +10 \cdot Bats +8\cdot Cats \\
+    \text{s.t.:} & \\
+& 1\cdot Ants + 3 \cdot Bats  +2\cdot Cats \leq 1000 \\
+& 3\cdot Ants + 4 \cdot Bats  +2\cdot Cats \leq 1000 \\
+& 2\cdot Ants + 3 \cdot Bats  +4\cdot Cats \leq 720 \\
+& 3\cdot Ants + 5 \cdot Bats  +2\cdot Cats \leq 1200 \\
+& Ants, Bats, Cats \geq 0  
   \end{aligned}
   \end{split}
 $$
@@ -567,17 +566,16 @@ This results in the LP on the right.
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max:  } & 20Ants+14Bats+16Cats \\
-    \text{S.t.:} & \\
-                  & 6Ants+2Bats+4Cats \leq 2000 \\
-                  & 8Ants+6Bats+4Cats \leq 2000 \\
-                  & 6Ants+4Bats+8Cats \leq 1440 \\
-                  & 40Ants+25Bats+16Cats \leq 9600 \\
-                  & Cats \leq 200 \\
-                  & Ants \geq 300 \\
-                  & Bats, Cats \geq 0  
-  \end{aligned}
-  \end{split}
+    \text{Max  }   & 7\cdot Ants +10 \cdot Bats +8\cdot Cats \\
+    \text{s.t.:} & \\
+& 1\cdot Ants + 3 \cdot Bats  +2\cdot Cats \leq 1000 \\
+& 3\cdot Ants + 4 \cdot Bats  +2\cdot Cats \leq 1000 \\
+& 2\cdot Ants + 3 \cdot Bats  +4\cdot Cats \leq 720 \\
+& 3\cdot Ants + 5 \cdot Bats  +2\cdot Cats \leq 1200 \\
+& Ants \geq 300 \\
+& Ants, Bats, Cats \geq 0  
+\end{aligned}
+\end{split}
 $$
 ```
 
