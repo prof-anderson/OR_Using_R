@@ -266,8 +266,8 @@ Let's take a look at the summary of the model after all of the constraints have 
 model0g
 ```
 
-Our model has variables, constraints, and an objective function.
-Let's go ahead and solve it.
+Our model has the three core elements of an optimization model: variables, constraints, and an objective function.
+Let's go ahead and solve `model0g`.
 The LP can be solved using different LP engines - we'll use `glpk` for now.
 We'll assign the result of the solved model to `result0`.
 
@@ -283,20 +283,20 @@ We built up the model line by line incrementally taking the previous model, addi
 Note that we could keep placing them into the original model if we had wished such as the following.
 \vspace{12pt}
 
-```{r base_case_no_pipes_single_model}
-model0  <- MIPModel()     # Initialize an empty model
+```{r base_case_no_pipes_single_model, eval=FALSE}
+model0 <- MIPModel()     # Initialize an empty model
 model0 <- add_variable(model0, Ants, 
                        type = "continuous", lb = 0) 
 model0 <- add_variable(model0, Bats, 
                        type = "continuous",lb = 0)
-model0<- set_objective(model0,20*Ants + 14*Bats, "max")
-model0<- add_constraint(model0,6*Ants + 2*Bats <= 2000) 
+model0<- set_objective(model0, 7*Ants + 14*Bats, "max")
+model0<- add_constraint(model0, 1*Ants + 3*Bats <= 1000) 
 #machining
-model0 <- add_constraint(model0,8*Ants + 6*Bats <= 2000) 
+model0 <- add_constraint(model0, 3*Ants + 4*Bats <= 1000) 
 #assembly
-model0<- add_constraint(model0,6*Ants + 4*Bats <= 1440) 
+model0<- add_constraint(model0, 2*Ants + 3*Bats <= 720) 
 #testing
-model0<- add_constraint(model0,40*Ants + 25*Bats <= 9600) 
+model0<- add_constraint(model0, 3*Ants + 5*Bats <= 1200) 
 #wood
 result0 <- solve_model(model0, with_ROI(solver = "glpk"))
 ```
@@ -382,17 +382,17 @@ result0 <- MIPModel() %>%
   add_variable(Ants, type = "continuous", lb = 0) %>%
   add_variable(Bats, type = "continuous",lb = 0) %>%
  
-  set_objective(20*Ants + 14*Bats, "max") %>%
+  set_objective(7*Ants + 10*Bats, "max") %>%
   
-  add_constraint(6*Ants + 2*Bats<= 2000) %>% #machining
-  add_constraint(8*Ants + 6*Bats<= 2000) %>% #assembly
-  add_constraint(6*Ants + 4*Bats<= 1440) %>% #testing
-  add_constraint(40*Ants + 25*Bats<= 9600) %>%   #wood
+  add_constraint(1*Ants + 3*Bats<= 1000) %>% #machining
+  add_constraint(3*Ants + 4*Bats<= 1000) %>% #assembly
+  add_constraint(2*Ants + 3*Bats<= 720)  %>% #testing
+  add_constraint(3*Ants + 5*Bats<= 1200) %>% #sensors
   solve_model(with_ROI(solver = "glpk"))
   
 ```
 
-Note that we load a new package `magrittr` which gives us the piping function that simplifies model building.
+Note that we loaded a new package, `magrittr`, which gives us the piping function that simplifies model building.
 \vspace{12pt}
 
 ```{marginfigure}
@@ -408,6 +408,7 @@ Note that we load a new package `magrittr` which gives us the piping function th
 The first line creates the basic model.
 The `%>%` serves as a pipe symbol at the end of each line.
 It basically means take product of the previous command and feed it in as the first argument of the following command.
+While it may shorten each line of code and may be faster, there is drawback in that the the piped commands are treated as one very long line of code making it harder to find where an error occurs.
 
 Let's check to see the status of the solver.
 Did it find the optimal solution?
