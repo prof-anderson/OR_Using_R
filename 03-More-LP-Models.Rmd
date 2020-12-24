@@ -1,3 +1,9 @@
+---
+editor_options: 
+  markdown: 
+    wrap: sentence
+---
+
 # More Linear Programming Models
 
 ```{r Ch3setup, include=FALSE}
@@ -17,14 +23,20 @@ knitr::opts_chunk$set(width = 30)
 
 ## Types of LP Models
 
-In this chapter, we will examine a range of classic applications of linear programs.  These applications will give ideas for how to model a variety of situations.  In each case, try to follow along with the application.  
+In this chapter, we will examine a range of classic applications of linear programs.
+These applications will give ideas for how to model a variety of situations.
+In each case, try to follow along with the application.
 
 ## The Algebraic Model
 
-In the previous chapter, we examined situations with only a few products and constraints.  In general, most companies have many more products and we won't be wanting to name each product explicilty and uniquely.  Instead, we use sets of products and resources.  
+In the previous chapter, we examined situations with only a few products and constraints.
+In general, most companies have many more products and we won't be wanting to name each product explicitly and uniquely.
+Instead, we use sets of products and resources.\
 \vspace{12pt}
 
-We could also reframe the model more algebraically. Let's use subscripts to differentiate between products and resources. We can define that _i=1_ represents Chairs, _i=2_ represents Desks, and _i=3_ represents Tables. 
+We could also reframe the model more algebraically.
+Let's use subscripts to differentiate between products and resources.
+We can define that *i=1* represents Chairs, *i=2* represents Desks, and *i=3* represents Tables.
 
 ```{marginfigure}
 $$
@@ -37,14 +49,23 @@ $$
   \end{split}
 $$
 ```
+
 ```{marginfigure}
 **Formula 3.1**: A production planning LP with 3 products and 4 contraints.
 ```
+
 \vspace{12pt}
 
-Similarly, _j=1_ represents fabrication, _j=2_, represents assembly, etc.   Now, let's move on to defining the data.  Let's define the amount to produce of each product, _i_, as $x_i$ and resource _j_ consumed by product _i_ as $R_{i,j}$.  The available resource _j_ is then $A_j$. The profit per product _i_ is then $P_i$. The LP can now be rewritten as shown in the right margin, formula 3.1, if there are three products and four constraints.   \vspace{12pt}
+Similarly, *j=1* represents fabrication, *j=2*, represents assembly, etc.
+Now, let's move on to defining the data.
+Let's define the amount to produce of each product, *i*, as $x_i$ and resource *j* consumed by product *i* as $R_{i,j}$.
+The available resource *j* is then $A_j$.
+The profit per product *i* is then $P_i$.
+The LP can now be rewritten as shown in the right margin, formula 3.1, if there are three products and four constraints.
+\vspace{12pt}
 
-We could further generalize this by instead of hard coding the number of products and resource constraints, we instead define the number of products and resources as NProd and NResources respectively.  We can then rewrite the above formulation as the following. 
+We could further generalize this by instead of hard coding the number of products and resource constraints, we instead define the number of products and resources as *NProd* and *NResources* respectively.
+We can then rewrite the above formulation as the following.
 
 ```{marginfigure}
 $$
@@ -57,29 +78,41 @@ $$
   \end{split}
 $$
 ```
+
 ```{marginfigure}
 **Formula 3.2**: A production planning LP for any number of products and constraints.
 ```
 
 ## Tips and Conventions for Algebraic Models
 
-Learning how to read and write mathematical models is an important skill.  In this section we will provide a quick overview. More information is provided in _Appendix A_.
+Learning how to read and write mathematical models is an important skill.
+In this section we will provide a quick overview.
+More information is provided in *Appendix A*.
 
-The symbol, $\forall$, is read as "for all" and can be interpreted to mean "repeat this line substituting in a value for this subscript **for all** possible values of this subscript."  In other words, given that _i_ is used consistently for the three products, then $x_i \geq 0  \; \forall \; i$ is equivalent to $x_i \geq 0  \;,i=1,2,3$ or even $x_1 \geq 0, \; x_2 \geq 0, \; x_3 \geq 0$.  The result is that the $\forall$ symbol can simplify the description of complex models when index ranges are clear.
+The symbol, $\forall$, is read as "for all" and can be interpreted to mean "repeat this line substituting in a value for this subscript **for all** possible values of this subscript." In other words, given that *i* is used consistently for the three products, then $x_i \geq 0 \; \forall \; i$ is equivalent to $x_i \geq 0 \;,i=1,2,3$ or even $x_1 \geq 0, \; x_2 \geq 0, \; x_3 \geq 0$.
+The result is that the $\forall$ symbol can simplify the description of complex models when index ranges are clear.
 \vspace{12pt}
 
-Also, another good practice is to use a mnemonic to help suggest the meaning of data. That is why I chose "R" for Resource, "P" for Profit, and "A" for Available resources. 
+Also, another good practice is to use a mnemonic to help suggest the meaning of data.
+That is why I chose "R" for Resource, "P" for Profit, and "A" for Available resources.
 \vspace{12pt}
 
-Another helpful convention is to use capital letters for data and lower case letters for variables.  (Some people will swap this around and use capital letters for variables and lower case letters for data - it doesn't really matter as long as a model is consistent.)  
+Another helpful convention is to use capital letters for data and lower case letters for variables.
+(Some people will swap this around and use capital letters for variables and lower case letters for data - it doesn't really matter as long as a model is consistent.)\
 \vspace{12pt}
 
-More complex models often run out of letters that make sense.  A common approach in these models is to use a superscript. For example, perhaps labor cost for each worker, _w_, could have different values for both normal and overtime rates.  Rather than separate data terms for such closely related concepts, we might denote regular hourly labor cost for worker _w_ as $C^R_w$ and for overtime as $C^O_w$.  Again, it is very important to clearly define all the data and variables used in the model.  
+More complex models often run out of letters that make sense.
+A common approach in these models is to use a superscript.
+For example, perhaps labor cost for each worker, *w*, could have different values for both normal and overtime rates.
+Rather than separate data terms for such closely related concepts, we might denote regular hourly labor cost for worker *w* as $C^R_w$ and for overtime as $C^O_w$.
+Again, it is very important to clearly define all the data and variables used in the model.\
 \vspace{12pt}
 
 ## Building the Generalized Model in R
 
-This concise, algebraic representation can be easily scaled to any number of products and resources. Let's write this as the following.  I'll expand the names of data slightly for making the R code more readable but this is meant to be consistent with the above formulation.  
+This concise, algebraic representation can be easily scaled to any number of products and resources.
+Let's write this as the following.
+I'll expand the names of data slightly for making the R code more readable but this is meant to be consistent with the above formulation.\
 \vspace{12pt}
 
 ```{r, fig.margin=TRUE, echo=FALSE}
@@ -91,11 +124,12 @@ Profit <- matrix(c(20, 14, 3, 16),
               ncol=NProd,dimnames=c("Profit",ProdNames))
 grid.table(Profit)
 ```
+
 ```{marginfigure}
 **Table 3.1**: Profit per product
 ```
 
-We will define the number of products as four and five resource constraints. 
+We will define the number of products as four and five resource constraints.
 
 ```{r Product_Planning_4x5, max.width=30}
 NProd <- 4
@@ -114,15 +148,16 @@ Available <- matrix(c(1440, 1440, 2000, 1000, 9600),
               ncol=1,dimnames=c(ResNames,"Available"))
 ```
 
-
 ```{r Display_Resources, tidy=FALSE, echo = FALSE, results='asis',fig.margin=TRUE}
 grid.table(Resources)
 ```
+
 ```{marginfigure}
 **Table 3.2**: Resources Used by Each Product
 ```
 
-On the right side we can see the data. This should match the data that we hard coded into the R linear programming model in the previous chapter.  
+On the right side we can see the data.
+This should match the data that we hard coded into the R linear programming model in the previous chapter.
 
 ```{marginfigure}
 **cbind function**: This function joins tables in column-wise orientation by aligning the tables side by side.
@@ -130,46 +165,54 @@ On the right side we can see the data. This should match the data that we hard c
 **rbind function**: Same concept as cbind but in this case uses rows binding element to stack tables on top of each other.
 ```
 
-Similarly, we can display the resources used by each product and the amount of each resource available. See both tables on the right. Table 3.2 displays the resources used by each product and Table 3.3 the amount of resources available from each product.   
+Similarly, we can display the resources used by each product and the amount of each resource available.
+See both tables on the right.
+Table 3.2 displays the resources used by each product and Table 3.3 the amount of resources available from each product.
 
 ```{r Display_Available, tidy=FALSE, echo = FALSE, results='asis',fig.margin=TRUE}
 grid.table(Available)
 ```
+
 ```{marginfigure}
 **Table 3.3**: Amount of Each Resource Available
 ```
 
 \vspace{12pt}
-Now we need to define variables.  
+
+Now we need to define variables.
 
 ```{r Display_Resources_Available_Combined, fig.margin=TRUE}
 Combined <- cbind(Resources, Available) 
 grid.table(Combined)
 ```
+
 ```{marginfigure}
 **Table 3.4**: Resources Used by Each Product and Available
 ```
 
 \vspace{12pt}
-On the right table, we can see the resources used and available in a single table.  We have used the _cbind_ function to do a column binding of the data. In this way the representation is more visually intuitive. 
 
-To ensure that we know how to access the data, if we want to see how the amount of the first resource used by the second product, you can enter `Resources[1,2]` in R Studio's console which is then evaluated as `r Resources[1,2]`.  
+On the right table, we can see the resources used and available in a single table.
+We have used the *cbind* function to do a column binding of the data.
+In this way the representation is more visually intuitive.
+
+To ensure that we know how to access the data, if we want to see how the amount of the first resource used by the second product, you can enter `Resources[1,2]` in R Studio's console which is then evaluated as `r Resources[1,2]`.\^[Using inline code is a great feature of RMarkdown.
+In the text of your RMarkdown, anything enclosed by a pair of single tick marks will be shown as a code chunk.
+If it starts with the letter r, it will be passed instead to R for evaluation.
+This allows for discussing results in a reproducible manner.
+Rather than discussing the result giving a value of 47.1 in the text and a later rerun of the analysis has an updated table of results showing the result to be 47.2, by using inline code evaluation, it will always show the up to date result, in this case, 47.2.]\
 \vspace{12pt}
 
-```{marginfigure}
-Using inline code is a great part of RMarkdown.  In the text of your RMarkdown, anything enclosed by a pair of single tick marks will be shown as a code chunk.  If it starts with the letter r, it will be passed instead to R for evaluation. This allows for discussing reproducible results in a reproducible manner.  Rather than discussing the result giving a value of 47.1 in the text and a later rerun of the analysis has an updated table of results showing the result to be 47.2, by using inline code evaluation, it will always show the up to date result, in this case, 47.2
-```
-
-Now, let's begin building our optimization model.  
+Now, let's begin building our optimization model.\
 \vspace{12pt}
 
-First, we'll start by loading the packages that we are using.  
+First, we'll start by loading the packages that we are using.
 
 ```{marginfigure}
 **Notice** that the resources available are listed as a column (vertical) vector rather than a row (flat) vector.  This differentiation will be important later.
 ```
 
-``` {r warning=FALSE}
+```{r warning=FALSE}
 library (tufte) 
 library (magrittr, quietly = TRUE) 
 suppressPackageStartupMessages(
@@ -199,6 +242,7 @@ prodmodel <- MIPModel() %>%
 prodmodel
 ```
 
+```{=html}
 <!-- comment out for this section, which is not finish yet
 Let's walk through what is done line by line.
 
@@ -206,13 +250,15 @@ Let's walk through what is done line by line.
 `prodmodel <- MIPModel() %>%`
 ```
 -->
-
+```
 ## Examining the Results
 
-Displaying the object of `prodmodel` only shows a simple summary of the results of the analysis.  It indicates whether the model was solved to optimality (and it was!) and the objective function value (profit).  
+Displaying the object of `prodmodel` only shows a simple summary of the results of the analysis.
+It indicates whether the model was solved to optimality (and it was!) and the objective function value (profit).\
 \vspace{12pt}
 
-This is useful to know but we are really interested in how to generate this profit.  To do this, we need to extract the values of the variables.  
+This is useful to know but we are really interested in how to generate this profit.
+To do this, we need to extract the values of the variables.
 
 ```{r Display_Results, fig.margin=TRUE}
 results.products <- matrix (rep(-1.0,NProd), 
@@ -228,6 +274,7 @@ results.products <- matrix (results.products,
                             # Resizes and renames 
 grid.table(format(head(results.products),digits=4))
 ```
+
 ```{marginfigure}
 **Table 3.5**: Optimal Production Plan
 ```
@@ -235,15 +282,25 @@ grid.table(format(head(results.products),digits=4))
 The table on the right displays the optimal production plan.
 \vspace{12pt}
 
-Let's examine how the resources are consumed.  To do this, we can multiply the amount of each product by the amount of each resource used for that product. For the first product, this would be a term by term sum of each product resulting in ``r Resources[1,]%*%t(results.products)`` which is less than ``r Available[1]``. We can do this manually for each product. Another approach is to use the command, `Resources[1,]%*%t(results.products)`. This command will take the first row of the Resources matrix and multiplies it by the vector of results.  
+Let's examine how the resources are consumed.
+To do this, we can multiply the amount of each product by the amount of each resource used for that product.
+For the first product, this would be a term by term sum of each product resulting in `r Resources[1,]%*%t(results.products)` which is less than `r Available[1]`.
+We can do this manually for each product.
+Another approach is to use the command, `Resources[1,]%*%t(results.products)`.
+This command will take the first row of the Resources matrix and multiplies it by the vector of results.\
 \vspace{12pt}
 
 ```{marginfigure}
 Note how we used both an inline r expression and an inline executable r code chunk.  Inline code chunks can be inserted into text by using a single tick at the beginning and end of the chunk instead of the triple tick mark for regular code chunks.  Also, the inline r code chunk starts with the letter r to indicate that it is an r code code.  A common use for this might be to show the results of an earlier analysis.
 ```
+
 \vspace{12pt}
 
-One thing to note is that the first row of `Resources` is by definition a row vector and `result.products` is also a row vector.  What we want to do is do a row vector multiplied by a column vector.  In order to do this, we need to convert the row vector of results into a column vector.  This is done by doing a _transpose_ which changes the row to a column.  This is done often enough that the function is just a single letter, `t`.  
+One thing to note is that the first row of `Resources` is by definition a row vector and `result.products` is also a row vector.
+What we want to do is do a row vector multiplied by a column vector.
+In order to do this, we need to convert the row vector of results into a column vector.
+This is done by doing a *transpose* which changes the row to a column.
+This is done often enough that the function is just a single letter, `t`.\
 \vspace{12pt}
 
 We can go one further step now and multiply the matrix of resources by the column vector of production.
@@ -258,18 +315,24 @@ ResourceSlacks <- cbind (results.Resources,
 colnames(ResourceSlacks)<-c("Used", "Available", "Slack")      
 grid.table(format(head(ResourceSlacks),digits=4))
 ```
+
 ```{marginfigure}
 **Table 3.6**: Resources Used
 ```
 
-This section covered a lot of concepts including defining the data, setting names, using indices in _ompr_, building a generalized _ompr_ model, extracting decision variable values, and calculating constraint right hand sides.  If you find this a little uncomfortable, try doing some experimenting with the model. It may take some experimenting to get familiar and comfortable with this.  
+This section covered a lot of concepts including defining the data, setting names, using indices in *ompr*, building a generalized *ompr* model, extracting decision variable values, and calculating constraint right hand sides.
+If you find this a little uncomfortable, try doing some experimenting with the model.
+It may take some experimenting to get familiar and comfortable with this.
 
 ## Changing the Model
 
-Let's modify the above model.  We can do this by simply changing the data that we pass into the model.
+Let's modify the above model.
+We can do this by simply changing the data that we pass into the model.
 \vspace{12pt}
 
-Let's change the time required for painting a chair to 20.  Recall that this is the first product and the fourth resource.  This is how we can change the value.
+Let's change the time required for painting a chair to 20.
+Recall that this is the first product and the fourth resource.
+This is how we can change the value.
 
 ```{r Change_Data}
 Resources[4,1] <- 20  
@@ -299,7 +362,7 @@ prodmodel <- MIPModel() %>%
 prodmodel
 ```
 
-Note that the objective function has changed.  
+Note that the objective function has changed.
 
 ```{r Examine_Results_of_Changed_Model, fig.margin=TRUE}
 results.products <- matrix (rep(-1.0,NProd), 
@@ -317,18 +380,22 @@ results.products <- matrix (results.products,
    # Resizes and renames
 grid.table(results.products) 
 ```
+
 ```{marginfigure}
 **Table 3.7**: Revised Optimal Production Plan
 ```
+
 The table on the right displays the new Production plan and the optimal distribution of the resources.
 
 ```{marginfigure}
 **Note** that the production plan has significantly changed. At this point, we could discuss why this makes sense or not.  
 ```
-  
+
 ## Blending Problems
 
-Specific blend limitations arise in many situations.  In our example, we might say that Chairs can make up no more than 40% of the overall product plan.  In our original case, this would be expressed as the following.  
+Specific blend limitations arise in many situations.
+In our example, we might say that Chairs can make up no more than 40% of the overall product plan.
+In our original case, this would be expressed as the following.\
 \vspace{12pt}
 
 $$
@@ -341,7 +408,7 @@ $$
 
 \vspace{12pt}
 
-Let's rebuild our three variable production plan from Chapter 2. 
+Let's rebuild our three variable production plan from Chapter 2.
 
 ```{r Base3VarModel, echo=TRUE}
 Base3VarModel <- MIPModel() %>%
@@ -373,28 +440,26 @@ rownames(base_case_res) <- "Amount to Produce"
 grid.table(base_case_res)
 **Table 3.8**: Production Plan for Base Case
 ```
-The table on the right displays the optimal production plan for the original formulation without the limit on production of chairs. 
+
+The table on the right displays the optimal production plan for the original formulation without the limit on production of chairs.
 \vspace{12pt}
 
-Let's add the constraint that chairs can't make up more than 40% of the total production.  \vspace{12pt}
-
-Effectively, we are saying that $\frac{Chairs}{Chairs+Desks+Tables} \leq 0.40$
+Let's add the constraint that chairs can't make up more than 40% of the total production.
 \vspace{12pt}
+
+Effectively, we are saying that $\frac{Chairs}{Chairs+Desks+Tables} \leq 0.40$ \vspace{12pt}
 
 Alas, this is not a linear function so we need to clear the denominator.
 \vspace{12pt}
 
-$Chairs \leq 0.40  \cdot  (Chairs+Desks+Tables)$
-\vspace{12pt}
+$Chairs \leq 0.40 \cdot (Chairs+Desks+Tables)$ \vspace{12pt}
 
 We like to get all the variables on the left side so let's move them over.
 \vspace{12pt}
 
-$Chairs - 0.4 \cdot Chairs-0.4 \cdot Desks-0.4 \cdot Tables \leq 0$
-\vspace{12pt}
+$Chairs - 0.4 \cdot Chairs-0.4 \cdot Desks-0.4 \cdot Tables \leq 0$ \vspace{12pt}
 
-Let's simplify this a little, which gives us the following:
-\vspace{12pt}
+Let's simplify this a little, which gives us the following: \vspace{12pt}
 
 $0.6 \cdot Chairs-0.4 \cdot Desks-0.4 \cdot Tables \leq 0$
 
@@ -420,26 +485,32 @@ $$
   \end{split}
 $$
 ```
+
 ```{marginfigure}
 **Formula 3.4**: Three variable base case model with a blending constraint.  
 ```
+
 \vspace{12pt}
-We can simply add a constraint to an existing `ompr` model of our 3 variable base case.  
+
+We can simply add a constraint to an existing `ompr` model of our 3 variable base case.\
 \vspace{12pt}
+
 ```{r Blending}
 ModelBlending<- add_constraint(Base3VarModel,
                 0.6*Chairs -0.4*Desks - 0.4*Tables <= 0) 
 resBlending<- solve_model(ModelBlending, 
                           with_ROI(solver = "glpk"))
 ```
+
 ```{r Blending_Results}
 blendres<-cbind(get_solution (resBlending, Chairs),
                 get_solution (resBlending, Desks),
                 get_solution (resBlending, Tables))
 ```
+
 \vspace{12pt}
 
-Okay, now let's put both side by side in a table to show the results.  
+Okay, now let's put both side by side in a table to show the results.\
 \vspace{12pt}
 
 ```{r Compare_Blending_to_Base_Results, fig.margin=TRUE,fig.width=3}
@@ -449,6 +520,7 @@ comparative <- rbind(base_case_res,round(blendres, 2))
 colnames (comparative) <- c("Chairs","Desks","Tables")
 grid.table(comparative)
 ```
+
 ```{marginfigure}
 **Table 3.9**: Compare Baseline and Production Plan due to a Blending Constraint
 ```
@@ -460,7 +532,9 @@ As a summary, we can see on the table on the right a comparative between the bas
 
 \vspace{12pt}
 
-An allocation model divides resources and assigns them to competing activities. Typically it has a maximization objective with less than or equal to constraints. Note that our production planning problem from Chapter 2 is an allocation model.
+An allocation model divides resources and assigns them to competing activities.
+Typically it has a maximization objective with less than or equal to constraints.
+Note that our production planning problem from Chapter 2 is an allocation model.
 
 ```{marginfigure}
 $$
@@ -474,14 +548,18 @@ $$
   \end{split}
 $$
 ```
+
 ```{marginfigure}
 **Formula 3.5**: Allocation  
 ```
+
 See the Formula 3.5 on the right to understand the mathematical expression.
 
 ## Covering Models
 
-A covering model combines resources and coordinates activities. A classic covering application would be what mix of ingredients "covers" the requirements at the lowest possible cost. Typically it has a minimization objective function and greater than or equal to constraints.
+A covering model combines resources and coordinates activities.
+A classic covering application would be what mix of ingredients "covers" the requirements at the lowest possible cost.
+Typically it has a minimization objective function and greater than or equal to constraints.
 \vspace{12pt}
 
 ```{marginfigure}
@@ -494,17 +572,23 @@ $$
   \end{aligned}
   \end{split}
 $$
-```      
+```
+
 ```{marginfigure}
 **Formula 3.6**: Covering  
 ```
+
 See the Formula 3.5 on the right to understand the mathematical expression.
 \vspace{12pt}
 
-Consider the case of Trevor's Trail Mix Company.  Trevor creates a variety of custom trail mixes for health food fans.  He can use a variety of ingredients displayed in the table on the right.
+Consider the case of Trevor's Trail Mix Company.
+Trevor creates a variety of custom trail mixes for health food fans.
+He can use a variety of ingredients displayed in the table on the right.
+
 ```{marginfigure}
 
 ```
+
 \vspace{12pt}
 
 ```{marginfigure}
@@ -515,7 +599,8 @@ Consider the case of Trevor's Trail Mix Company.  Trevor creates a variety of cu
 | Protein  |  8  |  6  |  1 |   8 |  1440  |
 | Carbohyd.|  6  |  4  |  1 |  25 |  2000  |
 | Calories |  7  | 10  |  2 |  12 |  1000  |
-```  
+```
+
 ```{marginfigure}
 **Table 3.10**: Trevor Trail Mix Company ingredients  
 ```
@@ -545,6 +630,7 @@ CharMin <- matrix(c(1440, 1440, 2000, 1000),
 TTMix <-cbind(MixChar,CharMin)
 grid.table(TTMix)
 ```
+
 ```{marginfigure}
 **Table 3.11**: Data for Trevor Trail Mix Company  
 ```
@@ -553,7 +639,7 @@ grid.table(TTMix)
 **Hint**: You might need to add a total amount to make! Modify the numbers until it runs...
 ```
 
-Now let's build our model.  
+Now let's build our model.
 
 ```{r trailmix}
 trailmixmodel <- MIPModel() %>%
@@ -575,14 +661,24 @@ xvalue <- t(get_solution(results.trailmix, Vx[i])[,3])
 We'll leave it to the reader to clean up the output of results.
 \vspace{12pt}
 
-Another classic example of a covering problem is a staff scheduling problem.  In this case, a manager is trying to assign workers to cover the required demands throughout the day, week, or month.
+Another classic example of a covering problem is a staff scheduling problem.
+In this case, a manager is trying to assign workers to cover the required demands throughout the day, week, or month.
 
 ## Transportation Models
 
-A transportation model is typically for getting material from one place to another at the lowest possible costs. It has sets of source points or nodes as well as ending or destination nodes. The decision variables are the amount to send on each route.  Constraints are typically based on supply from the source nodes and capacity at the destination nodes. This naturally lends itself to potential network diagrams.  In this case, $x_{i,j}$ is the amount of product to ship from node i to node j.  The cost per unit to ship from node i to node j is $C_{i,j}$.  The supply available from each supply node is $S_i$ and the maximum demand that can be accommodate from each destination node is $D_j$.  
+A transportation model is typically for getting material from one place to another at the lowest possible costs.
+It has sets of source points or nodes as well as ending or destination nodes.
+The decision variables are the amount to send on each route.
+Constraints are typically based on supply from the source nodes and capacity at the destination nodes.
+This naturally lends itself to potential network diagrams.
+In this case, $x_{i,j}$ is the amount of product to ship from node i to node j.
+The cost per unit to ship from node i to node j is $C_{i,j}$.
+The supply available from each supply node is $S_i$ and the maximum demand that can be accommodate from each destination node is $D_j$.\
 \vspace{12pt}
 
-In this formulation we need to make sure that we don't ship out more than capacity from each supply node. Similarly, we need to ensure that we don't take in more than demand capacity at any destination.
+In this formulation we need to make sure that we don't ship out more than capacity from each supply node.
+Similarly, we need to ensure that we don't take in more than demand capacity at any destination.
+
 ```{marginfigure}
 $$
  \begin{split}
@@ -595,18 +691,28 @@ $$
   \end{split}
 $$
 ```
+
 ```{marginfigure}
 **Formula 3.7**: Base Case for Transportation model  
 ```
 
-If we simply run this model, as is, the minimum cost plan would be to just do nothing! The cost would be zero. In reality, even though we are focused on costs in this application, there is an implied revenue and therefore profit (we hope!) that we aren't directly modeling.  We are likely to instead be wanting to ship all of the product that we can at the lowest possible cost. More precisely, what we want to do is instead determine if the problem is supply limited or demand limited. This is a simple matter of comparing the net demand vs. the net supply and making sure that the lesser is satisfied completely.
+If we simply run this model, as is, the minimum cost plan would be to just do nothing!
+The cost would be zero.
+In reality, even though we are focused on costs in this application, there is an implied revenue and therefore profit (we hope!) that we aren't directly modeling.
+We are likely to instead be wanting to ship all of the product that we can at the lowest possible cost.
+More precisely, what we want to do is instead determine if the problem is supply limited or demand limited.
+This is a simple matter of comparing the net demand vs. the net supply and making sure that the lesser is satisfied completely.
 \vspace{12pt}
 
-|If...                           | Then Situation is: | Source Constraints            | Demand Constraints         |
-|--------------------------------:|:-----------------:|:-----------------------------:|:--------------------------:|
-|$\sum_{i} S_i < \sum_{j} D_j$  |Supply Constrained | $\sum_{j} x_{i,j} = S_i$        |$\sum_{i} x_{i,j} \leq D_j$ |
-|$\sum_{i} S_i > \sum_{j} D_j$  |Demand Constrained | $\sum_{j} x_{i,j} \leq S_i$     |$\sum_{i} x_{i,j} = D_j$    |
-|$\sum_{i} S_i = \sum_{j} D_j$  |Balanced           | $\sum_{j} x_{i,j} = S_i$        |$\sum_{i} x_{i,j} = D_j$    |
++-------------------------------+--------------------+-----------------------------+-----------------------------+
+| If...                         | Then Situation is: | Source Constraints          | Demand Constraints          |
++==============================:+:==================:+:===========================:+:===========================:+
+| $\sum_{i} S_i < \sum_{j} D_j$ | Supply Constrained | $\sum_{j} x_{i,j} = S_i$    | $\sum_{i} x_{i,j} \leq D_j$ |
++-------------------------------+--------------------+-----------------------------+-----------------------------+
+| $\sum_{i} S_i > \sum_{j} D_j$ | Demand Constrained | $\sum_{j} x_{i,j} \leq S_i$ | $\sum_{i} x_{i,j} = D_j$    |
++-------------------------------+--------------------+-----------------------------+-----------------------------+
+| $\sum_{i} S_i = \sum_{j} D_j$ | Balanced           | $\sum_{j} x_{i,j} = S_i$    | $\sum_{i} x_{i,j} = D_j$    |
++-------------------------------+--------------------+-----------------------------+-----------------------------+
 
 In the balanced situation, either source or demand constraints can be equalities.
 \vspace{12pt}
@@ -619,7 +725,10 @@ Similarly, if we try to use equality constraints for both the supply and demand 
 `add_variable(x[i, j], type = "continuous", i = 1:10, j = 1:10, lb=0)`
 ```
 
-Let's show how to set up a basic implementation of the tranportation problem in ompr.  This demonstrates the use of double subscripted variables. Note that I have not defined the data.  Also, it should be customized for a particular application of being demand or supply constrained but it will give a good running head start.
+Let's show how to set up a basic implementation of the tranportation problem in ompr.
+This demonstrates the use of double subscripted variables.
+Note that I have not defined the data.
+Also, it should be customized for a particular application of being demand or supply constrained but it will give a good running head start.
 \vspace{12pt}
 
 ```{r transportation, eval=FALSE}
@@ -652,12 +761,18 @@ A generalization of the transportation model is that of transhipment where some 
 
 ## Standard Form
 
-Any linear program in inequality constraints can be converted into what is referred to as standard form.  First, all strictly numerical terms are collected or moved to the right hand side and all variables are on the left hand side.
+Any linear program in inequality constraints can be converted into what is referred to as standard form.
+First, all strictly numerical terms are collected or moved to the right hand side and all variables are on the left hand side.
 
-It makes little difference as to whether the objective function is a _min_ or a _max_ function since a min objective function can be converted to a max objective function by multiplying everything a negative one.  The converse is also true.
+It makes little difference as to whether the objective function is a *min* or a *max* function since a min objective function can be converted to a max objective function by multiplying everything a negative one.
+The converse is also true.
 \vspace{12pt}
 
-Lastly is a step where all of the inequalities are replaced by strict equality relations.  The conversion of inequalities to equalities warrants a little further explanation.  This is done by introducing a new, non-negative "slack" variable for each inequality.  If the inequality is a $\leq$, then the slack variable can be thought of as filling the left hand side to make it equal to the right hand side so the slack variable is added to the left hand side.  If the inequality is $\geq$, then the slack variable is the amount that must be absorbed from the left hand side to make it equal the right hand side.  
+Lastly is a step where all of the inequalities are replaced by strict equality relations.
+The conversion of inequalities to equalities warrants a little further explanation.
+This is done by introducing a new, non-negative "slack" variable for each inequality.
+If the inequality is a $\leq$, then the slack variable can be thought of as filling the left hand side to make it equal to the right hand side so the slack variable is added to the left hand side.
+If the inequality is $\geq$, then the slack variable is the amount that must be absorbed from the left hand side to make it equal the right hand side.\
 \vspace{12pt}
 
 Let's demonstrate with a two variable example.
@@ -686,8 +801,11 @@ $$
                        & x,y, s_1, s_2 \geq 0  
   \end{aligned}
   \end{split}
-$$
-The standard form now consists of a system of equations, generally with far more variables (both regular and slack) than equations. The simplex algorithm makes use of the fact that a system of equations and unknowns can be solved efficiently.  The Simplex algorithm solves for as many variables (termed basic variables) as there are equations and sets the remaining variables to zero (non-basic variables).  It then systematically swaps a variable from the set of basic variables and non-basic variables until it can no longer find an improvement.  The actual algorithm for the Simplex algorithm is beyond the scope of what we will cover this in book.  
+$$ The standard form now consists of a system of equations, generally with far more variables (both regular and slack) than equations.
+The simplex algorithm makes use of the fact that a system of equations and unknowns can be solved efficiently.
+The Simplex algorithm solves for as many variables (termed basic variables) as there are equations and sets the remaining variables to zero (non-basic variables).
+It then systematically swaps a variable from the set of basic variables and non-basic variables until it can no longer find an improvement.
+The actual algorithm for the Simplex algorithm is beyond the scope of what we will cover this in book.\
 \vspace{12pt}
 
 Let's examine the solution to our example though.
@@ -723,12 +841,16 @@ rownames(base_case_res) <- "Optimal Values"
 pander(base_case_res, caption="Solution to Standard Form")
 ```
 
-Notice that we had three equations and four variables (both regular and slack variables.)  This meant that at every iteration of the simplex algorithm, it would set one variable equal to zero and solve for the other three variables because solving three equations with three unknowns is very easy.  This is consistent with our solution, where $s_1$ is zero and the other three variables all had values.
+Notice that we had three equations and four variables (both regular and slack variables.) This meant that at every iteration of the simplex algorithm, it would set one variable equal to zero and solve for the other three variables because solving three equations with three unknowns is very easy.
+This is consistent with our solution, where $s_1$ is zero and the other three variables all had values.
 \vspace{12pt}
 
 ## Vector and Matrix Forms of LPs
 
-One of the benefits of using an algebraic modeling approach for linear programming such as `ompr` is that it provides a direct mapping from the mathematical model of the application to the implementation.  The actual solver used such as `glpk,` `symphony,` or `gurobi` take the linear program in a different form though and `ompr` processes it into a form they can handle.  In general, the solver thinks of the problem in terms of a vector of coefficients for the objective function, _C_, a vector of right hand side constraint values, _B_, a matrix of data, _A_, and a vector of variables, _x_.  The result is that any linear program can be thought of in a form such as the following.
+One of the benefits of using an algebraic modeling approach for linear programming such as `ompr` is that it provides a direct mapping from the mathematical model of the application to the implementation.
+The actual solver used such as `glpk,` `symphony,` or `gurobi` take the linear program in a different form though and `ompr` processes it into a form they can handle.
+In general, the solver thinks of the problem in terms of a vector of coefficients for the objective function, *C*, a vector of right hand side constraint values, *B*, a matrix of data, *A*, and a vector of variables, *x*.
+The result is that any linear program can be thought of in a form such as the following.
 
 $$
  \begin{split}
@@ -740,14 +862,17 @@ $$
   \end{split}
 $$
 
-Let's demonstrate this by extracting data from a model, `Base3VarModel` that we have previously built in `ompr`.  Simply typing in the name of the unsolved model will give a summary of the model characteristics. This was a problem with three variable and five constraints.  
+Let's demonstrate this by extracting data from a model, `Base3VarModel` that we have previously built in `ompr`.
+Simply typing in the name of the unsolved model will give a summary of the model characteristics.
+This was a problem with three variable and five constraints.\
 \vspace{12pt}
 
 ```{r Display_3Var_Model}
 Base3VarModel
 ```
 
-When we build the model in `ompr`, it builds a representation of _A, B, C,_ and _x_.  Now, let's examine the the data structures inside the model.
+When we build the model in `ompr`, it builds a representation of *A, B, C,* and *x*.
+Now, let's examine the the data structures inside the model.
 
 ```{r Display_3Var_Objective_Function}
 objective_function(Base3VarModel)
@@ -762,42 +887,56 @@ Similarly, we can extract the constraint data.
 extract_constraints(Base3VarModel)
 ```
 
-Notice this gives us the _A_ matrix (aptly named `matrix` by `ompr`).  The set of right hand side values of the constraints (the _B_ vector) is named `rhs` by `ompr`.  Lastly, the equality or type of inequality constraint is stored in a vector named `sense`.
+Notice this gives us the *A* matrix (aptly named `matrix` by `ompr`).
+The set of right hand side values of the constraints (the *B* vector) is named `rhs` by `ompr`.
+Lastly, the equality or type of inequality constraint is stored in a vector named `sense`.
 \vspace{12pt}
 
-The benefit of `ompr` and algebraic modeling more generally is highlighted as models get more complex with multiple subscripted variables (especially double or triple subscripted variables), and lots of constraints. Creating the Operations Research analyst could be build the _A_ matrix on their own, keeping track of which row corresponds to a particular variable becomes very difficult. For an example of how this can be done, see the _DEA Using R_ book's chapter on a matrix implementation of DEA.
+The benefit of `ompr` and algebraic modeling more generally is highlighted as models get more complex with multiple subscripted variables (especially double or triple subscripted variables), and lots of constraints.
+Creating the Operations Research analyst could be build the *A* matrix on their own, keeping track of which row corresponds to a particular variable becomes very difficult.
+For an example of how this can be done, see the *DEA Using R* book's chapter on a matrix implementation of DEA.
 \vspace{12pt}
 
 ## Production and Inventory
 
-A common application is production planning and inventory management planning over time.  Let's assume a company has a manufacturing cost for product _p_ in time period _t_ of $C^M_{p,t}$.  The cost to carry a unit of product _p_ in inventory from period _t_ to _t+1_ is $C^I_{p,t}$.  Demand of $D_{p,t}$ must be met each period.  The maximum production in any period can vary and is denoted as $M_{p,t}$.  The beginning inventory for each product is $B_{p}$.  The goal of the manager is to find a production plan that minimizes cost.  
+A common application is production planning and inventory management planning over time.
+Let's assume a company has a manufacturing cost for product *p* in time period *t* of $C^M_{p,t}$.
+The cost to carry a unit of product *p* in inventory from period *t* to *t+1* is $C^I_{p,t}$.
+Demand of $D_{p,t}$ must be met each period.
+The maximum production in any period can vary and is denoted as $M_{p,t}$.
+The beginning inventory for each product is $B_{p}$.
+The goal of the manager is to find a production plan that minimizes cost.\
 \vspace{12pt}
 
-We can start by defining our decision variables.  We will need a set of decision variables for the amount to produce of each product _p_ in each period _t_.  Let's define that as $x_{p,t}$.  
+We can start by defining our decision variables.
+We will need a set of decision variables for the amount to produce of each product *p* in each period *t*.
+Let's define that as $x_{p,t}$.\
 \vspace{12pt}
 
-Similarly, we will define a variable for the inventory at the end of each period, $y_{p,t}$.  
+Similarly, we will define a variable for the inventory at the end of each period, $y_{p,t}$.\
 \vspace{12pt}
 
 The production cost is simply cost per product multiplied by the number of products produced or $\sum_{p} \sum_{t} C^M_{p,t} x_{p,t}$.
 \vspace{12pt}
 
-The inventory carrying cost follows the same structure, $\sum_{p} \sum_{t} ( C^I_{p,t} y_{p,t}$
+The inventory carrying cost follows the same structure, $\sum_{p} \sum_{t} ( C^I_{p,t} y_{p,t}$ \vspace{12pt}
+
+We can then combine them as $\sum_{p} \sum_{t} ( C^M_{p,t} x_{p,t} + C^I_{p,t} y_{p,t})$ \vspace{12pt}
+
+At this point, it is important to look at the relationship between inventory, production, and sales.
 \vspace{12pt}
 
-We can then combine them as $\sum_{p} \sum_{t} ( C^M_{p,t} x_{p,t} + C^I_{p,t} y_{p,t})$
+Sometimes care must be taken for the "boundary conditions" of the first or last time period.
+In our case, we have a value defined the beginning inventory of $B_p$.
+For product 1, we would have $B_1 + x_{1,1} - D_{1,1} = y_{1,1}$.
+For product 2, it would be $B_2 + x_{2,1} - D_{2,1} = y_{2,1}$ and so on for other products.
+We would generalize this then as $B_p + x_{p,1} - D_{p,1} = y_{p,1}$.
 \vspace{12pt}
 
-At this point, it is important to look at the relationship between inventory, production, and sales. 
-\vspace{12pt}
+For periods after the first $(t>1)$) Essentially the ending inventory is equal to the beginning inventory plus the inflow (production) minus the outflow (demand).
+For product *p* in time period *t*, this then becomes $y_{p,t-1} + x_{p,t} - D_{p,t} = y_{p,t}$ \vspace{12pt}
 
-Sometimes care must be taken for the "boundary conditions" of the first or last time period.  In our case, we have a value defined the beginning inventory of $B_p$.  For product 1, we would have $B_1 + x_{1,1} - D_{1,1} = y_{1,1}$.  For product 2, it would be $B_2 + x_{2,1} - D_{2,1} = y_{2,1}$ and so on for other products.  We would generalize this then as $B_p + x_{p,1} - D_{p,1} = y_{p,1}$.
-\vspace{12pt}
-
-For periods after the first $(t>1)$) Essentially the ending inventory is equal to the beginning inventory plus the inflow (production) minus the outflow (demand).  For product _p_ in time period _t_, this then becomes $y_{p,t-1} + x_{p,t} - D_{p,t} = y_{p,t}$
-\vspace{12pt}
-
-Of course we would need to ensure appropriate upper and lower bounds on the decision variables.  
+Of course we would need to ensure appropriate upper and lower bounds on the decision variables.\
 \vspace{12pt}
 
 Let's wrap it all together in the follow formulation.
@@ -814,11 +953,13 @@ $$
   \end{split}
 $$
 
-This model illustrates the basic dynamics of relating production, inventory, and demand. Each application often requires tailoring to address specific needs.  For example:
+This model illustrates the basic dynamics of relating production, inventory, and demand.
+Each application often requires tailoring to address specific needs.
+For example:
 
-* Some companies require safety stocks levels to maintained which could be done by setting minimum inventory levels
-* Sometimes all the demand cannot be met in a period - this can be modeled by separating sales from demand with a separate variable for sales in each period.
-* Allowing backlogged demand that can be met in the following period - again modeled with an additional variable.  
+-   Some companies require safety stocks levels to maintained which could be done by setting minimum inventory levels
+-   Sometimes all the demand cannot be met in a period - this can be modeled by separating sales from demand with a separate variable for sales in each period.
+-   Allowing backlogged demand that can be met in the following period - again modeled with an additional variable.
 
 \vspace{12pt}
 
@@ -826,7 +967,15 @@ This model illustrates the basic dynamics of relating production, inventory, and
 
 ```{exercise, name="Transportation"}
 ```
-Four manufacturing plants are supplying material for distributors in four regions.  The four supply plants are located in Chicago, Beaverton, Eugene, and Dallas.  The four distributors are in PDX (Portland), SEA (Seattle), MSP (Minneapolis), and ATL (Atlanta).  Each manufacturing plant has a maximum amount that they can produce.  For example, Chicago can produce at most 500.  Similarly, the PDX region can handle at most 700 units.  The cost to transport from Dallas to MSP is three times as high as the cost from Dallas to Atlanta. The table on the right displays the transportation cost between all the cities.
+
+Four manufacturing plants are supplying material for distributors in four regions.
+The four supply plants are located in Chicago, Beaverton, Eugene, and Dallas.
+The four distributors are in PDX (Portland), SEA (Seattle), MSP (Minneapolis), and ATL (Atlanta).
+Each manufacturing plant has a maximum amount that they can produce.
+For example, Chicago can produce at most 500.
+Similarly, the PDX region can handle at most 700 units.
+The cost to transport from Dallas to MSP is three times as high as the cost from Dallas to Atlanta.
+The table on the right displays the transportation cost between all the cities.
 \vspace{12pt}
 
 ```{marginfigure}
@@ -838,33 +987,40 @@ Four manufacturing plants are supplying material for distributors in four region
 |  Dallas     |  16  |  26  |  15  |  5   | **600**  |
 |**Capacity** | **700**| **500**| **500**| **600**|          |
 
-```  
+```
+
 ```{marginfigure}
 
 **Table 3.12**: Transportation cost between cities  
 ```
 
-Formulate an explicit model for the above application that solves this transportation problem to find the lowest cost way of transporting as much as product as we can to distributors.  Hint:  You might choose to define variables based on the first letter of source and destination so *XCP* is the amount to ship from Chicago to PDX.  
+Formulate an explicit model for the above application that solves this transportation problem to find the lowest cost way of transporting as much as product as we can to distributors.
+Hint: You might choose to define variables based on the first letter of source and destination so *XCP* is the amount to ship from Chicago to PDX.\
 \vspace{12pt}
 
-Implement and solve the model using ompr.  Be sure to interpret and discuss the solution as to why it makes it sense. \vspace{12pt}
+Implement and solve the model using ompr.
+Be sure to interpret and discuss the solution as to why it makes it sense.
+\vspace{12pt}
 
 ```{exercise, name="Generalized Transportation Model"}
 ```
-Formulate a generalized model for the above application that solves this transportation problem to find the lowest cost way of transporting as much product as we can to distributors. 
+
+Formulate a generalized model for the above application that solves this transportation problem to find the lowest cost way of transporting as much product as we can to distributors.
 \vspace{12pt}
 
 ```{marginfigure}
 **Hint**: Feel free to use my LaTeX formulation for the general transportation model and make change(s) to reflect your case.
 ```
 
-Implement and solve the model using ompr.  Be sure to discuss the solution as to why it makes sense.
+Implement and solve the model using ompr.
+Be sure to discuss the solution as to why it makes sense.
 \vspace{12pt}
 
 ```{exercise, name="Convert LP to Standard Form"}
 ```
 
 Convert the three variable LP represented in Table 3.13 into standard form.
+
 ```{marginfigure}
 $$
  \begin{split}
@@ -882,21 +1038,27 @@ $$
   \end{split}
 $$
 ```
+
 ```{marginfigure}
 **Table 3.13**: Base LP Model 
 ```
+
 \vspace{12pt}
 
 ```{exercise, name="Convert LP to Standard Form"}
 ```
-Implement and solve the standard form of the LP using R.  Be sure to interpret the solution and discuss how it compares to the solution from the original model. 
+
+Implement and solve the standard form of the LP using R.
+Be sure to interpret the solution and discuss how it compares to the solution from the original model.
 
 \vspace{12pt}
+
 ```{exercise, name="Convert Generalized LP to Standard Form"}
 ```
 
-Convert the generalized production planning LP, displayed on the right in formula 3.7, into standard form.  
-Hint: define a set of variables, $s_j$ to reflect these changes and add it to the following formulation.   
+Convert the generalized production planning LP, displayed on the right in formula 3.7, into standard form.\
+Hint: define a set of variables, $s_j$ to reflect these changes and add it to the following formulation.
+
 ```{marginfigure}
 $$
  \begin{split}
@@ -908,15 +1070,19 @@ $$
   \end{split}
 $$
 ```
+
 ```{marginfigure}
 **Formula 3.7**: Generalized LP case
 ```
 
 \vspace{12pt}
+
 ```{exercise, name="Staff Scheduling"}
 ```
 
-Happy Patient Hospital (HPH), has varying needs for nurses throughout the day.  They expect the following numbers of nurses to be needed over the typical 24 hour period.  Nurses work eight hour shifts, starting at each 4 hour time period specified in the table.  
+Happy Patient Hospital (HPH), has varying needs for nurses throughout the day.
+They expect the following numbers of nurses to be needed over the typical 24 hour period.
+Nurses work eight hour shifts, starting at each 4 hour time period specified in the table.
 
 ```{r, nurse_scheduling, fig.margin=TRUE}
 hph_needs <- matrix (c(50, 140, 260, 140, 100, 80), ncol=1, 
@@ -930,6 +1096,7 @@ hph_needs <- matrix (c(50, 140, 260, 140, 100, 80), ncol=1,
 grid.table (hph_needs)
 ```
 
-Create an appropriate optimization model to minimize the number of nurses needed to cover the requirements.  
+Create an appropriate optimization model to minimize the number of nurses needed to cover the requirements.
 
-Implement and solve the model in R.  Discuss and explain your solution.  
+Implement and solve the model in R.
+Discuss and explain your solution.

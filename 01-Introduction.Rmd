@@ -173,7 +173,7 @@ Notice the hash symbol is used to mark comment in the above code chunk. It is al
 **pander**: Provides a number of user-level functions to work with tables.
 ```
 
-Now, we have several options to draw a table. We could use the `kable` , `grid.table`, `huxtable`, `dt`, or many others but for now we'll use one of the simplest, `pander` .
+Now, we have several options to draw a table. We could use the `kable` , `grid.table`, `huxtable`, `dt`, or many others but for now we'll use one of the simplest and most common table packages, `pander` .\^[The `tufte` package in R does not deal well with complicated material in the margin. Yihui Xie, the author of `Bookdown` and many packages recommends avoiding using things such as bulleted lists in marginfigures. The only way that I have found to place tables in marginfigures reliably is `grid.table` in the `gridExtra` package.]
 
 ```{r Using_pander, fig.margin=TRUE}
 pander(b)
