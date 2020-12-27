@@ -28,11 +28,11 @@ Each robot requires time in machining, assembly, and testing and sensors. For ex
 ```{marginfigure}
 | Characteristic | Ants  | Bats   |  Available | 
 |---------------:|:-----:|:------:|:----------:|
-|  Profit        |  $7   | $10    |            |
-|  Machining     |  1    |   3    |   1000     |
-|  Assembly      |  3    |   4    |   1000     |
-|  Testing       |  2    |   3    |   720      |
-|  Sensors       |  3    |   5    |   1200     |
+|  Profit        |  $7   | $12    |            |
+|  Machining     |  1    |   4    |   800      |
+|  Assembly      |  3    |   6    |   900      |
+|  Testing       |  2    |   2    |   480      |
+|  Sensors       |  3    |  10    |   1200     |
 ```
 
 ```{marginfigure}
@@ -83,12 +83,12 @@ Our objective function and constraints can now be written as the optimization mo
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max  }   & 7\cdot Ants +10 \cdot Bats \\
+    \text{Max  }   & 7\cdot Ants +12 \cdot Bats \\
     \text{s.t.:} & \\
-& 1\cdot Ants + 3 \cdot Bats \leq 1000 \\
-& 3\cdot Ants + 4 \cdot Bats \leq 1000 \\
-& 2\cdot Ants + 3 \cdot Bats \leq 720 \\
-& 3\cdot Ants + 5 \cdot Bats \leq 1200 \\
+& 1\cdot Ants + 4 \cdot Bats \leq 800 \\
+& 3\cdot Ants + 6 \cdot Bats \leq 900 \\
+& 2\cdot Ants + 2 \cdot Bats \leq 480 \\
+& 3\cdot Ants + 10 \cdot Bats \leq 1200 \\
 & Ants, Bats \geq 0  
   \end{aligned}
   \end{split}
@@ -176,20 +176,20 @@ model0b
 Next, we can add the objective function. We set the objective function as well declaring it to be a *max* rather than a *min* function.
 
 ```{r base_case_no_pipes_step_3}
-model0c<-set_objective(model0b,7*Ants+10*Bats,"max")
+model0c<-set_objective(model0b,7*Ants+12*Bats,"max")
 ```
 
 Now we move on to adding constraints. \vspace{12pt}
 
 ```{r base_case_no_pipes_step_4}
 
-model0d<-add_constraint(model0c,1*Ants+4*Bats<= 1000) 
+model0d<-add_constraint(model0c,1*Ants+4*Bats<= 800) 
   #machining
 model0e<-add_constraint(model0d,3*Ants+6*Bats<= 900)  
   #assembly
-model0f<-add_constraint(model0e,3*Ants+3*Bats<= 720)  
+model0f<-add_constraint(model0e,2*Ants+2*Bats<= 480)  
   #testing
-model0g<-add_constraint(model0f,3*Ants+6*Bats<=1200) 
+model0g<-add_constraint(model0f,3*Ants+12*Bats<=1200) 
   #sensors
 
 ```
@@ -219,13 +219,13 @@ model0 <- add_variable(model0, Ants,
 model0 <- add_variable(model0, Bats, 
                        type = "continuous",lb = 0)
 model0<- set_objective(model0, 7*Ants + 12*Bats, "max")
-model0<- add_constraint(model0, 1*Ants + 4*Bats <= 1000) 
+model0<- add_constraint(model0, 1*Ants + 4*Bats <= 800) 
 #machining
 model0 <- add_constraint(model0, 3*Ants + 6*Bats <= 900) 
 #assembly
 model0<- add_constraint(model0, 2*Ants + 2*Bats <= 480) 
 #testing
-model0<- add_constraint(model0, 3*Ants + 9*Bats <= 1200) 
+model0<- add_constraint(model0, 3*Ants + 10*Bats <= 1200) 
 #sensors
 result0 <- solve_model(model0, with_ROI(solver = "glpk"))
 
@@ -297,12 +297,12 @@ result0 <- MIPModel() %>%
   add_variable(Ants, type = "continuous", lb = 0) %>%
   add_variable(Bats, type = "continuous",lb = 0) %>%
  
-  set_objective(7*Ants + 10*Bats, "max") %>%
+  set_objective(7*Ants + 12*Bats, "max") %>%
   
-  add_constraint(1*Ants + 3*Bats<= 1000) %>% #machining
-  add_constraint(3*Ants + 4*Bats<= 1000) %>% #assembly
-  add_constraint(2*Ants + 3*Bats<= 720)  %>% #testing
-  add_constraint(3*Ants + 5*Bats<= 1200) %>% #sensors
+  add_constraint(1*Ants + 4*Bats<= 800) %>% #machining
+  add_constraint(3*Ants + 6*Bats<= 900) %>% #assembly
+  add_constraint(2*Ants + 2*Bats<= 480)  %>% #testing
+  add_constraint(3*Ants + 10*Bats<= 1200) %>% #sensors
   solve_model(with_ROI(solver = "glpk"))
   
 ```
@@ -351,11 +351,11 @@ We will now extend the previous model to account for a third product, the Cat ro
 ```{marginfigure}
 | | Ant| Bat | Cat |Available| 
 |-------------:|:-----:|:----:|:------:|:-------:|
-|  Profit      |  $7   | $10  |  $8    |         |
-|  Machining   |   1   |   3  |    2   |  1000  |
-|  Assembly    |   3   |   4  |    2   |  1000  |
-|  Testing     |   2   |   3  |    4   |   720  |
-|  Sensors     |   3   |   5  |    2   |  1200  |
+|  Profit      |  $7   | $12  |  $8    |       |
+|  Machining   |   1   |   4  |    2   |  800  |
+|  Assembly    |   3   |   6  |    2   |  900  |
+|  Testing     |   2   |   2  |    4   |  480  |
+|  Sensors     |   3   |  10  |    2   | 1200  |
 ```
 
 ```{marginfigure}
@@ -378,12 +378,12 @@ Our objective function and constraints can now be written as the optimization mo
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max  }   & 7\cdot Ants +10 \cdot Bats +8\cdot Cats \\
+    \text{Max  }   & 7\cdot Ants +12 \cdot Bats +8\cdot Cats \\
     \text{s.t.:} & \\
-& 1\cdot Ants + 3\cdot Bats +2\cdot Cats \leq 1000 \\
-& 3\cdot Ants + 4\cdot Bats +2\cdot Cats \leq 1000 \\
-& 2\cdot Ants + 3\cdot Bats +4\cdot Cats \leq 720 \\
-& 3\cdot Ants + 5\cdot Bats +2\cdot Cats \leq 1200 \\
+& 1\cdot Ants + 1\cdot Bats +2\cdot Cats \leq 800 \\
+& 3\cdot Ants + 3\cdot Bats +2\cdot Cats \leq 900 \\
+& 2\cdot Ants + 2\cdot Bats +4\cdot Cats \leq 480 \\
+& 3\cdot Ants + 3\cdot Bats +2\cdot Cats \leq 1200 \\
 & Ants, Bats, Cats \geq 0  
   \end{aligned}
   \end{split}
@@ -410,13 +410,13 @@ model1 <- MIPModel() %>%
   
   set_objective(7*Ants + 10*Bats + 8*Cats,"max")%>%
   
-  add_constraint(1*Ants + 3*Bats + 2*Cats<=1000)%>% 
+  add_constraint(1*Ants + 4*Bats + 2*Cats<=1000)%>% 
   #machining
-  add_constraint(3*Ants + 4*Bats + 2*Cats<=1000)%>% 
+  add_constraint(3*Ants + 6*Bats + 2*Cats<=1000)%>% 
   #assembly
-  add_constraint(2*Ants + 3*Bats + 4*Cats<=720)%>% 
+  add_constraint(2*Ants + 2*Bats + 4*Cats<=720)%>% 
   #testing
-  add_constraint(3*Ants + 5*Bats + 2*Cats<=1200)%>% 
+  add_constraint(3*Ants + 10*Bats + 2*Cats<=1200)%>% 
   #sensors
   add_constraint(Cats <= 200)
   
@@ -549,13 +549,13 @@ model2a <- MIPModel() %>%
   
   set_objective(7*Ants + 2*Bats + 14*Cats,"max")%>%
   
-  add_constraint(1*Ants + 3*Bats + 2*Cats<=1000)%>% 
+  add_constraint(1*Ants + 4*Bats + 2*Cats<=800)%>% 
   #machining
-  add_constraint(3*Ants + 4*Bats + 6*Cats<=1000)%>% 
+  add_constraint(3*Ants + 6*Bats + 6*Cats<=900)%>% 
   #assembly
-  add_constraint(2*Ants + 3*Bats + 4*Cats<=720)%>% 
+  add_constraint(2*Ants + 2*Bats + 4*Cats<=480)%>% 
   #testing
-  add_constraint(3*Ants + 5*Bats + 6*Cats<=1200)
+  add_constraint(3*Ants + 10*Bats + 6*Cats<=1200)
   #sensors
 
 result2a <-  solve_model(model2a, with_ROI(solver="glpk"))
@@ -569,7 +569,7 @@ result2a <-  solve_model(model2a, with_ROI(solver="glpk"))
 #    is run.
 # It is hidden since it may be confusing for the reader.
 result2a <- model2a %>% 
-  add_constraint( Ants==360) %>%
+  add_constraint( Ants==240) %>%
   solve_model(with_ROI(solver="glpk"))
 ```
 
@@ -660,12 +660,12 @@ For the redundant constraint, a new constraint for painting is created. Let's as
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max  }   & Profit=6\cdot Ants +10 \cdot Bats +4\cdot Cats \\
+    \text{Max  }   & Profit=7\cdot Ants +12 \cdot Bats +4\cdot Cats \\
     \text{s.t.:} & \\
-& 1\cdot Ants + 3 \cdot Bats  +2\cdot Cats \leq 1000 \\
-& 3\cdot Ants + 4 \cdot Bats  +2\cdot Cats \leq 1000 \\
-& 2\cdot Ants + 3 \cdot Bats  +4\cdot Cats \leq 720 \\
-& 3\cdot Ants + 5 \cdot Bats  +2\cdot Cats \leq 1200 \\
+& 1\cdot Ants + 4 \cdot Bats  +2\cdot Cats \leq 1000 \\
+& 3\cdot Ants + 6 \cdot Bats  +2\cdot Cats \leq 1000 \\
+& 2\cdot Ants + 2 \cdot Bats  +4\cdot Cats \leq 720 \\
+& 3\cdot Ants + 10 \cdot Bats  +2\cdot Cats \leq 1200 \\
 &  Ants +  Bats  + Cats \leq 500 \\
  \end{aligned}
  \end{split}
@@ -756,15 +756,15 @@ result4 <- MIPModel() %>%
  add_variable(Bats, type = "continuous", lb = 0) %>%
  add_variable(Cats, type = "continuous", lb = 0) %>%
   
- set_objective(7*Ants + 10*Bats + 8*Cats,"max")%>%
+ set_objective(7*Ants + 12*Bats + 8*Cats,"max")%>%
   
- add_constraint(1*Ants + 3*Bats + 1*Cats>= 1000) %>%
+ add_constraint(1*Ants + 4*Bats + 1*Cats>= 800) %>%
     #machining
- add_constraint(3*Ants + 4*Bats + 1*Cats>= 1000) %>% 
+ add_constraint(3*Ants + 6*Bats + 1*Cats>= 900) %>% 
     #assembly
- add_constraint(2*Ants + 3*Bats + 2*Cats>= 720) %>%
+ add_constraint(2*Ants + 2*Bats + 2*Cats>= 480) %>%
     #testing
- add_constraint(3*Ants + 5*Bats + 2*Cats>= 1200)%>% 
+ add_constraint(3*Ants + 10*Bats + 2*Cats>= 1200)%>% 
     #sensors
   
  add_constraint(Cats >= 200) %>% 
