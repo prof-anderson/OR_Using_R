@@ -183,13 +183,13 @@ Now we move on to adding constraints. \vspace{12pt}
 
 ```{r base_case_no_pipes_step_4}
 
-model0d<-add_constraint(model0c,1*Ants+3*Bats<= 1000) 
+model0d<-add_constraint(model0c,1*Ants+4*Bats<= 1000) 
   #machining
-model0e<-add_constraint(model0d,3*Ants+4*Bats<= 1000)  
+model0e<-add_constraint(model0d,3*Ants+6*Bats<= 900)  
   #assembly
-model0f<-add_constraint(model0e,2*Ants+3*Bats<= 720)  
+model0f<-add_constraint(model0e,3*Ants+3*Bats<= 720)  
   #testing
-model0g<-add_constraint(model0f,3*Ants+5*Bats<=1200) 
+model0g<-add_constraint(model0f,3*Ants+6*Bats<=1200) 
   #sensors
 
 ```
@@ -218,21 +218,23 @@ model0 <- add_variable(model0, Ants,
                        type = "continuous", lb = 0) 
 model0 <- add_variable(model0, Bats, 
                        type = "continuous",lb = 0)
-model0<- set_objective(model0, 7*Ants + 14*Bats, "max")
-model0<- add_constraint(model0, 1*Ants + 3*Bats <= 1000) 
+model0<- set_objective(model0, 7*Ants + 12*Bats, "max")
+model0<- add_constraint(model0, 1*Ants + 4*Bats <= 1000) 
 #machining
-model0 <- add_constraint(model0, 3*Ants + 4*Bats <= 1000) 
+model0 <- add_constraint(model0, 3*Ants + 6*Bats <= 900) 
 #assembly
-model0<- add_constraint(model0, 2*Ants + 3*Bats <= 720) 
+model0<- add_constraint(model0, 2*Ants + 2*Bats <= 480) 
 #testing
-model0<- add_constraint(model0, 3*Ants + 5*Bats <= 1200) 
+model0<- add_constraint(model0, 3*Ants + 9*Bats <= 1200) 
 #sensors
 result0 <- solve_model(model0, with_ROI(solver = "glpk"))
+
+result0$solution
 ```
 
 In this case, we take the previous command's output, `model0`, add an element to it, and then store it back in the same object, `model0`. We keep doing it for each element until we are done. \vspace{12pt}
 
-This is equivalent to assigning the value of *2* to *a*. We then multiple *a* by *3* and assign the result again to *a*. \vspace{12pt}
+This is equivalent to assigning the value of *2* to *a*. We then multiply *a* by *3* and assign the result again to *a*. \vspace{12pt}
 
 ```{r basic_assignment}
 a <- 2
@@ -515,23 +517,18 @@ Notice that since the solver status was infeasible, the values for the decision 
 
 When a linear program is solved to optimality, it is an assurance that there is no better solution that can be found in terms of an objective function value.  It is not a guarantee of being the only way of finding that good of a solution though.  The case of different decision variable values resulting in the same, optimal objective function value is referred to as multiple optimal solutions.  
 
-There are a couple of ways of creating situations for multiple optima. One situation is to have a decision variable be identical or a linear multiple of another variable. In this case, each Cat now consumes exactly half of the resources as an Ant and generates half the profit of an Ant. \vspace{12pt}
-
-To clarify the objective function value, I will define a variable for Profit. Add a constraint to set the value of profit to what had been the objective function, and now simply maximize profit. This will allow me to find the objective function value by using the `get_solution` for the variable profit. \vspace{12pt}
-
-The new LP is shown in the formulation on the right.
+There are a couple of ways of creating situations for multiple optima. One situation is to have a decision variable be identical or a linear multiple of another variable. In this case, each Cat now consumes exactly double the resources as an Ant and generates double the profit of an Ant.  Also, we will assume the profit per Bat drops to just 2.  \vspace{12pt}  The new LP is shown in the formulation on the right.
 
 ```{marginfigure}
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max  }   & Profit=6\cdot Ants +10 \cdot Bats +4\cdot Cats \\
+    \text{Max  }   & Profit=4\cdot Ants +2 \cdot Bats +8\cdot Cats \\
     \text{s.t.:} & \\
 & 1\cdot Ants + 3 \cdot Bats  +2\cdot Cats \leq 1000 \\
-& 3\cdot Ants + 4 \cdot Bats  +2\cdot Cats \leq 1000 \\
+& 3\cdot Ants + 4 \cdot Bats  +6\cdot Cats \leq 1000 \\
 & 2\cdot Ants + 3 \cdot Bats  +4\cdot Cats \leq 720 \\
-& 3\cdot Ants + 5 \cdot Bats  +2\cdot Cats \leq 1200 \\
-& Cats \leq 200 \\
+& 3\cdot Ants + 5 \cdot Bats  +6\cdot Cats \leq 1200 \\
 & Ants, Bats, Cats \geq 0  
 \end{aligned}
 \end{split}
@@ -550,19 +547,32 @@ model2a <- MIPModel() %>%
   add_variable(Bats, type = "continuous",lb = 0) %>%
   add_variable(Cats, type = "continuous", lb = 0, ub = 200) %>%
   
-  set_objective(6*Ants + 10*Bats + 4*Cats,"max")%>%
+  set_objective(7*Ants + 2*Bats + 14*Cats,"max")%>%
   
   add_constraint(1*Ants + 3*Bats + 2*Cats<=1000)%>% 
   #machining
-  add_constraint(3*Ants + 4*Bats + 2*Cats<=1000)%>% 
+  add_constraint(3*Ants + 4*Bats + 6*Cats<=1000)%>% 
   #assembly
   add_constraint(2*Ants + 3*Bats + 4*Cats<=720)%>% 
   #testing
-  add_constraint(3*Ants + 5*Bats + 2*Cats<=1200)
+  add_constraint(3*Ants + 5*Bats + 6*Cats<=1200)
   #sensors
 
 result2a <-  solve_model(model2a, with_ROI(solver="glpk"))
+
 ```
+
+```{r Forcing_Mult_Optima_to_Make_Only_Ants, echo=FALSE, include=FALSE}
+# This is being done to force a particular solution in the
+#    case of multiple optima since a solver might arrive
+#    at different multiple optimal solutions each time it
+#    is run.
+# It is hidden since it may be confusing for the reader.
+result2a <- model2a %>% 
+  add_constraint( Ants==360) %>%
+  solve_model(with_ROI(solver="glpk"))
+```
+
 
 ```{r Show_First_Solution_from_Multiple_Optima}
 print(solver_status(result2a))
@@ -585,7 +595,7 @@ grid.table(res2a)
 Okay. When I ran it, all the production was focused on Ants I think that there is an alternate solution producing Bats with the same total profit. The LP engine won't necessarily tell you that there is an alternate optimal solution. Let's see if we can "trick" the LP to show an alternate solution by preventing the use of any bat by adding a constraint, $Ants=0$ to `model2a` and naming this `model2b` and the solved object or solution as `result2b`.
 
 ```{r Show_Second_Solution_from_Multiple_Optima,  fig.margin = T}
-model2b <- add_constraint(model2a, Ants <= 0) 
+model2b <- add_constraint(model2a, Ants == 0) 
             # FORCING LP TO FIND A DIFFERENT SOLUTION
 result2b <- solve_model(model2b, with_ROI(solver = "glpk"))
 print(solver_status(result2b))
@@ -604,14 +614,14 @@ grid.table(res2b)
 
 Again, only one product is made but now it is Ants instead of Bats with exactly the same level of profit. This is an instance of multiple optima. \vspace{12pt}
 
-Let's try one more situation by adding instead forcing the number of Bats to be 60 and solving.
+Let's try one more situation by adding instead forcing the number of Bats to be 120 and solving.
 
-```{r Find_a_Third_Solution_from_Multiple_Optima,  fig.margin = T}
-model2c <- add_constraint(model2a, Bats == 60) 
+```{r Find_a_Third_Solution_from_Multiple_Optima,  fig.margin = TRUE}
+model2c <- add_constraint(model2a, Ants == 60) 
             # FORCING LP TO FIND A DIFFERENT SOLUTION
 result2c <- solve_model(model2c, with_ROI(solver = "glpk"))
 print(solver_status(result2c))
-res2c <- cbind(objective_value(result2b),
+res2c <- cbind(objective_value(result2c),
                get_solution(result2c, Ants),
                get_solution(result2c, Bats),
                get_solution(result2c, Cats))
@@ -621,8 +631,12 @@ rownames(res2c)<-list("Solution 2c")
 
 Let's summarize these results more clearly by displaying them in a single table.
 
+```{r Combine_Multiple_Optima_Results, echo=FALSE, include=FALSE}
+res2z <- rbind(res2a, res2b, res2c)
+```
+
+
 ```{r Summarize_Results_of_Multiple_Optima, fig.margin =T}
-res2z <- rbind(res2a,res2b,res2c)
 grid.table(res2z)
 ```
 
@@ -1180,6 +1194,7 @@ RMarkdown is very helpful for integrating analysis and results but the code can 
 -   Putting two blank spaces at the end of a paragraphy will give a little more spacing between paragraphs.\
 -   Sometimes running all chunks will make more visible where a problem is than when an RMD is knitted.
 -   Look over the generated PDF for issues like misrendered section headings or bullet lists.
+-   In a bookdown project with multiple RMDs such as this book, it is much quicker to render just a chapter.  This can be done by doing a command like this: `library(rmarkdown); rmarkdown::render("02-A_First_LP.Rmd", "tufte_book2")`
 
 ## RStudio Tips and Tricks
 
