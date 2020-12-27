@@ -56,7 +56,7 @@ $$
 
 \vspace{12pt}
 
-Similarly, *j=1* represents fabrication, *j=2*, represents assembly, etc.
+Similarly, *j=1* represents machining, *j=2*, represents assembly, etc.
 Now, let's move on to defining the data.
 Let's define the amount to produce of each product, *i*, as $x_i$ and resource *j* consumed by product *i* as $R_{i,j}$.
 The available resource *j* is then $A_j$.
