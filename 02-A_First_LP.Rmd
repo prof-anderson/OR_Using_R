@@ -7,10 +7,10 @@ library(knitr)
 library(gridExtra)
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = FALSE)
-knitr::opts_chunk$set(cache = TRUE)
+knitr::opts_chunk$set(cache = FALSE)
 knitr::opts_chunk$set(width = 30)
 # knitr::opts_chunk$set(fig.lp='fig:')
-# library(rmarkdown); rmarkdown::render("02-A_First_LP.Rmd", "tufte_book2")
+# library(bookdown); library(rmarkdown); rmarkdown::render("02-A_First_LP.Rmd", "tufte_book2")
 ```
 
 ## What is Linear Programming
@@ -32,7 +32,7 @@ Each robot requires time in machining, assembly, and testing and sensors. For ex
 |  Machining     |  1    |   4    |   800      |
 |  Assembly      |  3    |   6    |   900      |
 |  Testing       |  2    |   2    |   480      |
-|  Sensors       |  3    |  10    |   1200     |
+|  Sensors       |  2    |  10    |   1200     |
 ```
 
 ```{marginfigure}
@@ -88,7 +88,7 @@ $$
 & 1\cdot Ants + 4 \cdot Bats \leq 800 \\
 & 3\cdot Ants + 6 \cdot Bats \leq 900 \\
 & 2\cdot Ants + 2 \cdot Bats \leq 480 \\
-& 3\cdot Ants + 10 \cdot Bats \leq 1200 \\
+& 2\cdot Ants + 10 \cdot Bats \leq 1200 \\
 & Ants, Bats \geq 0  
   \end{aligned}
   \end{split}
@@ -189,7 +189,7 @@ model0e<-add_constraint(model0d,3*Ants+6*Bats<= 900)
   #assembly
 model0f<-add_constraint(model0e,2*Ants+2*Bats<= 480)  
   #testing
-model0g<-add_constraint(model0f,3*Ants+12*Bats<=1200) 
+model0g<-add_constraint(model0f,2*Ants+12*Bats<=1200) 
   #sensors
 
 ```
@@ -225,7 +225,7 @@ model0 <- add_constraint(model0, 3*Ants + 6*Bats <= 900)
 #assembly
 model0<- add_constraint(model0, 2*Ants + 2*Bats <= 480) 
 #testing
-model0<- add_constraint(model0, 3*Ants + 10*Bats <= 1200) 
+model0<- add_constraint(model0, 2*Ants + 10*Bats <= 1200) 
 #sensors
 result0 <- solve_model(model0, with_ROI(solver = "glpk"))
 
@@ -258,7 +258,7 @@ extract_constraints(model0)
 
 This should look familiar. Let's see if we can arrange to make it look more similar to what we had given the model.  Note that the term `RHS` represents the right hand side of the constraint.  
 
-```{r construct_constraints_for_display, fig.margin=TRUE}
+```{r construct_constraints_for_display, eval=TRUE, fig.margin=TRUE}
 constr0<-extract_constraints(model0)    
 # Pass the constraints out of  model
 constr00<- (cbind(as.matrix(constr0$matrix), 
@@ -302,7 +302,7 @@ result0 <- MIPModel() %>%
   add_constraint(1*Ants + 4*Bats<= 800) %>% #machining
   add_constraint(3*Ants + 6*Bats<= 900) %>% #assembly
   add_constraint(2*Ants + 2*Bats<= 480)  %>% #testing
-  add_constraint(3*Ants + 10*Bats<= 1200) %>% #sensors
+  add_constraint(2*Ants + 10*Bats<= 1200) %>% #sensors
   solve_model(with_ROI(solver = "glpk"))
   
 ```
@@ -351,11 +351,11 @@ We will now extend the previous model to account for a third product, the Cat ro
 ```{marginfigure}
 | | Ant| Bat | Cat |Available| 
 |-------------:|:-----:|:----:|:------:|:-------:|
-|  Profit      |  $7   | $12  |  $8    |       |
+|  Profit      |  $7   | $12  |  $5    |       |
 |  Machining   |   1   |   4  |    2   |  800  |
 |  Assembly    |   3   |   6  |    2   |  900  |
-|  Testing     |   2   |   2  |    4   |  480  |
-|  Sensors     |   3   |  10  |    2   | 1200  |
+|  Testing     |   2   |   2  |    1   |  480  |
+|  Sensors     |   2   |  10  |    2   | 1200  |
 ```
 
 ```{marginfigure}
@@ -363,8 +363,6 @@ We will now extend the previous model to account for a third product, the Cat ro
 ```
 
 \vspace{12pt}
-
-There is an additional constraint that the number of Cats made (sold) can not exceed 200.
 
 A simple LP now is to find the production plan or amount of each of the products that results in the most profit. This will require a new decision variable, Cats, to be added to the model. \vspace{12pt} Let's extend our previous model. Just to reinforce the point, it is an important habit to very clearly define the decision variables.
 
@@ -378,12 +376,12 @@ Our objective function and constraints can now be written as the optimization mo
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max  }   & 7\cdot Ants +12 \cdot Bats +8\cdot Cats \\
+    \text{Max  }   & 7\cdot Ants +12 \cdot Bats +5\cdot Cats \\
     \text{s.t.:} & \\
-& 1\cdot Ants + 1\cdot Bats +2\cdot Cats \leq 800 \\
-& 3\cdot Ants + 3\cdot Bats +2\cdot Cats \leq 900 \\
-& 2\cdot Ants + 2\cdot Bats +4\cdot Cats \leq 480 \\
-& 3\cdot Ants + 3\cdot Bats +2\cdot Cats \leq 1200 \\
+& 1\cdot Ants + 4\cdot Bats +2\cdot Cats \leq 800 \\
+& 3\cdot Ants + 6\cdot Bats +2\cdot Cats \leq 900 \\
+& 2\cdot Ants + 2\cdot Bats +1\cdot Cats \leq 480 \\
+& 2\cdot Ants + 10\cdot Bats +2\cdot Cats \leq 1200 \\
 & Ants, Bats, Cats \geq 0  
   \end{aligned}
   \end{split}
@@ -408,18 +406,17 @@ model1 <- MIPModel() %>%
   add_variable(Bats, type = "continuous",lb = 0) %>%
   add_variable(Cats, type = "continuous", lb = 0) %>%
   
-  set_objective(7*Ants + 10*Bats + 8*Cats,"max")%>%
+  set_objective(7*Ants + 12*Bats + 5*Cats,"max")%>%
   
-  add_constraint(1*Ants + 4*Bats + 2*Cats<=1000)%>% 
+  add_constraint(1*Ants + 4*Bats + 2*Cats<=800)%>% 
   #machining
-  add_constraint(3*Ants + 6*Bats + 2*Cats<=1000)%>% 
+  add_constraint(3*Ants + 6*Bats + 2*Cats<=900)%>% 
   #assembly
-  add_constraint(2*Ants + 2*Bats + 4*Cats<=720)%>% 
+  add_constraint(2*Ants + 2*Bats + 1*Cats<=480)%>% 
   #testing
-  add_constraint(3*Ants + 10*Bats + 2*Cats<=1200)%>% 
+  add_constraint(2*Ants + 10*Bats + 2*Cats<=1200) 
   #sensors
-  add_constraint(Cats <= 200)
-  
+
 result1 <-  solve_model(model1, with_ROI(solver="glpk"))
 ```
 
@@ -427,23 +424,17 @@ result1 <-  solve_model(model1, with_ROI(solver="glpk"))
 
 ## Three Variable Case Results and Interpretation
 
-Let's check to see the status of the solver. Did it find the optimal solution?
+Let's check to see the status of the solver and the results.
 
 \vspace{12pt}
 
 ```{r base_status_3var}
 print(solver_status(result1))
+result1$solution
+result1$objective_value
+
 ```
-
-Again, the LP solver found an optimal solution, let's now extract the solution values found.
-
-```{r base_solution_3var}
-get_solution(result1, Ants)
-get_solution(result1, Bats)
-get_solution(result1, Cats)
-```
-
-This is interesting - even though we added a new profitable product to our portfolio, the production decision stayed the same.
+Adding a decision variable, in this case, _Cats_ enables new possibilities so it could increase profit.  
 
 ## Linear Programming Special Cases
 
@@ -469,12 +460,12 @@ This results in the LP on the right.
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max  }   & 7\cdot Ants +10 \cdot Bats +8\cdot Cats \\
+    \text{Max  }   & 7\cdot Ants +12 \cdot Bats +5\cdot Cats \\
     \text{s.t.:} & \\
-& 1\cdot Ants + 3 \cdot Bats  +2\cdot Cats \leq 1000 \\
-& 3\cdot Ants + 4 \cdot Bats  +2\cdot Cats \leq 1000 \\
-& 2\cdot Ants + 3 \cdot Bats  +4\cdot Cats \leq 720 \\
-& 3\cdot Ants + 5 \cdot Bats  +2\cdot Cats \leq 1200 \\
+& 1\cdot Ants + 4 \cdot Bats  +2\cdot Cats \leq 800 \\
+& 3\cdot Ants + 6 \cdot Bats  +2\cdot Cats \leq 900 \\
+& 2\cdot Ants + 2 \cdot Bats  +4\cdot Cats \leq 480 \\
+& 2\cdot Ants + 10 \cdot Bats  +1\cdot Cats \leq 1200 \\
 & Ants \geq 400 \\
 & Ants, Bats, Cats \geq 0  
 \end{aligned}
@@ -490,7 +481,7 @@ Now let's extend our formulation with this change. \vspace{12pt}
 
 ```{r infeasible_case}
 model1infeas <- 
-  add_constraint(model1, Ants >= 300)  
+  add_constraint(model1, Ants >= 400)  
   #THIS IS THE NEW CHANGE
 
 result1infeas <- solve_model(model1infeas, 
@@ -523,12 +514,12 @@ There are a couple of ways of creating situations for multiple optima. One situa
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max  }   & Profit=4\cdot Ants +2 \cdot Bats +8\cdot Cats \\
+    \text{Max  }   & Profit=7\cdot Ants +12 \cdot Bats +14\cdot Cats \\
     \text{s.t.:} & \\
-& 1\cdot Ants + 3 \cdot Bats  +2\cdot Cats \leq 1000 \\
-& 3\cdot Ants + 4 \cdot Bats  +6\cdot Cats \leq 1000 \\
-& 2\cdot Ants + 3 \cdot Bats  +4\cdot Cats \leq 720 \\
-& 3\cdot Ants + 5 \cdot Bats  +6\cdot Cats \leq 1200 \\
+& 1\cdot Ants + 4 \cdot Bats  +2\cdot Cats \leq 800 \\
+& 3\cdot Ants + 6 \cdot Bats  +6\cdot Cats \leq 900 \\
+& 2\cdot Ants + 2 \cdot Bats  +4\cdot Cats \leq 480 \\
+& 2\cdot Ants + 10 \cdot Bats  +4\cdot Cats \leq 1200 \\
 & Ants, Bats, Cats \geq 0  
 \end{aligned}
 \end{split}
@@ -547,7 +538,7 @@ model2a <- MIPModel() %>%
   add_variable(Bats, type = "continuous",lb = 0) %>%
   add_variable(Cats, type = "continuous", lb = 0, ub = 200) %>%
   
-  set_objective(7*Ants + 2*Bats + 14*Cats,"max")%>%
+  set_objective(7*Ants + 12*Bats + 14*Cats,"max")%>%
   
   add_constraint(1*Ants + 4*Bats + 2*Cats<=800)%>% 
   #machining
@@ -555,7 +546,7 @@ model2a <- MIPModel() %>%
   #assembly
   add_constraint(2*Ants + 2*Bats + 4*Cats<=480)%>% 
   #testing
-  add_constraint(3*Ants + 10*Bats + 6*Cats<=1200)
+  add_constraint(2*Ants + 10*Bats + 4*Cats<=1200)
   #sensors
 
 result2a <-  solve_model(model2a, with_ROI(solver="glpk"))
@@ -569,7 +560,7 @@ result2a <-  solve_model(model2a, with_ROI(solver="glpk"))
 #    is run.
 # It is hidden since it may be confusing for the reader.
 result2a <- model2a %>% 
-  add_constraint( Ants==240) %>%
+  add_constraint( Ants==180) %>%
   solve_model(with_ROI(solver="glpk"))
 ```
 
@@ -592,7 +583,7 @@ grid.table(res2a)
 **Table 2.4**: First Solution of Multiple Optima Case
 ```
 
-Okay. When I ran it, all the production was focused on Ants I think that there is an alternate solution producing Bats with the same total profit. The LP engine won't necessarily tell you that there is an alternate optimal solution. Let's see if we can "trick" the LP to show an alternate solution by preventing the use of any bat by adding a constraint, $Ants=0$ to `model2a` and naming this `model2b` and the solved object or solution as `result2b`.
+Okay. When I ran it, all the production was focused on a mix of Ants and Bats but as discussed earlier, I think that there is an alternate solution producing Cats with the same total profit. The LP engine won't necessarily tell you that there is an alternate optimal solution. Let's see if we can "trick" the LP to show an alternate solution by preventing the use of any bat by adding a constraint, $Ants=0$ to `model2a` and naming this `model2b` and the solved object or solution as `result2b`.
 
 ```{r Show_Second_Solution_from_Multiple_Optima,  fig.margin = T}
 model2b <- add_constraint(model2a, Ants == 0) 
@@ -612,9 +603,9 @@ grid.table(res2b)
 **Table 2.5**: An Alternate Optimal Solution
 ```
 
-Again, only one product is made but now it is Ants instead of Bats with exactly the same level of profit. This is an instance of multiple optima. \vspace{12pt}
+Again, a product mix is made but now instead and Ants and Bats,  is Ants instead of Bats with exactly the same level of profit. This is an instance of multiple optima. \vspace{12pt}
 
-Let's try one more situation by adding instead forcing the number of Bats to be 120 and solving.
+Let's try one more situation by adding instead forcing the number of Ants to be 60 and solving.
 
 ```{r Find_a_Third_Solution_from_Multiple_Optima,  fig.margin = TRUE}
 model2c <- add_constraint(model2a, Ants == 60) 
@@ -644,7 +635,7 @@ grid.table(res2z)
 **Table 2.6**: Examples of Alternate Optimal Solutions
 ```
 
-Notice that all three of these solutions have exactly the same profit but different production plans to generate this profit. Furthermore while we are listing three, there are actually many more solutions. You can force the system to find other solutions by setting the number of Bats to a number between 0 and 120 or Ants between 0 and 200. In fact, the number of solutions is infinite if we allow fractional solutions. More generally, when there are two alternate optimal in a linear program with continuous variables, there is actually an infinite number of other optimal solutions between them.\
+Notice that all three of these solutions have exactly the same profit but different production plans to generate this profit. Furthermore while we are listing three, there are actually many more solutions. You can force the system to find other solutions by setting the number of Ants to a number between 0 and 180 or Cats between 0 and 90. In fact, the number of solutions is infinite if we allow fractional solutions. More generally, when there are two alternate optimal in a linear program with continuous variables, there is actually an infinite number of other optimal solutions between them.\
 \vspace{12pt}
 
 While our first optimization found a solution focused on bats and our second found a solution that only made ants, this is strictly dependent upon the particular solver's algorithmic implementation. The user can consider this to be relatively arbitrary. \vspace{12pt}
@@ -660,12 +651,12 @@ For the redundant constraint, a new constraint for painting is created. Let's as
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max  }   & Profit=7\cdot Ants +12 \cdot Bats +4\cdot Cats \\
+    \text{Max  }   & Profit=7\cdot Ants +12 \cdot Bats +5\cdot Cats \\
     \text{s.t.:} & \\
-& 1\cdot Ants + 4 \cdot Bats  +2\cdot Cats \leq 1000 \\
-& 3\cdot Ants + 6 \cdot Bats  +2\cdot Cats \leq 1000 \\
-& 2\cdot Ants + 2 \cdot Bats  +4\cdot Cats \leq 720 \\
-& 3\cdot Ants + 10 \cdot Bats  +2\cdot Cats \leq 1200 \\
+& 1\cdot Ants + 4 \cdot Bats  +2\cdot Cats \leq 800 \\
+& 3\cdot Ants + 6 \cdot Bats  +2\cdot Cats \leq 900 \\
+& 2\cdot Ants + 2 \cdot Bats  +1\cdot Cats \leq 480 \\
+& 2\cdot Ants + 10 \cdot Bats  +2\cdot Cats \leq 1200 \\
 &  Ants +  Bats  + Cats \leq 500 \\
  \end{aligned}
  \end{split}
@@ -710,32 +701,16 @@ Note that not all non-binding constraints at an optimal solution are redundant. 
 
 As with other cases, there are multiple ways of triggering this condition. For the unbounded solution, instead of at *most* a certain amount of resources can be used, the constraints are changed to at *least* that amount of each resource must be used. This doesn't make a lot of sense in the setting of this application. Perhaps a cynic would say that in a cost-plus business arrangement or a situation where the factory manager has a limited purview and doesn't see issues such as downstream demand limits and cost impacts, it results in this kind of myopic perspective. More commonly, an unbounded solution might be a sign that the analyst had simply reversed one or more inequalities or the form of the objective (max vs. min).
 
-$$
- \begin{split}
- \begin{aligned}
-    \text{Max  }   & 7\cdot Ants +10 \cdot Bats +8 \cdot Cats \\
-    \text{s.t.:} & \\
-& 1\cdot Ants + 3 \cdot Bats + 1\cdot Cats \geq 1000 \\
-& 3\cdot Ants + 4 \cdot Bats + 1\cdot Cats \geq 1000 \\
-& 2\cdot Ants + 3 \cdot Bats + 2\cdot Cats \geq 720 \\
-& 3\cdot Ants + 5 \cdot Bats + 2\cdot Cats \geq 1200 \\
-& Cats \geq 200 \\
-& Ants, Bats, Cats \geq 0  
-  \end{aligned}
-  \end{split}
-$$
-
 ```{marginfigure}
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max  }   & 7\cdot Ants +10 \cdot Bats +8 \cdot Cats \\
+    \text{Max  }   & 7\cdot Ants +12 \cdot Bats +5 \cdot Cats \\
     \text{s.t.:} & \\
-& 1\cdot Ants + 3 \cdot Bats + 1\cdot Cats \geq 1000 \\
-& 3\cdot Ants + 4 \cdot Bats + 1\cdot Cats \geq 1000 \\
-& 2\cdot Ants + 3 \cdot Bats + 2\cdot Cats \geq 720 \\
-& 3\cdot Ants + 5 \cdot Bats + 2\cdot Cats \geq 1200 \\
-& Cats \geq 200 \\
+& 1\cdot Ants + 4 \cdot Bats + 2\cdot Cats \geq 900 \\
+& 3\cdot Ants + 6 \cdot Bats + 2\cdot Cats \geq 800 \\
+& 2\cdot Ants + 2 \cdot Bats + 1\cdot Cats \geq 480 \\
+& 2\cdot Ants + 10 \cdot Bats + 2\cdot Cats \geq 1200 \\
 & Ants, Bats, Cats \geq 0  
   \end{aligned}
   \end{split}
@@ -748,7 +723,7 @@ $$
 
 \vspace{12pt}
 
-The implementation simply requires changing a \< to a \> for each constraint as well. \vspace{12pt}
+Let's make this change to the model and the implementation by simply changing each $\leq$ to a $\geq$ for each constraint. \vspace{12pt}
 
 ```{r Unbounded_Model}
 result4 <- MIPModel() %>%
@@ -756,19 +731,16 @@ result4 <- MIPModel() %>%
  add_variable(Bats, type = "continuous", lb = 0) %>%
  add_variable(Cats, type = "continuous", lb = 0) %>%
   
- set_objective(7*Ants + 12*Bats + 8*Cats,"max")%>%
+ set_objective(7*Ants + 12*Bats + 5*Cats,"max")%>%
   
- add_constraint(1*Ants + 4*Bats + 1*Cats>= 800) %>%
+ add_constraint(1*Ants + 4*Bats + 2*Cats>= 800) %>%
     #machining
- add_constraint(3*Ants + 6*Bats + 1*Cats>= 900) %>% 
+ add_constraint(3*Ants + 6*Bats + 2*Cats>= 900) %>% 
     #assembly
- add_constraint(2*Ants + 2*Bats + 2*Cats>= 480) %>%
+ add_constraint(2*Ants + 2*Bats + 1*Cats>= 480) %>%
     #testing
- add_constraint(3*Ants + 10*Bats + 2*Cats>= 1200)%>% 
+ add_constraint(2*Ants + 10*Bats + 2*Cats>= 1200)%>% 
     #sensors
-  
- add_constraint(Cats >= 200) %>% 
-  
  solve_model(with_ROI(solver = "glpk"))
 ```
 
@@ -783,11 +755,11 @@ get_solution(result4, Bats)
 get_solution(result4, Cats)
 ```
 
-The solver status reports that the problem is *infeasible* rather than *unbounded* but by inspection, the LP is feasible. A value for *Cats=1000, Ants=Bats=0,* satisfies all of the constraints and therefore the LP is feasible.\
+The solver status reports that the problem is *infeasible* rather than *unbounded* but by inspection, the solution is feasible in that it satisfies all of the constraints of $/geq$ and therefore the LP is feasible.
 \vspace{12pt}
 
 ```{marginfigure}
-**Infeasible vs Unbounded**. This is a known issue in ompr as of 0.8.0 reported on github. It is caused by not distinguishing between the different status conditions that can result in a failed optimization.  The result is that you should read the ompr status of "infeasible" to indicate no optimal solution.
+**Infeasible vs Unbounded**. This is a known issue in ompr as of 0.8.0 reported on github. It is caused by not distinguishing between the different status conditions for situations other than solved to guaranteed optimality.  The result is that you should read the ompr status of "infeasible" to indicate not assured of  optimal solution.
 ```
 
 This is another good reminder that it is important to always check the status of the solver.\
@@ -809,7 +781,7 @@ We could adopt a variety of naming or notation conventions of the variables:
 -   X1, X2, X3
 -   X[1], X[2], X[3]
 -   $X_1, X_2, X_3$
--   $X_i, \;  i=1,…,3$
+-   $X_i, \;  i=1,\ldots,3$
 
 \vspace{12pt}
 
@@ -879,12 +851,12 @@ e)  Discuss how one parameter would need to change in order to result in a diffe
 
 |Char.|Ants|Bats|Cats|Dogs|Avail.| 
 |----------:|:--:|:--:|:--:|:---:|:-----:|
-| Prof.     | $7 |$10 | $16 | $24 |       |
-| Fabr.     | 1  |  3 |  1 |   2 | 1000  |
-| Asse.     | 3  |  4 |  1 |   2 | 1000  |
-| Mach.     | 2  |  3 |  1 |   2 |  720  |
+| Prof.     | $7 |$10 | $5 | $24 |       |
+| Fabr.     | 1  |  3 |  2 |   2 | 800  |
+| Asse.     | 3  |  4 |  2 |   2 | 900  |
+| Mach.     | 2  |  3 |  1 |   2 |  480  |
+| Sens.     | 3  |  5 |  2 |   4 | 1200  |
 | Pain.     | 2  |  7 |  2 |   6 |  500  |
-| Sens.     | 3  |  5 |  5 |   4 | 1200  |
 ```
 
 ```{marginfigure}
