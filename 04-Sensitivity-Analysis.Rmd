@@ -19,6 +19,8 @@ library (ompr.roi, quietly = TRUE)
 library (pander, quietly = TRUE)
 library (gridExtra)
 library (formatR)
+# knitr::opts_chunk$set(fig.lp='fig:')
+# library(bookdown); library(rmarkdown); rmarkdown::render("04-Sensitivity-Analysis.Rmd", "tufte_book2")
 ```
 
 We can get a lot more than just the objective function value and the decision variable from a solved linear program.  In particular, we can potentially explore the impact of changes in constrained resources, changes in the objective function, forced changes in decision variables, and the introduction of additional decision variables.  
@@ -34,17 +36,17 @@ Recall the explicit production planning problem from earlier on Formulation 4.1.
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max: } & 20Chairs+14Desks+16Tables \\
-    \text{s.t.} & \\
-         & 6Chairs+2Desks+4Tables \leq 2000 \\
-         & 8Chairs+6Desks+4Tables \leq 2000 \\
-         & 6Chairs+4Desks+8Tables \leq 1440 \\
-         & 40Chairs+25Desks+16Tables \leq 9600 \\
-         & Tables \leq 200 \\
-         & Chairs,  \; Desks, \; Tables \geq 0  
+    \text{Max  }   & 7\cdot Ants +12 \cdot Bats +5\cdot Cats \\
+    \text{s.t.:} & \\
+& 1\cdot Ants + 4\cdot Bats +2\cdot Cats \leq 800 \\
+& 3\cdot Ants + 6\cdot Bats +2\cdot Cats \leq 900 \\
+& 2\cdot Ants + 2\cdot Bats +1\cdot Cats \leq 480 \\
+& 2\cdot Ants + 10\cdot Bats +2\cdot Cats \leq 1200 \\
+& Ants, Bats, Cats \geq 0  
   \end{aligned}
   \end{split}
 $$
+
 ```
 ```{marginfigure}
 **Formulation 4.1**: Explicit model of production planning
@@ -54,34 +56,30 @@ The implementation that we did earlier for production planning was straightforwa
 
 ```{r Base3VarModel, fig.margin=TRUE,fig.width=7}
 Base3VarModel <- MIPModel() %>%
-  add_variable(Chairs, type ="continuous", lb = 0) %>%
-  add_variable(Desks, type ="continuous",lb = 0) %>%
-  add_variable(Tables, type ="continuous", lb = 0) %>%
+  add_variable(Ants, type = "continuous", lb = 0) %>%
+  add_variable(Bats, type = "continuous",lb = 0) %>%
+  add_variable(Cats, type = "continuous", lb = 0) %>%
   
-  set_objective(20*Chairs+14*Desks+16*Tables,"max")%>%
+  set_objective(7*Ants + 12*Bats + 5*Cats,"max")%>%
   
-  add_constraint(6*Chairs+2*Desks+4*Tables<= 2000)%>%
-  #fabrication
-  add_constraint(8*Chairs+6*Desks+4*Tables<= 2000)%>% 
-  #assembly
-  add_constraint(6*Chairs+4*Desks+8*Tables<= 1440)%>% 
-  #machining
-  add_constraint(40*Chairs+25*Desks+16*Tables<= 9600)%>% 
-  #wood
-  add_constraint(Tables <= 200) %>% #
-  solve_model(with_ROI(solver = "glpk"))
-  obj_val <- objective_value(Base3VarModel)
-  xchairs <- get_solution (Base3VarModel, Chairs)
-  xdesks  <- get_solution (Base3VarModel, Desks)
-  xtables <- get_solution (Base3VarModel, Tables)
+  add_constraint(1*Ants + 4*Bats + 2*Cats<=800)%>% 
+  add_constraint(3*Ants + 6*Bats + 2*Cats<=900)%>% 
+  add_constraint(2*Ants + 2*Bats + 1*Cats<=480)%>% 
+  add_constraint(2*Ants + 10*Bats + 2*Cats<=1200)%>% 
+  solve_model(with_ROI(solver="glpk"))
+
+obj_val <- objective_value(Base3VarModel)
+  xchairs <- get_solution (Base3VarModel, Ants)
+  xdesks  <- get_solution (Base3VarModel, Bats)
+  xtables <- get_solution (Base3VarModel, Cats)
 base_case_res <- cbind(objective_value(Base3VarModel),
-                    get_solution(Base3VarModel, Chairs),
-                    get_solution(Base3VarModel, Desks),
-                    get_solution(Base3VarModel, Tables))
+                    get_solution(Base3VarModel, Ants),
+                    get_solution(Base3VarModel, Bats),
+                    get_solution(Base3VarModel, Cats))
 colnames(base_case_res)<-list("Profit", 
-                              "Chairs", 
-                              "Desks", 
-                              "Tables")
+                              "Ants", 
+                              "Bats", 
+                              "Cats")
 rownames(base_case_res)<-list("Base Case")
 grid.table(base_case_res)
 ```
@@ -100,11 +98,10 @@ Let's begin by examining the row duals, also known as shadow prices.
 ```{r rduals_3var,fig.margin=TRUE,fig.width=5}
 #rduals1 <-as.matrix(get_row_duals(result1), ncol=5)
 rduals1 <-as.matrix(get_row_duals(Base3VarModel))
-dimnames(rduals1)<-list(c("fabrication", 
-                          "assembly", 
-                          "machining", 
-                          "wood", 
-                          "demand"), 
+dimnames(rduals1)<-list(c("Machining", 
+                          "Assembly", 
+                          "Testing", 
+                          "Sensors"), 
                           c("Row Duals"))
 grid.table(format(rduals1,digits=4))
 ```
@@ -124,85 +121,80 @@ This potential for increased profit can't be achieved by simply increasing the r
 
 ## Testing Adding Labor to Machining
 
-Let's test the numerical results from the Shadow Price table by adding an hour of labor to the machining center. The model is represented in the formulation 4.2.  
+Let's test the numerical results from the Shadow Price table by adding an hour of labor to the testing department. The model is represented in the formulation 4.2.  
 
 ```{marginfigure}
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max:  } & 20Chairs+14Desks+16Tables \\
+    \text{Max:  } & 7\cdot Ants+12\cdot  Bats+5\cdot Cats \\
     \text{s.t.} \\
-          & 6Chairs+2Desks+4Tables \leq 2000 \\
-          & 8Chairs+6Desks+4Tables \leq 2000 \\
-          & 6Chairs+4Desks+8Tables \leq 
-                        \textcolor{red}{1441} \\
-          & 40Chairs+25Desks+16Tables \leq 9600 \\
-          & Tables \leq 200 \\
-          & Chairs,  \; Desks, \; Tables \geq 0  
+          & 1\cdot Ants+4\cdot Bats+2\cdot Cats \leq 900 \\
+          & 3\cdot Ants+6\cdot Bats+2\cdot Cats \leq 800 \\
+          & 2\cdot Ants+2\cdot Bats+1\cdot Cats \leq 
+                        \textcolor{red}{481} \\
+          & 2\cdot Ants+10\cdot Bats+2\cdot Cats \leq 1200 \\
+          & Ants,  \; Bats, \; Cats \geq 0  
   \end{aligned}
   \end{split}
 $$
 ```
 ```{marginfigure}
-**Formulation 4.2**: Explicit model of production planning adding labor to machining
+**Formulation 4.2**: Explicit model of production planning adding labor to Testing
 ```
 \vspace{12pt}
 And the code is showed in the following chunk, with Table 4.3 showing the optimal model result.
-```{r IncMachiningHrs, fig.margin=TRUE}
-IncMachiningHrs <- MIPModel() %>%
-  add_variable(Chairs, type = "continuous", lb = 0) %>%
-  add_variable(Desks, type = "continuous",lb = 0) %>%
-  add_variable(Tables, type = "continuous", lb = 0) %>%
+```{r IncTestingHrs, fig.margin=TRUE}
+IncTestingHrs <- MIPModel() %>%
+  add_variable(Ants, type = "continuous", lb = 0) %>%
+  add_variable(Bats, type = "continuous",lb = 0) %>%
+  add_variable(Cats, type = "continuous", lb = 0) %>%
   
-  set_objective(20*Chairs + 14*Desks + 16*Tables,"max")%>%
+  set_objective(7*Ants + 12*Bats + 5*Cats,"max")%>%
   
-  add_constraint(6*Chairs + 2*Desks + 4*Tables<= 2000)%>% 
-  #fabrication
-  add_constraint(8*Chairs + 6*Desks + 4*Tables<= 2000)%>% 
-  #assembly
-  add_constraint(6*Chairs + 4*Desks + 8*Tables<= 1441)%>% 
-  #machining
-  add_constraint(40*Chairs + 25*Desks + 16*Tables<= 9600)%>% 
-  #wood
-  add_constraint(Tables <= 200) %>% #
+  add_constraint(1*Ants + 4*Bats + 2*Cats<= 900)%>% 
+  add_constraint(3*Ants + 6*Bats + 2*Cats<= 800)%>% 
+  add_constraint(2*Ants + 2*Bats + 1*Cats<= 481)%>% 
+  add_constraint(2*Ants + 10*Bats + 2*Cats<= 1200)%>% 
+
   solve_model(with_ROI(solver = "glpk"))
-inc_mc_res  <- cbind(objective_value(IncMachiningHrs),
-                     get_solution(IncMachiningHrs, Chairs),
-                     get_solution(IncMachiningHrs, Desks),
-                     get_solution(IncMachiningHrs, Tables))
-colnames(inc_mc_res)<-list("Profit", 
-                           "Chairs", 
-                           "Desks", 
-                           "Tables")
-rownames(inc_mc_res)<-list("Increased M/C Hrs")
-temp1 <- rbind(base_case_res, inc_mc_res)
+
+inc_testing_res  <- cbind(objective_value(IncTestingHrs),
+                     get_solution(IncTestingHrs, Ants),
+                     get_solution(IncTestingHrs, Bats),
+                     get_solution(IncTestingHrs, Cats))
+colnames(inc_testing_res)<-list("Profit", 
+                           "Ants", 
+                           "Bats", 
+                           "Cats")
+rownames(inc_testing_res)<-list("Increased Testing Hrs")
+temp1 <- rbind(base_case_res, inc_testing_res)
 grid.table(temp1)
 ```
 ```{marginfigure}
-**Table 4.3**: Production Plan with One Additional Machining Hour
+**Table 4.3**: Production Plan with One Additional Testing Hour
 ```
 \vspace{12pt}
-These results confirmed that adding one hour of machining time results in a _new_ production plan that generates a profit of two more dollars, exactly as expected.  
+These results confirmed that adding one hour of Testing time results in a _new_ production plan that generates a profit of two more dollars, exactly as expected.  
 \vspace{12pt}
 
 The Shadow Prices can be very helpful in larger problems where questions might come up of trying to evaluate or prioritize limited resources.  
 
 ## Shadow Prices of Underutilized Resources
 
-The shadow price on wood is zero (as was also the case for assembly hours).  This means that even a large increase in wood would not affect the maximum profit or the optimal production plan. Essentially there is plenty of wood, having more would not allow enable a better profit plan to be possible.  Let's confirm this as well with a numerical example by adding _10,000_ more square feet of wood. See formulation 4.3. 
+The shadow price on sensors is zero (as was also the case for assembly hours).  This means that even a large increase in the number of sensors would not affect the maximum profit or the optimal production plan. Essentially there is plenty of sensors, having more would not allow enable a better profit plan to be possible.  Let's confirm this as well with a numerical example by adding _10,000_ more sensors. See formulation 4.3. 
 ```{marginfigure}
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max:  }   & 20Chairs+14Desks+16Tables \\
+    \text{Max:  }   & 7\cdot Ants+12\cdot Bats+5\cdot Cats \\
     \text{s.t.} & \\
-        & 6Chairs+2Desks+4Tables \leq 2000 \\
-        & 8Chairs+6Desks+4Tables \leq 2000 \\
-        & 6Chairs+4Desks+8Tables \leq 1440 \\
-        & 40Chairs+25Desks+16Tables \leq 
-                        \textcolor{red}{19600} \\
-        & Tables \leq 200 \\
-        & Chairs,  \; Desks, \; Tables \geq 0  
+        & 1\cdot Ants+4\cdot Bats+2\cdot Cats \leq 900 \\
+        & 3\cdot Ants+6\cdot Bats+2\cdot Cats \leq 800 \\
+        & 2\cdot Ants+2\cdot Bats+1\cdot Cats \leq 480 \\
+        & 2\cdot Ants+10\cdot Bats+2\cdot Cats \leq 
+                        \textcolor{red}{11200} \\
+        & Ants,  \; Bats, \; Cats \geq 0  
   \end{aligned}
   \end{split}
 $$
@@ -214,52 +206,48 @@ $$
 
 In the same way that it was done in previous point, the next chunk shows how to build in R an underutilized scenario. Table 4.3 contains the result for this model.
 
-```{r IncWood, fig.margin=TRUE}
-IncWood<- MIPModel() %>%
-  add_variable(Chairs, type = "continuous", lb = 0) %>%
-  add_variable(Desks, type = "continuous",lb = 0) %>%
-  add_variable(Tables, type = "continuous", lb = 0) %>%
+```{r IncSensor, fig.margin=TRUE}
+IncSensor<- MIPModel() %>%
+  add_variable(Ants, type = "continuous", lb = 0) %>%
+  add_variable(Bats, type = "continuous",lb = 0) %>%
+  add_variable(Cats, type = "continuous", lb = 0) %>%
   
-  set_objective(20*Chairs + 14*Desks + 16*Tables,"max")%>%
-  
-  add_constraint(6*Chairs + 2*Desks + 4*Tables<= 2000)%>% 
-  #fabrication
-  add_constraint(8*Chairs+6*Desks + 4*Tables<=2000)%>% 
-  #assembly
-  add_constraint(6*Chairs+4*Desks+8*Tables<=1440)%>% 
-  #machining
-  add_constraint(40*Chairs+25*Desks+16*Tables<=19600)%>% 
-  #wood
-  add_constraint(Tables <= 200) %>% #
+  set_objective(7*Ants + 12*Bats + 5*Cats,"max")%>%
+
+  add_constraint(1*Ants+4*Bats + 2*Cats<= 900)%>% 
+  add_constraint(3*Ants+6*Bats + 2*Cats<=800)%>% 
+  add_constraint(2*Ants+2*Bats+1*Cats<=480)%>% 
+  add_constraint(2*Ants+10*Bats+2*Cats<=11200)%>% 
   solve_model(with_ROI(solver = "glpk"))
-inc_wd_res  <- cbind(objective_value(IncWood),
-                     get_solution (IncWood, Chairs),
-                     get_solution (IncWood, Desks),
-                     get_solution (IncWood, Tables))
-colnames(inc_wd_res)<-list("Profit", 
-                           "Chairs", 
-                           "Desks", 
-                           "Tables")
-rownames(inc_wd_res)<-list("Increased Wood")
-temp2 <- rbind(base_case_res, inc_mc_res, inc_wd_res)
+
+inc_sensor_res  <- cbind(objective_value(IncSensor),
+                     get_solution (IncSensor, Ants),
+                     get_solution (IncSensor, Bats),
+                     get_solution (IncSensor, Cats))
+colnames(inc_sensor_res)<-list("Profit", 
+                           "Ants", 
+                           "Bats", 
+                           "Cats")
+rownames(inc_sensor_res)<-list("Increased Sensors")
+temp2 <- rbind(base_case_res, inc_testing_res, inc_sensor_res)
        grid.table(temp2)
 ```
 ```{marginfigure}
-**Table 4.4**: Production Plan with 10,000 More Wood
+**Table 4.4**: Production Plan with 10,000 More Sensors.
 ```
 
 Increasing wood does not result in any increase in profit or change the production plan.  
 
-Note that another constraint with a zero shadow price was the demand constraint of 200 on Tables. Since far fewer than 200 Tables are produced in the optimal production plan, relaxing this constraint also has no impact (shadow price=0).  This could also be implemented as a simple upper bound on the `Tables` variable.  
+Note that another constraint with a zero shadow price was the demand constraint of 200 on Cats. Since far fewer than 200 Cats are produced in the optimal production plan, relaxing this constraint also has no impact (shadow price=0).  This could also be implemented as a simple upper bound on the `Cats` variable.  
 
 ## Reduced Costs of Variables
 
 Next, we move on to the *reduced costs* of variables. This concept often requires rereading  several times. The mathematical details rely on the structure of linear programming and the simplex algorithm. We won't go into great detail on the origin of this mathematically in detail here.  
 \vspace{12pt}
 
-*Reduced Cost of Chairs*
+*Reduced Cost of Ants*
 
-Let's start by examining the Chairs. The reduced cost for *Chairs* is the per unit marginal profit minus the per unit value (in terms of shadow prices) of the resources used by a unit in production.  
+Let's start by examining the Ants. The reduced cost for *Ants* is the per unit marginal profit minus the per unit value (in terms of shadow prices) of the resources used by a unit in production.  
 \vspace{12pt}
 
 Next, let's discuss the column duals which are often referred to as reduced costs of variables.  Let's extract these from the results just as we did for the shadow prices.
@@ -267,7 +255,7 @@ Next, let's discuss the column duals which are often referred to as reduced cost
 ```{r cduals_3var, fig.margin=TRUE}
 #cduals1 <-as.matrix(get_column_duals(result1), ncol=1 )
 cduals1 <-as.matrix(get_column_duals(Base3VarModel) )
-dimnames(cduals1)<-list(c("Chairs", "Desks", "Tables"), 
+dimnames(cduals1)<-list(c("Ants", "Bats", "Cats"), 
                         c("Column Duals"))
 grid.table(format(cduals1,digits=4))
 ```
@@ -275,120 +263,117 @@ grid.table(format(cduals1,digits=4))
 **Table 4.5**: Reduced Costs of Variables
 ```
 
-These results are interesting.  The reduced costs of variables that are between simple upper and lower bounds will be zero. The reduced cost of a variable can be thought as the difference between the value of the  resources consumed by the product and the value of the product in the objective function.  All of our product's variables have simple lower bounds of zero and no upper bounds.  The first two (Chairs and Desks) have a zero reduced cost and the last one (Tables) is negative.  
+These results are interesting.  The reduced costs of variables that are between simple upper and lower bounds will be zero. The reduced cost of a variable can be thought as the difference between the value of the  resources consumed by the product and the value of the product in the objective function.  All of our product's variables have simple lower bounds of zero and no upper bounds.  The first two (Ants and Bats) have a zero reduced cost and the last one (Cats) is negative.  
 
 Let's start by examining the Shadow Prices of the resources along with the number of each resource used in the production of a single chair.  
 
-```{r Shadow_Price_Single_Chair, fig.margin=TRUE}
+```{r Shadow_Price_Single_Ant, fig.margin=TRUE}
 chair_res_used<-cbind(rduals1,c(2,8,6,40,0))
 colnames(chair_res_used)<-c("Row Duals", "Resources Used")
 grid.table(format(chair_res_used, digits=4))
 ```
 ```{marginfigure}
-**Table 4.6**: Resources Used by a Chair and their Shadow Prices
+**Table 4.6**: Resources Used by a Ant and their Shadow Prices
 ```
-Taking the product in each row and adding them up will give the marginal value of the resources consumed by an incremental change in production of chairs. In this case, the marginal value is $0+1\cdot 8+2\cdot6+0+0=20$.  Since the profit per chair (from the objective function coefficient on Chairs) is also $\$ 20$, they are in balance and the difference between them is zero which is why the reduced cost for Chairs is zero. This can be thought of saying that there is marginal benefit of cost to a very small forced change in the value of the Chairs variable.  The value of the resources used in producing a chair equals that of the profit of a chair.  
+Taking the product in each row and adding them up will give the marginal value of the resources consumed by an incremental change in production of chairs. In this case, the marginal value is $0+1\cdot 8+2\cdot6+0+0=20$.  Since the profit per chair (from the objective function coefficient on Ants) is also $\$ 20$, they are in balance and the difference between them is zero which is why the reduced cost for Ants is zero. This can be thought of saying that there is marginal benefit of cost to a very small forced change in the value of the Ants variable.  The value of the resources used in producing an Ant equals that of the profit of an Ant.  
 \vspace{12pt}
 
-We can repeat the same process and calculations for Desks.  
+We can repeat the same process and calculations for Bats.  
 
-```{r Shadow_Price_Desks,fig.margin=TRUE }
+```{r Shadow_Price_Bats,fig.margin=TRUE }
 desk_res_used<-cbind(rduals1,c(2,6,4,25,0))
 colnames(desk_res_used)<-c("Row Duals", "Resources Used")
 grid.table(format(desk_res_used, digits=4))
 ```
 ```{marginfigure}
-**Table 4.7**: Resources Used by a Desk and their Shadow Prices
+**Table 4.7**: Resources Used by a Bat and their Shadow Prices
 ```
-In this case, using the columns from Table 4.6 we can calulate the marginal value as $0+1\cdot6+2\cdot4+0+0=14$.  Since the profit per desk (from the objective function coefficient on Desks) is also $\$ 14$, they are in balance and the difference between them is zero which is why the reduced cost for the _Desks_ variable is also zero.
+In this case, using the columns from Table 4.6 we can calulate the marginal value as $0+1\cdot6+2\cdot4+0+0=14$.  Since the profit per desk (from the objective function coefficient on Bats) is also $\$ 14$, they are in balance and the difference between them is zero which is why the reduced cost for the _Bats_ variable is also zero.
 \vspace{12pt}
 
-*Reduced Price of Tables*
+*Reduced Price of Cats*
 
-The situation is more interesting for Tables. The production plan does not call for producing any tables. This means that it is sitting right at the lower bound of zero Tables.  This hints that perhaps we would like to make even less than zero Tables if we could and that being _forced_ to make even one table would be costly. A reduced cost of -4 means that the opportunity cost of resources used in producing a table is $\$4$ more than the profit of producing a single table.  In other words, we would expect that if we force the production of a single table, the over all production plan's profit will go down by $\$4$.
+The situation is more interesting for Cats. The production plan does not call for producing any Cats. This means that it is sitting right at the lower bound of zero Cats.  This hints that perhaps we would like to make even less than zero Cats if we could and that being _forced_ to make even one table would be costly. A reduced cost of -4 means that the opportunity cost of resources used in producing a table is $\$4$ more than the profit of producing a single table.  In other words, we would expect that if we force the production of a single table, the over all production plan's profit will go down by $\$4$.
 \vspace{12pt}
 
 Let's go ahead and test this interpretation by again looking at the value of the resources consumed in the production of a table and the number used. 
 
-```{r Shadow_Price_Table, fig.margin=TRUE}
+```{r Shadow_Price_Cat, fig.margin=TRUE}
 table_res_used<-cbind(rduals1,c(4,4,8,25,0))
 colnames(table_res_used)<-c("Row Duals", "Resources Used")
 grid.table(table_res_used)
 ```
 ```{marginfigure}
-**Table 4.8**: Resources Used by a Table and their Shadow Prices
+**Table 4.8**: Resources Used by a Cat and their Shadow Prices
 ```
-Notice that the values based on shadow prices of the resources used by a table are $\$1*4+\$2*8=\$20$. Alas, the profit for each table is just $\$16$ which means that forcing the production of a single table will decrease the production plan's profit by $\$4$. In other words, the impact on the objective function is   $\$-4$ which is the same as the reduced price entry of Tables.  
+Notice that the values based on shadow prices of the resources used by a table are $\$1*4+\$2*8=\$20$. Alas, the profit for each Cat is just $\$16$ which means that forcing the production of a single table will decrease the production plan's profit by $\$4$. In other words, the impact on the objective function is   $\$-4$ which is the same as the reduced price entry of Cats.  
 \vspace{12pt}
 
 Okay, now let's put both side by side in a table to show the results.
 \vspace{12pt}
 
-Okay, now let's test it.  We will modify the formulation to set a lower bound on the number of Tables to be 1.  Note that we do this in case by setting the _lb_ option in the *add_variable* to be 1.  Also, the demand constraint for tables could also be accommodated by setting the table variable's upper bound (*ub*) to 200.  
+Okay, now let's test it.  We will modify the formulation to set a lower bound on the number of Cats to be 1.  Note that we do this in case by setting the _lb_ option in the *add_variable* to be 1.  Also, the demand constraint for tables could also be accommodated by setting the table variable's upper bound (*ub*) to 200.  
 
-```{r Table1Model, fig.margin=TRUE,fig.width=5}
-Table1Model <- MIPModel() %>%
-  add_variable(Chairs, type = "continuous", lb = 0) %>%
-  add_variable(Desks, type = "continuous",lb = 0) %>%
-  add_variable(Tables, type = "continuous", lb = 1) %>%
+```{r Cat1Model, fig.margin=TRUE,fig.width=5}
+Cat1Model <- MIPModel() %>%
+  add_variable(Ants, type = "continuous", lb = 0) %>%
+  add_variable(Bats, type = "continuous",lb = 0) %>%
+  add_variable(Cats, type = "continuous", lb = 1) %>%
   
-  set_objective(20*Chairs + 14*Desks + 16*Tables,"max")%>%
-  
-  add_constraint(6*Chairs + 2*Desks + 4*Tables<= 2000)%>% 
-  #fabrication
-  add_constraint(8*Chairs + 6*Desks + 4*Tables<= 2000)%>% 
-  #assembly
-  add_constraint(6*Chairs + 4*Desks + 8*Tables<= 1440)%>% 
-  #machining
-  add_constraint(40*Chairs + 25*Desks + 16*Tables<= 9600)%>% 
-  #wood
-  add_constraint(Tables <= 200) %>% #
+  set_objective(7*Ants + 12*Bats + 5*Cats,"max")%>%
+
+  add_constraint(1*Ants+4*Bats + 2*Cats<= 900)%>% 
+  add_constraint(3*Ants+6*Bats + 2*Cats<=800)%>% 
+  add_constraint(2*Ants+2*Bats+1*Cats<=480)%>% 
+  add_constraint(2*Ants+10*Bats+2*Cats<=1200)%>% 
+
   solve_model(with_ROI(solver = "glpk"))
-  obj_val <- objective_value(Table1Model)
-  xchairs <- get_solution (Table1Model, Chairs)
-  xdesks  <- get_solution (Table1Model, Desks)
-  xtables <- get_solution (Table1Model, Tables)
-  Table1_case_res           <- cbind(xchairs,
-                                     xdesks,
-                                     xtables,
+
+  obj_val <- objective_value(Cat1Model)
+  xants <- get_solution (Cat1Model, Ants)
+  xbats  <- get_solution (Cat1Model, Bats)
+  xcats <- get_solution (Cat1Model, Cats)
+  Cat1_case_res           <- cbind(xants,
+                                     xbats,
+                                     xcats,
                                      obj_val)
-  rownames(Table1_case_res) <- ""
-  #rownames(Table1_case_res) <- "Amount to Produce"
-  grid.table(Table1_case_res)
+  rownames(Cat1_case_res) <- ""
+  #rownames(Cat1_case_res) <- "Amount to Produce"
+  grid.table(Cat1_case_res)
 ```
 ```{marginfigure}
-**Table 4.9**: Production Plan with Table Set to One
+**Table 4.9**: Production Plan with Cat Set to One
 ```
 \vspace{12pt}
 Let's compare the results for the new production plan and the original base case looking at the Table 4.9.  
 
-```{r Base_vs_Forced_Table, fig.margin=TRUE}
+```{r Base_vs_Forced_Cat, fig.margin=TRUE}
 rownames(base_case_res) <- "Base Case"
-Table1_case_res <- cbind(obj_val, xchairs,xdesks,xtables)
-rownames(Table1_case_res) <- "After change"
-temp3 <-rbind(base_case_res,Table1_case_res)
+Cat1_case_res <- cbind(obj_val, xants,xbats,xcats)
+rownames(Cat1_case_res) <- "After change"
+temp3 <-rbind(base_case_res,Cat1_case_res)
 grid.table(temp3)
 ```
 ```{marginfigure}
-**Table 4.10**: Impact of a Forced Change in Tables
+**Table 4.10**: Impact of a Forced Change in Cats
 ```
-As we expected, the forced change of making one additional table resulted in a decrease of the overall profit from  $\$4800$ to  $\$4876$. This occurred because making one table meant that we had fewer of the precious, limited resources. \vspace{12pt}
+As we expected, the forced change of making one additional table resulted in a decrease of the overall profit from  $\$4800$ to  $\$4876$. This occurred because making one Cat meant that we had fewer of the precious, limited resources. \vspace{12pt}
 
-This meant that the number of chairs and desks were changed resulting lower profit even though a table is on its own profitable.
+This meant that the number of Ants and Bats were changed resulting lower profit even though a Cat is on its own profitable.
 \vspace{12pt}
 
 ## Evaluating a New Product Design with Shadow Prices 
 
-Let's consider a design proposal for a bookcase. The bookcase has a projected profit of $\$35$ each and uses 6 hours of fabrication time, 12 of assembly, and 16 of machining. It uses 80 square feet of wood.
+Let's consider a design proposal for a Dog drone. The Dog has a projected profit of $\$35$ each and uses 6 hours of machining time, 12 of assembly, and 16 of testing. It uses 8 sensors.
 
 ```{r New_Prod_with_Shadow_Prices,fig.margin=TRUE}
-bookcase_res_used<-cbind(rduals1,c(6,12,16,80,0))
-colnames(bookcase_res_used)<-c("Row Duals", 
+dog_res_used<-cbind(rduals1,c(6,12,16,80,0))
+colnames(dog_res_used)<-c("Row Duals", 
                                "Resources Used")
-grid.table(format(bookcase_res_used,digits=4))
+grid.table(format(dog_res_used,digits=4))
 ```
 ```{marginfigure}
-**Table 4.11**: Resources Used by a Bookcase and their Shadow Prices
+**Table 4.11**: Resources Used by a Dog and their Shadow Prices
 ```
 Even without adding it to the model, we can check to see if it is worthwhile to consider seriously.  The opportunity cost of producing one bookcase would result in the $\$35-\$1\cdot12-\$2\cdot16=\$-9$.  In other words, even though a bookcase has higher profit than any other product, producing one would cost the company nine dollars of overall profit. 
 \vspace{12pt}
@@ -398,18 +383,18 @@ We could interpret this as a simple hard stop on the decision to produce bookcas
 
 ## Exercises 
 
-```{exercise, name="Adding Frames"}
+```{exercise, name="Adding Eels"}
 ```
-Your company has extended production to allow for producing picture frames and is now including a finishing department that primes and paints (or stains) the furniture.
+Your company has extended production to allow for producing aquatic Eels and is now including a finishing department that primes and paints the drones.
 
-| Characteristic | Chairs | Desks | Frames | Tables | Available  | 
+| Characteristic | Ants | Bats | Cats | Eels | Available  | 
 |---------------:|:-----:|:-----:|:------:|:---------:|:----------:|
-|  Profit        |  $20  |  $14  |    $3  |  $16      |            |
-|  Fabrication   |   6   |   2   |     1  |    4      |   1440     |
-|  Assembly      |   8   |   6   |     1  |    8      |   1440     |
-|  Machining     |   6   |   4   |     1  |   25      |   2000     |
-|  Painting      |   7   |  10   |     2  |   12      |   1000     |
-|  Wood          |  40   |  25   |     5  |   16      |   9600     |
+|  Profit        |  $7  |  $12  |    $5  |  $16      |            |
+|  Machining     |   1   |   4   |    2  |    4      |   1440     |
+|  Assembly      |   3   |   6   |    2  |    8      |   1440     |
+|  Testing       |   2   |   2   |    1  |   25      |   2000     |
+|  Sensor        |   2   |  10   |    2  |   16      |   9600     |
+|  Painting      |   1   |   1   |    1  |   12      |   1000     |
 
 a) Use R Markdown to create your own description of the model.
 b) Extend the R Markdown to show your LP Model.  Be sure to define models.
