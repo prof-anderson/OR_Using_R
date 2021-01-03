@@ -698,9 +698,7 @@ grid.table(res2b)
 **Table 2.6**: An Alternate Optimal Solution
 ```
 
-Again, a product mix is made but now instead and Ants and Bats,  is Ants instead of Bats with exactly the same level of profit. This is an instance of multiple optima. \vspace{12pt}
-
-Let's try one more situation by adding instead forcing the number of Ants to be 60 and solving.
+Again, a product mix is made but now instead and Ants and Bats, the mix is made up of Bats and Cats with exactly the same level of profit. This is an instance of multiple optima. Let's try one more situation by adding a constraint forcing the number of Ants to be 60 and solving.
 
 ```{r Find_a_Third_Solution_from_Multiple_Optima,  fig.margin = TRUE}
 model2c <- add_constraint(model2a, Ants == 60) 
