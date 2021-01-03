@@ -112,6 +112,82 @@ Note that since the objective function and each constraint is a simple linear fu
 It is impressive the number of situations that can be modeled well using linear programming. Keeping to the world of linear programming in general allows for finding the very best solution to very big problems in a short amount of time. For example, it is common for practitioners to be analyzing real-world problems with hundreds of thousands of decision variables and constraints.\
 \vspace{12pt}
 
+## Graphically Solving a Linear Program
+\vspace{12pt}
+
+Given that the linear program has two variables, it can be represented in two dimensions making it straightforward to draw and visualize.  Before we analyze it using the `R` we will walk through a graphical representation.
+\vspace{12pt}
+
+We do this by iteratively adding each constraint and trimming the feasible region. The line can be drawn by looking at the constraint from two perspectives.  First as if only Ants are produced and second as if only Bats are produced.  This gives specific point on the horizontal and vertical axes respectively which are simply connected.  
+\vspace{12pt}
+
+```{r Fig-First_Constraint, echo=FALSE, fig.margin=TRUE, out.width="2in"}
+library(knitr)
+knitr::include_graphics("images/Fig02-01-First_Constraint.PNG")
+```
+
+The constraints are differentiated by color and the diagonal lines of the same color drawn off the constraint are a hatching line indicating the directionaly of the inequality constraint.  In this case, each of the constraints are less than or equal to constraints and are indicating that this constrain includes the line and the region under the line.  If it had been a greater than or equal to constraint, the hatching would have been rising above the constraint line.  If it had been an exact equality constraint rather than equality constraint, it would have been just the line with no hatching.
+\vspace{12pt}
+
+In each figure, we illustrate the feasible region as a grayed oval but it is the whole region.  
+\vspace{24pt}
+
+```{r Fig-Second_Constraint, echo=FALSE, fig.margin=TRUE, out.width="2in"}
+knitr::include_graphics("images/Fig02-02-Second_Constraint.PNG")
+```
+
+The assembly constraint is drawn as a red line connecting a production plan of just 300 Ants on the horizontal axis to just 150 Bats on the vertical axis.
+\vspace{24pt}
+
+```{r Fig-Third_Constraint, echo=FALSE, fig.margin=TRUE, out.width="2in"}
+knitr::include_graphics("images/Fig02-03-Third_Constraint.PNG")
+```
+
+Since both products require two hours of testing and there are 480 hours available, the Green Testing constraint connects producing just 240 Ants and just 240 Bats.  
+\vspace{24pt}
+
+```{r Fig-Fourth_Constraint, echo=FALSE, fig.margin=TRUE, out.width="2in"}
+knitr::include_graphics("images/Fig02-04-Fourth_Constraint.PNG")
+```
+
+This now results in a feasible region that satisfies all of the contraints simultaneously.  Every point in this region is feasible or possible in that it does not violate any of the constraints.  There is an infinite number of possible points in this feasible region.  
+\vspace{24pt}
+
+```{r Fig-Feasible_Region, echo=FALSE, fig.margin=TRUE, out.width="2in"}
+knitr::include_graphics("images/Fig02-05-Feasible_Region.PNG")
+```
+
+Given that we are doing linear programming and we are trying to maximize or minimize a certain ojective function, the optimal solution will be at a corner point or more formally, a vertex. In our example, we can narrow our attention from the full feasible region to just the five vertices or candidate solutions.     
+\vspace{24pt}
+
+```{r Fig-Candidate_Solutions, echo=FALSE, fig.margin=TRUE, out.width="2in"}
+knitr::include_graphics("images/Fig02-06-Candidate_Solutions.PNG")
+```
+
+Lastly, we can pick from among these possible solutions by drawing parallel, equal profit lines radiating out from the origin to find the last line that still touches the feasibile region.  The figure to the right shows one line with a profit of $\$  1400$.  A second line is drawn that last touches the feasible region is at $\$  1980$. \vspace{24pt}
+ 
+
+```{r Fig-Iso_Profit, echo=FALSE, fig.margin=TRUE, out.width="2in"}
+knitr::include_graphics("images/Fig02-07-Iso_Profit.PNG")
+```
+
+Graphically, we could read the number of Ants and number of Bats to produce.  Accuracy would be limited to the drawing skills.  Also, each point in a two dimensional space is defined by the instersection of two lines.  
+\vspace{12pt}
+
+In this case, the optimal solution (and all of the other candidate solutions too) can be defined by the intersection of two constraint lines, listed as exact eqalities.  These can be solved as a system of equations with two equations and two unknowns.  The optimal solution here is defined by the intersection of the Assembly (Red) and the Testing (Green) constraints.  Just solve $3A+6B=900$ and $2A+2B=480$ for $A$ and $B$. \vspace{24pt}
+ 
+
+```{r Fig-Optimal_Solution, echo=FALSE, fig.margin=TRUE, out.width="2in"}
+knitr::include_graphics("images/Fig02-08-Optimal_Solution.PNG")
+```
+
+This approach of graphical solving is helpful for understanding how optimization works but does not scale up to larger dimensions.  Three variables corresponds to three dimensions and can therefore be drawn using various drawing programs but are harder to visualize on a printed page or computer screen.  
+\vspace{12pt}
+Alas, real optimization problems typically have far more three variables - perhaps tens of thousands or hundreds of thousands of variables.  In general, we need to use computer tools for solving larger problems.  In our case, we will adopt `R` and `ompr` but there are a wide range of similar tools availble.
+\vspace{12pt}
+
+## Solving a Linear Program using `ompr`
+
 For the sake of simplicity, we will implement our first R LP model using explicit variables and data consistent with the first formulation.\
 \vspace{12pt}
 
@@ -173,7 +249,7 @@ The *Bats* variable is added in the same way to `model0a` creating `model0b`. Le
 model0b
 ```
 
-Next, we can add the objective function. We set the objective function as well declaring it to be a *max* rather than a *min* function.
+Next, we can add the objective function. We set the objective function as well as declaring it to be a *max* rather than a *min* function.
 
 ```{r base_case_no_pipes_step_3}
 model0c<-set_objective(model0b,7*Ants+12*Bats,"max")
@@ -194,7 +270,7 @@ model0g<-add_constraint(model0f,2*Ants+12*Bats<=1200)
 
 ```
 
-Notice that we do not need to include non-negativity constraints since they were in the earlier definition of the variables. Let's take a look at the summary of the model after all of the constraints have been added.
+Notice that we do not need to include non-negativity constraints since they were in the earlier definition of the variables as lower bounds of zero. Let's take a look at the summary of the model after all of the constraints have been added.
 
 ```{r Model_Summary_with_All_Constraints}
 model0g
@@ -220,16 +296,35 @@ model0 <- add_variable(model0, Bats,
                        type = "continuous",lb = 0)
 model0<- set_objective(model0, 7*Ants + 12*Bats, "max")
 model0<- add_constraint(model0, 1*Ants + 4*Bats <= 800) 
-#machining
+                        # machining
 model0 <- add_constraint(model0, 3*Ants + 6*Bats <= 900) 
-#assembly
+                        # assembly
 model0<- add_constraint(model0, 2*Ants + 2*Bats <= 480) 
-#testing
+                        # testing
 model0<- add_constraint(model0, 2*Ants + 10*Bats <= 1200) 
-#sensors
+                        # sensors
 result0 <- solve_model(model0, with_ROI(solver = "glpk"))
 
 result0$solution
+```
+
+Let's use the `grid.table` function to display the results nicely.  
+
+```{r}
+res0 <- cbind(objective_value (result0),
+           get_solution(result0, Ants),
+           get_solution(result0, Bats))
+colnames(res0)<-list("Profit","Ants","Bats")
+rownames(res0)<-list("Solution")
+
+```
+
+```{r Base_2Var_Solution, fig.margin = T}
+grid.table(res0)
+```
+
+```{marginfigure}
+**Table 2.2**: Base Case Two Variable Solution
 ```
 
 In this case, we take the previous command's output, `model0`, add an element to it, and then store it back in the same object, `model0`. We keep doing it for each element until we are done. \vspace{12pt}
@@ -268,14 +363,14 @@ constr00<- (cbind(as.matrix(constr0$matrix),
                   as.matrix(constr0$rhs)))   
                   # Get the Right Hand Side
 dimnames(constr00)<-c(list(c("Machining", 
-                          "Assembly","Machining","Sensors")),
+                          "Assembly","Testing","Sensors")),
                       list(c("Ants", 
                           "Bats","Relationship","RHS")))
 grid.table(constr00)
 ```
 
 ```{marginfigure}
-**Table 2.2**: Elements of the Constraints
+**Table 2.3**: Elements of the Constraints
 ```
 
 In the first version of the LP model implementation, we created many different versions of the model along the way while we really just keep adding stuff to the same model. This uses extra memory and will be slower. The second implementation keeps reusing the same model object until the very end when solving is done and it places the results into an object. This may be more memory efficient but is still likely slower and carries along a lot of extra notation. \vspace{12pt}
@@ -359,7 +454,7 @@ We will now extend the previous model to account for a third product, the Cat ro
 ```
 
 ```{marginfigure}
-**Table 2.3**: Three variable base case
+**Table 2.4**: Three variable base case
 ```
 
 \vspace{12pt}
@@ -580,7 +675,7 @@ grid.table(res2a)
 ```
 
 ```{marginfigure}
-**Table 2.4**: First Solution of Multiple Optima Case
+**Table 2.5**: First Solution of Multiple Optima Case
 ```
 
 Okay. When I ran it, all the production was focused on a mix of Ants and Bats but as discussed earlier, I think that there is an alternate solution producing Cats with the same total profit. The LP engine won't necessarily tell you that there is an alternate optimal solution. Let's see if we can "trick" the LP to show an alternate solution by preventing the use of any bat by adding a constraint, $Ants=0$ to `model2a` and naming this `model2b` and the solved object or solution as `result2b`.
@@ -600,7 +695,7 @@ grid.table(res2b)
 ```
 
 ```{marginfigure}
-**Table 2.5**: An Alternate Optimal Solution
+**Table 2.6**: An Alternate Optimal Solution
 ```
 
 Again, a product mix is made but now instead and Ants and Bats,  is Ants instead of Bats with exactly the same level of profit. This is an instance of multiple optima. \vspace{12pt}
@@ -632,7 +727,7 @@ grid.table(res2z)
 ```
 
 ```{marginfigure}
-**Table 2.6**: Examples of Alternate Optimal Solutions
+**Table 2.7**: Examples of Alternate Optimal Solutions
 ```
 
 Notice that all three of these solutions have exactly the same profit but different production plans to generate this profit. Furthermore while we are listing three, there are actually many more solutions. You can force the system to find other solutions by setting the number of Ants to a number between 0 and 180 or Cats between 0 and 90. In fact, the number of solutions is infinite if we allow fractional solutions. More generally, when there are two alternate optimal in a linear program with continuous variables, there is actually an infinite number of other optimal solutions between them.\
@@ -834,7 +929,7 @@ In particular, you might want to look over this document with respect to:
 ```{exercise, name="Adding Dog robot"}
 ```
 
-Your company has extended production to allow for producing the dog robot and is now including a finishing department that primes and paints (or stains) the furniture. See Table 2.7 on the right.
+Your company has extended production to allow for producing the dog robot and is now including a finishing department that primes and paints (or stains) the furniture. See Table to the right.
 
 a)  Use R Markdown to create your own description of the model.
 
@@ -860,289 +955,12 @@ e)  Discuss how one parameter would need to change in order to result in a diffe
 ```
 
 ```{marginfigure}
-**Table 2.7**: Exercise 2.1
+**Table 2.8**: Exercise 2.1
 ```
 
 Hint: Knit your RMarkdown as a PDF or open the HTML version in your browser and print to PDF.\
 \vspace{12pt}
 
-## Graphically Solving LPs with R
-
-This example is based on work by Christopher Davis. Christopher is the author of *Agile Metrics in Action* from Manning Press [@DavisAgileMetricsAction2015].
-
-The goal of this section is to show linear programming graphically using R. Unfortunately there isn't a library that we can use to create a nice chart in R for our problems. To make this work there are a few steps we'll have to follow to take our problem and turn it into something that we can easily plot in R. Here is a brief outline, all of these steps are expanded on below.
-
-1)  Re-write our constraints to solve for Y. We have to do this in order to plot them on our graph.
-2)  Generate the points for the chart. To do this we'll use the function that we create in step 1 to create the points used for our lines.
-3)  Find the intersection points. Unfortunately there isn't a nice function that can tell us where lines intersect on our graphs so we'll need to put a simple function together that figures that out so we can plot it.
-4)  Now that we have all the data we need in graphable format, we can plot it!
-
-Let's make up another simple example where we want to build robots - because I love to build robots! There are 2 options, xbot (x) and ybot (y). It costs \$40 in material to build an xbot and \$60 in material to build a ybot. There is a maximum of \$7400 available for investment. There are 3300 hours of labor available. It takes 20 labor hours to build an xbot and 25 labor hours to build ybot. If an xbot is put into the field it will make \$150/hour, while a ybot in the field can generate \$200/hour. If we want to maximize profit, what do we do? First let's put the simple problem together:
-
-```{marginfigure}
-$$
- \begin{split}
- \begin{aligned}
-    \text{Max:}  & 150x+200y \\
-    \text{s.t.: } &\\
-&40x+60y \leq 7400 \\
-& 20x+25y \leq 3300 \\
-& x, y \geq 0  
-  \end{aligned}
-  \end{split}
-$$
-```
-
-```{marginfigure}
-**Formula 2.7**: Optimization model for Graphically Solving LPs with R exercise 
-```
-
-*Create a data series to plot*
-
-To graph a line in R you need to have a series of coordinates, you can't just input a formula and see it on a chart. Here are some steps to help turn your constraints into data series.
-
-*Reduce the constraints*
-
-To convert our constraints into a series of numbers the first thing we want to do is update the formulas to solve for *y*. Let's take a look at the constraints in this problem. We simply do a little rearranging of terms for the first constraint to get *y* on its own on the left hand side.
-
-```{marginfigure}
-$$
- \begin{split}
- 40x+60y \leq 7400 \\
- y \leq \frac{7400-40x}{60}\\
-  \end{split}
-$$
-**Formula 2.8**: Update formulation for constraint 1. 
-```
-
-We do the same thing for the second constraint.
-
-```{marginfigure}
-$$
- \begin{split}
- 20x+25y \leq 3300 \\
- y \leq \frac{3300-20x}{25}\\
-  \end{split}
-  (\#eq:Constraint2)
-$$
-**Formula 2.9**: Update formulation for constraint 2. 
-```
-
-Next we can turn those into functions. Rather than inequalities, treat them as equalities so that we can find the edge defined by this constraint.
-
-Note that R makes it very easy to define a function! In this case, the first function will take a value of `x` and return the value of `y` for the first constraint.
-
-```{r Using_Functions}
-r1y <- function(x) 7400 / 60 - 40 / 60 * x
-r2y <- function(x) 3300 / 25 - 20 / 25 * x
-```
-
-*Create the series*
-
-Secondly we will create an artificial series for x to plug into our functions, then create a data frame with a column for each series. Let's populate the data frame of possible plans of xbots `x1`. The `seq` function is very handy here in that it will generate a sequence of values from *0* to *200* xbots.
-
-```{r Create_a_Series, fig.margin=TRUE}
-# create the series
-x1 = seq(0,200)
-tablex1 <- head(as.matrix(x1))
-grid.table(tablex1)
-```
-
-```{marginfigure}
-**Table 2.8**: Beginning of Sequence x1
-```
-
-The next statement takes a little unpacking to fully understand and illustrates another strength of R. Now, we would like to evaluate each of these 201 values for `x1` using the functions for the two constraints that we just defined. We could use a `for-next loop` if we were using a language such as BASIC but R handles these operations more smoothly and efficiently. We can pass the data frame for `x1` into the function and R is smart enough to return the results in the same size data frame, `y1`. Of course we do the same thing for the second function (constraint).
-
-```{r Creating_More_Data, fig.margin=TRUE}
-# 2 constraints in this equation so there are 2 y variables, 
-# y1 and y2.  
-# If you have more constraints you can just keep adding them 
-# here.
-seriesDf = data.frame(x1, y1=r1y(x1), y2=r2y(x1))
-# take a look at the generated data
-grid.table(format(head(seriesDf),digits=4))
-```
-
-```{marginfigure}
-**Table 2.9**: Some datapoints from the lines for the constraints
-```
-
-Note that we now have coordinates for each series. If you have more than 2 constraints you can just continue to add columns to your data frame.
-
-To show our feasible region on a graph the x and y coordinates are not enough, we also need to determine the area of the region we want to shade in to show the region. To do this we really just need to get the minimum of y1 or y2. Note this is for a maximization problem, if we were looking at a minimization problem you would change 'pmin' to 'pmax', which would shade the region above the line rather than below the line. If this doesn't make sense at this point, it will when you see the graph.
-
-```{r First_ggplot}
-library(ggplot2)
-
-head(seriesDf)
-```
-
-\vspace{12pt}
-
-```{r Data_for_Area, fig.margin=T}
-  # Add the Z region for shading
-seriesDf <- transform(seriesDf, z = pmin(y1,y2))
-  # take a look at the generated data
-grid.table(format(head(seriesDf),digits=4))
-```
-
-```{marginfigure}
-**Table 2.10**: Some datapoints from the lines for regions
-```
-
-*Finding the intersection of constraints*
-
-To find the optimal value we will look for the intersection of the constraints. Unfortunately in R there isn't a nice easy way to get this so we'll need to write a function that takes in our lines and returns the x,y coordinates of their intersection.
-
-```{r Intersecting_Constraints}
-# this function returns a data frame with the intersection  
-# point of 2 lines pass in the model for each line
-lmInt <- function(line1, line2) {
-  b1<- line1$coefficient[1]  #y-int for line1
-  m1<- line1$coefficient[2]  #slope for line1
-  b2<- line2$coefficient[1]  #y-int for line2
-  m2<- line2$coefficient[2]  #slope for line2
-  x <- (b2-b1)/(m1-m2)       #solved general equation for x
-  y <- m1*x + b1             #plug in the result 
-  data.frame(x=round(x, 2), y=round(y, 2)) 
-  #create a data frame with x and y
-}
-```
-
-Next we can use this function to find the intercept of these lines:
-
-```{r Finding_Intersection}
-# find the intersect of the lines
-intersection <- lmInt(lm(seriesDf$y1~seriesDf$x1), 
-lm(seriesDf$y2~seriesDf$x1))
-head(intersection)
-```
-
-At this point we have everything we need to see our results on a graph. There are a few ways to build graphs in R but one very popular and powerful package is `ggplot`.
-
-```{marginfigure}
-**ggplot** was written by [Hadley Wickham](http://hadley.nz/) to implement Leland Wilkinson's [_Grammar of Graphics_](https://www.amazon.com/Grammar-Graphics-Statistics-Computing/dp/0387245448). Hadley Wickham has written a book specifically for gpplot2 with a publicly available version of the ebook [Hadley's overview](http://vita.had.co.nz/papers/layered-grammar.pdf).
-```
-
-In this example we are going to just scratch the surface of `ggplot2` functionality, so know that if you study up a bit you can do much more!
-
-```{r Plotting_Lines, fig.margin=TRUE}
-#make a plot with PSU colors for the lines!
-ggplot(seriesDf, aes(x = x1)) + 
-  geom_line(aes(y = y1), color = 'white') +
-  geom_line(aes(y = y2), color = 'green') +
-  geom_ribbon(aes(ymin=0,ymax = z), fill = 'gray60') + 
-  geom_point(x = intersection$x, y = intersection$y)
-```
-
-```{marginfigure}
-**Figure 2.1**: Example of ggplot
-```
-
-Awesome, it looks good! Though PSU colors don't work so well, that white is hard to see.
-
-Now let's solve the model for real to see if it's right!
-
-```{r Solving_Model}
-result0 <- MIPModel() %>%
-  add_variable(R1, type = "continuous", lb = 0) %>%
-  add_variable(R2, type = "continuous", lb = 0) %>%
- 
-  set_objective(150*R1 + 200*R2, "max") %>%
-  
-  add_constraint(40*R1 + 60*R2 <= 7400) %>% 
-  add_constraint(20*R1 + 25*R2 <= 3300) %>% 
-  solve_model(with_ROI(solver = "glpk"))
-print(solver_status(result0))
-print(objective_value(result0))
-print(get_solution(result0, R1))
-print(get_solution(result0, R2))
-```
-
-Same results as our graph, great!
-
-*Putting it all together in a more complex example*
-
-Now that you've seen all of these steps let's change the scenario and put all our code in one place. Let's still say we know we want to maximize profit and each robot can still make the same amount of money. However there are new constraints to the model.
-
-```{marginfigure}
-$$
- \begin{split}
- \begin{aligned}
-    \text{Max:} & 150x+200y \\
-    \text{S.t.:} & \\
-&5x+3y \geq 210 \\
-& x+y \leq 110 \\
-& 4x+y \leq 200 \\
-& x, y \geq 0  
-  \end{aligned}
-  \end{split}
-$$
-```
-
-```{marginfigure}
-**Formula 2.10**: More complex formulation
-```
-
-```{r Translate_Constraints, fig.margin=TRUE,width=20}
-# first translate the constraints:
-# 5*x + 3*y >=  210   becomes y = 210/3 - 5/3*x
-# x + y <= 110        becomes y = 110 - x
-# 4*x + y <= 200      becomes y = 200 - 4*x
-constraint1 <- function(x) 210/3 -5/3*x
-constraint2 <- function(x) 110 -x
-constraint3 <- function(x) 200 -4*x
-x2 = seq(0,100)
-dataFrameTwo = data.frame(x2, y1=constraint1(x2), 
-                          y2=constraint2(x2) , 
-                          y3=constraint3(x2))
-# because constraints are mixed leq and geq, 
-#we take the min of y2 and y3
-dataFrameTwo <-  transform(dataFrameTwo, 
-                           z = pmax(y1,pmin(y2,y3)))
-# get the intersections of the lines
-intersection1 <- 
-  lmInt(lm(dataFrameTwo$y3~dataFrameTwo$x2), 
-        lm(dataFrameTwo$y2~dataFrameTwo$x2))
-intersection2 <- 
-  lmInt(lm(dataFrameTwo$y3~dataFrameTwo$x2), 
-        lm(dataFrameTwo$y1~dataFrameTwo$x2))
-#plot it
-ggplot(dataFrameTwo, aes(x = x2)) + 
-  geom_line(aes(y = y1), color = 'aquamarine', size = 2) + 
-  #you can change line size
-  geom_line(aes(y = y2), color = '#99ffbb', size = 2) + 
-  #you can use hex colors
-  geom_line(aes(y = y3), color = 'white', size = 2) +
-  geom_ribbon(aes(ymin=y1,ymax = z), fill = 'gray80') + 
-  #you can change alpha on colors
-  geom_point(x = intersection1$x, 
-             y = intersection1$y,color= "green",size = 5)+
-  geom_point(x = intersection2$x, 
-             y = intersection2$y, color = "red") 
-```
-
-```{marginfigure}
-**Figure 2.2**: Example of ggplot (2)
-```
-
-Note now our chart looks much different because we have combination of lesser than and greater than constraints.
-
-## Next Steps
-
-Note that we only used 2 variables, so we were able to see this in a 2 dimensional space. If you add another variable to equation you will have to map this in a 3 dimensional chart which you may want to try a different charting library for like [plotly](https://plot.ly/r/). If you have more variables than that using the graphical method will become very hard!
-
-```{marginfigure}
-**Plotly** R graphing library makes interactive, publication-quality graphs online. Examples of how to make line plots, scatter plots, area charts, bar charts, error bars, box plots, histograms, heatmaps, subplots, multiple-axes, and 3D (WebGL based) charts.
-```
-
-This section on graphically exploring linear programming is a great first start and may be further refined in future versions of this book. Challenges for the future include:
-
--   Adding more annotations to the graphs
--   Adjusting colors
--   Adding more aesthetics
--   Refining limits for the plotting area to be non-negative.
 
 ## Miscellaneous Tips and Tricks
 
