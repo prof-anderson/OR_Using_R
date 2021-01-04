@@ -150,6 +150,10 @@ Since both products require two hours of testing and there are 480 hours availab
 knitr::include_graphics("images/Fig02-04-Fourth_Constraint.PNG")
 ```
 
+We now draw our fourth and final constraint - Sensors.  This constraint is done in yellow so it may be more difficult to see but it goes from an Ants only production plan of 600 units to a bats only production plan of 120.   
+\vspace{24pt}
+
+
 This now results in a feasible region that satisfies all of the contraints simultaneously.  Every point in this region is feasible or possible in that it does not violate any of the constraints.  There is an infinite number of possible points in this feasible region.  
 \vspace{24pt}
 
