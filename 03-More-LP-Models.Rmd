@@ -1,9 +1,3 @@
----
-editor_options: 
-  markdown: 
-    wrap: sentence
----
-
 # More Linear Programming Models
 
 ```{r Ch3setup, include=FALSE}
@@ -19,6 +13,7 @@ knitr::opts_chunk$set(tidy = F)
 knitr::opts_chunk$set(cache = TRUE)
 knitr::opts_chunk$set(width = 30)
 #knitr::opts_chunk$set(fig.lp='fig:')
+# library(bookdown); library(rmarkdown); rmarkdown::render("03-More-LP-Models.Rmd", "tufte_book2")
 ```
 
 ## Types of LP Models
@@ -65,7 +60,7 @@ The LP can now be rewritten as shown in the right margin, formula 3.1, if there 
 \vspace{12pt}
 
 We could further generalize this by instead of hard coding the number of products and resource constraints, we instead define the number of products and resources as *NProd* and *NResources* respectively.
-We can then rewrite the above formulation as the following.
+We can then rewrite the previous formulation as the Formulation 3.2.
 
 ```{marginfigure}
 $$
@@ -93,12 +88,12 @@ The symbol, $\forall$, is read as "for all" and can be interpreted to mean "repe
 The result is that the $\forall$ symbol can simplify the description of complex models when index ranges are clear.
 \vspace{12pt}
 
-Also, another good practice is to use a mnemonic to help suggest the meaning of data.
+Another good practice is to use a mnemonic to help suggest the meaning of data.
 That is why I chose "R" for Resource, "P" for Profit, and "A" for Available resources.
 \vspace{12pt}
 
 Another helpful convention is to use capital letters for data and lower case letters for variables.
-(Some people will swap this around and use capital letters for variables and lower case letters for data - it doesn't really matter as long as a model is consistent.)\
+(Some people will swap this around and use capital letters for variables and lower case letters for data - it doesn't matter as long as a model is consistent.)
 \vspace{12pt}
 
 More complex models often run out of letters that make sense.
@@ -110,7 +105,7 @@ Again, it is very important to clearly define all the data and variables used in
 
 ## Building the Generalized Model in R
 
-This concise, algebraic representation can be easily scaled to any number of products and resources.
+The concise, algebraic representation can be easily scaled to any number of products and resources.
 Let's write this as the following.
 I'll expand the names of data slightly for making the R code more readable but this is meant to be consistent with the above formulation.\
 \vspace{12pt}
@@ -120,7 +115,7 @@ NProd <- 4
 NResources <- 5
 ProdNames <- lapply(list(rep("Prod",NProd)),paste0,1:NProd) 
                  # Product names: Prod1, Prod2, ... 
-Profit <- matrix(c(20, 14, 3, 16), 
+Profit <- matrix(c(7, 10, 5, 24), 
               ncol=NProd,dimnames=c("Profit",ProdNames))
 grid.table(Profit)
 ```
@@ -129,7 +124,7 @@ grid.table(Profit)
 **Table 3.1**: Profit per product
 ```
 
-We will define the number of products as four and five resource constraints.
+Let's implement a four product model requiring varying levels of five limited resources.  The profit per product is described in Table 3.1 and and the resource consumption per product is given in table 3.2.  We will start our implementatoin by creating the appropriate data structures in `R`.
 
 ```{r Product_Planning_4x5, max.width=30}
 NProd <- 4
@@ -141,10 +136,10 @@ Profit <- matrix(c(20, 14, 3, 16),
 ResNames<- lapply(list(rep("Res",NResources)),
                   paste0,1:NResources) 
                  # Resource names: Res1, Res2, ... 
-Resources <- matrix(c( 6, 8, 6, 7 , 40, 2, 6, 4, 10, 
-                       25, 1, 1, 1, 2, 5, 4, 8, 25, 12, 16), 
+Resources <- matrix(c( 1, 3, 2, 3, 2, 3, 4, 3, 5, 7, 
+                       2, 2, 1, 2, 2, 2, 2, 2, 4, 6), 
               ncol=NProd,dimnames=c(ResNames,ProdNames))
-Available <- matrix(c(1440, 1440, 2000, 1000, 9600), 
+Available <- matrix(c(800, 900, 480, 1200, 500), 
               ncol=1,dimnames=c(ResNames,"Available"))
 ```
 
@@ -213,7 +208,6 @@ First, we'll start by loading the packages that we are using.
 ```
 
 ```{r warning=FALSE}
-library (tufte) 
 library (magrittr, quietly = TRUE) 
 suppressPackageStartupMessages(
   library (dplyr, quietly = TRUE))
@@ -224,7 +218,7 @@ library (ompr, quietly = TRUE)
 library (ompr.roi, quietly = TRUE)
 ```
 
-And we will continue with the code to build the mode in a generic format.
+And we will continue with the code to build the mode in a generic format.  Note that in the `ompr` model, every variable is given a `V` prefix to differentiate it from a regular `R` data object that might exist elsewhere in my `R` environment.  Conflicts between `R` objects and `ompr` variables are a common problem for modelers and this helps to avoid the problem, assuming that you don't have a lot of other `R` objects that start with `V`.  For more discussion about this issue and other common problems, see Appendix B.  
 
 ```{r Build_Prod_Model}
 prodmodel <- MIPModel() %>%
@@ -330,18 +324,16 @@ Let's modify the above model.
 We can do this by simply changing the data that we pass into the model.
 \vspace{12pt}
 
-Let's change the time required for painting an ant to 20.
-Recall that this is the first product and the fourth resource.
-This is how we can change the value.
+Let's number of sensors required for an ant to 5. Recall that this is the first product and the fourth resource. This is how we can change the value.
 
 ```{r Change_Data}
-Resources[4,1] <- 20  
-# Set value of the 4th row, 1st column to 20
-# In our example, this is the paint resource 
-# used by making an ant
+Resources[4,1] <- 5 
+# Set value of the 4th row, 1st column to 5
+# In our example, this is the number of sensors needed per ant
 ```
 
-Now we will rebuild the the optimization model.
+Now we will rebuild the the optimization model.  Note that simply changing the data does not change the model.  
+
 \vspace{12pt}
 
 ```{r Rebuild_and_Solve_Model}
@@ -394,7 +386,7 @@ The table on the right displays the new Production plan and the optimal distribu
 ## Blending Problems
 
 Specific blend limitations arise in many situations.
-In our example, we might say that Ants can make up no more than 40% of the overall product plan.
+In our example, we might say that Ants can make up no more than 40% of the overall product plan.  To demonstrate this, we will return to an explicitly defined model. 
 In our original case, this would be expressed as the following.\
 \vspace{12pt}
 
@@ -411,33 +403,36 @@ $$
 Let's rebuild our three variable production plan from Chapter 2.
 
 ```{r Base3VarModel, echo=TRUE}
-Base3VarModel <- MIPModel() %>%
- add_variable(Ants, type = "continuous", lb = 0) %>%
- add_variable(Bats, type = "continuous",lb = 0) %>%
- add_variable(Cats, type = "continuous", lb = 0) %>%
+model1 <- MIPModel() %>%
+  add_variable(Ants, type = "continuous", lb = 0) %>%
+  add_variable(Bats, type = "continuous",lb = 0) %>%
+  add_variable(Cats, type = "continuous", lb = 0) %>%
   
- set_objective(20*Ants + 14*Bats + 16*Cats,"max")%>%
+  set_objective(7*Ants + 12*Bats + 5*Cats,"max")%>%
   
- add_constraint(6*Ants + 2*Bats + 4*Cats<= 2000)%>%
-      #fabrication
- add_constraint(8*Ants + 6*Bats + 4*Cats<= 2000)%>% 
-      #assembly
- add_constraint(6*Ants + 4*Bats + 8*Cats<= 1440)%>%
-      #machining
- add_constraint(40*Ants + 25*Bats + 16*Cats<= 9600)%>% 
-      #wood
-  add_constraint(Cats <= 200) #
-res3base <- solve_model(Base3VarModel, 
-                        with_ROI(solver = "glpk"))
-xants <- get_solution (res3base , Ants)
-xbats  <- get_solution (res3base , Bats)
-xtables <- get_solution (res3base , Cats)
+  add_constraint(1*Ants + 4*Bats + 2*Cats<=800)%>% 
+  #machining
+  add_constraint(3*Ants + 6*Bats + 2*Cats<=900)%>% 
+  #assembly
+  add_constraint(2*Ants + 2*Bats + 1*Cats<=480)%>% 
+  #testing
+  add_constraint(2*Ants + 10*Bats + 2*Cats<=1200) 
+  #sensors
+
+res3base <-  solve_model(model1, with_ROI(solver="glpk"))
+
+xants <- get_solution (res3base, Ants)
+xbats  <- get_solution (res3base, Bats)
+xtables <- get_solution (res3base, Cats)
 base_case_res           <- cbind(xants,xbats,xtables)
-rownames(base_case_res) <- "Amount to Produce"
+rownames(base_case_res) <- "Amount"
+```
+
+```{r, fig.margin=TRUE}
+grid.table(base_case_res)
 ```
 
 ```{marginfigure}
-grid.table(base_case_res)
 **Table 3.8**: Production Plan for Base Case
 ```
 
@@ -471,16 +466,14 @@ The result is displayed as a formula on the right.
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max:} & \\
-                & 20 \cdot Ants+14 \cdot Bats+16 \cdot Cats \\
-    \text{S.t.} & \\
-                       & 6 \cdot Ants+2 \cdot Bats+4 \cdot Cats \leq 2000 \\
-                       & 8 \cdot Ants+6 \cdot Bats+4 \cdot Cats \leq 2000 \\
-                       & 6 \cdot Ants+4 \cdot Bats+8 \cdot Cats \leq 1440 \\
-                       & 40 \cdot Ants+25Bats+16Cats \leq 9600 \\
-                       & 0.6 \cdot Ants-0.4 \cdot Bats-0.4 \cdot Cats \leq 0 \\
-                       & Cats \leq 200 \\
-                       & Ants,  \; Bats, \; Cats \geq 0  
+    \text{Max  }   & 7\cdot Ants +12 \cdot Bats +5\cdot Cats \\
+    \text{s.t.:} & \\
+                 & 1\cdot Ants + 4\cdot Bats +2\cdot Cats \leq 800 \\
+                 & 3\cdot Ants + 6\cdot Bats +2\cdot Cats \leq 900 \\
+                 & 2\cdot Ants + 2\cdot Bats +1\cdot Cats \leq 480 \\
+                 & 2\cdot Ants + 10\cdot Bats +2\cdot Cats \leq 1200 \\
+                 & 0.6 \cdot Ants-0.4 \cdot Bats-0.4 \cdot Cats \leq 0 \\
+                 & Ants,  \; Bats, \; Cats \geq 0  
   \end{aligned}
   \end{split}
 $$
@@ -670,13 +663,22 @@ A transportation model is typically for getting material from one place to anoth
 It has sets of source points or nodes as well as ending or destination nodes.
 The decision variables are the amount to send on each route.
 Constraints are typically based on supply from the source nodes and capacity at the destination nodes.
-This naturally lends itself to potential network diagrams.
-In this case, $x_{i,j}$ is the amount of product to ship from node i to node j.
-The cost per unit to ship from node i to node j is $C_{i,j}$.
+This naturally lends itself to potential network diagrams such as the one to the right.  In this case we have three warehouses (or supply points) in Minnesota (MN), Pennsylvania (PA), and Wyoming (WY), each with a supply shown to the left.  On the right side, we have four customer or demand nodes:  Atlanta (ATL), Boston (Bos), Chicago (Chi), and Denver (Den) with their maximum demand shown to the right of the node.  We also have arcs connecting every supply node to every demand node, each labeled with a corresponding cost per unit to transport an item along that arc.  The goal is to get as much shipped as possible at the lowest possible cost.
+
+```{r Fig-Transportation, echo=FALSE, fig.margin=TRUE, out.width="2in"}
+library(knitr)
+knitr::include_graphics("images/Fig03-01-Transportation.PNG")
+```
+
+Let's start to model this now.  We want to define the decision variables, in this case, $x_{i,j}$ is the amount of product to ship from node i to node j.
+\vspace{12pt}
+
+Let's also define the data available. The cost per unit to ship from node i to node j is $C_{i,j}$.
 The supply available from each supply node is $S_i$ and the maximum demand that can be accommodate from each destination node is $D_j$.\
 \vspace{12pt}
 
-In this formulation we need to make sure that we don't ship out more than capacity from each supply node.
+In this formulation we need to make sure that we don't ship out more than the capacity of each supply node.
+
 Similarly, we need to ensure that we don't take in more than demand capacity at any destination.
 
 ```{marginfigure}
@@ -725,13 +727,31 @@ Similarly, if we try to use equality constraints for both the supply and demand 
 `add_variable(x[i, j], type = "continuous", i = 1:10, j = 1:10, lb=0)`
 ```
 
-Let's show how to set up a basic implementation of the tranportation problem in ompr.
-This demonstrates the use of double subscripted variables.
-Note that I have not defined the data.
-Also, it should be customized for a particular application of being demand or supply constrained but it will give a good running head start.
+Let's show how to set up a basic implementation of the tranportation problem in `ompr`. This demonstrates the use of double subscripted variables. Also, it should be customized for a particular application of being demand or supply constrained but it will give a good running head start.
 \vspace{12pt}
 
-```{r transportation, eval=FALSE}
+```{r transp_data}
+NSupply <- 3   # 3 Supply nodes
+NDest   <- 4   # 4 Destination nodes
+snames <- list("MN", "PA", "WY")
+dnames <- list("Atl", "Bos", "Chi", "Den")
+Cost <- matrix (c(65, 36, 65, 57, 30, 70, 22, 30, 55, 42, 60, 42),
+                nrow = NSupply,
+                dimnames =list(snames,dnames))
+S <- c(1000, 1500, 1500)
+
+D <- c(700,  900, 1200, 900)
+
+```
+
+At this point, it may be a good idea to look at the arcs and see if you can expect which routes are likely to be heavily used and which are likely to be unused.  You can also do this by looking at the matrix of transportation costs to the right.
+
+```{r Show_Transp_Cost, fig.margin=TRUE}
+grid.table (Transp)
+```
+
+Now, let's move on to implementing the model.  
+```{r transportation, eval=TRUE}
 transportationmodel <- MIPModel() %>%
  add_variable(Vx[i, j], type = "continuous", 
                i = 1:NSupply, 
@@ -750,14 +770,78 @@ transportationmodel <- MIPModel() %>%
                 # Inequality and Right side of constraints
                 i=1:NSupply)  
                 # Repeat for each supply node i.  
-results.transportation <-solve_model(transportationmodel, 
+
+res.transp <-solve_model(transportationmodel, 
                                     with_ROI(solver ="glpk"))
-  
+
 ```
 
-## Transhipment Models
+Let's confirm that our model solved correctly.
 
-A generalization of the transportation model is that of transhipment where some nodes are intermediate nodes that are neither pure sources or destinations but can have both inflow and outflow.
+```{r transp_status, fig.margin=TRUE}
+res.transp$status
+```
+
+Since it was solved to optimality, the optimal objective function value is meaningful and again we can use an inline code chunk of `R` to extract this value `r  res.transp$objective_value`.  The actual decision variable values of the solution are more interesting though.  Let's first prepare these results by extracting them from the solution object and then applying our names to them.  
+
+```{r}
+Transp <- matrix(res.transp$solution,
+                nrow = NSupply,
+                dimnames =list(snames,dnames))  
+```
+
+Now we can display the table of optimal transportation decisions from supply points to destinations cleanly.  
+
+```{r}
+grid.table (Transp)
+```
+
+
+## Transshipment Models
+
+A generalization of the transportation model is that of transhipment where some nodes are intermediate nodes that are neither pure sources or destinations but can have both inflow and outflow.  We could extend our previous example with factories in Vietnam and Thailand.  Note that the facilities in the middle (Minnesota, Pennsylvania, and Wyoming) are better described as distribution centers rather than warehouses.
+
+```{r Fig-Transshipment, echo=FALSE, fig.margin=TRUE, out.width="2in"}
+library(knitr)
+knitr::include_graphics("images/Fig03-02-Transshipment.PNG")
+```
+
+In this case, the standard convention might be to work from left to right and index the set of factories by _i_, the set of distribution centers by _j_ and the set of customers by _k_.  We might also use $x_{i,j}$ to be the amount to ship from factory _i_ to distribution center _j_ and $y_{j,k}$ to be the amount to ship from distribution center _j_ to customer _k_.
+
+A common characteristic of this kind of problem is then that the inflow at each distribution center must equal the outflow.  This means that for Minnesota, $(i=1)$, we would would have a relationship of the following.
+
+$$x_{1,1}+x_{2,1}=y_{1,1}+y_{1,2}+y_{1,3}+y_{1,4}$$ 
+
+This lends itself to a summation.
+
+$$\sum_{i=1}^2 x_{i,1}=\sum_{i=k}^4 y_{1,k}$$
+
+We can then generalize this for every distribution center, _j_.
+
+$$\sum_{i=1}^2 x_{i,j}=\sum_{i=k}^4 y_{j,k} \; \forall \; j$$
+
+Now we could put everything together.  We'll differentiate the costs to ship from supply and to destination now as $C_{i,j}^S$ and $C_{j,k}^D$ respectively.
+
+$$
+ \begin{split}
+ \begin{aligned}
+    \text{Minimize  }   &  \sum_{i} \sum_{j} C_{i,j}^S x_{i,j} + 
+                           \sum_{j} \sum_{k} C_{j,k}^D y_{j,k}\\
+    \text{subject to } & \sum_{j} y_{j,k} \leq D_k \; \forall \; k\\
+                       & \sum_{j} x_{i,j} \leq S_i \; \forall \; i\\
+                       & \sum_{i} x_{i,j}=\sum_{k} y_{j,k} \; \forall \; j\\
+                       & x_{i,j},  y_{j,k} \geq 0  \; \forall \; i,j,k
+  \end{aligned}
+  \end{split}
+$$
+
+The directions of the supply and demand constraint inequalities must again be considered as to whether the problem is supply or demand constrained, lest we find an optimal solution of doing nothing.
+
+This transhipment application can be further enhanced to allow for losses along arcs.  In this case there might be affect amount that reaches the distribution center based on losses enroute.  For example, we might use $L_{i,j}$ to capture this effect with $L_{1,2}=0.9$ to indicate that only 90% of the material makes it from factory _1_ to distribution center _2_. We would then modify the balance constraints to take the following form  $\sum_{i} L_{i,j} \cdot x_{i,j}=\sum_{k} y_{j,k} \; \forall \; j$  Loses might also apply in the transportation to the end customer with similar modifications to the model.
+
+Another common situation is to add capacity limits to each arc, perhaps both upper and lower bounds on capacity.
+
+Another common need in real world application is modeling a time dimension.  
 
 ## Standard Form
 
@@ -805,7 +889,7 @@ $$ The standard form now consists of a system of equations, generally with far m
 The simplex algorithm makes use of the fact that a system of equations and unknowns can be solved efficiently.
 The Simplex algorithm solves for as many variables (termed basic variables) as there are equations and sets the remaining variables to zero (non-basic variables).
 It then systematically swaps a variable from the set of basic variables and non-basic variables until it can no longer find an improvement.
-The actual algorithm for the Simplex algorithm is beyond the scope of what we will cover this in book.\
+The actual algorithm for the Simplex algorithm is beyond the scope of what we will cover in this book.\
 \vspace{12pt}
 
 Let's examine the solution to our example though.
@@ -919,7 +1003,7 @@ Similarly, we will define a variable for the inventory at the end of each period
 The production cost is simply cost per product multiplied by the number of products produced or $\sum_{p} \sum_{t} C^M_{p,t} x_{p,t}$.
 \vspace{12pt}
 
-The inventory carrying cost follows the same structure, $\sum_{p} \sum_{t} ( C^I_{p,t} y_{p,t}$ \vspace{12pt}
+The inventory carrying cost follows the same structure, $\sum_{p} \sum_{t}  C^I_{p,t} y_{p,t}$ \vspace{12pt}
 
 We can then combine them as $\sum_{p} \sum_{t} ( C^M_{p,t} x_{p,t} + C^I_{p,t} y_{p,t})$ \vspace{12pt}
 
