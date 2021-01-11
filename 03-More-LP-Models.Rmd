@@ -10,7 +10,7 @@ library (pander)
 library (magrittr)
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = F)
-knitr::opts_chunk$set(cache = TRUE)
+knitr::opts_chunk$set(cache = FALSE)
 knitr::opts_chunk$set(width = 30)
 #knitr::opts_chunk$set(fig.lp='fig:')
 # library(bookdown); library(rmarkdown); rmarkdown::render("03-More-LP-Models.Rmd", "tufte_book2")
@@ -124,7 +124,7 @@ grid.table(Profit)
 **Table 3.1**: Profit per product
 ```
 
-Let's implement a four product model requiring varying levels of five limited resources.  The profit per product is described in Table 3.1 and and the resource consumption per product is given in table 3.2.  We will start our implementatoin by creating the appropriate data structures in `R`.
+Let's implement a four product model requiring varying levels of five limited resources.  The profit per product is described in Table 3.1 and and the resource consumption per product is given in table 3.2.  We will start our implementation by creating the appropriate data structures in `R`.
 
 ```{r Product_Planning_4x5, max.width=30}
 NProd <- 4
@@ -138,7 +138,8 @@ ResNames<- lapply(list(rep("Res",NResources)),
                  # Resource names: Res1, Res2, ... 
 Resources <- matrix(c( 1, 3, 2, 3, 2, 3, 4, 3, 5, 7, 
                        2, 2, 1, 2, 2, 2, 2, 2, 4, 6), 
-              ncol=NProd,dimnames=c(ResNames,ProdNames))
+              ncol=NProd, 
+              dimnames=c(ResNames,ProdNames))
 Available <- matrix(c(800, 900, 480, 1200, 500), 
               ncol=1,dimnames=c(ResNames,"Available"))
 ```
@@ -547,8 +548,11 @@ $$
 ```
 
 See the Formula 3.5 on the right to understand the mathematical expression.
+\vspace{12pt}
 
 ## Covering Models
+
+\vspace{12pt}
 
 A covering model combines resources and coordinates activities.
 A classic covering application would be what mix of ingredients "covers" the requirements at the lowest possible cost.
@@ -571,7 +575,7 @@ $$
 **Formula 3.6**: Covering  
 ```
 
-See the Formula 3.5 on the right to understand the mathematical expression.
+See the Formula 3.6 on the right to understand the mathematical expression.
 \vspace{12pt}
 
 Consider the case of Trevor's Trail Mix Company.
@@ -656,18 +660,27 @@ We'll leave it to the reader to clean up the output of results.
 
 Another classic example of a covering problem is a staff scheduling problem.
 In this case, a manager is trying to assign workers to cover the required demands throughout the day, week, or month.
+\vspace{12pt}
 
 ## Transportation Models
+
+\vspace{12pt}
 
 A transportation model is typically for getting material from one place to another at the lowest possible costs.
 It has sets of source points or nodes as well as ending or destination nodes.
 The decision variables are the amount to send on each route.
 Constraints are typically based on supply from the source nodes and capacity at the destination nodes.
+\vspace{12pt}
+
 This naturally lends itself to potential network diagrams such as the one to the right.  In this case we have three warehouses (or supply points) in Minnesota (MN), Pennsylvania (PA), and Wyoming (WY), each with a supply shown to the left.  On the right side, we have four customer or demand nodes:  Atlanta (ATL), Boston (Bos), Chicago (Chi), and Denver (Den) with their maximum demand shown to the right of the node.  We also have arcs connecting every supply node to every demand node, each labeled with a corresponding cost per unit to transport an item along that arc.  The goal is to get as much shipped as possible at the lowest possible cost.
 
 ```{r Fig-Transportation, echo=FALSE, fig.margin=TRUE, out.width="2in"}
-library(knitr)
 knitr::include_graphics("images/Fig03-01-Transportation.PNG")
+```
+
+
+```{marginfigure}
+**Figure 3.1**: Transportation application.
 ```
 
 Let's start to model this now.  We want to define the decision variables, in this case, $x_{i,j}$ is the amount of product to ship from node i to node j.
@@ -678,6 +691,7 @@ The supply available from each supply node is $S_i$ and the maximum demand that 
 \vspace{12pt}
 
 In this formulation we need to make sure that we don't ship out more than the capacity of each supply node.
+\vspace{12pt}
 
 Similarly, we need to ensure that we don't take in more than demand capacity at any destination.
 
@@ -744,13 +758,22 @@ D <- c(700,  900, 1200, 900)
 
 ```
 
+\vspace{12pt}
+
 At this point, it may be a good idea to look at the arcs and see if you can expect which routes are likely to be heavily used and which are likely to be unused.  You can also do this by looking at the matrix of transportation costs to the right.
 
-```{r Show_Transp_Cost, fig.margin=TRUE}
-grid.table (Transp)
+```{r Show_Transp_Cost, eval=FALSE, fig.margin=TRUE}
+grid.table (Cost)
 ```
 
+```{marginfigure}
+**Formula 3.8**: Costs for transportation application  
+```
+\vspace{12pt}
+
 Now, let's move on to implementing the model.  
+\vspace{12pt}
+
 ```{r transportation, eval=TRUE}
 transportationmodel <- MIPModel() %>%
  add_variable(Vx[i, j], type = "continuous", 
@@ -775,14 +798,17 @@ res.transp <-solve_model(transportationmodel,
                                     with_ROI(solver ="glpk"))
 
 ```
+\vspace{12pt}
 
 Let's confirm that our model solved correctly.
+\vspace{12pt}
 
 ```{r transp_status, fig.margin=TRUE}
 res.transp$status
 ```
 
 Since it was solved to optimality, the optimal objective function value is meaningful and again we can use an inline code chunk of `R` to extract this value `r  res.transp$objective_value`.  The actual decision variable values of the solution are more interesting though.  Let's first prepare these results by extracting them from the solution object and then applying our names to them.  
+\vspace{12pt}
 
 ```{r}
 Transp <- matrix(res.transp$solution,
@@ -790,37 +816,55 @@ Transp <- matrix(res.transp$solution,
                 dimnames =list(snames,dnames))  
 ```
 
+\vspace{12pt}
 Now we can display the table of optimal transportation decisions from supply points to destinations cleanly.  
+\vspace{12pt}
 
 ```{r}
 grid.table (Transp)
 ```
 
+\vspace{12pt}
 
 ## Transshipment Models
+
+\vspace{12pt}
 
 A generalization of the transportation model is that of transhipment where some nodes are intermediate nodes that are neither pure sources or destinations but can have both inflow and outflow.  We could extend our previous example with factories in Vietnam and Thailand.  Note that the facilities in the middle (Minnesota, Pennsylvania, and Wyoming) are better described as distribution centers rather than warehouses.
 
 ```{r Fig-Transshipment, echo=FALSE, fig.margin=TRUE, out.width="2in"}
-library(knitr)
 knitr::include_graphics("images/Fig03-02-Transshipment.PNG")
 ```
 
+```{marginfigure}
+**Figure 3.2**: Transshipment application.
+```
+\vspace{12pt}
+
 In this case, the standard convention might be to work from left to right and index the set of factories by _i_, the set of distribution centers by _j_ and the set of customers by _k_.  We might also use $x_{i,j}$ to be the amount to ship from factory _i_ to distribution center _j_ and $y_{j,k}$ to be the amount to ship from distribution center _j_ to customer _k_.
+\vspace{12pt}
 
 A common characteristic of this kind of problem is then that the inflow at each distribution center must equal the outflow.  This means that for Minnesota, $(i=1)$, we would would have a relationship of the following.
+\vspace{12pt}
 
 $$x_{1,1}+x_{2,1}=y_{1,1}+y_{1,2}+y_{1,3}+y_{1,4}$$ 
 
 This lends itself to a summation.
+\vspace{12pt}
 
 $$\sum_{i=1}^2 x_{i,1}=\sum_{i=k}^4 y_{1,k}$$
 
+\vspace{12pt}
+
 We can then generalize this for every distribution center, _j_.
+\vspace{12pt}
 
 $$\sum_{i=1}^2 x_{i,j}=\sum_{i=k}^4 y_{j,k} \; \forall \; j$$
+\vspace{12pt}
 
 Now we could put everything together.  We'll differentiate the costs to ship from supply and to destination now as $C_{i,j}^S$ and $C_{j,k}^D$ respectively.
+
+\vspace{12pt}
 
 $$
  \begin{split}
@@ -834,182 +878,23 @@ $$
   \end{aligned}
   \end{split}
 $$
+\vspace{12pt}
 
 The directions of the supply and demand constraint inequalities must again be considered as to whether the problem is supply or demand constrained, lest we find an optimal solution of doing nothing.
+\vspace{12pt}
 
 This transhipment application can be further enhanced to allow for losses along arcs.  In this case there might be affect amount that reaches the distribution center based on losses enroute.  For example, we might use $L_{i,j}$ to capture this effect with $L_{1,2}=0.9$ to indicate that only 90% of the material makes it from factory _1_ to distribution center _2_. We would then modify the balance constraints to take the following form  $\sum_{i} L_{i,j} \cdot x_{i,j}=\sum_{k} y_{j,k} \; \forall \; j$  Loses might also apply in the transportation to the end customer with similar modifications to the model.
+\vspace{12pt}
 
 Another common situation is to add capacity limits to each arc, perhaps both upper and lower bounds on capacity.
-
-Another common need in real world application is modeling a time dimension.  
-
-## Standard Form
-
-Any linear program in inequality constraints can be converted into what is referred to as standard form.
-First, all strictly numerical terms are collected or moved to the right hand side and all variables are on the left hand side.
-
-It makes little difference as to whether the objective function is a *min* or a *max* function since a min objective function can be converted to a max objective function by multiplying everything a negative one.
-The converse is also true.
 \vspace{12pt}
 
-Lastly is a step where all of the inequalities are replaced by strict equality relations.
-The conversion of inequalities to equalities warrants a little further explanation.
-This is done by introducing a new, non-negative "slack" variable for each inequality.
-If the inequality is a $\leq$, then the slack variable can be thought of as filling the left hand side to make it equal to the right hand side so the slack variable is added to the left hand side.
-If the inequality is $\geq$, then the slack variable is the amount that must be absorbed from the left hand side to make it equal the right hand side.\
+Another common need in real world application is modeling a time dimension which leads us to issue production and inventory planning.
+
 \vspace{12pt}
-
-Let's demonstrate with a two variable example.
-
-$$
- \begin{split}
- \begin{aligned}
-    \text{max  }   &  2 \cdot x + 3 \cdot y \\
-    \text{subject to } &  10 \cdot x + 2 \cdot y \leq 110 \\
-                       & 2 \cdot x + 10 \cdot y \geq 50 \\
-                       & 2 \cdot x = 4 \cdot y  \\
-                       & x,y \geq 0  
-  \end{aligned}
-  \end{split}
-$$
-
-This can be then transformed to standard form by rearranging terms in the third constraint and adding two non-negative slack variables to the first two constraints.
-
-$$
- \begin{split}
- \begin{aligned}
-    \text{max  }   &  2 \cdot x + 3 \cdot y \\
-    \text{subject to } &  10 \cdot x + 2 \cdot y + s_1 = 110 \\
-                       & 2 \cdot x + 10 \cdot y -s_2 = 50 \\
-                       & 2 \cdot x - 4 \cdot y = 0 \\
-                       & x,y, s_1, s_2 \geq 0  
-  \end{aligned}
-  \end{split}
-$$ The standard form now consists of a system of equations, generally with far more variables (both regular and slack) than equations.
-The simplex algorithm makes use of the fact that a system of equations and unknowns can be solved efficiently.
-The Simplex algorithm solves for as many variables (termed basic variables) as there are equations and sets the remaining variables to zero (non-basic variables).
-It then systematically swaps a variable from the set of basic variables and non-basic variables until it can no longer find an improvement.
-The actual algorithm for the Simplex algorithm is beyond the scope of what we will cover in this book.\
-\vspace{12pt}
-
-Let's examine the solution to our example though.
-\vspace{12pt}
-
-```{r StdModel, echo=TRUE}
-StdModel <- MIPModel() %>%
- # To avoid name space conflicts, using a prefix of V
- #    for ompr variables.
-  
- add_variable(Vx, type = "continuous", lb = 0) %>%
- add_variable(Vy, type = "continuous",lb = 0) %>%
- add_variable(Vs1, type = "continuous", lb = 0) %>%
- add_variable(Vs2, type = "continuous", lb = 0) %>%
-  
- set_objective(2*Vx + 3*Vy,"max") %>%
-  
- add_constraint(10*Vx + 2*Vy + Vs1==110) %>%
- add_constraint(2*Vx + 10*Vy - Vs2==50) %>% 
- add_constraint(2*Vx - 4*Vy == 0) 
-
-  resStd <- solve_model(StdModel, 
-                        with_ROI(solver = "glpk"))
-  resStd
-  
-x  <- get_solution (resStd , Vx)
-y  <- get_solution (resStd , Vy)
-s1 <- get_solution (resStd , Vs1)
-s2 <- get_solution (resStd , Vs2)
-
-base_case_res           <- cbind(x, y, s1, s2)
-rownames(base_case_res) <- "Optimal Values"
-pander(base_case_res, caption="Solution to Standard Form")
-```
-
-Notice that we had three equations and four variables (both regular and slack variables.) This meant that at every iteration of the simplex algorithm, it would set one variable equal to zero and solve for the other three variables because solving three equations with three unknowns is very easy.
-This is consistent with our solution, where $s_1$ is zero and the other three variables all had values.
-\vspace{12pt}
-
-## Vector and Matrix Forms of LPs
-
-One of the benefits of using an algebraic modeling approach for linear programming such as `ompr` is that it provides a direct mapping from the mathematical model of the application to the implementation.
-The actual solver used such as `glpk,` `symphony,` or `gurobi` take the linear program in a different form though and `ompr` processes it into a form they can handle.
-In general, the solver thinks of the problem in terms of a vector of coefficients for the objective function, *C*, a vector of right hand side constraint values, *B*, a matrix of data, *A*, and a vector of variables, *x*.
-The result is that any linear program can be thought of in a form such as the following.
-
-$$
- \begin{split}
- \begin{aligned}
-    \text{max  }   &  C \cdot x \\
-    \text{subject to } &  A \cdot x \leq B \\
-                       & x \geq 0  
-  \end{aligned}
-  \end{split}
-$$
-
-Let's demonstrate this by extracting data from a model, `model1` that we have previously built in `ompr`.
-Simply typing in the name of the unsolved model will give a summary of the model characteristics.
-This was a problem with three variable and five constraints.\
-\vspace{12pt}
-
-```{r Display_3Var_Model}
-model1
-```
-
-When we build the model in `ompr`, it builds a representation of *A, B, C,* and *x*.
-Now, let's examine the the data structures inside the model.
-
-```{r Display_3Var_Objective_Function}
-objective_function(model1)
-```
-
-This describes the objective function with a constant term added of zero.
-\vspace{12pt}
-
-Similarly, we can extract the constraint data.
-
-```{r Extract_3Var_Constraints}
-extract_constraints(model1)
-```
-
-Notice this gives us the *A* matrix (aptly named `matrix` by `ompr`).
-The set of right hand side values of the constraints (the *B* vector) is named `rhs` by `ompr`.
-Lastly, the equality or type of inequality constraint is stored in a vector named `sense`.
-\vspace{12pt}
-
-The benefit of `ompr` and algebraic modeling more generally is highlighted as models get more complex with multiple subscripted variables (especially double or triple subscripted variables), and lots of constraints.
-Creating the Operations Research analyst could be build the *A* matrix on their own, keeping track of which row corresponds to a particular variable becomes very difficult.
-For an example of how this can be done, see the *DEA Using R* book's chapter on a matrix implementation of DEA.
-\vspace{12pt}
-
-```{r}
-# min cx; Ax<=B
-library (Rglpk)
-constraints <- extract_constraints(model1)
-A_matrix <- constraints$matrix
-B_vector<- extract_constraints(model1)$rhs
-CC <- objective_function(model1)
-C_vector <- CC$solution
-direction <- constraints$sense
-
-A_matrix  # Matrix of constraint coefficients
-B_vector  # Constraint right hand sides
-C_vector  # Objective function coefficients
-
-res <- Rglpk_solve_LP(C_vector, A_matrix, direction, B_vector, 
-                      max=TRUE)
-
-```
-
-Let's review results of solving the `Rglpk` solve version of the model. 
-
-```{r}
-res$status
-```
-The status returned `Rglpk` is zero.  This may sound bad but the package's help file indicate that returning a status value of zero means that it found an optimal solution.
-
-Let's look at the objective function value 
 
 ## Production and Inventory
+\vspace{12pt}
 
 A common application is production planning and inventory management planning over time.
 Let's assume a company has a manufacturing cost for product *p* in time period *t* of $C^M_{p,t}$.
@@ -1072,6 +957,221 @@ For example:
 -   Some companies require safety stocks levels to maintained which could be done by setting minimum inventory levels
 -   Sometimes all the demand cannot be met in a period - this can be modeled by separating sales from demand with a separate variable for sales in each period.
 -   Allowing backlogged demand that can be met in the following period - again modeled with an additional variable.
+
+\vspace{12pt}
+
+## Standard Form
+
+\vspace{12pt}
+
+Any linear program in inequality constraints can be converted into what is referred to as standard form.
+First, all strictly numerical terms are collected or moved to the right hand side and all variables are on the left hand side.
+\vspace{12pt}
+
+It makes little difference as to whether the objective function is a *min* or a *max* function since a min objective function can be converted to a max objective function by multiplying everything a negative one.
+The converse is also true.
+\vspace{12pt}
+
+Lastly is a step where all of the inequalities are replaced by strict equality relations.
+The conversion of inequalities to equalities warrants a little further explanation.
+This is done by introducing a new, non-negative "slack" variable for each inequality.
+If the inequality is a $\leq$, then the slack variable can be thought of as filling the left hand side to make it equal to the right hand side so the slack variable is added to the left hand side.
+If the inequality is $\geq$, then the slack variable is the amount that must be absorbed from the left hand side to make it equal the right hand side.\
+\vspace{12pt}
+
+Let's demonstrate with a two variable example.
+\vspace{12pt}
+
+$$
+ \begin{split}
+ \begin{aligned}
+    \text{max  }   &  2 \cdot x + 3 \cdot y \\
+    \text{subject to } &  10 \cdot x + 2 \cdot y \leq 110 \\
+                       & 2 \cdot x + 10 \cdot y \geq 50 \\
+                       & 2 \cdot x = 4 \cdot y  \\
+                       & x,y \geq 0  
+  \end{aligned}
+  \end{split}
+$$
+
+\vspace{12pt}
+This can be then transformed to standard form by rearranging terms in the third constraint and adding two non-negative slack variables to the first two constraints.
+\vspace{12pt}
+
+$$
+ \begin{split}
+ \begin{aligned}
+    \text{max  }   &  2 \cdot x + 3 \cdot y \\
+    \text{subject to } &  10 \cdot x + 2 \cdot y + s_1 = 110 \\
+                       & 2 \cdot x + 10 \cdot y -s_2 = 50 \\
+                       & 2 \cdot x - 4 \cdot y = 0 \\
+                       & x,y, s_1, s_2 \geq 0  
+  \end{aligned}
+  \end{split}
+$$ The standard form now consists of a system of equations, generally with far more variables (both regular and slack) than equations.
+The simplex algorithm makes use of the fact that a system of equations and unknowns can be solved efficiently.
+The Simplex algorithm solves for as many variables (termed basic variables) as there are equations and sets the remaining variables to zero (non-basic variables).
+It then systematically swaps a variable from the set of basic variables and non-basic variables until it can no longer find an improvement.
+The actual algorithm for the Simplex algorithm is beyond the scope of what we will cover in this book.\
+\vspace{12pt}
+
+Let's examine the solution to our example though.
+\vspace{12pt}
+
+```{r StdModel, echo=TRUE}
+StdModel <- MIPModel() %>%
+ # To avoid name space conflicts, using a prefix of V
+ #    for ompr variables.
+  
+ add_variable(Vx, type = "continuous", lb = 0) %>%
+ add_variable(Vy, type = "continuous",lb = 0) %>%
+ add_variable(Vs1, type = "continuous", lb = 0) %>%
+ add_variable(Vs2, type = "continuous", lb = 0) %>%
+  
+ set_objective(2*Vx + 3*Vy,"max") %>%
+  
+ add_constraint(10*Vx + 2*Vy + Vs1==110) %>%
+ add_constraint(2*Vx + 10*Vy - Vs2==50) %>% 
+ add_constraint(2*Vx - 4*Vy == 0) 
+
+  resStd <- solve_model(StdModel, 
+                        with_ROI(solver = "glpk"))
+  resStd
+  
+x  <- get_solution (resStd , Vx)
+y  <- get_solution (resStd , Vy)
+s1 <- get_solution (resStd , Vs1)
+s2 <- get_solution (resStd , Vs2)
+
+base_case_res           <- cbind(x, y, s1, s2)
+rownames(base_case_res) <- "Optimal Values"
+pander(base_case_res, caption="Solution to Standard Form")
+```
+
+Notice that we had three equations and four variables (both regular and slack variables.) This meant that at every iteration of the simplex algorithm, it would set one variable equal to zero and solve for the other three variables because solving three equations with three unknowns is very easy.
+This is consistent with our solution, where $s_1$ is zero and the other three variables all had values.
+\vspace{12pt}
+
+## Vector and Matrix Forms of LPs
+
+\vspace{12pt}
+One of the benefits of using an algebraic modeling approach for linear programming such as `ompr` is that it provides a direct mapping from the mathematical model of the application to the implementation.
+The actual solver used such as `glpk,` `symphony,` or `gurobi` take the linear program in a different form though and `ompr` processes it into a form they can handle.
+
+```{r Fig-ompr_structure, echo=FALSE, fig.margin=TRUE, out.width="2in"}
+knitr::include_graphics("images/Fig03-03-ROI_1a.PNG")
+```
+
+```{marginfigure}
+**Figure 3.3**: Relationship between `ompr` and solvers.
+```
+\vspace{12pt}
+
+In general, the solver thinks of the problem in terms of a vector of coefficients for the objective function, *C*, a vector of right hand side constraint values, *B*, a matrix of data, *A*, and a vector of variables, *x*.
+The result is that any linear program can be thought of in a form to the right.
+
+```{marginfigure}
+$$
+ \begin{split}
+ \begin{aligned}
+    \text{max  }   &  C \cdot x \\
+    \text{s.t. } &  A \cdot x \leq B \\
+                       & x \geq 0  
+  \end{aligned}
+  \end{split}
+$$
+```
+
+```{marginfigure}
+**Formula 3.10**: Optimization base model with 2 variables.
+```
+
+\vspace{12pt}
+
+Earlier in the chapter, we created data structures for the generalized version of the optimization model. Recall that we `Resources` as a matrix of the resources used by each product - this corresponds to our $A$ matrix.  We also created a single column  matrix, `Available` for the amount of each resource available which is our $B$
+vector.  The `Profit` single row matrix serves as our $C$ vector.  The last item that we need to do is to specify a direction for each inequality. 
+\vspace{12pt}
+
+We could rewrite our formulation then as the following.  
+\vspace{12pt}
+
+$$
+ \begin{split}
+ \begin{aligned}
+    \text{max  }   &  Profit \cdot x \\
+    \text{s.t. } &  Resources \cdot x \leq Available \\
+                       & x \geq 0  
+  \end{aligned}
+  \end{split}
+$$
+The `Rglpk` package can then be accessed directly.
+\vspace{12pt}
+
+```{r Fig-ompr_to_glpk, echo=FALSE, fig.margin=TRUE, out.width="2in"}
+knitr::include_graphics("images/Fig03-04-ROI_glpk1a.PNG")
+```
+
+```{marginfigure}
+**Figure 3.4**: Relationship between `ompr` and `rglpk`.
+```
+
+```{r}
+library (Rglpk)    # Load Rglpk package
+
+dir2<- c( "<=", "<=", "<=", "<=", "<=")
+                   # Set direction of each inequality
+
+res2 <- Rglpk_solve_LP(obj=Profit,    # C vector
+                       mat=Resources, # A matrix
+                       dir=dir2,      # Constraint Inequalities
+                       Available,     # B vector
+                       max=TRUE)      # False does a minimization
+   # Uses default bounds on all variables
+   #   LB = 0, UB=infinity (just non-negativity)
+   # Defaults to continuous variables
+```
+\vspace{12pt}
+
+Notice that calling the solver directly such as in this way using `Rglpk` does not require naming decision variables.  A decision variable is created for each column of the matrix.  Directly accessing the solver allows for all the same features that we use through `ompr` such as placing bounds on the variables, changing to a minimization objective function, and more such as advanced solving options.  Other LP solving engines available in `R` such as `RSymphony` and `lpSolve` have similar syntax for solving.  
+\vspace{12pt}
+
+Let's look at the results. As usual, we start by examining the status. 
+\vspace{12pt}
+
+```{r}
+res2$status
+```
+
+\vspace{12pt}
+The status returned by `Rglpk` is zero.  This may sound bad but the package's help file indicates that returning a status value of zero means that no problems occurred and it found an optimal solution.  We can then proceed to examine the objective function value.  
+\vspace{12pt}
+
+```{r}
+res2$optimum
+```
+\vspace{12pt}
+
+This objective function value may look familiar.  Now let's look at the solution in terms of optimal decision variable values.
+\vspace{12pt}
+
+```{r}
+res2$solution
+```
+
+Most of these LP solving engines can also allow models to be built up incrementally as well by creating an empty model, then adding an objective function and adding constraints, bounds on variables as separate lines of `R` code.  
+\vspace{12pt}
+
+While working with the solver directly has the benefit of avoiding ambiguities such as the difficulty of parsing solution status correctly, creating a single _A_ matrix for optimization problems with multiple sets of decision variables and decision variables that may have 3 or more subscripts can be very tricky, hard to maintain, and even harder to debug.  Also, the results require just as much or more care in unpacking as the solution variable values are returned as a single vector, _x_ containing all the separate decision variables.  Think of having three triple subscripted variables, _u_, _v_, and _y_ with each subscript having 12 values.  The resulting _x_ vector will have $3 \cdot 12^3=5184$ elements, each of which must always be considered in exactly the same order for each constraint or building of the _A_ matrix.
+\vspace{12pt}
+
+At this point, it may be apparent that a chief benefit of `ompr` is that allows the modeler to deal with the model at a higher level and forces the computer to handle the detailed accounting translating the model into a lower level solvable structure and then translating the solution back into the original terms.  These conversions are analogous to using a high level computer language versus a low level assembly code.  A talented programmer can write a program in assembly code to do anything that could be done in a high level language but the cost in terms of time and effort is typically prohibitive.    
+\vspace{12pt}
+
+The investment of time and effort to use a lower level, more direct access to the solver engine may be warranted when developing a package that does optimization. For example, packages for doing Data Envelopment Analysis require doing many linear programs.  These are typically done using the lower level engines such as lpSolveAPI, `Rglkp`, `lpSolveAPI`, or other tools rather than `ompr` but the platform decision should be made carefully.  A more indepth example of building optimization models using lower level access calls is in _DEA Using R_.
+\vspace{12pt}
+
+Since each low level solver may have different choices made in terms of the name or format of parameters to be passed for the LP as well as a different naming convention of elements being passed back, a translation layer has been developed, `ROI` which stands for the R Optimization Interface. There is the core `ROI` package and a specific `ROI` interface for each LP solver such as `ROI.plugin.glpk`. `ROI` can then be used to simplify switching between LP solvers.  This is demonstrated in Chapter 8.  
+\vspace{12pt}
 
 \vspace{12pt}
 
