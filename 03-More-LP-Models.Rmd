@@ -36,7 +36,7 @@ Instead, we use sets of products and resources.\
 
 We could also reframe the model more algebraically.
 Let's use subscripts to differentiate between products and resources.
-We can define that *i=1* represents Chairs, *i=2* represents Desks, and *i=3* represents Tables.
+We can define that *i=1* represents Ants, *i=2* represents Bats, and *i=3* represents Cats.
 
 ```{marginfigure}
 $$
@@ -330,7 +330,7 @@ Let's modify the above model.
 We can do this by simply changing the data that we pass into the model.
 \vspace{12pt}
 
-Let's change the time required for painting a chair to 20.
+Let's change the time required for painting an ant to 20.
 Recall that this is the first product and the fourth resource.
 This is how we can change the value.
 
@@ -338,7 +338,7 @@ This is how we can change the value.
 Resources[4,1] <- 20  
 # Set value of the 4th row, 1st column to 20
 # In our example, this is the paint resource 
-# used by making a chair
+# used by making an ant
 ```
 
 Now we will rebuild the the optimization model.
@@ -394,14 +394,14 @@ The table on the right displays the new Production plan and the optimal distribu
 ## Blending Problems
 
 Specific blend limitations arise in many situations.
-In our example, we might say that Chairs can make up no more than 40% of the overall product plan.
+In our example, we might say that Ants can make up no more than 40% of the overall product plan.
 In our original case, this would be expressed as the following.\
 \vspace{12pt}
 
 $$
  \begin{split}
  \begin{aligned}
-   \frac {Chairs} {Chairs + Desks + Tables} \leq 0.40
+   \frac {Ants} {Ants + Bats + Cats} \leq 0.40
   \end{aligned}
   \end{split}
 $$
@@ -412,27 +412,27 @@ Let's rebuild our three variable production plan from Chapter 2.
 
 ```{r Base3VarModel, echo=TRUE}
 Base3VarModel <- MIPModel() %>%
- add_variable(Chairs, type = "continuous", lb = 0) %>%
- add_variable(Desks, type = "continuous",lb = 0) %>%
- add_variable(Tables, type = "continuous", lb = 0) %>%
+ add_variable(Ants, type = "continuous", lb = 0) %>%
+ add_variable(Bats, type = "continuous",lb = 0) %>%
+ add_variable(Cats, type = "continuous", lb = 0) %>%
   
- set_objective(20*Chairs + 14*Desks + 16*Tables,"max")%>%
+ set_objective(20*Ants + 14*Bats + 16*Cats,"max")%>%
   
- add_constraint(6*Chairs + 2*Desks + 4*Tables<= 2000)%>%
+ add_constraint(6*Ants + 2*Bats + 4*Cats<= 2000)%>%
       #fabrication
- add_constraint(8*Chairs + 6*Desks + 4*Tables<= 2000)%>% 
+ add_constraint(8*Ants + 6*Bats + 4*Cats<= 2000)%>% 
       #assembly
- add_constraint(6*Chairs + 4*Desks + 8*Tables<= 1440)%>%
+ add_constraint(6*Ants + 4*Bats + 8*Cats<= 1440)%>%
       #machining
- add_constraint(40*Chairs + 25*Desks + 16*Tables<= 9600)%>% 
+ add_constraint(40*Ants + 25*Bats + 16*Cats<= 9600)%>% 
       #wood
-  add_constraint(Tables <= 200) #
+  add_constraint(Cats <= 200) #
 res3base <- solve_model(Base3VarModel, 
                         with_ROI(solver = "glpk"))
-xchairs <- get_solution (res3base , Chairs)
-xdesks  <- get_solution (res3base , Desks)
-xtables <- get_solution (res3base , Tables)
-base_case_res           <- cbind(xchairs,xdesks,xtables)
+xants <- get_solution (res3base , Ants)
+xbats  <- get_solution (res3base , Bats)
+xtables <- get_solution (res3base , Cats)
+base_case_res           <- cbind(xants,xbats,xtables)
 rownames(base_case_res) <- "Amount to Produce"
 ```
 
@@ -441,27 +441,27 @@ grid.table(base_case_res)
 **Table 3.8**: Production Plan for Base Case
 ```
 
-The table on the right displays the optimal production plan for the original formulation without the limit on production of chairs.
+The table on the right displays the optimal production plan for the original formulation without the limit on production of ants.
 \vspace{12pt}
 
-Let's add the constraint that chairs can't make up more than 40% of the total production.
+Let's add the constraint that ants can't make up more than 40% of the total production.
 \vspace{12pt}
 
-Effectively, we are saying that $\frac{Chairs}{Chairs+Desks+Tables} \leq 0.40$ \vspace{12pt}
+Effectively, we are saying that $\frac{Ants}{Ants+Bats+Cats} \leq 0.40$ \vspace{12pt}
 
 Alas, this is not a linear function so we need to clear the denominator.
 \vspace{12pt}
 
-$Chairs \leq 0.40 \cdot (Chairs+Desks+Tables)$ \vspace{12pt}
+$Ants \leq 0.40 \cdot (Ants+Bats+Cats)$ \vspace{12pt}
 
 We like to get all the variables on the left side so let's move them over.
 \vspace{12pt}
 
-$Chairs - 0.4 \cdot Chairs-0.4 \cdot Desks-0.4 \cdot Tables \leq 0$ \vspace{12pt}
+$Ants - 0.4 \cdot Ants-0.4 \cdot Bats-0.4 \cdot Cats \leq 0$ \vspace{12pt}
 
 Let's simplify this a little, which gives us the following: \vspace{12pt}
 
-$0.6 \cdot Chairs-0.4 \cdot Desks-0.4 \cdot Tables \leq 0$
+$0.6 \cdot Ants-0.4 \cdot Bats-0.4 \cdot Cats \leq 0$
 
 \vspace{12pt}
 
@@ -472,15 +472,15 @@ $$
  \begin{split}
  \begin{aligned}
     \text{Max:} & \\
-                & 20 \cdot Chairs+14 \cdot Desks+16 \cdot Tables \\
+                & 20 \cdot Ants+14 \cdot Bats+16 \cdot Cats \\
     \text{S.t.} & \\
-                       & 6 \cdot Chairs+2 \cdot Desks+4 \cdot Tables \leq 2000 \\
-                       & 8 \cdot Chairs+6 \cdot Desks+4 \cdot Tables \leq 2000 \\
-                       & 6 \cdot Chairs+4 \cdot Desks+8 \cdot Tables \leq 1440 \\
-                       & 40 \cdot Chairs+25Desks+16Tables \leq 9600 \\
-                       & 0.6 \cdot Chairs-0.4 \cdot Desks-0.4 \cdot Tables \leq 0 \\
-                       & Tables \leq 200 \\
-                       & Chairs,  \; Desks, \; Tables \geq 0  
+                       & 6 \cdot Ants+2 \cdot Bats+4 \cdot Cats \leq 2000 \\
+                       & 8 \cdot Ants+6 \cdot Bats+4 \cdot Cats \leq 2000 \\
+                       & 6 \cdot Ants+4 \cdot Bats+8 \cdot Cats \leq 1440 \\
+                       & 40 \cdot Ants+25Bats+16Cats \leq 9600 \\
+                       & 0.6 \cdot Ants-0.4 \cdot Bats-0.4 \cdot Cats \leq 0 \\
+                       & Cats \leq 200 \\
+                       & Ants,  \; Bats, \; Cats \geq 0  
   \end{aligned}
   \end{split}
 $$
@@ -497,15 +497,15 @@ We can simply add a constraint to an existing `ompr` model of our 3 variable bas
 
 ```{r Blending}
 ModelBlending<- add_constraint(Base3VarModel,
-                0.6*Chairs -0.4*Desks - 0.4*Tables <= 0) 
+                0.6*Ants -0.4*Bats - 0.4*Cats <= 0) 
 resBlending<- solve_model(ModelBlending, 
                           with_ROI(solver = "glpk"))
 ```
 
 ```{r Blending_Results}
-blendres<-cbind(get_solution (resBlending, Chairs),
-                get_solution (resBlending, Desks),
-                get_solution (resBlending, Tables))
+blendres<-cbind(get_solution (resBlending, Ants),
+                get_solution (resBlending, Bats),
+                get_solution (resBlending, Cats))
 ```
 
 \vspace{12pt}
@@ -517,7 +517,7 @@ Okay, now let's put both side by side in a table to show the results.\
 rownames(base_case_res)<-"Base Model"
 rownames(blendres)<-"with Constraint"
 comparative <- rbind(base_case_res,round(blendres, 2))
-colnames (comparative) <- c("Chairs","Desks","Tables")
+colnames (comparative) <- c("Ants","Bats","Cats")
 grid.table(comparative)
 ```
 
@@ -1026,14 +1026,14 @@ $$
  \begin{split}
  \begin{aligned}
     \text{Max:} & \\
-                & Profit=20Chairs+10Desks+16Tables \\
+                & Profit=20Ants+10Bats+16Cats \\
     \text{S.t.} & \\
-                & 6Chairs+3Desks+4Tables \leq 2000 \\
-                & 8Chairs+4Desks+4Tables \leq 2000 \\
-                & 6Chairs+3Desks+8Tables \leq 1440 \\
-                & 40Chairs+20Desks+16Tables \leq 9600 \\
-                & Tables  \leq 200 \\
-                & Chairs, Desks, Tables \geq 0  
+                & 6Ants+3Bats+4Cats \leq 2000 \\
+                & 8Ants+4Bats+4Cats \leq 2000 \\
+                & 6Ants+3Bats+8Cats \leq 1440 \\
+                & 40Ants+20Bats+16Cats \leq 9600 \\
+                & Cats  \leq 200 \\
+                & Ants, Bats, Cats \geq 0  
   \end{aligned}
   \end{split}
 $$
