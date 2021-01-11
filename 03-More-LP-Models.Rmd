@@ -489,7 +489,7 @@ We can simply add a constraint to an existing `ompr` model of our 3 variable bas
 \vspace{12pt}
 
 ```{r Blending}
-ModelBlending<- add_constraint(Base3VarModel,
+ModelBlending<- add_constraint(model1,
                 0.6*Ants -0.4*Bats - 0.4*Cats <= 0) 
 resBlending<- solve_model(ModelBlending, 
                           with_ROI(solver = "glpk"))
@@ -946,20 +946,20 @@ $$
   \end{split}
 $$
 
-Let's demonstrate this by extracting data from a model, `Base3VarModel` that we have previously built in `ompr`.
+Let's demonstrate this by extracting data from a model, `model1` that we have previously built in `ompr`.
 Simply typing in the name of the unsolved model will give a summary of the model characteristics.
 This was a problem with three variable and five constraints.\
 \vspace{12pt}
 
 ```{r Display_3Var_Model}
-Base3VarModel
+model1
 ```
 
 When we build the model in `ompr`, it builds a representation of *A, B, C,* and *x*.
 Now, let's examine the the data structures inside the model.
 
 ```{r Display_3Var_Objective_Function}
-objective_function(Base3VarModel)
+objective_function(model1)
 ```
 
 This describes the objective function with a constant term added of zero.
@@ -968,7 +968,7 @@ This describes the objective function with a constant term added of zero.
 Similarly, we can extract the constraint data.
 
 ```{r Extract_3Var_Constraints}
-extract_constraints(Base3VarModel)
+extract_constraints(model1)
 ```
 
 Notice this gives us the *A* matrix (aptly named `matrix` by `ompr`).
@@ -980,6 +980,34 @@ The benefit of `ompr` and algebraic modeling more generally is highlighted as mo
 Creating the Operations Research analyst could be build the *A* matrix on their own, keeping track of which row corresponds to a particular variable becomes very difficult.
 For an example of how this can be done, see the *DEA Using R* book's chapter on a matrix implementation of DEA.
 \vspace{12pt}
+
+```{r}
+# min cx; Ax<=B
+library (Rglpk)
+constraints <- extract_constraints(model1)
+A_matrix <- constraints$matrix
+B_vector<- extract_constraints(model1)$rhs
+CC <- objective_function(model1)
+C_vector <- CC$solution
+direction <- constraints$sense
+
+A_matrix  # Matrix of constraint coefficients
+B_vector  # Constraint right hand sides
+C_vector  # Objective function coefficients
+
+res <- Rglpk_solve_LP(C_vector, A_matrix, direction, B_vector, 
+                      max=TRUE)
+
+```
+
+Let's review results of solving the `Rglpk` solve version of the model. 
+
+```{r}
+res$status
+```
+The status returned `Rglpk` is zero.  This may sound bad but the package's help file indicate that returning a status value of zero means that it found an optimal solution.
+
+Let's look at the objective function value 
 
 ## Production and Inventory
 
