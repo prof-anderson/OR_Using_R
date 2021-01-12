@@ -1088,8 +1088,7 @@ $$
 
 \vspace{12pt}
 
-Earlier in the chapter, we created data structures for the generalized version of the optimization model. Recall that we `Resources` as a matrix of the resources used by each product - this corresponds to our $A$ matrix.  We also created a single column  matrix, `Available` for the amount of each resource available which is our $B$
-vector.  The `Profit` single row matrix serves as our $C$ vector.  The last item that we need to do is to specify a direction for each inequality. 
+Earlier in the chapter, we created data structures for the generalized version of the optimization model. Recall that earlir in this chapter we created a `Resources` matrix of the resources used by each product - this corresponds to our $A$ matrix.  We also created a single column  matrix, `Available`, for the amount of each resource available which is our $B$ vector.  The `Profit` single row matrix serves as our $C$ vector.  The last item that we need to do is to specify a direction for each inequality. 
 \vspace{12pt}
 
 We could rewrite our formulation then as the following.  

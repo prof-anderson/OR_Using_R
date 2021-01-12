@@ -441,7 +441,7 @@ print(get_solution(result0, Ants))
 print(get_solution(result0, Bats))
 ```
 
-In summary, our optimal production plan is to make a mix of Ant and Bat robot models.  More specifically, should produce `r get_solution(result0, Ants)` Ants and `r get_solution(result0, Bats)` to generate a total profit of `r objective_value(result0)`.  Given the situation, this is the optimal or most profitable possible production plan.
+In summary, our optimal production plan is to make a mix of Ant and Bat robot models.  More specifically, should produce `r get_solution(result0, Ants)` Ants and `r get_solution(result0, Bats)` Bats to generate a total profit of `r objective_value(result0)`.  Given the situation, this is the optimal or most profitable possible production plan.
 
 ## Adding a Third Product (Variable)
 
@@ -755,6 +755,7 @@ $$
 & 2\cdot Ants + 2 \cdot Bats  +1\cdot Cats \leq 480 \\
 & 2\cdot Ants + 10 \cdot Bats  +2\cdot Cats \leq 1200 \\
 &  Ants +  Bats  + Cats \leq 500 \\
+&  Ants, /; Bats, /; Cats \geq 0 \\
  \end{aligned}
  \end{split}
 $$
@@ -783,7 +784,7 @@ get_solution(result3, Bats)
 get_solution(result3, Cats)
 ```
 
-This constraint was *redundant* because the other constraints would keep us from ever having 500 robots or therefore ever needing 500 gallons of paint. In other words, there is no way that this constraint could ever be binding at any solution regardless of what the objective function is. More precisely, elimination of a redundant constraint does not change the size of the feasible region at all. \vspace{12pt}
+This constraint was *redundant* because the other constraints would keep us from ever having 500 robots or therefore ever needing 500 liters of paint. In other words, there is no way that this constraint could ever be binding at any solution regardless of what the objective function is. More precisely, elimination of a redundant constraint does not change the size of the feasible region at all. \vspace{12pt}
 
 Note that not all non-binding constraints at an optimal solution are redundant. Deleting a non-binding constraint and resolving won't change the optimal objective function value. On the other hand, for a different objective function, that non-binding constraint might become binding and therefore different solutions would be found if it were deleted. \vspace{12pt}
 
