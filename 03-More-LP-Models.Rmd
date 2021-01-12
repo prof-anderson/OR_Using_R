@@ -1058,7 +1058,7 @@ This is consistent with our solution, where $s_1$ is zero and the other three va
 One of the benefits of using an algebraic modeling approach for linear programming such as `ompr` is that it provides a direct mapping from the mathematical model of the application to the implementation.
 The actual solver used such as `glpk,` `symphony,` or `gurobi` take the linear program in a different form though and `ompr` processes it into a form they can handle.
 
-```{r Fig-ompr_structure, echo=FALSE, fig.margin=TRUE, out.width="2in"}
+```{r Fig-ompr_structure, echo=FALSE, fig.margin=TRUE, out.width="1.5in"}
 knitr::include_graphics("images/Fig03-03-ROI_1a.PNG")
 ```
 
@@ -1107,12 +1107,12 @@ $$
 The `Rglpk` package can then be accessed directly.
 \vspace{12pt}
 
-```{r Fig-ompr_to_glpk, echo=FALSE, fig.margin=TRUE, out.width="2in"}
+```{r Fig-ompr_to_glpk, echo=FALSE, fig.margin=TRUE, out.width="1.5in"}
 knitr::include_graphics("images/Fig03-04-ROI_glpk1a.PNG")
 ```
 
 ```{marginfigure}
-**Figure 3.4**: Relationship between `ompr` and `rglpk`.
+**Figure 3.4**: Relationship between `ompr` and `Rglpk`.
 ```
 
 ```{r}
@@ -1123,9 +1123,9 @@ dir2<- c( "<=", "<=", "<=", "<=", "<=")
 
 res2 <- Rglpk_solve_LP(obj=Profit,    # C vector
                        mat=Resources, # A matrix
-                       dir=dir2,      # Constraint Inequalities
-                       Available,     # B vector
-                       max=TRUE)      # False does a minimization
+                       dir=dir2,  # Constraint Inequalities
+                       Available, # B vector
+                       max=TRUE)  # False does minimization
    # Uses default bounds on all variables
    #   LB = 0, UB=infinity (just non-negativity)
    # Defaults to continuous variables
