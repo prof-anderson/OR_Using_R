@@ -620,11 +620,10 @@ gres$status
 
 Let's take another look at comparing solvers by examining their popularity. More precisely, let's examine the download logs of CRAN for a variety of linear programming solvers.  
 
-```{r lp_package_download_stats, echo=FALSE, fig.width=10, fig.height=6, fig.fullwidth=TRUE}
+```{r lp_package_download_stats,  echo=FALSE, fig.width=10, fig.height=6, fig.fullwidth=TRUE}
 optim_packages <- c("lpSolve", "lpSolveAPI",  "Rglpk", 
                    "clpAPI",  "DEoptim", "Rsymphony", 
-                   "glpkAPI", "alabama","scs"
-)
+                   "glpkAPI", "alabama","scs")
 pkg_dl_data <- cran_stats(packages = optim_packages)
 ggplot(pkg_dl_data, aes(end, downloads, group=package, color=package)) +
     geom_line()  + 
