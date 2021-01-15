@@ -10,7 +10,7 @@ library (tidyr)
 library (ggplot2)
 library (ggrepel)
 library(ompr)
-library(magrittr)
+suppressPackageStartupMessages(library (magrittr, quietly = TRUE))
 library(ompr.roi)
 library(ROI.plugin.glpk)
 library (tictoc, quietly = TRUE) 
@@ -126,8 +126,9 @@ customer_locations <- data.frame(
 )
 ```
 
-> The **warehouses** are also randomly placed on the grid. The fixed cost for the warehouses are randomly generated as well with mean cost of 10,000.
-Notice that in this case, the fixedcost is generated using a normal random variable function, with a mean of 10 times the grid size or 10,000 and a standard deviation of 5000.
+Choosing to open a warehouse entails a fixed cost that varies for each warehouse, _j_, defined earlier as $fixedcost_j$ or `fixedcost[j]` in `R`.  The warehouse locations and fixed costs are again generated randomly as described by Dirk Schumacher.
+
+> The **warehouses** are also randomly placed on the grid. The fixed cost for the warehouses are randomly generated as well with mean cost of 10,000. Notice that in this case, the fixedcost is generated using a normal random variable function, with a mean of 10 times the grid size or 10,000 and a standard deviation of 5000.
 
 ```{r Create-Warehouse-Data}
 warehouse_locations <- data.frame(
@@ -149,7 +150,7 @@ hist(fixedcost, main="Fixed Costs of Warehouses",
 Note that the distribution of fixed costs is pretty broad. In fact, using a normal distribution means that is unbounded in both directions so it is possible for a warehouse to have a negative construction cost. While a negative construction cost might seem impossible, perhaps this would be an example of local tax incentives at work.
 \vspace{12pt}
 
-For transportation cost, we will assume that simple Euclidean distance is a good measure of cost.  Just a reminder, Euclidean distance between two points is $\sqrt{(X_1-X_2)^2+(Y_1-Y_2)^2}$.  Of course in terms of cost, we could scale it or add a startup cost to each trip but for the sake of this example, we don't need to worry about it.  
+For transportation cost, we will assume that simple Euclidean distance is a good measure of cost.  Just a reminder, Euclidean distance between two points is $\sqrt{(X_1-X_2)^2+(Y_1-Y_2)^2}$.  Of course in terms of cost, we could scale it or add a startup cost to each trip but for the sake of this example, we don't need to worry about it.  We could also use other distance metrics such rectilinear distance, driving distance, or any other metric we want.  
 \vspace{12pt}
 
 Her we define a function to calculate the distance between customer _i_ and warehouse _j_.
@@ -171,7 +172,7 @@ pander(head(customer_locations),
        caption="Locations of First Six Customers")
 ```
 
-A table of the randomly generated locations is not terribly helpful for understanding the locations of customers or warehouses though. Let's instead build a map by plotting both customers and warehouses together. Black dots are customers and red dots are possible warehouse locations.
+A table of the randomly generated locations is not terribly helpful for understanding the locations of customers or warehouses though. Let's build a map by plotting both customers and warehouses together. Black dots are customers and red dots are possible warehouse locations.
 
 ```{r Plot_Map_of_Customers_and_Warehouses}
 p <- ggplot(customer_locations, aes(x, y)) + 
@@ -191,10 +192,8 @@ p + ggtitle("Map of Customer and Warehouse Locations")
 Black dots are customers. Light red triangles show potential warehouse locations.
 ```
 
-Note that I have modified the variables names for _x_ and _y_ to be `Vx` and `Vy` in the code chunk to remove confusion over x and y representing location or variables.  The prefix of `V` is meant to suggest that it is a variable.
+Note that I have modified the variables names for _x_ and _y_ to be `Vx` and `Vy` in the code chunk to remove confusion over x and y representing location or variables.  The prefix of `V` is meant to suggest that it is a variable.  It also helps prevent name space conflicts with other `R` objects in my environment.
 \vspace{12pt}
-
-Note that I have modified the variables names for _x_ and _y_ to be `Vx` and `Vy` in the code chunk to remove confusion over x and y representing location or variables.  The prefix of `V` is meant to suggest that it is a variable.
 
 ```{r Build_Warehouse_Model, message=FALSE}
 model <- MIPModel() %>%
@@ -582,13 +581,13 @@ pander(timeresults,
 The most important thing to note is that each solver states that it found the same value for an objective function.  While they may vary in how it is achieved if there are multiple optima (in other words, different values for decision variables _x_ and _y_), this means that they all found a correct solution.  It would be a big issue if they differed. Causes for difference could be timing out, satisfying a suboptimality tolerance factor condition, or some error.  
 \vspace{12pt}
 
-Note that time will vary significantly from computer to computer and may also depend upon the other tasks and the amount of memory available. Performance will change for different solver settings and for different problems.  Also, performance time will change for different random instances---simply changing the random number seed will create diferent run-time results.  This problem is probably too small to show off the advantages of gurobi and running gurobi through the ROI 
+Note that time will vary significantly from computer to computer and may also depend upon the other tasks and the amount of memory available. Performance will change for different solver settings and for different problems.  Also, performance time will change for different random instances---simply changing the random number seed will create diferent run-time results.  This problem is probably too small to show off the advantages of gurobi and running gurobi through third party tool interfaces such as `ompr` and `ROI` will also be slower than a more native format.
 \vspace{12pt}
 
 The ROI package lists 19 different solvers with ROI plugins. Three commercial solvers, C-Plex, GUROBI, and MOSEK are worth highlighting. These programs may be substantially faster on large MIP problems and may make versions available for academic use.  Others are for quadratic optimization or special classes of optimization problems.  
 \vspace{12pt}
 
-After running these chunks dozens of times and finding the results to be quite stable across the various solvers tested, I decided to make use of the code chunk option `cache=TRUE`. Caching means that it will save the results unless things are changed.  If it determines that things have changed, it will rerun that chunk. This can save a lot of time in knitting the chapter or rebuilding the book. This is an excellent application area for demonstrating the benefits of using the chunk option for caching. The current application requires 10-15 seconds to do each full size customer warehouse optimization run. Caching just the four runs can save about a minute of knitting time. RStudio and knitr do a sophisticated check for changes which can invalidate the previously cached results and will then rerun the code chunk and save the results for future cached knits as appropriate. More demanding needs can use the granularity of numerical options for caching as compared to simply TRUE/FALSE and additional options. These might be required in detailed performance testing or numerical performance comparisons.  \vspace{12pt}
+After running these chunks dozens of times and finding the results to be quite stable across the various solvers tested, using a code chunk option `cache=TRUE` may be beneficial. Caching means that it will save and reuse the results unless things are changed.  If it determines that things have changed, it will rerun that chunk. This can save a lot of time in knitting the chapter or rebuilding the book. This is an excellent application area for demonstrating the benefits of using the chunk option for caching. The current application requires about a minuteto do each full size customer warehouse optimization run. Caching just the four runs can save a lot of knitting time. RStudio and knitr do a sophisticated check for changes which can invalidate the previously cached results and will then rerun the code chunk and save the results for future cached knits as appropriate. More demanding needs can use the granularity of numerical options for caching as compared to simply TRUE/FALSE and additional options. These might be required in detailed performance testing or numerical performance comparisons.  \vspace{12pt}
 
 Significant computer time can be used for large models but a variety of questions can be examined such as the following.  
 
@@ -652,7 +651,7 @@ ggplot(pkg_dl_data, aes(end, downloads, group=package,
        x = "Month", y = "Downloads") 
 ```
 
-It is interesting to see that the symphony and glpk ROI plugins were relatively equal in downloads until about 2015 when glpk started to open a lead in usage.  This of course does not mean that glpk is better than the others but is interesting to note. The spikes in downloads could be driven by other packages that use this particular solver, visibility from vignettes, courses, other publications, or package updates.  \vspace{12pt}
+It is interesting to see that the `symphony` and `glpk` ROI plugins were relatively equal in downloads until about 2015 when `glpk` started to open a lead in usage.  This of course does not mean that `glpk` is better than the others but is interesting to note. The spikes in downloads could be driven by other packages that use this particular solver, visibility from vignettes, courses, other publications, or package updates.  \vspace{12pt}
   
 ```{r package_download_stats, fig.width=10, fig.height=6, fig.margin=TRUE}
 pkg_dl_data <- cran_stats(packages = c("ompr"))
