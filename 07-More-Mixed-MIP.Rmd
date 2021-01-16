@@ -1023,16 +1023,12 @@ In this case we will have two products,
 nTime <- 4
 mDemandA <- 100  # Used for generating demand
 mDemandB <- 200
-mProdA   <- 1300  # Maximum production per week of A
-mProdB   <- 1500
+mProdA   <- 300  # Maximum production per week of A
+mProdB   <- 500
 
-demandA <- data.frame(
-  dem = round(runif(nTime)*mDemandA)    
-)
+demA <- c(round(runif(nTime)*mDemandA))   
 
-demandB <- data.frame(
-  dem = round(runif(nTime)*mDemandB)    
-)
+demB <- c(round(runif(nTime)*mDemandB))
 
 beg_invA <- 77  # Inv at beginning of week 1
 beg_invB <- 189
@@ -1054,16 +1050,20 @@ We'll start by initializing the model and creating the decision variables.
 ```{r}
 promod <- MIPModel()
 
-promod <- add_variable (promod, VxA[t], t=1:nTime, type="continuous")
-promod <- add_variable (promod, VxB[t], t=1:nTime, type="continuous")
+promod <- add_variable (promod, VxA[tt], tt=1:nTime, 
+                        lb=0, type="continuous")
+promod <- add_variable (promod, VxB[tt], tt=1:nTime, 
+                        lb=0, type="continuous")
    # Production volume for products A and B in each time period.
 
-promod <- add_variable (promod, VyA[t], t=1:nTime, type="binary")
-promod <- add_variable (promod, VyB[t], t=1:nTime, type="binary")
+promod <- add_variable (promod, VyA[tt], tt=1:nTime, type="binary")
+promod <- add_variable (promod, VyB[tt], tt=1:nTime, type="binary")
    # Setups incurred for each product in each time period.
 
-promod <- add_variable (promod, ViA[t], t=1:nTime, type="continuous")
-promod <- add_variable (promod, ViB[t], t=1:nTime, type="continuous")
+promod <- add_variable (promod, ViA[tt], tt=1:nTime, 
+                        lb=0, type="continuous")
+promod <- add_variable (promod, ViB[tt], tt=1:nTime, 
+                        lb=0, type="continuous")
    # Inventory at end of period for each product.
 
 ```
@@ -1071,46 +1071,51 @@ promod <- add_variable (promod, ViB[t], t=1:nTime, type="continuous")
 Now let's define the objective function.  We are not selling prices 
 
 ```{r}
-promod <- set_objective(promod, sum_expr(prodcostA * VxA[t] + 
-                                         prodcostB * VxB[t] + 
-                                         fcostA * VyA [t] +
-                                         fcostB * VyB [t] +
-                                         invcostA * ViA [t] +
-                                         invcostB * ViB [t],
-                                         t=1:nTime),
+promod <- set_objective(promod, sum_expr(prodcostA * VxA[tt] + 
+                                         prodcostB * VxB[tt] + 
+                                         fcostA * VyA [tt] +
+                                         fcostB * VyB [tt] +
+                                         invcostA * ViA [tt] +
+                                         invcostB * ViB [tt],
+                                         tt=1:nTime),
                                          "min")
 ```
 
 Let's start with our constraints for linking production, inventory, and demand for the first week.  The inventory at the end of week 1 is simply the beginning inventory at the start of week 1 (`beg_invA`) plus the amount produced minus the demand.  Note that this assumes all demand must be satisfied in the same week.  This model could be extended to allow for backlogged demand or other variations.
 
 ```{r, eval=FALSE}
-promod <- add_constraint (promod, beg_invA + VxA[1] - demandA [1,1] == ViA[1] )
+promod <- add_constraint (promod, beg_invA + VxA[1] - demA [1] == ViA[1] )
 
-promod <- add_constraint (promod, beg_invB + VxB[1] - demandB [1,1] == ViB[1] )
+promod <- add_constraint (promod, beg_invB + VxB[1] - demB [1] == ViB[1] )
 
 ```
 
 This handled the first week.  Now we need to do the same for all of the following weeks.  We take the ending inventory from the previous week, add the new production, and then subtract the demand to give us the ending inventory for both products.
 
-```{r, eval=FALSE}
-promod <- add_constraint (promod, ViB[t-1] + VxA[t] - demandA [t,1] == ViA[t], t=2:nTime )
+```{r, eval=TRUE}
+promod <- add_constraint (promod, ViB[tt-1] + VxA[tt] - 
+                            demA [tt] == ViA[tt], tt = 2:nTime )
 
-promod <- add_constraint (promod, ViB[t-1] + VxB[t] - demandB [t,1] == ViB[t], t=2:nTime )
+promod <- add_constraint (promod, ViB[tt-1] + VxB[tt] - 
+                            demB [tt] == ViB[tt], tt = 2:nTime )
 
 ```
 
 Now we need to use our create our linking constraints to connect our production and decision to produce products.  We will use the Big M method and the maximum production production value as our Big M value.
 
-```{r, eval=FALSE}
-promod <- add_constraint (promod, VxA [t] <= mProdA * VyA[t], t=1:nTime)
+```{r, eval=TRUE}
+promod <- add_constraint (promod, VxA [tt] <= mProdA * VyA[tt], 
+                          tt = 1:nTime)
 
-promod <- add_constraint (promod, VxB [t] <= mProdB * VyB[t], t=1:nTime)
+promod <- add_constraint (promod, VxB [tt] <= mProdB * VyB[tt], 
+                          tt = 1:nTime)
 
 ```
 
 Now let's put a limit our joint inventory of products.
-```{r, eval=FALSE}
-promod <- add_constraint (promod, ViA[t] + ViB[t] <= maxinv, t=1:nTime)
+```{r, eval=TRUE}
+promod <- add_constraint (promod, ViA[tt] + ViB[tt] <= maxinv, 
+                          tt = 1:nTime)
 
 ```
 
@@ -1123,9 +1128,10 @@ promod
 We are ready to solve.  
 
 ```{r}
-prores <- solve_model(promod, with_ROI(solver = "symphony"))
+prores <- solve_model(promod, with_ROI(solver = "glpk"))
 prores$status
 prores$objective_value
+prores$solution
 ```
 
 
