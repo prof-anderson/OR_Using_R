@@ -883,7 +883,7 @@ $$
 The directions of the supply and demand constraint inequalities must again be considered as to whether the problem is supply or demand constrained, lest we find an optimal solution of doing nothing.
 \vspace{12pt}
 
-This transhipment application can be further enhanced to allow for losses along arcs.  In this case there might be affect amount that reaches the distribution center based on losses enroute.  For example, we might use $L_{i,j}$ to capture this effect with $L_{1,2}=0.9$ to indicate that only 90% of the material makes it from factory _1_ to distribution center _2_. We would then modify the balance constraints to take the following form  $\sum_{i} L_{i,j} \cdot x_{i,j}=\sum_{k} y_{j,k} \; \forall \; j$  Loses might also apply in the transportation to the end customer with similar modifications to the model.
+This transhipment application can be further enhanced to allow for losses along arcs.  In this case there might be affect amount that reaches the distribution center based on losses enroute.  For example, we might use $L_{i,j}$ to capture this effect with $L_{1,2}=0.9$ to indicate that only 90% of the material makes it from factory _1_ to distribution center _2_. We would then modify the balance constraints to take the following form  $\sum_{i} L_{i,j} \cdot x_{i,j}=\sum_{k} y_{j,k} \; \forall \; j$.  Losses might also apply in the transportation to the end customer with similar modifications to the model.
 \vspace{12pt}
 
 Another common situation is to add capacity limits to each arc, perhaps both upper and lower bounds on capacity.
@@ -954,7 +954,7 @@ This model illustrates the basic dynamics of relating production, inventory, and
 Each application often requires tailoring to address specific needs.
 For example:
 
--   Some companies require safety stocks levels to maintained which could be done by setting minimum inventory levels
+-   Some companies require safety stocks levels to be maintained which could be done by setting minimum inventory levels.
 -   Sometimes all the demand cannot be met in a period - this can be modeled by separating sales from demand with a separate variable for sales in each period.
 -   Allowing backlogged demand that can be met in the following period - again modeled with an additional variable.
 
@@ -964,15 +964,15 @@ For example:
 
 \vspace{12pt}
 
-Any linear program in inequality constraints can be converted into what is referred to as standard form.
+Any linear program with inequality constraints can be converted into what is referred to as standard form.
 First, all strictly numerical terms are collected or moved to the right hand side and all variables are on the left hand side.
 \vspace{12pt}
 
-It makes little difference as to whether the objective function is a *min* or a *max* function since a min objective function can be converted to a max objective function by multiplying everything a negative one.
+It makes little difference as to whether the objective function is a *min* or a *max* function since a min objective function can be converted to a max objective function by multiplying everything by a negative one.
 The converse is also true.
 \vspace{12pt}
 
-Lastly is a step where all of the inequalities are replaced by strict equality relations.
+The last step is where all of the inequalities are replaced by strict equality relations.
 The conversion of inequalities to equalities warrants a little further explanation.
 This is done by introducing a new, non-negative "slack" variable for each inequality.
 If the inequality is a $\leq$, then the slack variable can be thought of as filling the left hand side to make it equal to the right hand side so the slack variable is added to the left hand side.
