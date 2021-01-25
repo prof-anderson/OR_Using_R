@@ -7,8 +7,8 @@ output:
 
 ```{r Ch4setup, warning=FALSE, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(tidy = F)
-knitr::opts_chunk$set(cache = TRUE)
+knitr::opts_chunk$set(tidy = FALSE)
+knitr::opts_chunk$set(cache = FALSE)
 knitr::opts_chunk$set(width = 30)
 library (magrittr, quietly = TRUE) #Used for pipes/dplyr
 library (dplyr, quietly = TRUE)
@@ -23,7 +23,7 @@ library (formatR)
 # library(bookdown); library(rmarkdown); rmarkdown::render("04-Sensitivity-Analysis.Rmd", "tufte_book2")
 ```
 
-We can get a lot more than just the objective function value and the decision variable from a solved linear program.  In particular, we can potentially explore the impact of changes in constrained resources, changes in the objective function, forced changes in decision variables, and the introduction of additional decision variables.  
+We can get a lot more than just the objective function value and the decision variable values from a solved linear program.  In particular, we can potentially explore the impact of changes in constrained resources, changes in the objective function, forced changes in decision variables, and the introduction of additional decision variables.  
 
 ## Base Case
 
@@ -100,7 +100,7 @@ grid.table(format(rduals1,digits=4))
 ```{marginfigure}
 **Table 4.2**: Shadow Prices of Constrained Resources
 ```
-The row duals or shadow prices for testing is zero.  This means that the marginal value of one additional hour of fabrication labor time is $\$0$. This makes sense if you examine the amount of testing time used and realize that the company is not using all of the 480 hours available.  Therefore adding more testing hours certainly can't help improve the production plan.    
+The row duals or shadow prices for testing is zero.  This means that the marginal value of one additional hour of testing labor time is $\$0$. This makes sense if you examine the amount of testing time used and realize that the company is not using all of the 480 hours available.  Therefore adding more testing hours certainly can't help improve the production plan.    
 \vspace{12pt}
 
 On the other hand, all of the assembly time (resource) is used in the optimal solution.  The shadow price of an hour of assembly time is $\$2.25$.  This means that for every hour of additional assembly time within certain limits, the objective function will increase by $\$2.25$ also.
@@ -283,7 +283,7 @@ In this case, using the columns from Table 4.6 we can calulate the marginal valu
 
 *Reduced Price of Bats*
 
-The situation is more interesting for Bats. The production plan does not call for producing any Bats. This means that it is sitting right at the lower bound of zero Bats.  This hints that perhaps we would like to make even less than zero Bats if we could and that being _forced_ to make even one Bat would be costly. A reduced cost of $\$-4$ means that the opportunity cost of resources used in producing a Bat is $\$4$ more than the profit of producing a single Bat  In other words, we would expect that if we force the production of a single Bat, the over all production plan's profit will go down by $\$4$.
+The situation is more interesting for Bats. The production plan does not call for producing any Bats. This means that it is sitting right at the lower bound of zero Bats.  This hints that perhaps we would like to make even less than zero Bats if we could and that being _forced_ to make even one Bat would be costly. A reduced cost of $\$-2.5$ means that the opportunity cost of resources used in producing a Bat is $\$2.5$ more than the profit of producing a single Bat  In other words, we would expect that if we force the production of a single Bat, the over all production plan's profit will go down by $\$2.5$.
 \vspace{12pt}
 
 Let's go ahead and test this interpretation by again looking at the value of the resources consumed in the production of a Bat and the amount of each resource used. 
