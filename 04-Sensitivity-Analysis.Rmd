@@ -333,7 +333,7 @@ grid.table(temp3)
 ```{marginfigure}
 **Table 4.10**: Impact of a Forced Change in Bats
 ```
-As we expected, the forced change of making one additional table resulted in a decrease of the overall profit from  $\$2225$ to  $\$2222.5$. This occurred because making one Bat meant that we had fewer of the precious, limited resources, decreasing overall profit due to limiting our possible production of Ants and Cats. \vspace{12pt}
+As we expected, the forced change of making one additional Bat resulted in a decrease of the overall profit from  $\$2225$ to  $\$2222.5$. This occurred because making one Bat meant that we had fewer of the precious, limited resources, decreasing overall profit due to limiting our possible production of Ants and Cats. \vspace{12pt}
 
 This meant that the number of Ants and Cats were changed resulting lower profit even though a Bat is on its own profitable.
 \vspace{12pt}
