@@ -17,6 +17,7 @@ library (knitr)
 library (DiagrammeRsvg, quietly=TRUE) 
 library (rsvg, quietly=TRUE) 
 library (htmltools, quietly=TRUE)
+library (TRA) # Requires installation from github
      # DiagrammeRsvg, rsvg, htmltools are used for IO diagrams
 # library(bookdown); library(rmarkdown); rmarkdown::render("05-DEA.Rmd", "tufte_book2")
 ```
