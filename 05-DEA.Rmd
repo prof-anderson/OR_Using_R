@@ -2,8 +2,8 @@
 
 ```{r Ch5setup, warning=FALSE, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(tidy = F)
-knitr::opts_chunk$set(cache = TRUE)
+knitr::opts_chunk$set(tidy = FALSE)
+knitr::opts_chunk$set(cache = FALSE)
 library (magrittr, quietly = TRUE) #Used for pipes/dplyr
 library (dplyr, quietly = TRUE)
 library (ROI, quietly = TRUE)
@@ -49,7 +49,7 @@ In contrast, outputs are the "good" items that are being produced by the actions
 Let's start by creating a simple dataset - assume that you are a regional manager of a grocery chain. You have four stores and would like to assess the performance of the store managers using number of employees, *x*, as an input and the weekly sales, *y*, as an output. The function `DrawIOdiagram` is from the `TRA` package and allows for creating a nicely formatted input-output diagram.\
 \vspace{12pt}
 
-```{r DEA_IO_Plot1, fig.margin=TRUE, out.width="2in"}
+```{r DEA_IO_Plot1, fig.margin=TRUE, out.width="2in", cache=TRUE}
 library (TRA) # Note, may need to install directly from github
               # devtools::install_github("prof-anderson/TRA")
 
@@ -655,44 +655,6 @@ pander(cbind(eff.crs, eff.vrs, eff.drs, eff.irs),
 
 Using DEA for two-dimensional examples such as the one-input, one-output model is easy to draw and visualize but overkill and not generally very useful. \vspace{12pt}
 
-Let's create a richer dataset. For this example, we will use the dataset from Kenneth Baker's third edition of *Optimization Modeling with Spreadsheets*, pages 175-178, Example 5.3 titled "Hope Valley Health Care Association." In this example, a health care organization wants to benchmark six nursing homes against each other. \vspace{12pt}
-
-This data is a little more complicated so let's make sure that we understand the definitions. Look at the line for the inputs which we will call XBaker1. The list of 12 data values has the structure defined as two columns for two separate inputs by use of 'ncol=2'. This then means that there are 6 rows or DMUs in this dataset. The six units are given capital letters for names starting with A. The names of the inputs are hard coded as "x1" and"x2" to represent the *staff hours per day* and the *supplies per day* respectively.
-
-```{r Multiple_inputs_outputs, eval=FALSE}
-  XBaker1 <- matrix(c(150, 400, 320, 520, 350, 320, .2, 
-                      0.7, 1.2, 2.0, 1.2, 0.7),
-                  ncol=2,dimnames=list(LETTERS[1:6],
-                                       c("x1", "x2")))
-```
-
-The two outputs of *reimbursed patient-days* and *privately paid patient-days* are named "y1" and "y2" but otherwise have the same structure as the inputs.
-
-```{r DEA_IO_Plot_Baker, fig.margin=TRUE, out.width="2in", eval=FALSE}
-Figure <- DrawIOdiagram (c("staff hours\nper day", 
-                           "supplies per day"  ), 
-                         c("reimbursed\npatient-days", 
-                           "privately paid\npatient-days"),
-                        '"\nNursing\nHome\n "')
-tmp<-capture.output(rsvg_png(
-  charToRaw(export_svg(Figure)),
-  'images/DEA_Baker_Nursing_Homes.PNG'))
-knitr::include_graphics(
-  "images/DEA_Baker_Nursing_Homes.PNG")
-```
-
-```{r Baker_Data, eval=FALSE}
-YBaker1 <- matrix(c(14000, 14000, 42000, 28000, 19000, 
-                    14000, 3500, 21000, 10500, 42000, 
-                    25000, 15000), ncol=2,
-                  dimnames=list(LETTERS[1:6],c("y1", "y2")))
-ND <- nrow(XBaker1); NX <- ncol(XBaker1); 
-NY <- ncol(YBaker1); 
-pander(cbind(XBaker1,YBaker1))
-```
-
-Note that I'm naming the data sets based on their origin and then loading them into xdata and ydata for actual operation. This allows the model to be generalized. The actual returns to scale models are straightforward to implement. \vspace{12pt}
-
 Let's move on to larger application of examining technology transfer success from university research by revisiting [@AndersonMeasuringefficiencyuniversity2007]. This paper used data from the Association of University Technology Managers, AUTM, and their 2004 survey. We will start by loading the data from the paper. The dataset can be accessed as a comma separated file (CSV) format from our github repository. Note that in RStudio, many datasets can be easily loaded using the `Import Dataset`command from under the File pulldown command. This provides a nice graphical user interface wrapper around various importing functions with a preview of the imported data along with R code that can be copied to an R script or RMarkdown document. \vspace{12pt}
 
 ```{r}
@@ -719,9 +681,22 @@ rownames(xdata)<-as.matrix(univ_lic_2007[,1])
 ydata <- as.matrix(univ_lic_2007 [,2:6])
 rownames(ydata)<-as.matrix(univ_lic_2007[,1])
 
+Xnames <- colnames(xdata)
+Ynames <- colnames(ydata)
+DMUnames <-list(as.matrix(univ_lic_2007[,1]))
+
+dimnames(xdata)              <- c(DMUnames,Xnames)
+#dimnames(ydata)              <- c(DMUnames,Ynames)
+colnames(ydata)              <- Ynames
+
 ND <- nrow(xdata)  # Number of DMUs (universities)
 NX <- ncol(xdata)  # Number of inputs (just 1 in this case)
 NY <- ncol(ydata)  # Number of outputs
+
+res.efficiency <- matrix(rep(-1.0, ND), nrow=ND, ncol=1)
+res.lambda     <- matrix(rep(-1.0, ND^2), nrow=ND,ncol=ND)
+dimnames(res.efficiency) <- c(DMUnames,"CCR-IO")
+dimnames(res.lambda)     <- c(DMUnames,DMUnames)
 
 #Define printable names to be used as appropriate
 ynames_printable<-c("Licensing Income\n($M)", 
@@ -799,10 +774,12 @@ for (k in 1:ND) {
     set_objective(vtheta, "min") %>%
     add_constraint(sum_expr(vlambda[j] * xdata[j,i], 
                             j = 1:ND) 
-                   <= vtheta * xdata[k,i], i = 1:NX) %>%
+                   <= vtheta * xdata[k,i], i = 1:NX, 
+                   .show_progress_bar=FALSE ) %>%
     add_constraint(sum_expr(vlambda[j] * ydata[j,r], 
                             j = 1:ND) 
-                   >= ydata[k,r], r = 1:NY) 
+                   >= ydata[k,r], r = 1:NY, 
+                   .show_progress_bar=FALSE ) 
     if (RTS=="VRS") {result <- add_constraint(result, 
                  sum_expr(vlambda[j],j = 1:ND) == 1) }  
         #Returns to Scale
@@ -815,20 +792,16 @@ for (k in 1:ND) {
 ```
 
 ```{r full-table, fig.fullwidth=TRUE}
-pander (cbind(res.efficiency, res.lambda), 
-        caption="Results from University Technology Transfer Example (CRS)")
-UTT_CCR.Res<-cbind(head(res.efficiency, res.lambda))
+pander (cbind(res.efficiency, poscol(res.lambda)), 
+        caption="Results from University Technology Transfer Example (CRS)", 
+        round=6)
+UTT_CCR.Res<-cbind(res.efficiency, res.lambda)
 ```
 
 Note that the results are different from those in the UTT paper because the model is different. This model is an input-oriented model with constant returns to scale. In contrast, the UTT paper uses an output-oriented variable returns to scale model with a weight restriction relationship. We will work our way towards those results.\vspace{12pt}
 
 In contrast, some values of $\lambda$ warrant a more careful look, in particular, there may be very small positive or negative numbers. These numbers are due to computational issues in the linear programming solvers and should be interpreted as zero. Rounding the results can make the tables easier for interpretation by the user. The pander packages makes it easy to round numbers to varying levels of precision.
 
-```{r rounded-table, fig.fullwidth = TRUE}
-pander (cbind(res.efficiency, res.lambda), round = 6, 
-        caption="Results from UTT Example (CRS) 
-        with Rounded Values")
-```
 
 The small, nearly zero, values that may appear in DEA calculations can cause some computational difficulty. For example, testing for zero lambda values could miss cases where the value is approximately but not exactly zero.\
 \vspace{12pt}
@@ -846,9 +819,11 @@ for (k in 1:ND) {
     set_objective(vtheta, "min") %>%
     add_constraint(sum_expr(vlambda[j] * xdata[j,i], 
                             j = 1:ND) 
-                   <= vtheta * xdata[k,i], i = 1:NX) %>%
+                   <= vtheta * xdata[k,i], i = 1:NX, 
+                   .show_progress_bar=FALSE ) %>%
     add_constraint(sum_expr(vlambda[j] * ydata[j,r], 
-                            j = 1:ND) 
+                            j = 1:ND, 
+                   .show_progress_bar=FALSE ) 
                    >= ydata[k,r], r = 1:NY) 
     if (RTS=="VRS") {modUTT_BCC <- 
       add_constraint(modUTT_BCC, 
@@ -860,7 +835,8 @@ res <- solve_model(modUTT_BCC, with_ROI(solver = "glpk"))
     res.lambda[k,] <- t(as.matrix(as.numeric(
                      get_solution(res, vlambda[j])[,3] )))
 }
-UTT_BCC.Res<-cbind(res.efficiency, res.lambda)
+#UTT_BCC.Res<-cbind(res.efficiency, res.lambda)
+UTT_BCC.Res<-res.efficiency
 colnames(UTT_BCC.Res)[1] <- "BCC-IO"
 ```
 
@@ -886,6 +862,17 @@ A few takeaways from these results: \vspace{12pt}
 The following process can be used for extracting the row duals from the linear program results. This extraction is based upon knowing the structure of the model that was built. \vspace{12pt}
 
 ```{r Multiplier_Weights_from_Env_Model}
+res.vweight    <- matrix(rep(-1.0, ND*NX), nrow=ND,ncol=NX) 
+res.uweight    <- matrix(rep(-1.0, ND*NY), nrow=ND,ncol=NY) 
+
+Vnames<- lapply(list(rep("v",NX)),paste0,1:NX)
+     # Input weight names: v1, ...
+Unames<- lapply(list(rep("u",NY)),paste0,1:NY)  
+     # Output weight names: u1, ...
+
+dimnames(res.vweight)    <- c(DMUnames,Vnames)
+dimnames(res.uweight)    <- c(DMUnames,Unames)
+
 rduals <- as.matrix(get_row_duals(res))
 res.vweight[k,] <- -1*rduals[1:NX]
    # Extract first NX row duals assuming first set of 
@@ -905,7 +892,7 @@ These results are for just the last unit examined.\
 Let's now wrap this into the full series of linear programs so as to calculate the multiplier weights for each unit.\
 \vspace{12pt}
 
-```{r Baker_example_w_mult_weight}
+```{r UTT_example_w_mult_weight}
 RTS<-"CRS"
 for (k in 1:ND) {
   
@@ -916,14 +903,16 @@ for (k in 1:ND) {
     set_objective(vtheta, "min") %>%
     add_constraint(sum_expr(vlambda[j] * xdata[j,i], 
                             j = 1:ND) 
-                   <= vtheta * xdata[k,i], i = 1:NX) %>%
+                   <= vtheta * xdata[k,i], i = 1:NX, 
+                   .show_progress_bar=FALSE ) %>%
     add_constraint(sum_expr(vlambda[j] * ydata[j,r], 
                             j = 1:ND) 
-                   >= ydata[k,r], r = 1:NY) 
+                   >= ydata[k,r], r = 1:NY, 
+                   .show_progress_bar=FALSE ) 
     if (RTS=="VRS") {modUTT_CRS <- 
       add_constraint(modUTT_CRS, 
                  sum_expr(vlambda[j],j = 1:ND) == 1) }  
-resUTT_CRS <- solve_model(modUTT_CRS, 
+    resUTT_CRS <- solve_model(modUTT_CRS, 
                            with_ROI(solver = "glpk")) 
     
     res.efficiency[k] <-  get_solution(resUTT_CRS, vtheta)       
@@ -1027,11 +1016,13 @@ for (k in 1:ND) {
     
     add_constraint(sum_expr(vlambda[j] * xdata[j,i] + 
                               xslack[i], j = 1:ND) 
-                   - vtheta * xdata[k,i]==0, i = 1:NX) %>%
+                   - vtheta * xdata[k,i]==0, i = 1:NX, 
+                   .show_progress_bar=FALSE ) %>%
     
     add_constraint(sum_expr(vlambda[j] * ydata[j,r] -
                               yslack[r], j = 1:ND) 
-                    ==ydata[k,r], r = 1:NY) 
+                    ==ydata[k,r], r = 1:NY, 
+                   .show_progress_bar=FALSE ) 
     if (RTS=="VRS") {LPSlack<-
       add_constraint(LPSlack, sum_expr(vlambda[j],
                                        j = 1:ND) == 1) }  
@@ -1053,13 +1044,18 @@ for (k in 1:ND) {
                  as.numeric(get_solution(result, 
                                          vlambda[j])[,3] )))
 }
-rownames(res.efficiency)<-c("A", "B", "C", "D", "E", "F")
+# rownames(res.efficiency)<-c("A", "B", "C", "D", "E", "F")
 #print (results.efficiency)
-pander(cbind(res.efficiency,xdata,ydata,res.lambda), 
-       round=5, caption="Input-oriented Efficiency Results")
 ```
 
 <!--The rightmost columns, denoted by "L_" are the resulting lambda values.  -->
+
+```{r}
+pander(cbind(res.efficiency,poscol(res.lambda), 
+       round=4, caption="Input-oriented Efficiency Results"))
+
+```
+
 
 ## DEA Model Building
 
