@@ -661,13 +661,11 @@ Let's move on to larger application of examining technology transfer success fro
 ```{r}
 library(readr)
 univ_lic_2007 <- read_csv("univ_lic_2007.csv")
-
-
 ```
 
 Next, it is always helpful to look over the dataset. The names of the columns will be long and awkward for displaying results. Let's abbreviate the names to make it more manageable.\vspace{12pt}
 
-```{r Prepare_Univ_data}
+```{r Simplify_data}
 colnames(univ_lic_2007) <- c("University", 
                              "LicInc", 
                              "LicOpt",
@@ -676,15 +674,31 @@ colnames(univ_lic_2007) <- c("University",
                              "PatIss",
                              "Spend")
 
-xdata <- as.matrix(univ_lic_2007 [,7])
-rownames(xdata)<-as.matrix(univ_lic_2007[,1])
+utt2007 <- univ_lic_2007 [1:25,]  
+           # Use first 25 universities
 
-ydata <- as.matrix(univ_lic_2007 [,2:6])
-rownames(ydata)<-as.matrix(univ_lic_2007[,1])
+utt2007 <- utt2007 [,-5]   
+           # Drop the fifth column (Patents Files)
+
+pander (head(utt2007),
+        caption="Simplified data for University Technology Transfer")
+```
+
+Rather than using the full dataset.  We are going to simplify the data a little.  First we limit it to just the first 25 universities instead of the full set of 54.  Second, we will drop the measure of patents filed. 
+
+Now, let's prepare our data for the upcoming analyses.
+
+```{r Prepare_Univ_data}
+
+xdata <- as.matrix(utt2007 [,6])
+rownames(xdata)<-as.matrix(utt2007[,1])
+
+ydata <- as.matrix(utt2007 [,2:5])
+rownames(ydata)<-as.matrix(utt2007[,1])
 
 Xnames <- colnames(xdata)
 Ynames <- colnames(ydata)
-DMUnames <-list(as.matrix(univ_lic_2007[,1]))
+DMUnames <-list(as.matrix(utt2007[,1]))
 
 dimnames(xdata)              <- c(DMUnames,Xnames)
 #dimnames(ydata)              <- c(DMUnames,Ynames)
@@ -703,10 +717,9 @@ dimnames(res.lambda)     <- c(DMUnames,DMUnames)
 ynames_printable<-c("Licensing Income\n($M)", 
                     "Licenses and \n Options Executed",
                     "Startup Companies",
-                    "US Patents Filed",
                     "US Patents Issued")
 xnames_printable<-c("Total Research\n Spending ($M)")
-DMUnames_printable <- as.matrix(univ_lic_2007[,1])
+DMUnames_printable <- as.matrix(utt2007[,1])
 
 ```
 
@@ -766,7 +779,7 @@ pander (cbind(res.efficiency, poscol(res.lambda)),
 UTT_CCR.Res<-cbind(res.efficiency, res.lambda)
 ```
 
-Note that the results are different from those in the UTT paper because the model is different. This model is an input-oriented model with constant returns to scale. In contrast, the UTT paper uses an output-oriented variable returns to scale model with a weight restriction relationship. We will work our way towards those results.\vspace{12pt}
+Note that the results are different from those in the UTT paper because the model is different and the data is trimmed. This model is an input-oriented model with constant returns to scale. In contrast, the UTT paper uses an output-oriented variable returns to scale model with a weight restriction relationship.  Recall that the data is trimmed to the first 25 universities and patents filed is dropped as less important than patents issued. \vspace{12pt} 
 
 In contrast, some values of $\lambda$ warrant a more careful look, in particular, there may be very small positive or negative numbers. These numbers are due to computational issues in the linear programming solvers and should be interpreted as zero. Rounding the results can make the tables easier for interpretation by the user. The pander packages makes it easy to round numbers to varying levels of precision.
 
@@ -1018,7 +1031,7 @@ for (k in 1:ND) {
 <!--The rightmost columns, denoted by "L_" are the resulting lambda values.  -->
 
 ```{r}
-pander(cbind(head(res.efficiency,poscol(res.lambda))), 
+pander(head(cbind(res.efficiency,poscol(res.lambda[1:25,]))), 
        round=4, caption="Selected Input-oriented Efficiency Results with Slack Maximization")
 
 ```
