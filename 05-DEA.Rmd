@@ -770,7 +770,6 @@ Note that the results are different from those in the UTT paper because the mode
 
 In contrast, some values of $\lambda$ warrant a more careful look, in particular, there may be very small positive or negative numbers. These numbers are due to computational issues in the linear programming solvers and should be interpreted as zero. Rounding the results can make the tables easier for interpretation by the user. The pander packages makes it easy to round numbers to varying levels of precision.
 
-
 The small, nearly zero, values that may appear in DEA calculations can cause some computational difficulty. For example, testing for zero lambda values could miss cases where the value is approximately but not exactly zero.\
 \vspace{12pt}
 
@@ -965,7 +964,7 @@ $$
 (\#eq:LPCCRIOE-Second-Phase)
 $$
 
-Implementing this algebraically is quite straightforward.
+Implementing this is straightforward.
 
 ```{r Slack_max}
 RTS<-"CRS"
@@ -1001,6 +1000,7 @@ for (k in 1:ND) {
     # Get Phase 1 objective value
     add_constraint(LPSlack, vtheta==phase1obj)   
         # Passing result from phase 1 to phase 2
+    
     set_objective(LPSlack, sum_expr(
               xslack[i], i=1:NX)+sum_expr(
                 yslack[r], r=1:NY), "max")
@@ -1012,18 +1012,29 @@ for (k in 1:ND) {
                  as.numeric(get_solution(result, 
                                          vlambda[j])[,3] )))
 }
-# rownames(res.efficiency)<-c("A", "B", "C", "D", "E", "F")
-#print (results.efficiency)
+
 ```
 
 <!--The rightmost columns, denoted by "L_" are the resulting lambda values.  -->
 
 ```{r}
-pander(cbind(res.efficiency,poscol(res.lambda)), 
-       round=4, caption="Input-oriented Efficiency Results")
+pander(cbind(head(res.efficiency,poscol(res.lambda))), 
+       round=4, caption="Selected Input-oriented Efficiency Results with Slack Maximization")
 
 ```
 
+## DEA Packages
+
+Over the years, there have been several R packages developed for doing DEA.  Each package is often developed by a researcher or team for their specific needs.  Some continue to be enhanced over time. At this point the reader will have an understanding of many of the basics of the implementation and have a greater appreciation of how the packages.  The following packages are currently available through CRAN.
+
+* `Benchmarking` by Bogetoft and Otto stands out for the comprehensive toolset and documentation in their book.  
+* `deaR` provides some interesting classic datasets along with both standard and less commonly used variations of DEA.
+* `DJL` incorporates a variety of DEA techniques and is officially an abbreviation of  distance measurement based judgement and learning. Perhaps not too coincidentally, it matches the author's, Dong-Joon Lim's, initials.
+* `MultiplierDEA` was developed by Aurobindh Kalathil Kumar from Portland State University and emphasizes the multiplier model of DEA.
+* `nonparaeff` draws its name from the nonparametric nature of DEA.  
+* `rDEA` stands for Robust DEA.
+
+In each case, the notation for calling DEA varies.  This includes the way that data is structured, how returns to scale is specified, whether a second phase for slack maximization is conducted, and more.  The result is that reading the help file for a package is necessary.  
 
 ## DEA Model Building
 
