@@ -730,39 +730,6 @@ knitr::include_graphics(
   "images/DEA_Univ_IO.PNG")
 ```
 
-```{r Get_Baker_data_ready, eval=FALSE}
-xdata      <-XBaker1[1:ND,]  # Call it xdata
-dim(xdata) <-c(ND,NX)  # structure data correctly
-ydata      <-YBaker1[1:ND,]
-dim(ydata) <-c(ND,NY)
-# Need to remember to restructure the results matrices.
-res.efficiency <- matrix(rep(-1.0, ND), nrow=ND, ncol=1)
-res.lambda     <- matrix(rep(-1.0, ND^2), nrow=ND,ncol=ND)
-res.xslack     <- matrix(rep(-1.0, ND*NX), nrow=ND,ncol=NX) 
-res.yslack     <- matrix(rep(-1.0, ND*NY), nrow=ND,ncol=NY) 
-res.vweight    <- matrix(rep(-1.0, ND*NX), nrow=ND,ncol=NX) 
-res.uweight    <- matrix(rep(-1.0, ND*NY), nrow=ND,ncol=NY) 
-DMUnames    <- list(c(LETTERS[1:ND]))
-Xnames      <- lapply(list(rep("X",NX)),paste0,1:NX)
-Ynames      <- lapply(list(rep("Y",NY)),paste0,1:NY)
-Vnames      <- lapply(list(rep("v",NX)),paste0,1:NX)
-Unames      <- lapply(list(rep("u",NY)),paste0,1:NY)
-SXnames     <- lapply(list(rep("sx",NX)),paste0,1:NX)
-SYnames     <- lapply(list(rep("sy",NY)),paste0,1:NY)
-Lambdanames <- lapply(list(rep("$\\lambda_",ND)),
-                      paste0,lapply(LETTERS[1:ND],
-                                    paste0,"$"))
-  
-dimnames(xdata)              <- c(DMUnames,Xnames)
-dimnames(ydata)              <- c(DMUnames,Ynames)
-dimnames(res.efficiency) <- c(DMUnames,"CCR-IO")
-dimnames(res.lambda)     <- c(DMUnames,Lambdanames)
-dimnames(res.xslack)     <- c(DMUnames,SXnames)
-dimnames(res.yslack)     <- c(DMUnames,SYnames)
-dimnames(res.vweight)    <- c(DMUnames,Vnames)
-dimnames(res.uweight)    <- c(DMUnames,Unames)
-```
-
 ```{r utt_example1_CCR}
 RTS<-"CRS"
 for (k in 1:ND) {
@@ -931,7 +898,7 @@ for (k in 1:ND) {
     }
 pander (cbind(res.efficiency, res.vweight, 
               res.uweight),round=6, 
-        caption="Results from Baker's Example")
+        caption="Multiplier Weights from UTT Example")
 ```
 
 A few things should be noticed with respect to the multiplier weights:
