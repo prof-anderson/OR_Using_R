@@ -1019,8 +1019,8 @@ for (k in 1:ND) {
 <!--The rightmost columns, denoted by "L_" are the resulting lambda values.  -->
 
 ```{r}
-pander(cbind(res.efficiency,poscol(res.lambda), 
-       round=4, caption="Input-oriented Efficiency Results"))
+pander(cbind(res.efficiency,poscol(res.lambda)), 
+       round=4, caption="Input-oriented Efficiency Results")
 
 ```
 
