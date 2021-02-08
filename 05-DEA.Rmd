@@ -106,17 +106,17 @@ colnames(temp)<-c("Store Name", "Employees (x)",
 pander(temp, caption="First Dataset for DEA")
 ```
 
-The above commands create matrices that hold the data and have named rows and columns to match. The \<- symbol is a key function in R and means to assign what is in the right to the object on the left.\
+The above commands create matrices that hold the data and have named rows and columns to match. The `<-` symbol is a key function in R and means to assign what is in the right to the object on the left.
 \vspace{12pt}
 
 For benchmarking, we want to know which ones are doing the best job. \vspace{12pt}
 
-Can you tell which stores represent the best tradeoff between inputs and outputs? None of the stores are strictly dominated by any of the other stores. Dominance would be producing more outputs using less input so let's move on to looking at it graphically.\
+Can you tell which stores represent the best tradeoff between inputs and outputs? None of the stores are strictly dominated by any of the other stores. Dominance would be producing more outputs using less input so let's move on to looking at it graphically.
 \vspace{12pt}
 
 ## Graphical Analysis
 
-Let's start by doing a simple plot of the data. For now, I'm going to make use of a function in Peter Bogetoft and Lars Otto's Benchmarking package [@BogetoftBenchmarkingDEASFA2013] which provides a very handy and nicely formatted two-dimensional plot in the format often used for showing production. Many of the functions in the package are also described in their book.
+Let's start by doing a simple plot of the data. For now, I'm going to make use of a function in Peter Bogetoft and Lars Otto's `Benchmarking` package [@BogetoftBenchmarkingDEASFA2013] which provides a very handy and nicely formatted two-dimensional plot in the format often used for showing production. Many of the functions in the package are also described in their book.
 
 ```{r DEA_Isoquant_Plot, fig.margin=TRUE, fig.height=4}
 library(Benchmarking, quietly=TRUE)
@@ -656,7 +656,7 @@ pander(cbind(eff.crs, eff.vrs, eff.drs, eff.irs),
 
 Using DEA for two-dimensional examples such as the one-input, one-output model is easy to draw and visualize but overkill and not generally very useful. \vspace{12pt}
 
-Let's move on to larger application of examining technology transfer success from university research by revisiting [@AndersonMeasuringefficiencyuniversity2007]. This paper used data from the Association of University Technology Managers, AUTM, and their 2004 survey. We will start by loading the data from the paper. The dataset can be accessed as a comma separated file (CSV) format from our github repository. Note that in RStudio, many datasets can be easily loaded using the `Import Dataset`command from under the File pulldown command. This provides a nice graphical user interface wrapper around various importing functions with a preview of the imported data along with R code that can be copied to an R script or RMarkdown document. \vspace{12pt}
+Let's move on to a larger application of examining technology transfer success from university research by revisiting [@AndersonMeasuringefficiencyuniversity2007]. This paper used data from the Association of University Technology Managers, AUTM, and their 2004 survey. We will start by loading the data from the paper. The dataset can be accessed as a comma separated file (CSV) format from our github repository. Note that in RStudio, many datasets can be easily loaded using the `Import Dataset`command from under the File pulldown command. This provides a nice graphical user interface wrapper around various importing functions with a preview of the imported data along with R code that can be copied to an R script or RMarkdown document. \vspace{12pt}
 
 ```{r}
 library(readr)
@@ -678,7 +678,7 @@ utt2007 <- univ_lic_2007 [1:25,]
            # Use first 25 universities
 
 utt2007 <- utt2007 [,-5]   
-           # Drop the fifth column (Patents Files)
+           # Drop the fifth column (Patents Filed)
 
 pander (head(utt2007),
         caption="Simplified data for University Technology Transfer")
