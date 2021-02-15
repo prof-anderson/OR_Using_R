@@ -298,14 +298,14 @@ model0 <- add_variable(model0, Ants,
                        type = "continuous", lb = 0) 
 model0 <- add_variable(model0, Bats, 
                        type = "continuous",lb = 0)
-model0<- set_objective(model0, 7*Ants + 12*Bats, "max")
-model0<- add_constraint(model0, 1*Ants + 4*Bats <= 800) 
+model0 <- set_objective(model0, 7*Ants + 12*Bats, "max")
+model0 <- add_constraint(model0, 1*Ants + 4*Bats <= 800) 
                         # machining
 model0 <- add_constraint(model0, 3*Ants + 6*Bats <= 900) 
                         # assembly
-model0<- add_constraint(model0, 2*Ants + 2*Bats <= 480) 
+model0 <- add_constraint(model0, 2*Ants + 2*Bats <= 480) 
                         # testing
-model0<- add_constraint(model0, 2*Ants + 10*Bats <= 1200) 
+model0 <- add_constraint(model0, 2*Ants + 10*Bats <= 1200) 
                         # sensors
 result0 <- solve_model(model0, with_ROI(solver = "glpk"))
 
@@ -399,7 +399,7 @@ result0 <- MIPModel() %>%
   set_objective(7*Ants + 12*Bats, "max") %>%
   
   add_constraint(1*Ants + 4*Bats<= 800) %>% #machining
-  add_constraint(3*Ants + 6*Bats<= 900) %>% #assembly
+  add_constraint(3*ants + 6*Bats<= 900) %>% #assembly
   add_constraint(2*Ants + 2*Bats<= 480)  %>% #testing
   add_constraint(2*Ants + 10*Bats<= 1200) %>% #sensors
   solve_model(with_ROI(solver = "glpk"))

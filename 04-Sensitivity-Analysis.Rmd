@@ -132,7 +132,7 @@ $$
 $$
 ```
 ```{marginfigure}
-**Formulation 4.2**: Explicit model of production planning adding labor to Testing
+**Formulation 4.2**: Explicit model of production planning adding an hour of labor to Testing right hand side.
 ```
 \vspace{12pt}
 And the code is showed in the following chunk, with Table 4.3 showing the optimal model result.

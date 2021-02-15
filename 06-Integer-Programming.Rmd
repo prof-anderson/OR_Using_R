@@ -972,4 +972,4 @@ How much would you produce of Widget 3 if there were no setup (fixed) cost for p
 ```{exercise, name="Reducing Fixed Costs"}
 ```
 
-How would production change if the setups costs were cut in half due to implementing lean production approaches?
+How would production change if the setup costs were cut in half due to implementing lean production approaches?
