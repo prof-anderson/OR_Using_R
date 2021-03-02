@@ -335,8 +335,11 @@ grid.table(temp3)
 ```
 As we expected, the forced change of making one additional Bat resulted in a decrease of the overall profit from  $\$2225$ to  $\$2222.5$. This occurred because making one Bat meant that we had fewer of the precious, limited resources, decreasing overall profit due to limiting our possible production of Ants and Cats. \vspace{12pt}
 
-This meant that the number of Ants and Cats were changed resulting lower profit even though a Bat is on its own profitable.
+This meant that the number of Ants and Cats were changed resulting lower total profit even though a Bat is on its own profitable.
 \vspace{12pt}
+
+Another way to view the reduced costs for Bats it look 
+Think of it as a cost for being pinned at the simple upper or lower bound (often 0). A non-zero reduced cost means that the optimizer would like to relax or loosen the lower bound and the value is how much better the objective would be with a unit change of one relaxing the bound. For example, in our case, with bats being pinned at zero at the optimal solution and a reduced cost of bats of -2.5, this means that if we relaxed the non-negativity from $Bats\geq0$  to instead be $Bats\geq-1$ and re-solve, then the objective function would improve by 2.5.  In other words, relaxing the simple lower bound would change the production plan to enable profit to increase by 2.5.
 
 ## Evaluating a New Product Design with Shadow Prices 
 
@@ -365,11 +368,11 @@ Your company has extended production to allow for producing aquatic Eels and is 
 
 | Characteristic | Ants | Bats | Cats | Eels | Available  | 
 |---------------:|:-----:|:-----:|:------:|:---------:|:----------:|
-|  Profit        |  $7  |  $12  |    $5  |  $16      |            |
+|  Profit        |  $7  |  $12  |    $5  |  $22      |            |
 |  Machining     |   1   |   4   |    2  |    4      |   800      |
 |  Assembly      |   3   |   6   |    2  |    8      |   900     |
 |  Testing       |   2   |   2   |    1  |   25      |   480     |
-|  Sensor        |   2   |  10   |    2  |   16      |   120     |
+|  Sensor        |   2   |  10   |    2  |   16      |   1200     |
 |  Painting      |   1   |   1   |    1  |   12      |   500     |
 
 a) Use R Markdown to create your own description of the model.

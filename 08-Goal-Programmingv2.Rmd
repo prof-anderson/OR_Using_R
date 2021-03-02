@@ -75,7 +75,7 @@ $$
   \end{split}
 $$
 
-Alas, linear programming models and the Simplex method only allow for a single objective function.  Let's go ahead solve both 
+Alas, linear programming models and the Simplex method only allow for a single objective function.  Let's start by solving from the perspective of the first group. 
 
 $$
  \begin{split}

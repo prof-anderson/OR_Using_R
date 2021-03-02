@@ -113,12 +113,12 @@ It is impressive the number of situations that can be modeled well using linear 
 \vspace{12pt}
 
 ## Graphically Solving a Linear Program
+
 \vspace{12pt}
 
-Given that the linear program has two variables, it can be represented in two dimensions making it straightforward to draw and visualize.  Before we analyze it using the `R` we will walk through a graphical representation.
-\vspace{12pt}
+Given that the linear program has two variables, it can be represented in two dimensions making it straightforward to draw and visualize. Before we analyze it using the `R` we will walk through a graphical representation. \vspace{12pt}
 
-We do this by iteratively adding each constraint and trimming the feasible region. The line can be drawn by looking at the constraint from two perspectives.  First as if only Ants are produced and second as if only Bats are produced.  This gives specific point on the horizontal and vertical axes respectively which are simply connected.  
+We do this by iteratively adding each constraint and trimming the feasible region. The line can be drawn by looking at the constraint from two perspectives. First as if only Ants are produced and second as if only Bats are produced. This gives specific point on the horizontal and vertical axes respectively which are simply connected.\
 \vspace{12pt}
 
 ```{r Fig-First_Constraint, echo=FALSE, fig.margin=TRUE, out.width="2in"}
@@ -126,69 +126,66 @@ library(knitr)
 knitr::include_graphics("images/Fig02-01-First_Constraint.PNG")
 ```
 
-The constraints are differentiated by color and the diagonal lines of the same color drawn off the constraint are a hatching line indicating the directionaly of the inequality constraint.  In this case, each of the constraints are less than or equal to constraints and are indicating that this constrain includes the line and the region under the line.  If it had been a greater than or equal to constraint, the hatching would have been rising above the constraint line.  If it had been an exact equality constraint rather than equality constraint, it would have been just the line with no hatching.
-\vspace{12pt}
+The constraints are differentiated by color and the diagonal lines of the same color drawn off the constraint are a hatching line indicating the directionaly of the inequality constraint. In this case, each of the constraints are less than or equal to constraints and are indicating that this constrain includes the line and the region under the line. If it had been a greater than or equal to constraint, the hatching would have been rising above the constraint line. If it had been an exact equality constraint rather than equality constraint, it would have been just the line with no hatching. \vspace{12pt}
 
-In each figure, we illustrate the feasible region as a grayed oval but it is the whole region.  
+$$
+\frac{\alpha }{\beta }
+$$
+
+In each figure, we illustrate the feasible region as a grayed oval but it is the whole region.\
 \vspace{24pt}
 
 ```{r Fig-Second_Constraint, echo=FALSE, fig.margin=TRUE, out.width="2in"}
 knitr::include_graphics("images/Fig02-02-Second_Constraint.PNG")
 ```
 
-The assembly constraint is drawn as a red line connecting a production plan of just 300 Ants on the horizontal axis to just 150 Bats on the vertical axis.
-\vspace{24pt}
+The assembly constraint is drawn as a red line connecting a production plan of just 300 Ants on the horizontal axis to just 150 Bats on the vertical axis. \vspace{24pt}
 
 ```{r Fig-Third_Constraint, echo=FALSE, fig.margin=TRUE, out.width="2in"}
 knitr::include_graphics("images/Fig02-03-Third_Constraint.PNG")
 ```
 
-Since both products require two hours of testing and there are 480 hours available, the Green Testing constraint connects producing just 240 Ants and just 240 Bats.  
+Since both products require two hours of testing and there are 480 hours available, the Green Testing constraint connects producing just 240 Ants and just 240 Bats.\
 \vspace{24pt}
 
 ```{r Fig-Fourth_Constraint, echo=FALSE, fig.margin=TRUE, out.width="2in"}
 knitr::include_graphics("images/Fig02-04-Fourth_Constraint.PNG")
 ```
 
-We now draw our fourth and final constraint - Sensors.  This constraint is done in yellow so it may be more difficult to see but it goes from an Ants only production plan of 600 units to a bats only production plan of 120.   
+We now draw our fourth and final constraint - Sensors. This constraint is done in yellow so it may be more difficult to see but it goes from an Ants only production plan of 600 units to a bats only production plan of 120.\
 \vspace{24pt}
 
-
-This now results in a feasible region that satisfies all of the contraints simultaneously.  Every point in this region is feasible or possible in that it does not violate any of the constraints.  There is an infinite number of possible points in this feasible region.  
+This now results in a feasible region that satisfies all of the contraints simultaneously. Every point in this region is feasible or possible in that it does not violate any of the constraints. There is an infinite number of possible points in this feasible region.\
 \vspace{24pt}
 
 ```{r Fig-Feasible_Region, echo=FALSE, fig.margin=TRUE, out.width="2in"}
 knitr::include_graphics("images/Fig02-05-Feasible_Region.PNG")
 ```
 
-Given that we are doing linear programming and we are trying to maximize or minimize a certain ojective function, the optimal solution will be at a corner point or more formally, a vertex. In our example, we can narrow our attention from the full feasible region to just the five vertices or candidate solutions.     
+Given that we are doing linear programming and we are trying to maximize or minimize a certain ojective function, the optimal solution will be at a corner point or more formally, a vertex. In our example, we can narrow our attention from the full feasible region to just the five vertices or candidate solutions.\
 \vspace{24pt}
 
 ```{r Fig-Candidate_Solutions, echo=FALSE, fig.margin=TRUE, out.width="2in"}
 knitr::include_graphics("images/Fig02-06-Candidate_Solutions.PNG")
 ```
 
-Lastly, we can pick from among these possible solutions by drawing parallel, equal profit lines radiating out from the origin to find the last line that still touches the feasibile region.  The figure to the right shows one line with a profit of $\$  1400$.  A second line is drawn that last touches the feasible region is at $\$  1980$. \vspace{24pt}
- 
+Lastly, we can pick from among these possible solutions by drawing parallel, equal profit lines radiating out from the origin to find the last line that still touches the feasibile region. The figure to the right shows one line with a profit of $\$ 1400$. A second line is drawn that last touches the feasible region is at $\$ 1980$. \vspace{24pt}
 
 ```{r Fig-Iso_Profit, echo=FALSE, fig.margin=TRUE, out.width="2in"}
 knitr::include_graphics("images/Fig02-07-Iso_Profit.PNG")
 ```
 
-Graphically, we could read the number of Ants and number of Bats to produce.  Accuracy would be limited to the drawing skills.  Also, each point in a two dimensional space is defined by the instersection of two lines.  
+Graphically, we could read the number of Ants and number of Bats to produce. Accuracy would be limited to the drawing skills. Also, each point in a two dimensional space is defined by the instersection of two lines.\
 \vspace{12pt}
 
-In this case, the optimal solution (and all of the other candidate solutions too) can be defined by the intersection of two constraint lines, listed as exact eqalities.  These can be solved as a system of equations with two equations and two unknowns.  The optimal solution here is defined by the intersection of the Assembly (Red) and the Testing (Green) constraints.  Just solve $3A+6B=900$ and $2A+2B=480$ for $A$ and $B$. \vspace{24pt}
- 
+In this case, the optimal solution (and all of the other candidate solutions too) can be defined by the intersection of two constraint lines, listed as exact eqalities. These can be solved as a system of equations with two equations and two unknowns. The optimal solution here is defined by the intersection of the Assembly (Red) and the Testing (Green) constraints. Just solve $3A+6B=900$ and $2A+2B=480$ for $A$ and $B$. \vspace{24pt}
 
 ```{r Fig-Optimal_Solution, echo=FALSE, fig.margin=TRUE, out.width="2in"}
 knitr::include_graphics("images/Fig02-08-Optimal_Solution.PNG")
 ```
 
-This approach of graphical solving is helpful for understanding how optimization works but does not scale up to larger dimensions.  Three variables corresponds to three dimensions and can therefore be drawn using various drawing programs but are harder to visualize on a printed page or computer screen.  
-\vspace{12pt}
-Alas, real optimization problems typically have far more three variables - perhaps tens of thousands or hundreds of thousands of variables.  In general, we need to use computer tools for solving larger problems.  In our case, we will adopt `R` and `ompr` but there are a wide range of similar tools availble.
-\vspace{12pt}
+This approach of graphical solving is helpful for understanding how optimization works but does not scale up to larger dimensions. Three variables corresponds to three dimensions and can therefore be drawn using various drawing programs but are harder to visualize on a printed page or computer screen.\
+\vspace{12pt} Alas, real optimization problems typically have far more three variables - perhaps tens of thousands or hundreds of thousands of variables. In general, we need to use computer tools for solving larger problems. In our case, we will adopt `R` and `ompr` but there are a wide range of similar tools availble. \vspace{12pt}
 
 ## Solving a Linear Program using `ompr`
 
@@ -312,7 +309,7 @@ result0 <- solve_model(model0, with_ROI(solver = "glpk"))
 result0$solution
 ```
 
-Let's use the `grid.table` function to display the results nicely.  
+Let's use the `grid.table` function to display the results nicely.
 
 ```{r}
 res0 <- cbind(objective_value (result0),
@@ -355,7 +352,7 @@ Furthermore, we can use the `extract_constraints` command to see what the actual
 extract_constraints(model0)
 ```
 
-This should look familiar. Let's see if we can arrange to make it look more similar to what we had given the model.  Note that the term `RHS` represents the right hand side of the constraint.  
+This should look familiar. Let's see if we can arrange to make it look more similar to what we had given the model. Note that the term `RHS` represents the right hand side of the constraint.
 
 ```{r construct_constraints_for_display, eval=TRUE, fig.margin=TRUE}
 constr0<-extract_constraints(model0)    
@@ -399,7 +396,7 @@ result0 <- MIPModel() %>%
   set_objective(7*Ants + 12*Bats, "max") %>%
   
   add_constraint(1*Ants + 4*Bats<= 800) %>% #machining
-  add_constraint(3*ants + 6*Bats<= 900) %>% #assembly
+  add_constraint(3*Ants + 6*Bats<= 900) %>% #assembly
   add_constraint(2*Ants + 2*Bats<= 480)  %>% #testing
   add_constraint(2*Ants + 10*Bats<= 1200) %>% #sensors
   solve_model(with_ROI(solver = "glpk"))
@@ -441,11 +438,11 @@ print(get_solution(result0, Ants))
 print(get_solution(result0, Bats))
 ```
 
-In summary, our optimal production plan is to make a mix of Ant and Bat robot models.  More specifically, should produce `r get_solution(result0, Ants)` Ants and `r get_solution(result0, Bats)` Bats to generate a total profit of `r objective_value(result0)`.  Given the situation, this is the optimal or most profitable possible production plan.
+In summary, our optimal production plan is to make a mix of Ant and Bat robot models. More specifically, should produce `r get_solution(result0, Ants)` Ants and `r get_solution(result0, Bats)` Bats to generate a total profit of `r objective_value(result0)`. Given the situation, this is the optimal or most profitable possible production plan.
 
 ## Adding a Third Product (Variable)
 
-We will now extend the previous model to account for a third product, the Cat robot. The goal is still to find the most profitable production plan.  See the table to the right with a summary of the new situation.
+We will now extend the previous model to account for a third product, the Cat robot. The goal is still to find the most profitable production plan. See the table to the right with a summary of the new situation.
 
 ```{marginfigure}
 | | Ant| Bat | Cat |Available| 
@@ -533,7 +530,8 @@ result1$solution
 result1$objective_value
 
 ```
-Adding a decision variable, in this case, _Cats_ enables new possibilities so it could increase profit.  
+
+Adding a decision variable, in this case, *Cats* enables new possibilities so it could increase profit.
 
 ## Linear Programming Special Cases
 
@@ -590,7 +588,7 @@ result1infeas <- solve_model(model1infeas,
 In this case, we are going to simply add the new constraint to `model1` and create a new model, `model1infeas` to solve.\
 \vspace{12pt}
 
-Note that the constraint on the minimum number of Ants could also be implemented by changing the lower bound on the `Ants` variable to be 400 instead of zero. 
+Note that the constraint on the minimum number of Ants could also be implemented by changing the lower bound on the `Ants` variable to be 400 instead of zero.
 
 ```{r Infeasible_Results}
 print(solver_status(result1infeas))
@@ -605,9 +603,9 @@ Notice that since the solver status was infeasible, the values for the decision 
 
 *Case 2: Multiple Optima* \vspace{12pt}
 
-When a linear program is solved to optimality, it is an assurance that there is no better solution that can be found in terms of an objective function value.  It is not a guarantee of being the only way of finding that good of a solution though.  The case of different decision variable values resulting in the same, optimal objective function value is referred to as multiple optimal solutions.  
+When a linear program is solved to optimality, it is an assurance that there is no better solution that can be found in terms of an objective function value. It is not a guarantee of being the only way of finding that good of a solution though. The case of different decision variable values resulting in the same, optimal objective function value is referred to as multiple optimal solutions.
 
-There are a couple of ways of creating situations for multiple optima. One situation is to have a decision variable be identical or a linear multiple of another variable. In this case, each Cat now consumes exactly double the resources as an Ant and generates double the profit of an Ant.  Also, we will assume the profit per Bat drops to just 2.  \vspace{12pt}  The new LP is shown in the formulation on the right.
+There are a couple of ways of creating situations for multiple optima. One situation is to have a decision variable be identical or a linear multiple of another variable. In this case, each Cat now consumes exactly double the resources as an Ant and generates double the profit of an Ant. Also, we will assume the profit per Bat drops to just 2. \vspace{12pt} The new LP is shown in the formulation on the right.
 
 ```{marginfigure}
 $$
@@ -662,7 +660,6 @@ result2a <- model2a %>%
   add_constraint( Ants==180) %>%
   solve_model(with_ROI(solver="glpk"))
 ```
-
 
 ```{r Show_First_Solution_from_Multiple_Optima}
 print(solver_status(result2a))
@@ -722,7 +719,6 @@ Let's summarize these results more clearly by displaying them in a single table.
 ```{r Combine_Multiple_Optima_Results, echo=FALSE, include=FALSE}
 res2z <- rbind(res2a, res2b, res2c)
 ```
-
 
 ```{r Summarize_Results_of_Multiple_Optima, fig.margin =T}
 grid.table(res2z)
@@ -853,8 +849,7 @@ get_solution(result4, Bats)
 get_solution(result4, Cats)
 ```
 
-The solver status reports that the problem is *infeasible* rather than *unbounded* but by inspection, the solution is feasible in that it satisfies all of the constraints of $/geq$ and therefore the LP is feasible.
-\vspace{12pt}
+The solver status reports that the problem is *infeasible* rather than *unbounded* but by inspection, the solution is feasible in that it satisfies all of the constraints of $/geq$ and therefore the LP is feasible. \vspace{12pt}
 
 ```{marginfigure}
 **Infeasible vs Unbounded**. This is a known issue in ompr as of 0.8.0 reported on github. It is caused by not distinguishing between the different status conditions for situations other than solved to guaranteed optimality.  The result is that you should read the ompr status of "infeasible" to indicate not assured of  optimal solution.
@@ -879,7 +874,7 @@ We could adopt a variety of naming or notation conventions of the variables:
 -   X1, X2, X3
 -   X[1], X[2], X[3]
 -   $X_1, X_2, X_3$
--   $X_i, \;  i=1,\ldots,3$
+-   $X_i, \; i=1,\ldots,3$
 
 \vspace{12pt}
 
@@ -888,7 +883,7 @@ Each of these conventions can have its place.
 The notation with brackets, X[1] is consistent R notation and that of many other computer languages. This allows us to simply use a vector of X where we can use each element of the vector for each of the products to use. This connects in very well with the data structures available to us in R (and other languages.) It would also allow us to handle any number of products. If we had a thousand products, the thousandth product is simply X[1000].\
 \vspace{12pt}
 
-The latter use subscripting to more succinctly and compactly express the same concept. The reader can think of this being a much more concise notation than the computer notation. \
+The latter use subscripting to more succinctly and compactly express the same concept. The reader can think of this being a much more concise notation than the computer notation.\
 \vspace{12pt}
 
 Similarly, the resources: Machining, Assembly, Testing, and Sensors resources are numbered as 1, 2, 3, and 4 respectively. Note that we do not need to separate the resources by units, the first three are in units of hours while the last is a count of sensors.\
@@ -964,7 +959,6 @@ e)  Discuss how one parameter would need to change in order to result in a diffe
 Hint: Knit your RMarkdown as a PDF or open the HTML version in your browser and print to PDF.\
 \vspace{12pt}
 
-
 ## Miscellaneous Tips and Tricks
 
 At this point, you are able to build your own optimization model. Here are a collection of tips and tricks that have confounded past students.
@@ -987,7 +981,7 @@ RMarkdown is very helpful for integrating analysis and results but the code can 
 -   Putting two blank spaces at the end of a paragraphy will give a little more spacing between paragraphs.\
 -   Sometimes running all chunks will make more visible where a problem is than when an RMD is knitted.
 -   Look over the generated PDF for issues like misrendered section headings or bullet lists.
--   In a bookdown project with multiple RMDs such as this book, it is much quicker to render just a chapter.  This can be done by doing a command like this: `library(rmarkdown); rmarkdown::render("02-A_First_LP.Rmd", "tufte_book2")`
+-   In a bookdown project with multiple RMDs such as this book, it is much quicker to render just a chapter. This can be done by doing a command like this: `library(rmarkdown); rmarkdown::render("02-A_First_LP.Rmd", "tufte_book2")`
 
 ## RStudio Tips and Tricks
 
