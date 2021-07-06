@@ -26,7 +26,7 @@ Allowing for integer values opens up many more important areas of applications a
 
 Unfortunately, there is no such thing as a free lunch-adding integrality can make problems much more computationally demanding. We will go through an example of how many optimization routines do integer optimization to demonstrate why it can be more difficult algorithmically even if looks trivially easy from the perspective of the change in the ompr function.
 
-## Example of Integrality having Little Impact
+## Example of Minor Integrality Impact
 
 Let's revisit the earlier example of producing drones with one additional hour in assembly as we did in Chapter 4. As a reminder, the LP is the same three variable case we have been using with a change of 901 instead of 900 for the second constraint's right hand side.
 
@@ -536,14 +536,11 @@ Now that you have binary constraints, let's explore the impact of logical restri
 
 \vspace{12pt}
 
-Let's assume that projects A and B require the focused effort of Outtel's top chip architects and Outtel has decided therefore that it is not possible to do both projects.
-\vspace{12pt}
+Let's assume that projects A and B require the focused effort of Outtel's top chip architects and Outtel has decided therefore that it is not possible to do both projects. \vspace{12pt}
 
 Therefore, they want to ensure that at most one of the two projects can be pursued. What needs to be added to enforce this situation?\vspace{12pt}
 
-
 Let's start with a truth table summarizing the interaction between projects (variable values) and the "Top Chip Architects" relationship.\vspace{12pt}
-
 
 +-----------+-----------+---------------------------------------------+
 | Project A | Project B | Violates "Top Chip Architects" Relationship |
@@ -562,6 +559,7 @@ Let's start with a truth table summarizing the interaction between projects (var
 : Relationships between Projects A, B, and the need for Chip Architects.
 
 \vspace{12pt}
+
 Now we need to create a constraint that blocks the situations that violate the relationship ($y_A=y_B=1$ ) but allows the other situations to be unblocked. Recall that you want to have a linear constraint or constraints that would be added to the model. In this case, we can use $y_A+y_B\leq1$. It is a good exercise to check this relationship against the truth table. \vspace{12pt}
 
 Note that we cannot use $y_{A}\cdot y_{B}=0$ because it is a nonlinear constraint when we multiply two variables together. Sometimes trial and error is needed to verify that a constraint enforces the needed situation. In these case, it can be helpful to draw up a truth table with values for the associated variables and see whether the satisfies the requirement. \vspace{12pt}
