@@ -144,7 +144,7 @@ grid.table(temp1)
 
 Notice that in this case, there was a small adjustment to the production plan and a small decrease to the optimal objective function value. This is not always the case, sometimes the result can be unchanged. In other cases, it may be changed in a very large way. In still others, the problem may in fact even become infeasible. \vspace{12pt}
 
-## Example of Integality having a Large Impact
+## Example of Major Integality Impact
 
 Let's take a look at another example. Acme makes two products, let's refer to them as product 1 and 2. Product 1 generates a profit of \$2000 per product, requires one liter of surfactant for cleaning, and 2.5 kilograms of high grade steel. \vspace{12pt}
 
