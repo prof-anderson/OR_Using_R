@@ -1088,7 +1088,49 @@ $$
 
 \vspace{12pt}
 
-Earlier in the chapter, we created data structures for the generalized version of the optimization model. Recall that earlir in this chapter we created a `Resources` matrix of the resources used by each product - this corresponds to our $A$ matrix.  We also created a single column  matrix, `Available`, for the amount of each resource available which is our $B$ vector.  The `Profit` single row matrix serves as our $C$ vector.  The last item that we need to do is to specify a direction for each inequality. 
+Let's examine building our first two variable LP model in this way using the `lpsolveAPI` package.  
+
+{marginfigure}
+$$
+ \begin{split}
+ \begin{aligned}
+    \text{Max  }   & 7\cdot Ants +12 \cdot Bats \\
+    \text{s.t.:} & \\
+& 1\cdot Ants + 4 \cdot Bats \leq 800 \\
+& 3\cdot Ants + 6 \cdot Bats \leq 900 \\
+& 2\cdot Ants + 2 \cdot Bats \leq 480 \\
+& 2\cdot Ants + 10 \cdot Bats \leq 1200 \\
+& Ants, Bats \geq 0  
+  \end{aligned}
+  \end{split}
+$$
+
+{marginfigure}
+**Formula 3.10**: First LP model with 2 variables.
+
+\vspace{12pt}
+
+```{r}
+library(lpSolveAPI)
+lps.model <- make.lp(0, 2) # Make empty 2 var model
+xt <- c(1,4)
+add.constraint(lps.model, xt, "<=", 40)
+xt <- c(3,6)
+add.constraint(lps.model, xt, "<=", 45)
+xt <- c(2,2)
+add.constraint(lps.model, xt, "<=", 24)
+xt <- c(2,10)
+add.constraint(lps.model, xt, "<=", 60)
+set.objfn(lps.model, c(-7,-12))
+name.lp(lps.model, "Simple LP")
+name.lp(lps.model)
+plot.lpExtPtr(lps.model)
+solve(lps.model)
+get.primal.solution(lps.model, orig=TRUE)
+```
+
+
+Earlier in the chapter, we created data structures for the generalized version of the optimization model. Recall that earlier in this chapter we created a `Resources` matrix of the resources used by each product - this corresponds to our $A$ matrix.  We also created a single column  matrix, `Available`, for the amount of each resource available which is our $B$ vector.  The `Profit` single row matrix serves as our $C$ vector.  The last item that we need to do is to specify a direction for each inequality. 
 \vspace{12pt}
 
 We could rewrite our formulation then as the following.  

@@ -3,6 +3,7 @@ output:
   pdf_document: default
   html_document: default
 ---
+
 # Data Envelopment Analysis
 
 ```{r Ch5setup, warning=FALSE, include=FALSE}
@@ -112,13 +113,11 @@ colnames(temp)<-c("Store Name", "Employees (x)",
 pander(temp, caption="First Dataset for DEA")
 ```
 
-The above commands create matrices that hold the data and have named rows and columns to match. The `<-` symbol is a key function in R and means to assign what is in the right to the object on the left.
-\vspace{12pt}
+The above commands create matrices that hold the data and have named rows and columns to match. The `<-` symbol is a key function in R and means to assign what is in the right to the object on the left. \vspace{12pt}
 
 For benchmarking, we want to know which ones are doing the best job. \vspace{12pt}
 
-Can you tell which stores represent the best tradeoff between inputs and outputs? None of the stores are strictly dominated by any of the other stores. Dominance would be producing more outputs using less input so let's move on to looking at it graphically.
-\vspace{12pt}
+Can you tell which stores represent the best tradeoff between inputs and outputs? None of the stores are strictly dominated by any of the other stores. Dominance would be producing more outputs using less input so let's move on to looking at it graphically. \vspace{12pt}
 
 ## Graphical Analysis
 
@@ -538,7 +537,7 @@ dea.plot(x, y, RTS="vrs", ORIENTATION="in-out",
 
 \vspace{12pt}
 
-The Constant Returns to Scale, CRS, model is often referred to in the DEA literature by CCR after Charnes, Cooper, and Rhodes. The Variable Returns to Scale, VRS, model is also referred to as the BCC model after Banker, Charnes, and Cooper. In addition to the CRS and VRS models, two other common approaches are Increasing Returns to Scale (IRS) and Decreasing Returns to Scale (DRS). Technically, IRS is sometimes more precisely referred to as non-decreasing returns to scale. Similarly, DRS corresponds to non-increasing returns to scale. \vspace{12pt}
+The Constant Returns to Scale, CRS, model is often referred to in the DEA literature by CCR after Charnes, Cooper, and Rhodes [@CharnesDataEnvelopmentAnalysis1978]. The Variable Returns to Scale, VRS, model is also referred to as the BCC model after Banker, Charnes, and Cooper. In addition to the CRS and VRS models, two other common approaches are Increasing Returns to Scale (IRS) and Decreasing Returns to Scale (DRS). Technically, IRS is sometimes more precisely referred to as non-decreasing returns to scale. Similarly, DRS corresponds to non-increasing returns to scale. \vspace{12pt}
 
 | Returns to Scale | Envelopment Constraint              |
 |------------------|-------------------------------------|
@@ -690,7 +689,7 @@ pander (head(utt2007),
         caption="Simplified data for University Technology Transfer")
 ```
 
-Rather than using the full dataset.  We are going to simplify the data a little.  First we limit it to just the first 25 universities instead of the full set of 54.  Second, we will drop the measure of patents filed. 
+Rather than using the full dataset. We are going to simplify the data a little. First we limit it to just the first 25 universities instead of the full set of 54. Second, we will drop the measure of patents filed.
 
 Now, let's prepare our data for the upcoming analyses.
 
@@ -785,7 +784,7 @@ pander (cbind(res.efficiency, poscol(res.lambda)),
 UTT_CCR.Res<-cbind(res.efficiency, res.lambda)
 ```
 
-Note that the results are different from those in the UTT paper because the model is different and the data is trimmed. This model is an input-oriented model with constant returns to scale. In contrast, the UTT paper uses an output-oriented variable returns to scale model with a weight restriction relationship.  Recall that the data is trimmed to the first 25 universities and patents filed is dropped as less important than patents issued. \vspace{12pt} 
+Note that the results are different from those in the UTT paper because the model is different and the data is trimmed. This model is an input-oriented model with constant returns to scale. In contrast, the UTT paper uses an output-oriented variable returns to scale model with a weight restriction relationship. Recall that the data is trimmed to the first 25 universities and patents filed is dropped as less important than patents issued. \vspace{12pt}
 
 In contrast, some values of $\lambda$ warrant a more careful look, in particular, there may be very small positive or negative numbers. These numbers are due to computational issues in the linear programming solvers and should be interpreted as zero. Rounding the results can make the tables easier for interpretation by the user. The pander packages makes it easy to round numbers to varying levels of precision.
 
@@ -1044,16 +1043,16 @@ pander(head(cbind(res.efficiency,poscol(res.lambda[1:25,]))),
 
 ## DEA Packages
 
-Over the years, there have been several R packages developed for doing DEA.  Each package is often developed by a researcher or team for their specific needs.  Some continue to be enhanced over time. At this point the reader will have an understanding of many of the basics of the implementation and have a greater appreciation of how the packages.  The following packages are currently available through CRAN.
+Over the years, there have been several R packages developed for doing DEA. Each package is often developed by a researcher or team for their specific needs. Some continue to be enhanced over time. At this point the reader will have an understanding of many of the basics of the implementation and have a greater appreciation of how the packages. The following packages are currently available through CRAN.
 
-* `Benchmarking` by Bogetoft and Otto stands out for the comprehensive toolset and documentation in their book.  
-* `deaR` provides some interesting classic datasets along with both standard and less commonly used variations of DEA.
-* `DJL` incorporates a variety of DEA techniques and is officially an abbreviation of  distance measurement based judgement and learning. Perhaps not too coincidentally, it matches the author's, Dong-Joon Lim's, initials.
-* `MultiplierDEA` was developed by Aurobindh Kalathil Kumar from Portland State University and emphasizes the multiplier model of DEA.
-* `nonparaeff` draws its name from the nonparametric nature of DEA.  
-* `rDEA` stands for Robust DEA.
+-   `Benchmarking` by Bogetoft and Otto stands out for the comprehensive toolset and documentation in their book.\
+-   `deaR` provides some interesting classic datasets along with both standard and less commonly used variations of DEA.
+-   `DJL` incorporates a variety of DEA techniques and is officially an abbreviation of distance measurement based judgement and learning. Perhaps not too coincidentally, it matches the author's, Dong-Joon Lim's, initials.
+-   `MultiplierDEA` was developed by Aurobindh Kalathil Kumar from Portland State University and emphasizes the multiplier model of DEA.
+-   `nonparaeff` draws its name from the nonparametric nature of DEA.\
+-   `rDEA` stands for Robust DEA.
 
-In each case, the notation for calling DEA varies.  This includes the way that data is structured, how returns to scale is specified, whether a second phase for slack maximization is conducted, and more.  The result is that reading the help file for a package is necessary.  
+In each case, the notation for calling DEA varies. This includes the way that data is structured, how returns to scale is specified, whether a second phase for slack maximization is conducted, and more. The result is that reading the help file for a package is necessary.
 
 ## DEA Model Building
 
