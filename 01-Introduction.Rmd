@@ -22,7 +22,7 @@ Neither term, Operations Research nor Management Science is perfect. Operations 
 
 ## Purpose of this Book
 
-There are many comprehensive introductions to Operations Research available [@hillier2020\]\[@winston2003], and others. In the past, I had emphasized a spreadsheet-centric based introduction to operations research such as [@RagsdaleSpreadsheetModelingDecision2017] and [@baker2015] which had the side benefit of also encouraging better spreadsheet usage practices. Unfortunately the spreadsheet metaphor constrains the reader's perspective often leading people to tie models to closely to the data analyzed, specific dimensions of a particular problem, and the rows/columns construct often prevents people from thinking of richer problems. A more rigorous and tool agnostic coverage of optimization can be beneficial, for example, Tovey's recent book stands out [@tovey]. The goal of this book is to provide a timely introduction to Operations Research using a powerful open source tool, R. It was written to support the ETM 540/640 Operations Research course at Portland State University which is taught on a quarter basis for people without a background in Operations Research or R. As such the current scope is limited to what can be readily accomplished in a 10 week quarter, giving an introduction to the tools and methods available. There are many other Operations Research tools available besides R. \vspace{12pt}
+There are many comprehensive introductions to Operations Research available [@hillier2020] [@winston2003], and others. In the past, I had emphasized a spreadsheet-centric based introduction to operations research such as [@RagsdaleSpreadsheetModelingDecision2017] and [@baker2015] which had the side benefit of also encouraging better spreadsheet usage practices. Unfortunately the spreadsheet metaphor constrains the reader's perspective often leading people to tie models to closely to the data analyzed, specific dimensions of a particular problem, and the rows/columns construct often prevents people from thinking of richer problems. A more rigorous and tool agnostic coverage of optimization can be beneficial, for example, Tovey's recent book stands out [@tovey]. The goal of this book is to provide a timely introduction to Operations Research using a powerful open source tool, R. It was written to support the ETM 540/640 Operations Research course at Portland State University which is taught on a quarter basis for people without a background in Operations Research or R. As such the current scope is limited to what can be readily accomplished in a 10 week quarter, giving an introduction to the tools and methods available. There are many other Operations Research tools available besides R. \vspace{12pt}
 
 This book is meant to be a hybrid, both serving as an introduction to R and to Operations Research in the context of optimization. \vspace{12pt}
 
@@ -207,19 +207,16 @@ pander(d)
 
 \vspace{12pt}
 
-Oops, notice that row and column names are also transposed. The result is that we now have rows labeled as columns and columns labeled as rows!
+Oops, notice that row and column names are also transposed. The result is that we now have rows labeled as columns and columns labeled as rows! \vspace{12pt}
 
-\
-\vspace{12pt} Now we have done some basic operations within R. Try your hand at the following exercises.
+Now we have done some basic operations within R. Try your hand at the following exercises.
 
-```{exercise, name="Changing Row and Column Names"}
-Change the row and column names for the transposed matrix above.   
-```
+**Exercise 1.1** (Changing Row and Column Names). Change the row and column names for the transposed matrix above. 
 
-Here is my solution to that...
+Here is my solution to that.
 
 ```{marginfigure}
-Oops..  Still not right.  Need to do some more...
+Oops.  Still not right.  Need to do some more.
 ```
 
 ```{r Displaying_My_Solution}
@@ -382,12 +379,12 @@ Data organizing is a less glamorous part of the job for practicing analytics pro
 
 \vspace{12pt}
 
-```{exercise, name="Creating a Matrix of Daily Demand for Four Weeks"}
+**Exercise 1.2** (Creating a Matrix of Daily Demand for Four Weeks)
 Assume that your company's product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday. Build a matrix of four weeks of demand where each row is a separate week. Each Monday starts over with the same demand.  The rows should be named Week1, Week2, etc. The columns should have names corresponding to the day of the week.
-```
+
 
 \vspace{12pt}
 
-```{exercise, name="Creating a Matrix of Demand for Two Products"}
+**Exercise 1.1** (Creating a Matrix of Demand for Two Products)
 Assume that your company's product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday. Gadgets have a demand of 20 on Monday, increasing by 3 units a day through Sunday. Build a matrix showing each product as a separate row.  Rows should have names for the products and columns for the days of the week.
-```
+

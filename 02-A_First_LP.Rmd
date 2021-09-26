@@ -924,14 +924,13 @@ In particular, you might want to look over this document with respect to:
 -   Organizing information in tables for display is helpful. Raw output can be verbose. I hard coded a table at the beginning that works for simple data in explicit LPs. For richer data models and nicer tables, see Chapter 2 again. The `gridExtra` package makes it easy to display matrices and data tables nicely in HTML and PDF outputs.
 -   Use of section and subsection headings to organize your writeups.
 
-```{exercise, name="Adding Dog robot"}
-```
+**Exercise 2.1** (Adding a Dog drone)
 
-Your company has extended production to allow for producing the dog robot and is now including a finishing department that primes and paints (or stains) the furniture. See Table to the right.
+Your company has extended production to allow for producing the dog drone and is now including a finishing department that primes and paints (or stains) the furniture. See Table to the right.
 
 a)  Use R Markdown to create your own description of the model.
 
-b)  Extend the R Markdown to show your LP Model.Be sure to define models.
+b)  Extend the R Markdown to show your LP Model. Be sure to define models.
 
 c)  Solve the model in R.
 
@@ -956,7 +955,7 @@ e)  Discuss how one parameter would need to change in order to result in a diffe
 **Table 2.8**: Exercise 2.1
 ```
 
-Hint: Knit your RMarkdown as a PDF or open the HTML version in your browser and print to PDF.\
+**Hint:**Knit your RMarkdown as a PDF or open the HTML version in your browser and print to PDF.\
 \vspace{12pt}
 
 ## Miscellaneous Tips and Tricks

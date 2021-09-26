@@ -1,3 +1,9 @@
+---
+editor_options: 
+  markdown: 
+    wrap: sentence
+---
+
 # More Integer Programming Models
 
 ```{r Ch7setup, echo=FALSE, warning=FALSE}
@@ -29,43 +35,78 @@ suppressPackageStartupMessages(library (tint, quietly = TRUE))
 
 ## Overview
 
-This chapter consists of a collection of rich MILP  models that can be used for inspiration on products.  Some of these cases are expansions of Dirk Schumacher's ompr vignettes.  These make for excellent resouces demonstrating a variety of features such as creation of simulated data and visualization of results.  I strongly recommend reading the original.  These vignettes can be viewed from the package documentation, Dirk's github web [site](https://dirkschumacher.github.io/ompr/articles/index.html),  or downloading his github repository.
+This chapter consists of a collection of rich MILP models that can be used for inspiration on products.
+Some of these cases are expansions of Dirk Schumacher's ompr vignettes.
+These make for excellent resources demonstrating a variety of features such as creation of simulated data and visualization of results.
+I strongly recommend reading the original.
+These vignettes can be viewed from the package documentation, Dirk's github web [site](https://dirkschumacher.github.io/ompr/articles/index.html), or downloading his github repository.
 
-* All text from Dirk Schumacher's articles are set in block quotes.  
-* Code chunks are generally based on Dirk Schumacher's articles unless stated otherwise.
-* The LaTeX formulations are generally based on Dirk Schumacher's LaTeX with some modifications to support LaTeX environments.
+-   All text from Dirk Schumacher's articles are set in block quotes.\
+-   Code chunks are generally based on Dirk Schumacher's articles unless stated otherwise.
+-   The LaTeX formulations are generally based on Dirk Schumacher's LaTeX with some modifications to support LaTeX environments.
 
 ## Revisiting the Warehouse Location Problem
 
-Let's start by reviewing Dirk's original description of the warehouse location problem.  
+Let's start by reviewing Dirk's original description of the warehouse location problem.
 
-> In this article we will look at the [Warehouse Location Problem](https://en.wikipedia.org/wiki/Facility_location_problem). Given a set of customers and set of locations to build warehouses, the task is to decide where to build warehouses and from what warehouses goods should be shipped to which customer. 
-  
-> Thus there are two decisions that need to made at once: where and if to build warehouses and the assignment of customers to warehouses. This simple setting also implies that at least one warehouse must be built and that any warehouse is big enough to serve all customers.
-  
-\vspace{12pt}
-> As a practical example: you run the logistics for an NGO and want to regularly distribute goods to people in need. You identified a set of possible locations to set up your distribution hubs, but you are not sure where to build them. Then such a model might help. In practice however you might need to incorporate additional constraints into the model.
-Let's start by defining the decision variables.  Each possible location of a warehouse, $j$ can have a warehouse be built or not be built.  We will use $y_j=1$ to indicate that warehouse $j$ is built.  Conversely, $y_j=0$ indicates that we are not building a warehouse at location $j$.  Since a warehouse is either built or not built, a binary variable is appropriate for $y_j$.
-\vspace{12pt}
+> In this article we will look at the [Warehouse Location Problem](https://en.wikipedia.org/wiki/Facility_location_problem).
+> Given a set of customers and set of locations to build warehouses, the task is to decide where to build warehouses and from what warehouses goods should be shipped to which customer.
 
-Similarly, the variable $x_{i,j}$ is the decision of assigning customer $i$ to warehouse $j$.  It also needs to be a binary variable since partial assignments are not allowed.  Therefore, $x_{3,7}=1$ means that customer _3_ is assigned to warehouse _7_ and we would expect $x_{3,8}=0$ since a customer can't be assigned to two warehouses.
+> Thus there are two decisions that need to made at once: where and if to build warehouses and the assignment of customers to warehouses.
+> This simple setting also implies that at least one warehouse must be built and that any warehouse is big enough to serve all customers.
 
 \vspace{12pt}
 
-Now, that we have a handle on the variables, let's move on to the constraints. Each customer must be assigned to one and only one warehouse. For illustration, this means that one of the variables $x_{1,j}$ must be set to one and the others are zero. To enforce this constraint, we can simply add the $x$ variables for warehouse 1 for each of the warehouses.  We could do this with $x_{1,1}+x_{1,2}+ \ldots + x_{1,m}$ and requiring it to be one. We could rewrite this using a summation as $\sum\limits_{j=1}^{m} x_{1, j} = 1$. That constraint is limited to just customer 1 though.  We don't want to write this constraint out separately for each customer so we can generalize this by repeating it for all $n$ customers as $\sum\limits_{j=1}^{m} x_{i, j} = 1, \> i=1 ,\ldots, n$.  
+> As a practical example: you run the logistics for an NGO and want to regularly distribute goods to people in need.
+> You identified a set of possible locations to set up your distribution hubs, but you are not sure where to build them.
+> Then such a model might help.
+> In practice however you might need to incorporate additional constraints into the model.
+> Let's start by defining the decision variables.
+> Each possible location of a warehouse, $j$ can have a warehouse be built or not be built.
+> We will use $y_j=1$ to indicate that warehouse $j$ is built.
+> Conversely, $y_j=0$ indicates that we are not building a warehouse at location $j$.
+> Since a warehouse is either built or not built, a binary variable is appropriate for $y_j$.
+> \vspace{12pt}
+
+Similarly, the variable $x_{i,j}$ is the decision of assigning customer $i$ to warehouse $j$.
+It also needs to be a binary variable since partial assignments are not allowed.
+Therefore, $x_{3,7}=1$ means that customer *3* is assigned to warehouse *7* and we would expect $x_{3,8}=0$ since a customer can't be assigned to two warehouses.
+
 \vspace{12pt}
 
-It would not work to assign a customer to an unbuilt warehouse. For example, it would not work to have customer 23 assigned to warehouse 7 if warehouse 7 was not built.  In other words, the combination of $x_{23,7}=1$ and $y_7=0$ would be a big problem and should not happen.  We need to connect the decision variable $x_{23,7}$ and $y_7$. One way to do that is creating a constraint, $x_{23,7} \leq y_7$ which explicitly blocks assigning customer 23 to warehouse 7 unless warehouse 7 is operating.   This can be generalized as $x_{i, j} \leq y_j, \> i=1 , \ldots, n, \> j=1 ,\ldots, m$.
+Now, that we have a handle on the variables, let's move on to the constraints.
+Each customer must be assigned to one and only one warehouse.
+For illustration, this means that one of the variables $x_{1,j}$ must be set to one and the others are zero.
+To enforce this constraint, we can simply add the $x$ variables for warehouse 1 for each of the warehouses.
+We could do this with $x_{1,1}+x_{1,2}+ \ldots + x_{1,m}$ and requiring it to be one.
+We could rewrite this using a summation as $\sum\limits_{j=1}^{m} x_{1, j} = 1$.
+That constraint is limited to just customer 1 though.
+We don't want to write this constraint out separately for each customer so we can generalize this by repeating it for all $n$ customers as $\sum\limits_{j=1}^{m} x_{i, j} = 1, \> i=1 ,\ldots, n$.\
 \vspace{12pt}
 
-Our objective is to minimize cost.  We have a cost assumed for each customer to warehouse assigment.  This might be related to distance.  Let's refer to this cost as $\operatorname{transportcost}_{i,j}$.  The cost based on the transportation from warehouse to customer is then $\sum\limits_{i=1}^{n}\sum\limits_{j=1}^{m}\operatorname{transportcost}_{i,j} \cdot x_{i, j}$. Note that we could concisely abbreviate it as something like $C_{i,j}^T$.  In this case, using a capital _C_ to indicate cost and a superscript T to indicate transportation cost.  
+It would not work to assign a customer to an unbuilt warehouse.
+For example, it would not work to have customer 23 assigned to warehouse 7 if warehouse 7 was not built.
+In other words, the combination of $x_{23,7}=1$ and $y_7=0$ would be a big problem and should not happen.
+We need to connect the decision variable $x_{23,7}$ and $y_7$.
+One way to do that is creating a constraint, $x_{23,7} \leq y_7$ which explicitly blocks assigning customer 23 to warehouse 7 unless warehouse 7 is operating.
+This can be generalized as $x_{i, j} \leq y_j, \> i=1 , \ldots, n, \> j=1 ,\ldots, m$.
 \vspace{12pt}
 
-We also have a cost factor for each warehouse that we choose to build/operate.  Again, if we define $\operatorname{fixedcost}_{j}$ as the fixed cost for building warehouse $j$, the cost of our decisions is simply, $\sum\limits_{j=1}^{m}\operatorname{fixedcost}_{j} \cdot y_{j}$. 
+Our objective is to minimize cost.
+We have a cost assumed for each customer to warehouse assignment.
+This might be related to distance.
+Let's refer to this cost as $\operatorname{transportcost}_{i,j}$.
+The cost based on the transportation from warehouse to customer is then $\sum\limits_{i=1}^{n}\sum\limits_{j=1}^{m}\operatorname{transportcost}_{i,j} \cdot x_{i, j}$.
+Note that we could concisely abbreviate it as something like $C_{i,j}^T$.
+In this case, using a capital *C* to indicate cost and a superscript T to indicate transportation cost.\
 \vspace{12pt}
 
-Let's combine all this together into the formulation.  
-  
+We also have a cost factor for each warehouse that we choose to build/operate.
+Again, if we define $\operatorname{fixedcost}_{j}$ as the fixed cost for building warehouse $j$, the cost of our decisions is simply, $\sum\limits_{j=1}^{m}\operatorname{fixedcost}_{j} \cdot y_{j}$.
+\vspace{12pt}
+
+Let's combine all this together into the formulation.
+
 \vspace{12pt}
 
 $$
@@ -79,29 +120,40 @@ $$
   \end{aligned}
   \end{split}
 $$
-  
+
 \vspace{12pt}
 
 *Implementing the Model*
 
-Rather than typing in fixed data or loading it from data file, Dirk simply generated a collection of random data for testing purposes. This highlights the advantage of R in that we have a rich collection of numerical tools available that we can leverage.  
-  
+Rather than typing in fixed data or loading it from data file, Dirk simply generated a collection of random data for testing purposes.
+This highlights the advantage of R in that we have a rich collection of numerical tools available that we can leverage.
+
 \vspace{12pt}
 
-> The first thing we need is the data. In this article we will simply generate artificial data.
-\vspace{12pt}
+> The first thing we need is the data.
+> In this article we will simply generate artificial data.
+> \vspace{12pt}
 
 > We assume the **customers** are located in a grid with Euclidian distances.
-Let's explain the functions used for this data generation. The first command sets the random number seed. In general, computers don't actually generate random numbers, they generate what is called pseudo random numbers according to a particular algorithm in a sequence. The starting point will set a sequence that appears to be random and behaves in a relatively random way. Much more can be said but this is setting as the first random number, 1234. It could just as easily have been 4321 or any other integer.  
-Let's unpack this further.  
+> Let's explain the functions used for this data generation.
+> The first command sets the random number seed.
+> In general, computers don't actually generate random numbers, they generate what is called pseudo random numbers according to a particular algorithm in a sequence.
+> The starting point will set a sequence that appears to be random and behaves in a relatively random way.
+> Much more can be said but this is setting as the first random number, 1234.
+> It could just as easily have been 4321 or any other integer.\
+> Let's unpack this further.\
+> \vspace{12pt}
+
+The grid size is set to 1000.
+You can think of this as a map for a square region that is 1000 kilometers in both horizontal (East-West) and vertical (North-South) directions for visualization purposes.
+We are then randomly placing customers on the map.\
 \vspace{12pt}
 
-The grid size is set to 1000. You can think of this as a map for a square region that is 1000 kilometers in both horizontal (East-West) and vertical (North-South) directions for visualization purposes.  We are then randomly placing customers on the map.  
-\vspace{12pt}
+Next we set the number of customers to be 100 and the number of warehouses to be 20.
+The size of this problem can have a tremendous impact on solving speed.[^more-mixed-mip-1]
 
-Next we set the number of customers to be 100 and the number of warehouses to be 20. The size of this problem can have a tremendous impact on solving speed.[^2]  
-
-[^2]: In particular, I recommend using a much smaller problem size (fewer customers and warehouses) if you are using a slow computer or a shared resource such as a server or cloud-based service like RStudio.cloud. Integer programming problems can quickly consume tremendous amounts of computer processing time which can have budgetary impacts or other problems.
+[^more-mixed-mip-1]: In particular, I recommend using a much smaller problem size (fewer customers and warehouses) if you are using a slow computer or a shared resource such as a server or cloud-based service like RStudio.cloud.
+    Integer programming problems can quickly consume tremendous amounts of computer processing time which can have budgetary impacts or other problems.
 
 ```{r Prepare-for-Data-Generation}
 set.seed(1234)      # Set random number seed
@@ -114,7 +166,11 @@ n <- 200 ; m <- 40 # Set number of customers and warehouses
         # Text discussion is for the larger size
 ```
 
-Next we create the customer data as a dataframe. The `runif` function generates a uniform random number between 0.0 and 1.0 such as perhaps 0.327216. This would be multiplied by our grid size multiplier of 1,000 resulting in 327.216.  This is then rounded to 327.  Let's now see how this is implemented for customers.  
+Next we create the customer data as a dataframe.
+The `runif` function generates a uniform random number between 0.0 and 1.0 such as perhaps 0.327216.
+This would be multiplied by our grid size multiplier of 1,000 resulting in 327.216.
+This is then rounded to 327.
+Let's now see how this is implemented for customers.
 
 ```{r Create-Customer-Data}
 customer_locations <- data.frame(      
@@ -127,9 +183,12 @@ customer_locations <- data.frame(
 )
 ```
 
-Choosing to open a warehouse entails a fixed cost that varies for each warehouse, _j_, defined earlier as $fixedcost_j$ or `fixedcost[j]` in `R`.  The warehouse locations and fixed costs are again generated randomly as described by Dirk Schumacher.
+Choosing to open a warehouse entails a fixed cost that varies for each warehouse, *j*, defined earlier as $fixedcost_j$ or `fixedcost[j]` in `R`.
+The warehouse locations and fixed costs are again generated randomly as described by Dirk Schumacher.
 
-> The **warehouses** are also randomly placed on the grid. The fixed cost for the warehouses are randomly generated as well with mean cost of 10,000. Notice that in this case, the fixedcost is generated using a normal random variable function, with a mean of 10 times the grid size or 10,000 and a standard deviation of 5000.
+> The **warehouses** are also randomly placed on the grid.
+> The fixed cost for the warehouses are randomly generated as well with mean cost of 10,000.
+> Notice that in this case, the fixedcost is generated using a normal random variable function, with a mean of 10 times the grid size or 10,000 and a standard deviation of 5000.
 
 ```{r Create-Warehouse-Data}
 warehouse_locations <- data.frame(
@@ -148,13 +207,18 @@ hist(fixedcost, main="Fixed Costs of Warehouses",
      xlab="Cost")
 ```
 
-Note that the distribution of fixed costs is pretty broad. In fact, using a normal distribution means that is unbounded in both directions so it is possible for a warehouse to have a negative construction cost. While a negative construction cost might seem impossible, perhaps this would be an example of local tax incentives at work.
+Note that the distribution of fixed costs is pretty broad.
+In fact, using a normal distribution means that is unbounded in both directions so it is possible for a warehouse to have a negative construction cost.
+While a negative construction cost might seem impossible, perhaps this would be an example of local tax incentives at work.
 \vspace{12pt}
 
-For transportation cost, we will assume that simple Euclidean distance is a good measure of cost.  Just a reminder, Euclidean distance between two points is $\sqrt{(X_1-X_2)^2+(Y_1-Y_2)^2}$.  Of course in terms of cost, we could scale it or add a startup cost to each trip but for the sake of this example, we don't need to worry about it.  We could also use other distance metrics such rectilinear distance, driving distance, or any other metric we want.  
+For transportation cost, we will assume that simple Euclidean distance is a good measure of cost.
+Just a reminder, Euclidean distance between two points is $\sqrt{(X_1-X_2)^2+(Y_1-Y_2)^2}$.
+Of course in terms of cost, we could scale it or add a startup cost to each trip but for the sake of this example, we don't need to worry about it.
+We could also use other distance metrics such rectilinear distance, driving distance, or any other metric we want.\
 \vspace{12pt}
 
-Her we define a function to calculate the distance between customer _i_ and warehouse _j_.
+Her we define a function to calculate the distance between customer *i* and warehouse *j*.
 
 ```{r Calculate_Transport_Cost}
 transportcost <- function(i, j) {
@@ -173,7 +237,9 @@ pander(head(customer_locations),
        caption="Locations of First Six Customers")
 ```
 
-A table of the randomly generated locations is not terribly helpful for understanding the locations of customers or warehouses though. Let's build a map by plotting both customers and warehouses together. Black dots are customers and red dots are possible warehouse locations.
+A table of the randomly generated locations is not terribly helpful for understanding the locations of customers or warehouses though.
+Let's build a map by plotting both customers and warehouses together.
+Black dots are customers and red dots are possible warehouse locations.
 
 ```{r Plot_Map_of_Customers_and_Warehouses}
 p <- ggplot(customer_locations, aes(x, y)) + 
@@ -193,7 +259,9 @@ p + ggtitle("Map of Customer and Warehouse Locations")
 Black dots are customers. Light red triangles show potential warehouse locations.
 ```
 
-Note that I have modified the variables names for _x_ and _y_ to be `Vx` and `Vy` in the code chunk to remove confusion over x and y representing location or variables.  The prefix of `V` is meant to suggest that it is a variable.  It also helps prevent name space conflicts with other `R` objects in my environment.
+Note that I have modified the variables names for *x* and *y* to be `Vx` and `Vy` in the code chunk to remove confusion over x and y representing location or variables.
+The prefix of `V` is meant to suggest that it is a variable.
+It also helps prevent name space conflicts with other `R` objects in my environment.
 \vspace{12pt}
 
 ```{r Build_Warehouse_Model, message=FALSE}
@@ -220,22 +288,32 @@ model <- MIPModel() %>%
 model
 ```
 
-The number of _x_ (or `Vx`) variables is $m \cdot n =40 \cdot 200$ or 8000 and the number of _y_ (or `Vy`) variables is $m$ or 20, the total number of variables is 8040 which matches the model summary. A similar calculation can be done on the constraints.  The number of variables and constraints make this a non-trivial sized MIP problem. Fortunately, solving still turns out to be pretty easy on a personal computer but be cautious of solving this on a cloud instance.
+The number of *x* (or `Vx`) variables is $m \cdot n =40 \cdot 200$ or 8000 and the number of *y* (or `Vy`) variables is $m$ or 20, the total number of variables is 8040 which matches the model summary.
+A similar calculation can be done on the constraints.
+The number of variables and constraints make this a non-trivial sized MIP problem.
+Fortunately, solving still turns out to be pretty easy on a personal computer but be cautious of solving this on a cloud instance.
 \vspace{12pt}
 
-*Solving the Warehouse Location Problem* 
+*Solving the Warehouse Location Problem* \vspace{12pt}
+
+We are now ready to work on solving the model.
+We will start with using `glpk`.\
 \vspace{12pt}
 
-We are now ready to work on solving the model. We will start with using `glpk`.  
+The solver can generate a lot of additional information.
+The default is `verbose = FALSE` but let's see the extra information that we get with a verbose solution.\
 \vspace{12pt}
 
-The solver can generate a lot of additional information.  The default is `verbose = FALSE` but let's see the extra information that we get with a verbose solution.  
+So far, you are unlikely to have noticed an optimization problem cause a visible delay.
+If you run the following code chunk to solve this model, you may see the first distinct pause.
+As I said, this is a non-trivial MIP problem!
+It may take only a few seconds or perhaps a few minutes depending upon your computer.
+This also means that you must be careful in running MIP problems on cloud based services.
+A particularly big MIP running on Amazon Web Services might create a sizable bill.
+Running it on a shared service like RStudio.cloud's service, currently being provided for free while in Alpha should not be used for such computationally intense purposes.\
 \vspace{12pt}
 
-So far, you are unlikely to have noticed an optimization problem cause a visible delay.  If you run the following code chunk to solve this model, you may see the first distinct pause.  As I said, this is a non-trivial MIP problem!  It may take only a few seconds or perhaps a few minutes depending upon your computer. This also means that you must be careful in running MIP problems on cloud based services.  A particularly big MIP running on Amazon Web Services might create a sizeable bill. Running it on a shared service like RStudio.cloud's service, currently being provided for free while in Alpha should not be used for such computationally intense purposes.  
-\vspace{12pt}
-
-In summary, non-trivial MIP models should be run locally on a computer unless you are certain that your computational loads will not cause a problem for yourself or others.  
+In summary, non-trivial MIP models should be run locally on a computer unless you are certain that your computational loads will not cause a problem for yourself or others.
 
 ```{r warehouse_glpk_solving}
 result <- solve_model(model, with_ROI(solver = "glpk"))
@@ -243,8 +321,9 @@ result <- solve_model(model, with_ROI(solver = "glpk"))
 result
 ```
 
-We can see that the result was solved to optimality and the objective function value of 
-We can summarize the information by simply extracting a the objective function value.  This can be done with inline R code.  For example, we can say the following.
+We can see that the result was solved to optimality and the objective function value of We can summarize the information by simply extracting a the objective function value.
+This can be done with inline R code.
+For example, we can say the following.
 \vspace{12pt}
 
 We solved the problem with an objective value of `r sprintf("%d", ompr::objective_value(result))`.
@@ -253,13 +332,18 @@ We solved the problem with an objective value of `r sprintf("%d", ompr::objectiv
 With `r sprintf("%d", NROW(result$solution))` variables, it isn't always terribly useful to just list out all of the variables.
 \vspace{12pt}
 
-At this point, we are really interested in the small minority of non-zero variables.  Only a small percentage of the _x_ variables are not zero. 
+At this point, we are really interested in the small minority of non-zero variables.
+Only a small percentage of the *x* variables are not zero.
 \vspace{12pt}
 
 ```{marginfigure}
 **Challenge**: Do you know why about approximately $\frac{1}{m}$ of the decision variables are non-zero?
 ```
-We can do some processing to extract the non-zero _x_ (or `Vx`) variables from those with zero values. In order to do so, Dirk uses the `dplyr` package. This package provides a tremendous number of functions for data management. To illustrate how this is done, let's review line by line how this code chunk works.
+
+We can do some processing to extract the non-zero *x* (or `Vx`) variables from those with zero values.
+In order to do so, Dirk uses the `dplyr` package.
+This package provides a tremendous number of functions for data management.
+To illustrate how this is done, let's review line by line how this code chunk works.
 
 ```{r warehouse_parsing_results}
 matching <- result %>% 
@@ -268,19 +352,25 @@ matching <- result %>%
   select(i, j)
 ```
 
-The next command  `matching <- result %>%` does a few things. It uses the piping operator `%>%` to pass the `result` object into being used by the following command and then everything that gets done later in this piped sequence will be assigned to `matching`.
+The next command `matching <- result %>%` does a few things.
+It uses the piping operator `%>%` to pass the `result` object into being used by the following command and then everything that gets done later in this piped sequence will be assigned to `matching`.
 \vspace{12pt}
 
-The command `get_solution(Vx[i,j]) %>%` extracts solution values for the x variables (`Vx`) from the solved model object `result` piped in from the previous stage.  This will give us a data object consisting of 2000 variables values, 95% of them being zero.  
+The command `get_solution(Vx[i,j]) %>%` extracts solution values for the x variables (`Vx`) from the solved model object `result` piped in from the previous stage.
+This will give us a data object consisting of 2000 variables values, 95% of them being zero.\
 \vspace{12pt}
 
-The command `filter(value > .9) %>%` takes the previous command's 2000 variable values and only keeps the ones for which the value is larger than 0.9. Since these are binary variables, they should all be exactly 1.0 but just in case there is any numerical anomaly where a value is passed as a value close to one, such as 0.9999999, it is best to test with some tolerance.  This command then only passes to the next command the 100 non-zero values.
+The command `filter(value > .9) %>%` takes the previous command's 2000 variable values and only keeps the ones for which the value is larger than 0.9.
+Since these are binary variables, they should all be exactly 1.0 but just in case there is any numerical anomaly where a value is passed as a value close to one, such as 0.9999999, it is best to test with some tolerance.
+This command then only passes to the next command the 100 non-zero values.
 \vspace{12pt}
 
-The last command in this code chunk `select(i, j)` says to only select (or retain) the columns named `i` and `j`.  Notice that this does not pass the actual value of zero or one - we know it is one!  Also, note that it does not include the piping operator `%>%` which means that it is the end of this piped sequence.
+The last command in this code chunk `select(i, j)` says to only select (or retain) the columns named `i` and `j`.
+Notice that this does not pass the actual value of zero or one - we know it is one!
+Also, note that it does not include the piping operator `%>%` which means that it is the end of this piped sequence.
 \vspace{12pt}
 
-Let's review what the two versions of the results look like.  
+Let's review what the two versions of the results look like.
 
 ```{r raw_results_table}
 pander(head( get_solution(result, Vx[i,j])),
@@ -291,7 +381,8 @@ pander(head( get_solution(result, Vx[i,j])),
 Notice that most of the results are simply zero indicating that the first six customers are not assigned to warehouse 1.  It is common in many binary programming cases for the vast majority of variables to have a value of zero.  
 ```
 
-Notice that in the table of raw results, the first six entries (obtained using the `head` function) did not show any customers assigned to a warehouse. This isn't surprising given that only one in twenty values are non-zero.  
+Notice that in the table of raw results, the first six entries (obtained using the `head` function) did not show any customers assigned to a warehouse.
+This isn't surprising given that only one in twenty values are non-zero.
 
 ```{r processed_results_table}
 pander(head( matching), 
@@ -303,14 +394,17 @@ pander(head( matching),
 Example of some of the processed results for variable x from matching.
 ```
 
-The processed results table shows that the `matching` object  simply lists six customers and to which warehouse it is assigned. It has cut out the vast majority of rows (decision variables) with zero values.  
+The processed results table shows that the `matching` object simply lists six customers and to which warehouse it is assigned.
+It has cut out the vast majority of rows (decision variables) with zero values.\
 \vspace{12pt}
 
 This clean and simple listing from `matching` is interesting and will then be used for adding lines to the earlier `ggplot` model.
 \vspace{12pt}
 
 The last step is to add the assignments to the previous plot we generated.
-Dirk used one single code chunk to do more processing of results, focused on warehouses, and then create the final plot. I'll break up the steps into separate code chunks just for the sake of illustrating how they work and showing the intermediate products.  This is a useful chance to see how to manage results.
+Dirk used one single code chunk to do more processing of results, focused on warehouses, and then create the final plot.
+I'll break up the steps into separate code chunks just for the sake of illustrating how they work and showing the intermediate products.
+This is a useful chance to see how to manage results.
 
 ```{r plot-assignment}
 plot_assignment <- matching %>% 
@@ -324,7 +418,7 @@ pander (head(plot_assignment),
 Notice that this gives the beginning and ending coordinates of what will soon be lines to show the connections between customers and warehouses.
 \vspace{12pt}
 
-Now, let's calcuate how many customers each warehouse serves.  
+Now, let's calcuate how many customers each warehouse serves.
 
 ```{r customer-count}
 customer_count <- matching %>% 
@@ -336,7 +430,9 @@ pander (customer_count, caption=
   "Count of customers assigned to each operating warehouse")
 ```
 
-We can see that warehouses selected to be built serve different numbers of customers.  Let's gather more information to examine the fixed cost of the selected.  How does this compare with the histogram of fixed costs?  
+We can see that warehouses selected to be built serve different numbers of customers.
+Let's gather more information to examine the fixed cost of the selected.
+How does this compare with the histogram of fixed costs?
 
 ```{r prepare_to_plot_warehouses}
 plot_warehouses <- warehouse_locations %>% 
@@ -347,10 +443,11 @@ pander (plot_warehouses, caption =
           "Table of information about warehouses used")
 ```
 
-The `plot_warehouses` data frame[^data_type] is built using `dplyr` functions to create a summary of the important information about the warehouses used:  where they are located, costs, and number of customers served.
+The `plot_warehouses` data frame[^more-mixed-mip-2] is built using `dplyr` functions to create a summary of the important information about the warehouses used: where they are located, costs, and number of customers served.
 \vspace{12pt}
 
-[^data_type]: Note that the data type can sometimes be a source of problems for R users.  You can use the command `class(plot_warehouses)` to confirm that it is a `data.frame`.
+[^more-mixed-mip-2]: Note that the data type can sometimes be a source of problems for R users.
+    You can use the command `class(plot_warehouses)` to confirm that it is a `data.frame`.
 
 ```{r plot_warehouses, echo=TRUE, fig.width=10, fig.height=6, fig.fullwidth=TRUE}
 p + 
@@ -376,7 +473,11 @@ The total fixed costs for setting up the `r dplyr::n_distinct(matching$j)` wareh
 sum(fixedcost[unique(matching$j)])
 ```
 
-The above function cleverly uses the warehouse ID column from  `matching` (`matching$j`), makes the list unique to get rid of duplicates.  Recall that warehouses will be listed 100 times since every customer has a warehouse listed in matching.  Next, it uses these ID numbers to extract fixedcost values and adds them up.  Note that when you see a command such as this in R, it can often work to run them one at time in the console to see how they work.  To demonstrate this, see how each statement builds upon the previous.
+The above function cleverly uses the warehouse ID column from `matching` (`matching$j`), makes the list unique to get rid of duplicates.
+Recall that warehouses will be listed 100 times since every customer has a warehouse listed in matching.
+Next, it uses these ID numbers to extract fixed-cost values and adds them up.
+Note that when you see a command such as this in R, it can often work to run them one at time in the console to see how they work.
+To demonstrate this, see how each statement builds upon the previous.
 
 ```{r demonstrate_calculation_of_fixed_costs}
 matching$j                          
@@ -388,53 +489,57 @@ fixedcost[unique(matching$j)]
 sum(fixedcost[unique(matching$j)])  
    # Add fixed costs of all warehouses used
 ```
+
 \vspace{12pt}
 
-*Discussion*
-\vspace{12pt}
+*Discussion* \vspace{12pt}
 
 This warehouse customer assignment problem was discussed in detail for multiple reasons.
 
-* It demonstrates a large, classic, and common industrial application of optimization.
-* The application uses simulated data to feed into an optimization model.
-* This model uses both single and double subscripted variables as well techniques for coordinating them. 
-* Introduces the use of `ggplot` to visualize the data and results.
-* Demonstrates data munging which is a major time sink for analysts which can also occur in large optimizaton models so this application shows how to use `dplyr` to process data and results.
-\vspace{12pt}
+-   It demonstrates a large, classic, and common industrial application of optimization.
+-   The application uses simulated data to feed into an optimization model.
+-   This model uses both single and double subscripted variables as well techniques for coordinating them.
+-   Introduces the use of `ggplot` to visualize the data and results.
+-   Demonstrates data munging which is a major time sink for analysts which can also occur in large optimizaton models so this application shows how to use `dplyr` to process data and results. \vspace{12pt}
 
 This analysis could be extended in a variety of ways to explore other questions.
 
-* What is the statistical distribution of the optimal number of warehouses used when simulated a 1000 times?
-* How often would it be optimal to five or more warehouses?
-* Does decreasing variation in fixed costs affect the number of warehouses used?
-* Does decreasing the mean cost of warehouses affect the number of warehouses used?
-\vspace{12pt}
+-   What is the statistical distribution of the optimal number of warehouses used when simulated a 1000 times?
+-   How often would it be optimal to five or more warehouses?
+-   Does decreasing variation in fixed costs affect the number of warehouses used?
+-   Does decreasing the mean cost of warehouses affect the number of warehouses used? \vspace{12pt}
 
-The model can also be extended in a variety of ways.  
+The model can also be extended in a variety of ways.
 
-* To allow for additional application characteristics such as warehouse capacity and customer demand.
-* Using actual cities in a region for locations rather than randomly generated data and a map.
-\vspace{12pt}
+-   To allow for additional application characteristics such as warehouse capacity and customer demand.
+-   Using actual cities in a region for locations rather than randomly generated data and a map. \vspace{12pt}
 
-The same concepts can also be applied to other applications.  
+The same concepts can also be applied to other applications.
 
 ## Solving MIPs with Different Solvers
 
-One of the big benefits of `ompr` is that it separates the process of formulating the optimization model from that of solving it and thereby let's us easily switch to other solvers. Up until this point, we have used the `glpk` solver. Now that we have a nontrivial optimization model, the Warehouse Location Model, let's use it.  
+One of the big benefits of `ompr` is that it separates the process of formulating the optimization model from that of solving it and thereby let's us easily switch to other solvers.
+Up until this point, we have used the `glpk` solver.
+Now that we have a nontrivial optimization model, the Warehouse Location Model, let's use it.\
 \vspace{12pt}
 
-The emphasis in this section is not model building but comparing the use of different solvers.  Since we have the model already defined as an object, simply named `model`, we can easily pass it to the different solvers for optimizing.  There is a large collection of other solvers that can be used with R.[^new_material]
+The emphasis in this section is not model building but comparing the use of different solvers.
+Since we have the model already defined as an object, simply named `model`, we can easily pass it to the different solvers for optimizing.
+There is a large collection of other solvers that can be used with R.[^more-mixed-mip-3]
 
-[^new_material]: This topic is not covered in Dirk's vignette or blog post.
+[^more-mixed-mip-3]: This topic is not covered in Dirk's vignette or blog post.
+    \vspace{12pt}
+
+We'll demonstrate the performance for illustration purposes.
+Again, do not run the following code chunks in this section on a cloud-based service such as Rstudio.cloud, unless you are certain that imposing a non-trivial computational load is acceptable.
 \vspace{12pt}
 
-We'll demonstrate the performance for illustration purposes.  Again, do not run the following code chunks in this section on a cloud-based service such as Rstudio.cloud, unless you are certain that imposing a non-trivial computational load is acceptable. 
-  \vspace{12pt}
-  
-*Performance of `glpk`*
-\vspace{12pt}
+*Performance of `glpk`* \vspace{12pt}
 
-We have been using `glpk` for all of our earlier examples.  For the sake of comparison, let's start off with it too.  We will use the `tictoc` package to help us collect data on timing.  Note that timing can vary even if the same problem is solved on the same computer twice in rapid succession. 
+We have been using `glpk` for all of our earlier examples.
+For the sake of comparison, let's start off with it too.
+We will use the `tictoc` package to help us collect data on timing.
+Note that timing can vary even if the same problem is solved on the same computer twice in rapid succession.
 \vspace{12pt}
 
 ```{r timeglpk }
@@ -449,12 +554,13 @@ glpktime1 <- c("glpk", glpktime$toc - glpktime$tic,
                result_glpk$objective_value)
 ```
 
-The `glpk` solver worked.  We'll take the results and combine them with other shortly
-  \vspace{12pt}
-  
+The `glpk` solver worked.
+We'll take the results and combine them with other shortly \vspace{12pt}
+
 *Performance of `symphony`*
 
 \vspace{12pt}
+
 Let's move on to testing the `symphony` solver.
 
 ```{r timesymphony }
@@ -469,19 +575,33 @@ symphonytime1 <- c("symphony",
                    result_symphony$objective_value)
 ```
 
-Again, `symphony` successfully solved the optimization problem.  \vspace{12pt}
+Again, `symphony` successfully solved the optimization problem.
+\vspace{12pt}
 
-Several items should be noted from the above code and output. One item is that parameters can be passed directly to solvers.  This is why `verbose = TRUE` was used for `glpk` but `symphony` uses `verbosity = -1`. Differing levels of verbosity gives much more granularity than a simple TRUE/FALSE. Setting `verbosity = 0` will give rich detail that an analyst trying to improve solution speed may find useful or for debugging why a model did not work but explaining the report is beyond the scope of this text.  \vspace{12pt}
+Several items should be noted from the above code and output.
+One item is that parameters can be passed directly to solvers.
+This is why `verbose = TRUE` was used for `glpk` but `symphony` uses `verbosity = -1`.
+Differing levels of verbosity gives much more granularity than a simple TRUE/FALSE.
+Setting `verbosity = 0` will give rich detail that an analyst trying to improve solution speed may find useful or for debugging why a model did not work but explaining the report is beyond the scope of this text.
+\vspace{12pt}
 
-It should be noted that other options can be passed to the symphony solver though such as `time_limit`, `gap_limit`, and  `first_feasible`.  \vspace{12pt}
+It should be noted that other options can be passed to the symphony solver though such as `time_limit`, `gap_limit`, and `first_feasible`.
+\vspace{12pt}
 
-The `time_limit` option has a default value of -1 meaning no time limit.  It should be an integer to indicate the number of seconds to run before stopping.  \vspace{12pt}
+The `time_limit` option has a default value of -1 meaning no time limit.
+It should be an integer to indicate the number of seconds to run before stopping.
+\vspace{12pt}
 
-The `node_limit` option has a default value of -1 meaning no limit on the number of nodes (in an MIP problem, the number of linear programs). It should be an integer to indicate the number of nodes examined before stopping.  \vspace{12pt}
+The `node_limit` option has a default value of -1 meaning no limit on the number of nodes (in an MIP problem, the number of linear programs).
+It should be an integer to indicate the number of nodes examined before stopping.
+\vspace{12pt}
 
-The last option, `first_feasible`, has a default value of `FALSE`.  If it is set to `TRUE`, then symphony will stop when it has found a first solution that satisfies all the constraints (including integrality) rather than continuing on to prove optimality.  \vspace{12pt}
+The last option, `first_feasible`, has a default value of `FALSE`.
+If it is set to `TRUE`, then symphony will stop when it has found a first solution that satisfies all the constraints (including integrality) rather than continuing on to prove optimality.
+\vspace{12pt}
 
-Let's examine the impact of just looking at the first feasible solution found by passing `first_feasible=TRUE` to see what happens.  \vspace{12pt}
+Let's examine the impact of just looking at the first feasible solution found by passing `first_feasible=TRUE` to see what happens.
+\vspace{12pt}
 
 ```{r timesymphonyfirstfeasible }
 tic("symphony")
@@ -496,20 +616,30 @@ symphonytimeff <- c("symphony first feas.",
                    result_symphony_ff$objective_value)
 ```
 
-Several interesing and important things should be noted here.  First, `ompr` interprets the status message from the solver as not being solved to optimality to indicate that the problem is not feasible.  This is a known issue in `ompr` and `ompr.ROI`as of version 0.8.0.0.  It highlights that "infeasible" status from the `ompr` should be thought of as meaning that an optimal solution was not found for _some_ reason such as being told to terminate after the first feasible solution was found, time limit reached, node limit reached, the MIP was infeasible, the MIP was unbounded, or some other issue.
+Several interesing and important things should be noted here.
+First, `ompr` interprets the status message from the solver as not being solved to optimality to indicate that the problem is not feasible.
+This is a known issue in `ompr` and `ompr.ROI`as of version 0.8.0.0.
+It highlights that "infeasible" status from the `ompr` should be thought of as meaning that an optimal solution was not found for *some* reason such as being told to terminate after the first feasible solution was found, time limit reached, node limit reached, the MIP was infeasible, the MIP was unbounded, or some other issue.
 \vspace{12pt}
 
-A second thing to note that in my randomly generated instance, the very first feasible solution it found, happens to have the same objective function value as the optimal solution found to optimality earlier by `glpk` and `symphony`. This is similar to the very simple, two variable integer programming problem that we examined using a branch and bound tree in the previous chapter.  Symphony just doesn't have confirmation yet that this first feasible solution is truly optimal yet.  
+A second thing to note that in my randomly generated instance, the very first feasible solution it found, happens to have the same objective function value as the optimal solution found to optimality earlier by `glpk` and `symphony`.
+This is similar to the very simple, two variable integer programming problem that we examined using a branch and bound tree in the previous chapter.
+Symphony just doesn't have confirmation yet that this first feasible solution is truly optimal yet.\
 \vspace{12pt}
 
-Thirdly, the time on my computer sometimes took less time to solve to optimality than for when it stopped _early_ with just the initial feasible solution.  This demonstrates the variability of solving time. Also, it might be that the code is more tightly optimized for cases of fully solving the LP than for early termination.
-  \vspace{12pt}
-  
+Thirdly, the time on my computer sometimes took less time to solve to optimality than for when it stopped *early* with just the initial feasible solution.
+This demonstrates the variability of solving time.
+Also, it might be that the code is more tightly optimized for cases of fully solving the LP than for early termination.
+\vspace{12pt}
+
 *Performance of `lpsolve`*
 
-  \vspace{12pt}
-The `lpsolve` package has a long history too and is widely used.  Let's test it and see how it performs.
-  \vspace{12pt}
+\vspace{12pt}
+
+The `lpsolve` package has a long history too and is widely used.
+Let's test it and see how it performs.
+\vspace{12pt}
+
 ```{r timelpsolve}
 tic("lpsolve")
 result_lpsolve <-  solve_model(
@@ -526,18 +656,25 @@ We can see that `lpsolve` was also successful.
 
 *Performance of `gurobi`*
 
-  \vspace{12pt}
-Gurobi is a comprehensive commercial optimization solver and is generally considered to be the fastest mixed integer programming solver.  It is widely used for large scale commercial applications such as Amazon, Starbucks, and others.  It can be run through a variety of platforms including C, Python, AMPL, GAMS, and other platforms.  It is also available through R but requires more work than the open solvers that have previously used.  To use Gurobi in R, do the following:
+\vspace{12pt}
 
-1. Get a license to gurobi (free licenses are available for academic use)
-2. Download and install the gurobi software
-3. Follow directions to have software access license key
-4. Install gurobi's R package.  Note that the package file is not in CRAN and will need to be installed directly from the gurobi installed files on your local computer.  (For example in my windows install, it was in `C:\\gurobi900\win64\R` directory.)
-5. Install the `roi.plugin.gurobi` package.  Note that this may need to be installed from a github account as it is not officially supported by Gurobi.  
+Gurobi is a comprehensive commercial optimization solver and is generally considered to be the fastest mixed integer programming solver.
+It is widely used for large scale commercial applications such as Amazon, Starbucks, and others.
+It can be run through a variety of platforms including C, Python, AMPL, GAMS, and other platforms.
+It is also available through R but requires more work than the open solvers that have previously used.
+To use Gurobi in R, do the following:
 
-A code chunk is provided without evaluation in order to avoid issue of reproducibility.  Also, performance testing of gurobi under these circumstances might not do justice to the performance benefits of gurobi on much more complex optimization problems.
+1.  Get a license to gurobi (free licenses are available for academic use)
+2.  Download and install the gurobi software
+3.  Follow directions to have software access license key
+4.  Install gurobi's R package. Note that the package file is not in CRAN and will need to be installed directly from the gurobi installed files on your local computer. (For example in my windows install, it was in `C:\\gurobi900\win64\R` directory.)
+5.  Install the `roi.plugin.gurobi` package. Note that this may need to be installed from a github account as it is not officially supported by Gurobi.
 
-  \vspace{12pt}
+A code chunk is provided without evaluation in order to avoid issue of reproducibility.
+Also, performance testing of gurobi under these circumstances might not do justice to the performance benefits of gurobi on much more complex optimization problems.
+
+\vspace{12pt}
+
 ```{r timegurobi, eval=FALSE}
 tic("gurobi")
 result_gurobi <-  solve_model(
@@ -550,21 +687,24 @@ gurobitime1 <- c("gurobi",
                    result_lpsolve$objective_value)
 ```
 
-The `ROI.plugin` for each respective solver general accepts a subset of all the parameters or options that a solver can use.  This may mean some trial and error is involved.  The [Gurobi documentation](https://www.gurobi.com/documentation/9.0/refman/parameters.html#sec:Parameters) provides a comprehensive list of parameters.  I've tested  the following commonly used parameters with Gurobi and can confirm that they appear to work.
+The `ROI.plugin` for each respective solver general accepts a subset of all the parameters or options that a solver can use.
+This may mean some trial and error is involved.
+The [Gurobi documentation](https://www.gurobi.com/documentation/9.0/refman/parameters.html#sec:Parameters) provides a comprehensive list of parameters.
+I've tested the following commonly used parameters with Gurobi and can confirm that they appear to work.
 
-* *TimeLimit* terminates solving based on seconds, (usage: `TimeLimit=40.0`)
-* *SolutionLimit* , limits the number of MIP feasible solutions, (usage:  `SolutionLimit=20`)
-* *NodeLimit* , limits the number of MIP nodes, only used in MIP, (usage: `NodeLimit=200`)
-* *BestObjStop* , stops when a solution is as good as value, (usage: `BestObjStop=50000.0`)
-* *BestBdStop* , stops when best bound is as good as value (usage: `BestBdStop=50000.0`)
-* *MIPGap*, stops based on relative gap between best bound and current solution.  Note that the default is $10^-4$ rather than 0. A value of 0.1 effectively means that a solution is accepted and solving terminated if it is known that no solution is possible that is 10% better. (usage: `MIPGap=0.1`)
-* *MIPGapAbs*, stops based on absolute gap between best bound and current solution. For example if the objective function is in dollars, a value of 1000.0  means that a solution is accepted and solving terminated if it is known that no solution is possible is more $\$1000$ better. (usage: `MIPGap=1000.0`)
+-   *TimeLimit* terminates solving based on seconds, (usage: `TimeLimit=40.0`)
+-   *SolutionLimit* , limits the number of MIP feasible solutions, (usage: `SolutionLimit=20`)
+-   *NodeLimit* , limits the number of MIP nodes, only used in MIP, (usage: `NodeLimit=200`)
+-   *BestObjStop* , stops when a solution is as good as value, (usage: `BestObjStop=50000.0`)
+-   *BestBdStop* , stops when best bound is as good as value (usage: `BestBdStop=50000.0`)
+-   *MIPGap*, stops based on relative gap between best bound and current solution. Note that the default is $10^-4$ rather than 0. A value of 0.1 effectively means that a solution is accepted and solving terminated if it is known that no solution is possible that is 10% better. (usage: `MIPGap=0.1`)
+-   *MIPGapAbs*, stops based on absolute gap between best bound and current solution. For example if the objective function is in dollars, a value of 1000.0 means that a solution is accepted and solving terminated if it is known that no solution is possible is more $\$1000$ better. (usage: `MIPGap=1000.0`)
 
-The gurobi solver has far more capabilities than are presented here.  
+The gurobi solver has far more capabilities than are presented here.
 
 ## Comparing Results across Solvers
 
-Now let's compare how they each did.  
+Now let's compare how they each did.
 
 ```{r comparetimes}
 timeresults <- rbind(glpktime1, symphonytime1, 
@@ -579,24 +719,46 @@ pander(timeresults,
        Customer Assignment Across Solvers", digits=2)
 ```
 
-The most important thing to note is that each solver states that it found the same value for an objective function.  While they may vary in how it is achieved if there are multiple optima (in other words, different values for decision variables _x_ and _y_), this means that they all found a correct solution.  It would be a big issue if they differed. Causes for difference could be timing out, satisfying a suboptimality tolerance factor condition, or some error.  
+The most important thing to note is that each solver states that it found the same value for an objective function.
+While they may vary in how it is achieved if there are multiple optima (in other words, different values for decision variables *x* and *y*), this means that they all found a correct solution.
+It would be a big issue if they differed.
+Causes for difference could be timing out, satisfying a suboptimality tolerance factor condition, or some error.\
 \vspace{12pt}
 
-Note that time will vary significantly from computer to computer and may also depend upon the other tasks and the amount of memory available. Performance will change for different solver settings and for different problems.  Also, performance time will change for different random instances---simply changing the random number seed will create diferent run-time results.  This problem is probably too small to show off the advantages of gurobi and running gurobi through third party tool interfaces such as `ompr` and `ROI` will also be slower than a more native format.
+Note that time will vary significantly from computer to computer and may also depend upon the other tasks and the amount of memory available.
+Performance will change for different solver settings and for different problems.
+Also, performance time will change for different random instances---simply changing the random number seed will create different run-time results.
+This problem is probably too small to show off the advantages of gurobi and running gurobi through third party tool interfaces such as `ompr` and `ROI` will also be slower than a more native format.
 \vspace{12pt}
 
-The ROI package lists 19 different solvers with ROI plugins. Three commercial solvers, C-Plex, GUROBI, and MOSEK are worth highlighting. These programs may be substantially faster on large MIP problems and may make versions available for academic use.  Others are for quadratic optimization or special classes of optimization problems.  
+The ROI package lists 19 different solvers with ROI plugins.
+Three commercial solvers, C-Plex, GUROBI, and MOSEK are worth highlighting.
+These programs may be substantially faster on large MIP problems and may make versions available for academic use.
+Others are for quadratic optimization or special classes of optimization problems.\
 \vspace{12pt}
 
-After running these chunks dozens of times and finding the results to be quite stable across the various solvers tested, using a code chunk option `cache=TRUE` may be beneficial. Caching means that it will save and reuse the results unless things are changed.  If it determines that things have changed, it will rerun that chunk. This can save a lot of time in knitting the chapter or rebuilding the book. This is an excellent application area for demonstrating the benefits of using the chunk option for caching. The current application requires about a minuteto do each full size customer warehouse optimization run. Caching just the four runs can save a lot of knitting time. RStudio and knitr do a sophisticated check for changes which can invalidate the previously cached results and will then rerun the code chunk and save the results for future cached knits as appropriate. More demanding needs can use the granularity of numerical options for caching as compared to simply TRUE/FALSE and additional options. These might be required in detailed performance testing or numerical performance comparisons.  \vspace{12pt}
+After running these chunks dozens of times and finding the results to be quite stable across the various solvers tested, using a code chunk option `cache=TRUE` may be beneficial.
+Caching means that it will save and reuse the results unless things are changed.
+If it determines that things have changed, it will rerun that chunk.
+This can save a lot of time in knitting the chapter or rebuilding the book.
+This is an excellent application area for demonstrating the benefits of using the chunk option for caching.
+The current application requires about a minute to do each full size customer warehouse optimization run.
+Caching just the four runs can save a lot of knitting time.
+RStudio and knitr do a sophisticated check for changes which can invalidate the previously cached results and will then rerun the code chunk and save the results for future cached knits as appropriate.
+More demanding needs can use the granularity of numerical options for caching as compared to simply TRUE/FALSE and additional options.
+These might be required in detailed performance testing or numerical performance comparisons.
+\vspace{12pt}
 
-Significant computer time can be used for large models but a variety of questions can be examined such as the following.  
+Significant computer time can be used for large models but a variety of questions can be examined such as the following.
 
-* How is problem size related to solving time?  
-* Are there systematic differences in speed or solving success for different solvers?   (ex. does Gurobi run faster?)  
-* How do various modeling parameters affect solution speed?  
+-   How is problem size related to solving time?\
 
-  \vspace{12pt}
+-   Are there systematic differences in speed or solving success for different solvers?
+    (ex. does Gurobi run faster?)\
+
+-   How do various modeling parameters affect solution speed?
+
+    \vspace{12pt}
 
 ```{r Demo_Gurobi_Solver, eval=FALSE, echo=FALSE}
 # Code fragment is only used for testing gurobi
@@ -618,7 +780,8 @@ gres$status
 
 ## Popularity of LP Solvers
 
-Let's take another look at comparing solvers by examining their popularity. More precisely, let's examine the download logs of CRAN for a variety of linear programming solvers.  
+Let's take another look at comparing solvers by examining their popularity.
+More precisely, let's examine the download logs of CRAN for a variety of linear programming solvers.
 
 ```{r lp_package_download_stats,  echo=FALSE, fig.width=10, fig.height=6, fig.fullwidth=TRUE}
 optim_packages <- c("lpSolve", "lpSolveAPI",  "Rglpk", 
@@ -633,10 +796,14 @@ ggplot(pkg_dl_data, aes(end, downloads, group=package, color=package)) +
        x = "Month", y = "Downloads") 
 ```
 
-Many of these packages are being used directly in other packages. While we can't see which packages are being specifically used most often for `ompr`, we can see which ROI plugins are downloaded most often which is probably a good proxy.    
+Many of these packages are being used directly in other packages.
+While we can't see which packages are being specifically used most often for `ompr`, we can see which ROI plugins are downloaded most often which is probably a good proxy.\
 \vspace{12pt}
 
-We will focus our attention on the ROI packages that emphasize linear programming. This means dropping packages such as `ROI.plugin.nloptr`, `ROI.plugin.qpOASES`, and `ROI.plugin.quadprog`. Also, proprietary packages that are not available on CRAN such as GUROBI and XPress, are not included.  \vspace{12pt}
+We will focus our attention on the ROI packages that emphasize linear programming.
+This means dropping packages such as `ROI.plugin.nloptr`, `ROI.plugin.qpOASES`, and `ROI.plugin.quadprog`.
+Also, proprietary packages that are not available on CRAN such as GUROBI and XPress, are not included.
+\vspace{12pt}
 
 ```{r ROI_Package_Stats, echo=FALSE, fig.width=10, fig.height=6, fig.fullwidth=TRUE}
 ROI_packages <- c( "ROI.plugin.glpk",   "ROI.plugin.symphony", 
@@ -652,8 +819,11 @@ ggplot(pkg_dl_data, aes(end, downloads, group=package,
        x = "Month", y = "Downloads") 
 ```
 
-It is interesting to see that the `symphony` and `glpk` ROI plugins were relatively equal in downloads until about 2015 when `glpk` started to open a lead in usage.  This of course does not mean that `glpk` is better than the others but is interesting to note. The spikes in downloads could be driven by other packages that use this particular solver, visibility from vignettes, courses, other publications, or package updates.  \vspace{12pt}
-  
+It is interesting to see that the `symphony` and `glpk` ROI plugins were relatively equal in downloads until about 2015 when `glpk` started to open a lead in usage.
+This of course does not mean that `glpk` is better than the others but is interesting to note.
+The spikes in downloads could be driven by other packages that use this particular solver, visibility from vignettes, courses, other publications, or package updates.
+\vspace{12pt}
+
 ```{r package_download_stats, fig.width=10, fig.height=6, fig.margin=TRUE}
 pkg_dl_data <- cran_stats(packages = c("ompr"))
 ggplot(pkg_dl_data, aes(end, downloads, group=package, 
@@ -665,11 +835,12 @@ ggplot(pkg_dl_data, aes(end, downloads, group=package,
        x = "Month", y = "Downloads") 
 ```
 
-Let's close this with examining the popularity of `ompr` itself.   
+Let's close this with examining the popularity of `ompr` itself.
 
 \vspace{12pt}
 
-Clearly a wide range of optimization tools can be used.  Let's return to optimization formulations with a more entertaining application.
+Clearly a wide range of optimization tools can be used.
+Let's return to optimization formulations with a more entertaining application.
 
 \vspace{12pt}
 
@@ -687,34 +858,48 @@ game1<-makeGame()
 plot(game1)
 ```
 
-After spending a significant amount of time and CPU cycles on a serious topic of warehouse optimization, let's take a break with a more lighthearted application of the classic Sudoku puzzle game. For those unfamiliar with Sukoku, the core idea is to use every digit from 1-9 once in each column, once in each row, and once in each 3x3 cluster. Feel free to work on this Sudoku puzzle to the right by hand.  
+After spending a significant amount of time and CPU cycles on a serious topic of warehouse optimization, let's take a break with a more lighthearted application of the classic Sudoku puzzle game.
+For those unfamiliar with Sukoku, the core idea is to use every digit from 1-9 once in each column, once in each row, and once in each 3x3 cluster.
+Feel free to work on this Sudoku puzzle to the right by hand.\
 \vspace{12pt}
 
-The optimization approach will give you the opportunity to solve this or any other Sudoku model. This section is based on an article by Dirk Schumacher and helper functions from the 'sudokuAlt' package from Bill Venables, one of the Godfathers of R.  Let's start with Dirk's explanation, with permission, of the model.  \vspace{12pt}
-
-> In this vignette we will solve Sudoku puzzles using MILP. [Sudoku](https://en.wikipedia.org/wiki/Sudoku) in its most popular form is a constraint satisfaction problem and by setting the objective function to $0$ you transform the optimization problem into a pure constraint satistication problem. In this document we will consider Sudokus in a 9x9 grid with 3x3 sub-matrices.  
-> Of course you can formulate an objective function as well that directs the solver towards solutions maximizing a certain linear function.  
-> The idea is to introduce a binary variable $x$ with three indexes $i, j, k$ that is $1$ if and only if the number $k$ is in cell $i, j$.  
-
-  \vspace{12pt}
-The basic optimization formulation is interesting for a few reasons.    \vspace{12pt}
-
-First, there isn't a clear objective function.  We are simply trying to find a a set of values that solves the problem without violating any of the rules of Sudoku.  In other words, any feasible solution would be acceptable.  We could minimize $x_{1,1,1}$, the sum of all decision variables (which would be 81, corresponding to the number of cells in the Sudoku grid.)  We could also just tell it to maximize a particular number, say 42, or minimize another number like 0, which is exactly what Dirk did.  
+The optimization approach will give you the opportunity to solve this or any other Sudoku model.
+This section is based on an article by Dirk Schumacher and helper functions from the 'SudokuAlt' package from Bill Venables, one of the Godfathers of R.
+Let's start with Dirk's explanation, with permission, of the model.
 \vspace{12pt}
 
-We need a constraint to ensure that each cell $(i,j)$ contains a value. 
+> In this vignette we will solve Sudoku puzzles using MILP.
+> [Sudoku](https://en.wikipedia.org/wiki/Sudoku) in its most popular form is a constraint satisfaction problem and by setting the objective function to $0$ you transform the optimization problem into a pure constraint satistication problem.
+> In this document we will consider Sudokus in a 9x9 grid with 3x3 sub-matrices.\
+> Of course you can formulate an objective function as well that directs the solver towards solutions maximizing a certain linear function.\
+> The idea is to introduce a binary variable $x$ with three indexes $i, j, k$ that is $1$ if and only if the number $k$ is in cell $i, j$.
+
+\vspace{12pt}
+
+The basic optimization formulation is interesting for a few reasons.
+\vspace{12pt}
+
+First, there isn't a clear objective function.
+We are simply trying to find a a set of values that solves the problem without violating any of the rules of Sudoku.
+In other words, any feasible solution would be acceptable.
+We could minimize $x_{1,1,1}$, the sum of all decision variables (which would be 81, corresponding to the number of cells in the Sudoku grid.) We could also just tell it to maximize a particular number, say 42, or minimize another number like 0, which is exactly what Dirk did.\
+\vspace{12pt}
+
+We need a constraint to ensure that each cell $(i,j)$ contains a value.
+
 ```{marginfigure marginsudoku_const1, echo=TRUE}
 $$\sum\limits_{k=1}^{9}   x_{i,j,k} = 1, \; \forall i,j$$
 ```
 
 \vspace{12pt}
+
 We then need to ensure that in each row, $i$, each digit $k$ only appears once.
 
 ```{marginfigure marginsudoku_const2}
 $$\sum\limits_{i=1}^{n}   x_{i,j,k} = 1, \; \forall j,k$$
 ```
 
-We then need to ensure that in each column, $j$, each digit only appears once.  
+We then need to ensure that in each column, $j$, each digit only appears once.
 
 ```{marginfigure marginsudoku_const3}
 $$\sum\limits_{j=1}^{n}   x_{i,j,k} = 1, \; \forall i,k$$
@@ -722,7 +907,10 @@ $$\sum\limits_{j=1}^{n}   x_{i,j,k} = 1, \; \forall i,k$$
 
 \vspace{12pt}
 
-Next, we need to create a constraint for each 3x3 grouping so that it contains each digit only once. This is more complicated.  Let's consider the top left 3x3 cluster.  For each digit $k$, we need to ensure that only one cell has it.  
+Next, we need to create a constraint for each 3x3 grouping so that it contains each digit only once.
+This is more complicated.
+Let's consider the top left 3x3 cluster.
+For each digit $k$, we need to ensure that only one cell has it.\
 \vspace{12pt}
 
 $$
@@ -743,13 +931,15 @@ $$
 \end {split}
 $$
 
-Unfortunately this set of constraints only covers one cluster.  
+Unfortunately this set of constraints only covers one cluster.\
 \vspace{12pt}
 
-If we are clever, we may note that the top left corner of each cluster is a row or column value of 1, 4, or 7.  
+If we are clever, we may note that the top left corner of each cluster is a row or column value of 1, 4, or 7.\
 \vspace{12pt}
 
-We could extend this constraint to handle each set of clusters. We'll use a counter across for each cluster by row, using $r$.  Similarly, we'll use $c$ for cluster.  
+We could extend this constraint to handle each set of clusters.
+We'll use a counter across for each cluster by row, using $r$.
+Similarly, we'll use $c$ for cluster.
 
 $$
 \begin {split}
@@ -761,7 +951,10 @@ $$
 \end {split}
 $$
 
-We can now pull everything together into a single formulation.  Again, remember that we could use _any_ objective function since we are simply trying to find a feasible solution. We will just picking maximizing the number zero since ompr defaults to maximization as an objective function.  We could also tell a solver such as `symphony` to just find a first feasible solution and terminate.
+We can now pull everything together into a single formulation.
+Again, remember that we could use *any* objective function since we are simply trying to find a feasible solution.
+We will just picking maximizing the number zero since ompr defaults to maximization as an objective function.
+We could also tell a solver such as `symphony` to just find a first feasible solution and terminate.
 
 $$
 \begin{split}
@@ -784,7 +977,10 @@ $$
 
 ## Implementing the Sudoku model in ompr
 
-We are now ready to implement the model. As always, clearly defining variables and constraints is important.  A triple subscripted variable often makes for a tricky model.  Also, that last constraint may take careful examination.  
+We are now ready to implement the model.
+As always, clearly defining variables and constraints is important.
+A triple subscripted variable often makes for a tricky model.
+Also, that last constraint may take careful examination.
 
 ```{r implementing_sudoku}
 n <- 9
@@ -817,11 +1013,15 @@ Sudoku_model <- MIPModel() %>%
 Sudoku_model
 ```
 
-We will use `glpk` to solve the above model. Note that we haven't fixed any numbers to specific values. That means that the solver will find a valid sudoku without any prior hints. 
+We will use `glpk` to solve the above model.
+Note that we haven't fixed any numbers to specific values.
+That means that the solver will find a valid Sudoku without any prior hints.
 
 \vspace{12pt}
 
-I've made a couple of minor changes to Dirk's code chunks. I replaced the `x` variable with `Vx` to avoid R name space collisions with previously defined enviromental variables for `x`. Secondly, I switch the `sx` and `sy` to `r` and `c` to represent moving over by rows and columns. 
+I've made a couple of minor changes to Dirk's code chunks.
+I replaced the `x` variable with `Vx` to avoid R name space collisions with previously defined enviromental variables for `x`.
+Secondly, I switch the `sx` and `sy` to `r` and `c` to represent moving over by rows and columns.
 
 ```{r Build_Sudoku_Model, echo=TRUE}
 Sudoku_result <- solve_model(
@@ -836,7 +1036,8 @@ Solution <- Sudoku_result %>%
   select(-i)
 ```
 
-If you want to solve a specific sudoku you can fix certain cells to specific values. For example here we solve a sudoku that has the sequence from 1 to 9 in the first 3x3 matrix fixed.
+If you want to solve a specific Sudoku you can fix certain cells to specific values.
+For example here we solve a Sudoku that has the sequence from 1 to 9 in the first 3x3 matrix fixed.
 \vspace{12pt}
 
 ```{r Enter_specific_puzzle}
@@ -872,153 +1073,174 @@ Now, let's try printing it nicely using the `sudokuAlt` package from Bill Venabl
 plot(as.sudoku(as.matrix(Solution_specific, colGame="grey")))
 ```
 
-Have at it.  Any Sudoku puzzle can be solved using this model as long as there is a feasible solution.  Note that if there are two or more solutions to the puzzle based on the hints, this model will find one of them and does not indicate whether there might be other solutions.
+Have at it.
+Any Sudoku puzzle can be solved using this model as long as there is a feasible solution.
+Note that if there are two or more solutions to the puzzle based on the hints, this model will find one of them and does not indicate whether there might be other solutions.
 \vspace{12pt}
 
-Feel free to time the solution using the `tictoc` package.  
+Feel free to time the solution using the `tictoc` package.\
 \vspace{12pt}
 
-The intention here is not to imply that optimization is the only way or the best way to solve Sudoku problems.  There are algorithmic approaches for solving Sudoku that can be more computationally efficient than using a general purpose integer programming system and in fact people have implemented such algorithms in R and other languages.  The purpose of this example was to show how a nontraditional problem can be framed and implemented.  
+The intention here is not to imply that optimization is the only way or the best way to solve Sudoku problems.
+There are algorithmic approaches for solving Sudoku that can be more computationally efficient than using a general purpose integer programming system and in fact people have implemented such algorithms in R and other languages.
+The purpose of this example was to show how a nontraditional problem can be framed and implemented.
+
+\vspace{12pt}
 
 ## Conclusion
 
-In this chapter, we covered some problems with medium-sized integer programming problems.  The same approaches and models can be scaled up to larger problems.  
+In this chapter, we covered some problems with medium-sized integer programming problems.
+The same approaches and models can be scaled up to larger problems.\
 \vspace{12pt}
 
-Improvements in software and computer hardware have opened up optimization to a variety of large scale problems.  Integrating this into R has made it straightforward to connect together a variety of tools including simulation and data visualization. 
+Improvements in software and computer hardware have opened up optimization to a variety of large scale problems.
+Integrating this into R has made it straightforward to connect together a variety of tools including simulation and data visualization.
+
+\vspace{12pt}
 
 ## Exercises
 
-Even moderate sized integer programming problems can result in significant computational loads.  While these problems will not represent a heavy load for a desktop or laptop computer, they be intensive for netbooks or cloud-based services. If you are using a cloud-based service such as RStudio.cloud, a server, or third party service such as Amazon Web Services, be sure to understand the implications of heavy computational loads.  Possible results of excessive use of third party computer time include throttling of access similar to cell phone users exceeding monthly data caps, high "overage" charges, a warning from a systems administrator, or even account termination.  
+Even moderate sized integer programming problems can result in significant computational loads.
+While these problems will not represent a heavy load for a desktop or laptop computer, they be intensive for netbooks or cloud-based services.
+If you are using a cloud-based service such as RStudio.cloud, a server, or third party service such as Amazon Web Services, be sure to understand the implications of heavy computational loads.
+Possible results of excessive use of third party computer time include throttling of access similar to cell phone users exceeding monthly data caps, high "overage" charges, a warning from a systems administrator, or even account termination.
 
 \vspace{12pt}
- 
-```{exercise, name="Warehouse-Max Customers-Small"}
-```
 
-Run the analysis for the smaller warehouse optimization but with just 10 customers and 3 warehouses. Extend the warehouse customer assignment problem to have each warehouse that is built be assigned a maximum of 4 customers. Compare the solution to that obtained earlier. Ensure that your data for customers and warehouses is the same for the two cases.
+**Exercise 7.1** (Warehouse-Max Customers-Small)
+
+Run the analysis for the smaller warehouse optimization but with just 10 customers and 3 warehouses.
+Extend the warehouse customer assignment problem to have each warehouse that is built be assigned a maximum of 4 customers.
+Compare the solution to that obtained earlier.
+Ensure that your data for customers and warehouses is the same for the two cases.
 \vspace{12pt}
 
 This problem size should be cloud-friendly but ensure that you are solving the appropropriate sized problem before running.
 
 \vspace{12pt}
- 
-```{exercise, name="Warehouse-Max and Min Customers-Small"}
-```
 
-Run the analysis for the smaller warehouse optimization but with just 10 customers and 3 warehouses. Extend and solve the warehouse customer assignment problem to have each warehouse that is built be assigned a maximum of 4 customers and a minimum of 2 customers. Show plots of both solutions. Compare the solution to that obtained earlier using tables as appropriate. Ensure that your data for customers and warehouses is the same for the two cases.  
+**Exercise 7.2** (Warehouse-Max and Min Customers-Small)
+
+Run the analysis for the smaller warehouse optimization but with just 10 customers and 3 warehouses.
+Extend and solve the warehouse customer assignment problem to have each warehouse that is built be assigned a maximum of 4 customers and a minimum of 2 customers.
+Show plots of both solutions.
+Compare the solution to that obtained earlier using tables as appropriate.
+Ensure that your data for customers and warehouses is the same for the two cases.\
 \vspace{12pt}
 
-This problem size should be cloud-friendly but ensure that you are solving the appropropriate sized problem before running.  
-\vspace{12pt}
- 
-```{exercise, name="Warehouse-Simulating Customers-Moderate"}
-```
-
-Run the analysis for the smaller warehouse optimization with a max of 10 customers and 3 warehouses. Simulate it 20 times and plot the results in terms of number of warehouses used and the total cost.  Discuss the results.  
+This problem size should be cloud-friendly but ensure that you are solving the appropropriate sized problem before running.\
 \vspace{12pt}
 
-This problem size should not be be run on a cloud or remote server without full understanding of load implications. Note that this will be somewhat computationally intensive and is best done on a local computer rather than the cloud.  Doing it on a personal computer may require on the order of five minutes of processing time.  
-\vspace{12pt}
- 
-```{exercise, name="Warehouse-Max Customers-Big"}
-```
+**Exercise 7.3** (Warehouse-Simulating Customers-Moderate)
 
-Extend the warehouse customer assignment problem to have each warehouse that is built be assigned a maximum of 40 customers.  Compare the solution to that obtained earlier.  Ensure that your data for customers and warehouses is the same for the two cases.
+Run the analysis for the smaller warehouse optimization with a max of 10 customers and 3 warehouses.
+Simulate it 20 times and plot the results in terms of number of warehouses used and the total cost.
+Discuss the results.\
 \vspace{12pt}
 
 This problem size should not be be run on a cloud or remote server without full understanding of load implications.
-```{exercise, name="Warehouse-Max and Min Customers-Big"}
-```
-
-Extend the warehouse customer assignment problem to have each warehouse that is built be assigned a maximum of 40 customers and a minimum of 15 customers.  Compare the solution to that obtained earlier.  Ensure that your data for customers and warehouses is the same for the two cases.
+Note that this will be somewhat computationally intensive and is best done on a local computer rather than the cloud.
+Doing it on a personal computer may require on the order of five minutes of processing time.\
 \vspace{12pt}
 
+**Exercise 7.4** (Warehouse-Max Customers-Big)
+
+Extend the warehouse customer assignment problem to have each warehouse that is built be assigned a maximum of 40 customers.
+Compare the solution to that obtained earlier.
+Ensure that your data for customers and warehouses is the same for the two cases.
 This problem size should not be be run on a cloud or remote server without full understanding of load implications.
 \vspace{12pt}
 
-```{exercise, name="Warehouse-Simulating Customers - Big"}
-```
+**Exercise 7.5** (Warehouse-Max and Min Customers-Big)
 
-Run the analysis for the warehouse optimization model 20 times and plot the results in terms of number of warehouses used and the total cost. Discuss and interpret the results.
+Extend the warehouse customer assignment problem to have each warehouse that is built be assigned a maximum of 40 customers and a minimum of 15 customers.
+Compare the solution to that obtained earlier.
+Ensure that your data for customers and warehouses is the same for the two cases.
+This problem size should not be be run on a cloud or remote server without full understanding of load implications.
 \vspace{12pt}
 
-Note that this will be **computationally intensive** and should not be done on the cloud.  Doing it on a personal computer may require on the order of five minutes of processing time.
+**Exercise 7.6** (Warehouse-Simulating Customers - Big)
+
+Run the analysis for the warehouse optimization model 20 times and plot the results in terms of number of warehouses used and the total cost.
+Discuss and interpret the results.
+Note that this will be **computationally intensive** and should not be done on the cloud.
+Doing it on a personal computer may require on the order of five minutes of processing time.
 
 \vspace{12pt}
- 
-```{exercise, name="Sudoku-Bottom Row"}
-```
 
-Solve the Sudoku puzzle from the beginning of this section using R.  
+**Exercise 7.7** (Sudoku-Bottom Row)
 
-\vspace{12pt}
- 
-```{exercise, name="Sudoku-Bottom Row"}
-```
-
-Solve a Sudoku model using optimization where the bottom row is 9 numbered down to 1.  
+Solve the Sudoku puzzle from the beginning of this section using R.
 
 \vspace{12pt}
- 
-```{exercise, name="Sudoku-Right Column"}
-```
 
-Solve a Sudoku model using optimization where the right most column  is 9 numbered down to 1.    
+**Exercise 7.8** (Sudoku-Bottom Row)
 
-\vspace{12pt}
- 
-```{exercise, name="Sudoku-Center Cluster"}
-```
-
-Solve a Sudoku model using optimization where the center 3x3 cluster is made up of the numbers from 9 to 1. (First row is 9, 8, 7; second row is 6, 5, 4; bottom row is 3, 2, 1)
+Solve a Sudoku model using optimization where the bottom row is 9 numbered down to 1.
 
 \vspace{12pt}
- 
-```{exercise, name="Find a Sudoku to Solve"}
-```
 
-Find a Sudoku puzzle from a newspaper or elsewhere and solve it using optimization.  
+**Exercise 7.9** (Sudoku-Right Column)
+
+Solve a Sudoku model using optimization where the right most column is 9 numbered down to 1.
+
 \vspace{12pt}
 
-```{exercise, name="Solve a Specific Sudoku"}
-```
+**Exercise 7.10** (Sudoku-Center Cluster)
 
-Solve the Sudoku problem from the beginning of this section. 
+Solve a Sudoku model using optimization where the center 3x3 cluster is made up of the numbers from 9 to 1.
+(First row is 9, 8, 7; second row is 6, 5, 4; bottom row is 3, 2, 1)
+
+\vspace{12pt}
+
+**Exercise 7.11** (Find a Sudoku to Solve)
+
+Find a Sudoku puzzle from a newspaper or elsewhere and solve it using optimization.\
+\vspace{12pt}
+
+**Exercise 7.12** (Solve a Specific Sudoku)
+
+Solve the Sudoku problem from the beginning of this section.
 
 ```{r First_Sudoku-exercise, echo=FALSE, fig.margin=TRUE, fig.height=4}
 plot(game1)
 ```
-\vspace{12pt}
- 
-```{exercise, name="Sudoku-Multiple Optima"}
-```
-
-**Challenge:**  Sudoku puzzles are often created with the intention of having a single solution since the approaches people use to solve them are based on incrementally reasoning out what values each cell must contain.  The result is that the ambiguity of multiple optima may cause problems for people to solve.  While the optimization model can solve these without difficulty, it is only going to find one, arbitrary solution. Simply resolving is likely to give you the same solution even when there are multiple optima.  Consider variations and apply them to find multiple solutions to a problem.  For an example of one with multiple optimal solutions, the most extreme case would be starting with a blank board.
 
 \vspace{12pt}
- 
-```{exercise, name="Sudoku-Infeasible"}
-```
 
-**Challenge:**  A Sudoku puzzle with only a small numbers shown can be infeasible even though it does not contain any obvious violation of repeated digits.  People building Sudoku puzzles need to ensure that every puzzle is solveable or risk having frustrated customers.  Add a digit one at a time to an existing Sudoku puzzle board that does not immediately violate the repeated digits requirement, test for a valid solution, and repeat, until the Sudoku game board becomes infeasible.  
+**Exercise 7.13** (Sudoku-Multiple Optima)
+
+**Challenge:** Sudoku puzzles are often created with the intention of having a single solution since the approaches people use to solve them are based on incrementally reasoning out what values each cell must contain.
+The result is that the ambiguity of multiple optima may cause problems for people to solve.
+While the optimization model can solve these without difficulty, it is only going to find one, arbitrary solution.
+Simply resolving is likely to give you the same solution even when there are multiple optima.
+Consider variations and apply them to find multiple solutions to a problem.
+For an example of one with multiple optimal solutions, the most extreme case would be starting with a blank board.
 
 \vspace{12pt}
- 
-```{exercise, name="Sudoku-4x4"}
-```
 
-**Ultra-Challenge:**  Solver the 16 letter Sudoku puzzle using R.  It consists of 4x4 grids and uses the letters starting with A in place of numbers. 
+**Exercise 7.14** (Sudoku-Infeasible)
 
-```{r sudoku_exercise_4x4, fig.margin=TRUE, echo=FALSE, fig.height=4}
+**Challenge:** A Sudoku puzzle with only a small numbers shown can be infeasible even though it does not contain any obvious violation of repeated digits.
+People building Sudoku puzzles need to ensure that every puzzle is solvable or risk having frustrated customers.
+Add a digit one at a time to an existing Sudoku puzzle board that does not immediately violate the repeated digits requirement, test for a valid solution, and repeat, until the Sudoku game board becomes infeasible.
+
+\vspace{12pt}
+
+**Exercise 7.15** (Sudoku-4x4)
+
+**Ultra-Challenge:** Solver the 16 letter Sudoku puzzle using R.
+It consists of 4x4 grids and uses the letters starting with A in place of numbers.
+
+```{r Sudoku_exercise_4x4, fig.margin=TRUE, echo=FALSE, fig.height=4}
 set.seed(1234); plot(makeGame(n=4))
 ```
 
-Production Planning over Time
+## Production Planning over Time
 
 In this section let's look at an example of producing two products with varying weekly demand, inventory carrying costs, fixed and marginal production costs, and a beginning inventory.
 
-In this case we will have two products, 
+In this case we will have two products.
 
 ```{r}
 nTime <- 4
@@ -1046,7 +1268,7 @@ prodcostB <- 11
 maxinv <- 1400  # Maximum combined inventory
 ```
 
-We'll start by initializing the model and creating the decision variables.  
+We'll start by initializing the model and creating the decision variables.
 
 ```{r}
 promod <- MIPModel()
@@ -1069,7 +1291,8 @@ promod <- add_variable (promod, ViB[tt], tt=1:nTime,
 
 ```
 
-Now let's define the objective function.  We are not selling prices 
+Now let's define the objective function.
+We are not selling prices
 
 ```{r}
 promod <- set_objective(promod, sum_expr(prodcostA * VxA[tt] + 
@@ -1082,7 +1305,10 @@ promod <- set_objective(promod, sum_expr(prodcostA * VxA[tt] +
                                          "min")
 ```
 
-Let's start with our constraints for linking production, inventory, and demand for the first week.  The inventory at the end of week 1 is simply the beginning inventory at the start of week 1 (`beg_invA`) plus the amount produced minus the demand.  Note that this assumes all demand must be satisfied in the same week.  This model could be extended to allow for backlogged demand or other variations.
+Let's start with our constraints for linking production, inventory, and demand for the first week.
+The inventory at the end of week 1 is simply the beginning inventory at the start of week 1 (`beg_invA`) plus the amount produced minus the demand.
+Note that this assumes all demand must be satisfied in the same week.
+This model could be extended to allow for backlogged demand or other variations.
 
 ```{r, eval=FALSE}
 promod <- add_constraint (promod, beg_invA + VxA[1] - demA [1] == ViA[1] )
@@ -1091,7 +1317,9 @@ promod <- add_constraint (promod, beg_invB + VxB[1] - demB [1] == ViB[1] )
 
 ```
 
-This handled the first week.  Now we need to do the same for all of the following weeks.  We take the ending inventory from the previous week, add the new production, and then subtract the demand to give us the ending inventory for both products.
+This handled the first week.
+Now we need to do the same for all of the following weeks.
+We take the ending inventory from the previous week, add the new production, and then subtract the demand to give us the ending inventory for both products.
 
 ```{r, eval=TRUE}
 promod <- add_constraint (promod, ViB[tt-1] + VxA[tt] - 
@@ -1102,7 +1330,8 @@ promod <- add_constraint (promod, ViB[tt-1] + VxB[tt] -
 
 ```
 
-Now we need to use our create our linking constraints to connect our production and decision to produce products.  We will use the Big M method and the maximum production production value as our Big M value.
+Now we need to use our create our linking constraints to connect our production and decision to produce products.
+We will use the Big M method and the maximum production production value as our Big M value.
 
 ```{r, eval=TRUE}
 promod <- add_constraint (promod, VxA [tt] <= mProdA * VyA[tt], 
@@ -1114,6 +1343,7 @@ promod <- add_constraint (promod, VxB [tt] <= mProdB * VyB[tt],
 ```
 
 Now let's put a limit our joint inventory of products.
+
 ```{r, eval=TRUE}
 promod <- add_constraint (promod, ViA[tt] + ViB[tt] <= maxinv, 
                           tt = 1:nTime)
@@ -1126,7 +1356,7 @@ At this point, let's look at the size of the problem.
 promod
 ```
 
-We are ready to solve.  
+We are ready to solve.
 
 ```{r}
 prores <- solve_model(promod, with_ROI(solver = "glpk"))
@@ -1134,5 +1364,3 @@ prores$status
 prores$objective_value
 prores$solution
 ```
-
-

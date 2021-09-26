@@ -1218,8 +1218,7 @@ Since each low level solver may have different choices made in terms of the name
 
 ## Exercises
 
-```{exercise, name="Transportation"}
-```
+**Exercise 3.1** (Transportation)
 
 Four manufacturing plants are supplying material for distributors in four regions.
 The four supply plants are located in Chicago, Beaverton, Eugene, and Dallas.
@@ -1251,12 +1250,11 @@ Formulate an explicit model for the above application that solves this transport
 Hint: You might choose to define variables based on the first letter of source and destination so *XCP* is the amount to ship from Chicago to PDX.\
 \vspace{12pt}
 
-Implement and solve the model using ompr.
+Implement and solve the model using `ompr`.
 Be sure to interpret and discuss the solution as to why it makes it sense.
 \vspace{12pt}
 
-```{exercise, name="Generalized Transportation Model"}
-```
+**Exercise 3.2** (Generalized Transportation Model)
 
 Formulate a generalized model for the above application that solves this transportation problem to find the lowest cost way of transporting as much product as we can to distributors.
 \vspace{12pt}
@@ -1269,8 +1267,7 @@ Implement and solve the model using ompr.
 Be sure to discuss the solution as to why it makes sense.
 \vspace{12pt}
 
-```{exercise, name="Convert LP to Standard Form"}
-```
+**Exercise 3.3** (Convert LP to Standard Form)
 
 Convert the three variable LP represented in Table 3.13 into standard form.
 
@@ -1298,16 +1295,14 @@ $$
 
 \vspace{12pt}
 
-```{exercise, name="Convert LP to Standard Form"}
-```
+**Exercise 3.4** (Convert LP to Standard Form)
 
 Implement and solve the standard form of the LP using R.
 Be sure to interpret the solution and discuss how it compares to the solution from the original model.
 
 \vspace{12pt}
 
-```{exercise, name="Convert Generalized LP to Standard Form"}
-```
+**Exercise 3.5** (Convert Generalized LP to Standard Form)
 
 Convert the generalized production planning LP, displayed on the right in formula 3.7, into standard form.\
 Hint: define a set of variables, $s_j$ to reflect these changes and add it to the following formulation.
@@ -1325,13 +1320,12 @@ $$
 ```
 
 ```{marginfigure}
-**Formula 3.7**: Generalized LP case
+**Formula 3.6**: Generalized LP case
 ```
 
 \vspace{12pt}
 
-```{exercise, name="Staff Scheduling"}
-```
+**Exercise 3.6** (Staff Scheduling)
 
 Happy Patient Hospital (HPH), has varying needs for nurses throughout the day.
 They expect the following numbers of nurses to be needed over the typical 24 hour period.

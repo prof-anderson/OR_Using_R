@@ -1098,43 +1098,36 @@ This section covers the second chapter of the book and introduces DEA and R work
 
 \vspace{12pt}
 
-```{exercise, name="Adding DMU E-Graphically"}
-```
+**Exercise 5.1** (Adding DMU E-Graphically)
 
 Add a fifth unit, E, to the first example that produces 400 units output using 30 units of input. Graphically evaluate all five units for their efficiency scores and lambda values. Interpret the solution in terms of who is doing well, who is doing poorly, and who should be learning from whom.
 
 \vspace{12pt}
 
-```{exercise, name="Adding DMU E-Using R"}
-```
+**Exercise 5.2** (Adding DMU E-Using R)
 
 Examine the new unit, E, using R. Interpret the solution in terms of who is doing well, who is doing poorly, and who should be learning from whom. \vspace{12pt}
 
-```{exercise, name="Looping"}
-```
+**Exercise 5.3** (Looping)
 
 Wrap a for loop around the model to examine every unit. Discuss results. \vspace{12pt}
 
-```{exercise, name="Bigger Data"}
-```
+**Exercise 5.4** (Bigger Data)
 
 Use a bigger data set and conduct an analysis & interpretation (more inputs, outputs, and units.)
 
 \vspace{12pt}
 
-```{exercise, name="Compare Results"}
-```
+**Exercise 5.5** (Compare Results)
 
 Check results against a DEA package (ex. DEAMultiplier, TFDEA, Benchmarking, nonparaeff). \vspace{12pt}
 
-```{exercise, name="Slacking"}
-```
+**Exercise 5.6** (Slacking)
 
 Construct an example where Phase 2 increases positive slacks from Phase 1.\
 \vspace{12pt}
 
-```{exercise, name="Graphics"}
-```
+**Exercise 5.7** (Graphics)
 
 Create "cool" graphs or plots of results.\
 \vspace{12pt}
@@ -1143,8 +1136,7 @@ To pass the challenges, work on extending my RMarkdown file or using a similar s
 
 \vspace{12pt}
 
-```{exercise, name="A DEA Application"}
-```
+**Exercise 5.8** (A DEA Application)
 
 Conduct a DEA study for an application that you are personally familiar with. (Pick one for which data is readily available but something that you are passionate about. It can have scrubbed or anonymized data. Examples might include your favorite sports league, team salaries, coaching salaries, wins, etc. or it can be USAF related.)
 

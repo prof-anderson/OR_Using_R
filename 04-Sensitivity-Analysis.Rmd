@@ -387,8 +387,7 @@ We could interpret this as a simple hard stop on the decision to produce Dogs bu
 
 ## Exercises
 
-```{exercise, name="Adding Eels"}
-```
+**Exercise 4.1** (Adding Eels)
 
 Your company has extended production to allow for producing aquatic Eels and is now including a finishing department that primes and paints the drones.
 
@@ -411,9 +410,9 @@ g)  Using the results from e), (i.e. reduced cost and shadow prices) make one ch
 h)  Using the results from e), (i.e. reduced cost and shadow prices) make one change to the base model's **available resource values** that will change the production plan. Rerun and discuss the new results.
 i)  Combine the results of the base case e), as well as the variations f) through h) into a single table and discuss the results. \vspace{12pt}
 
-```{exercise, name="Revisiting Transportation"}
-```
+**Exercise 3.1** (Revisiting Transportation)
 
-Using sensitivity analysis, revisit the transportation exercise from chapter 3.\
-a) If one more unit of supply was available, where would it be prioritized and why?\
+Using sensitivity analysis, revisit the transportation exercise from chapter 3.
+
+a) If one more unit of supply was available, where would it be prioritized and why?
 b) If demand could be increased by one unit, would it affect the result and at which destination node it be preferred and why?

@@ -511,22 +511,19 @@ pander (cbind(I,N),
 
 These projects all carry their own expenses and engineering support. There are limits to both the capital investment and engineering resources available. To start, consider all of these project to be independent. \vspace{12pt}
 
-```{exercise, name="Create and solve the model"}
-```
+**Exercise 6.1** (Create and solve the model)
 
 Formulate and solve a basic, naive model that allows projects to repeated and partially completed. Implement and solve your model. (Hint: You don't need binary variables yet.) What is the optimal decision? Is this result surprising? Does this make sense in terms of the application?
 
 \vspace{12pt}
 
-```{exercise, name="No Project is Repeated"}
-```
+**Exercise 6.2** (No Project is Repeated)
 
 Now, let's explore one aspect of moving towards binary variables. What constraint or constraints are needed to ensure no project is done more than once while allowing partial projects to still be funded and incur both proportionate costs and benefits. How does this solution compare to that of above?
 
 \vspace{12pt}
 
-```{exercise, name="No Partial Projects"}
-```
+**Exercise 6.3** (No Partial Projects)
 
 What change is needed to prevent partial funding of projects. How does this solution compare to that of above? Can you envision a situation where it might make sense to have partially funded projects? Could this be similar to corporate joint ventures where investments and benefits are shared across multiple entities?
 
@@ -566,31 +563,27 @@ Note that we cannot use $y_{A}\cdot y_{B}=0$ because it is a nonlinear constrain
 
 In each of the following sections create a linear relationship that models this situation.\vspace{12pt}
 
-```{exercise, name="Interconnects Need Something to Connect"}
-```
+**Exercise 6.4** (Interconnects Need Something to Connect)
 
 Instead of the constraint on chip architects, let's consider the situation of the interconnect technology. Assume that project E on interconnect technology would only provide strong benefit if a new architecture is also developed. In other words, E can only be done if A or B is done. Note that if both A and B are done, E will certainly have a use!
 
 \vspace{12pt}
 
-```{exercise, name="Manufacturing"}
-```
+**Exercise 6.5** (Manufacturing)
 
 Outtel knows that staying aggressive in manufacturing is important in this competitive industry but that it is too risky to do too much at once from manufacturing perspective. The result is that Outtel want to ensure that exactly one major manufacturing initiative (C or D) must be done. In other words, project C or project D must be done but not both.
 
 \vspace{12pt}
 
-```{exercise, name="Solving Each Case"}
-```
+**Exercise 6.6** (Solving Each Case)
 
 Solve for the base case and then show the results of just each constraint at once. Combine the results into a single pander table. Discuss the results.
 
 \vspace{12pt}
 
-```{exercise, name="Full Enumeration?"}
-```
+**Exercise 6.7** (Full Enumeration)
 
-When projects can be neither partially funded nor repeated, how many candidate solutions would there be by full enumeration? Can you list them out?
+When projects can be neither partially funded nor repeated, how many candidate solutions would there be by full enumeration? List them.
 
 ## Fixed Charge Models
 
@@ -962,12 +955,12 @@ Further analysis could examine alternatives such as redesigning widget 2 and 3 t
 
 \vspace{12pt}
 
-```{exercise, name="Redesign Widget 3"}
-```
+**Exercise 6.8** (Redesign Widget 3)
 
 How much would you produce of Widget 3 if there were no setup (fixed) cost for production of Widget 3? Experiment with the above model to find the lowest setup cost for Widget 3 where you still choose to not produce any of Widget 3.
 
-```{exercise, name="Reducing Fixed Costs"}
-```
+\vspace{12pt}
+
+**Exercise 6.9** (Reducing Fixed Costs)
 
 How would production change if the setup costs were cut in half due to implementing lean production approaches?
