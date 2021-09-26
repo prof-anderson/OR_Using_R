@@ -872,7 +872,7 @@ We could adopt a variety of naming or notation conventions of the variables:
 -   Ants, Bats, Cats
 -   Product1, Product2, Product3
 -   X1, X2, X3
--   X[1], X[2], X[3]
+-   X\[1\], X\[2\], X\[3\]
 -   $X_1, X_2, X_3$
 -   $X_i, \; i=1,\ldots,3$
 
@@ -880,7 +880,7 @@ We could adopt a variety of naming or notation conventions of the variables:
 
 Each of these conventions can have its place.
 
-The notation with brackets, X[1] is consistent R notation and that of many other computer languages. This allows us to simply use a vector of X where we can use each element of the vector for each of the products to use. This connects in very well with the data structures available to us in R (and other languages.) It would also allow us to handle any number of products. If we had a thousand products, the thousandth product is simply X[1000].\
+The notation with brackets, X\[1\] is consistent R notation and that of many other computer languages. This allows us to simply use a vector of X where we can use each element of the vector for each of the products to use. This connects in very well with the data structures available to us in R (and other languages.) It would also allow us to handle any number of products. If we had a thousand products, the thousandth product is simply X\[1000\].\
 \vspace{12pt}
 
 The latter use subscripting to more succinctly and compactly express the same concept. The reader can think of this being a much more concise notation than the computer notation.\
