@@ -175,17 +175,17 @@ Lastly, we can pick from among these possible solutions by drawing parallel, equ
 knitr::include_graphics("images/Fig02-07-Iso_Profit.PNG")
 ```
 
-Graphically, we could read the number of Ants and number of Bats to produce. Accuracy would be limited to the drawing skills. Also, each point in a two dimensional space is defined by the instersection of two lines.\
+Graphically, we could read the number of Ants and number of Bats to produce. Accuracy would be limited to the drawing skills. Also, each point in a two dimensional space is defined by the intersection of two lines.\
 \vspace{12pt}
 
-In this case, the optimal solution (and all of the other candidate solutions too) can be defined by the intersection of two constraint lines, listed as exact eqalities. These can be solved as a system of equations with two equations and two unknowns. The optimal solution here is defined by the intersection of the Assembly (Red) and the Testing (Green) constraints. Just solve $3A+6B=900$ and $2A+2B=480$ for $A$ and $B$. \vspace{24pt}
+In this case, the optimal solution (and all of the other candidate solutions too) can be defined by the intersection of two constraint lines, listed as exact inequalities. These can be solved as a system of equations with two equations and two unknowns. The optimal solution here is defined by the intersection of the Assembly (Red) and the Testing (Green) constraints. Just solve $3A+6B=900$ and $2A+2B=480$ for $A$ and $B$. \vspace{24pt}
 
 ```{r Fig-Optimal_Solution, echo=FALSE, fig.margin=TRUE, out.width="2in"}
 knitr::include_graphics("images/Fig02-08-Optimal_Solution.PNG")
 ```
 
 This approach of graphical solving is helpful for understanding how optimization works but does not scale up to larger dimensions. Three variables corresponds to three dimensions and can therefore be drawn using various drawing programs but are harder to visualize on a printed page or computer screen.\
-\vspace{12pt} Alas, real optimization problems typically have far more three variables - perhaps tens of thousands or hundreds of thousands of variables. In general, we need to use computer tools for solving larger problems. In our case, we will adopt `R` and `ompr` but there are a wide range of similar tools availble. \vspace{12pt}
+\vspace{12pt} Alas, real optimization problems typically have far more three variables - perhaps tens of thousands or hundreds of thousands of variables. In general, we need to use computer tools for solving larger problems. In our case, we will adopt `R` and `ompr` but there are a wide range of similar tools available. \vspace{12pt}
 
 ## Solving a Linear Program using `ompr`
 
@@ -211,7 +211,7 @@ library (ompr.roi, quietly = TRUE)
 **quietly=TRUE**: This option will not display standard messages returned when loading libraries.
 ```
 
-The first line `gridExtra`, provide nice formatting of tables. \vspace{12pt} The following packages provide the optimization functions that we will be relying on frequently. The ROI package is the R Optimization Interface for for connecting various optimization solvers to R. The ROI.plugin.glpk provides a connection between the the glpk solver and R through ROI. While this would be sufficient, we are going to make use of the ompr package by Dirk Schumacher to provide algebraic representations for linear programs. The ompr package also requires a connector to ROI, aptly named ompr.roi. \vspace{12pt}
+The first line `gridExtra`, provide nice formatting of tables. \vspace{12pt} The following packages provide the optimization functions that we will be relying on frequently. The `ROI`package is the R Optimization Interface for for connecting various optimization solvers to R. The `ROI.plugin.glpk` provides a connection between the the `glpk`solver and R through ROI. While this would be sufficient, we are going to make use of the `ompr`package by Dirk Schumacher to provide algebraic representations for linear programs. The `ompr` package also requires a connector to ROI, aptly named `ompr.roi`. \vspace{12pt}
 
 ```{marginfigure}
 **HINT**: As noted earlier, if these packages are not preinstalled, you may need to install them using the install.packages function or from the Packages tab in RStudio.
@@ -894,20 +894,20 @@ Here we are talking about abstracting the model in terms of variable names and n
 
 ## Advice on Homeworks
 
--   You can talk with classmates or colleagues but your markdown should be your own.\
+-   You can talk with classmates or colleagues but your markdown should be your own.
 -   The D2L Learning Management System has had issues with uploading HTML files. Instead use PDFs. Upload both the Rmd and PDF versions of your file.
 -   Include your name as the author.
 -   Explain your model or modifications and interpret the results. I explicitly had a subsection for each formulation, implementation, and results/interpretation. Frequently people try to mix all three together and this makes it very hard to help or debug. Also, formulations should be understood before moving into implementation.
--   If the solution does not make sense, acknowledge and explain.\
--   Always show your LP. It is best to show it algebraically as the problems get bigger. This will also pay off for most projects where the models become larger.\
+-   If the solution does not make sense, acknowledge and explain.
+-   Always show your LP. It is best to show it algebraically as the problems get bigger. This will also pay off for most projects where the models become larger.
 -   Discussion of results does not need to be long but this can be an interesting part of any paper.
 
 ## Comments Specific to R
 
 -   Using the LaTeX equations and rendering it in rmarkdown is helpful. Getting the first one written is sometimes tricky but then it is just a matter of cut and paste.
--   Installing LaTeX allows knitting to PDF which may be good for readability and turning in but please be sure to also turn in the .rmd file.
--   The R markdown documents (\*.rmd files) may cause problems with the previews in the D2L learning management system.\
--   Using R markdown documents allows you to mix both analysis and interpretation cleanly.
+-   Installing LaTeX allows knitting to PDF which may be good for readability and turning in but please be sure to also turn in the .rmd file. R now has a package, `tinytex`, which makes it easier to install just what is needed for R, RStudio, and markdown to operate.
+-   The R markdown documents (\*.rmd files) may cause problems with the previews in the D2L learning management system.
+-   Using RMarkdown documents allows you to mix both analysis and interpretation cleanly.
 -   Look over this .rmd file for information and try knitting it to HTML and PDF on your computer. If you have everything installed correctly, it should work fine including the mathematical notation. If it doesn't work, you may need to do a little extra free software installation.
 
 In particular, you might want to look over this document with respect to:
@@ -964,20 +964,20 @@ At this point, you are able to build your own optimization model. Here are a col
 
 ## `ompr` Related Tips and Tricks
 
--   `ompr` will complain if you use the same variable name for a data object in R and in `ompr`. For example, if you have variables *x* and y in a formulation, then build an `ompr` model with `x` and `y` variables. You might then assign the results to `x` and `y` objects in R, and run it again. You will then get a notification of a name space conflict from `ompr`. One work around is to prefix the `ompr` variables with a V to indicate variable thereby using `Vx` and `Vy` in `ompr` for is assigned to x and y in r.\
+-   `ompr` will complain if you use the same variable name for a data object in R and in `ompr`. For example, if you have variables *x* and y in a formulation, then build an `ompr` model with `x` and `y` variables. You might then assign the results to `x` and `y` objects in R, and run it again. You will then get a notification of a name space conflict from `ompr`. One work around is to prefix the `ompr` variables with a V to indicate variable thereby using `Vx` and `Vy` in `ompr` for is assigned to x and y in r.
 -   Typos can happen easily in piped models being built but are not typically localized. Try commenting in and out lines until the problem goes away. This will help to identify where the problem is.
--   Check for ompr updates. It is under active development. You may find versions on the author's github repository that are not yet available through CRAN.
--   The author of `ompr` is testing a much faster form of model building with a different syntax using `MILPmodel` rather than "MIPmodel". If you are running into delays building an ompr model but not solving the problem, this may be worth investigating.
+-   Check for `ompr` updates. It is under active development. You may find versions on the author's github repository that are not yet available through CRAN.
+-   The author of `ompr` is testing a much faster form of model building with a different syntax using `MILPmodel` rather than "MIPmodel". If you are running into delays building an `ompr` model but not solving the problem, this may be worth investigating.
 
 ## RMD Tips and Tricks
 
 RMarkdown is very helpful for integrating analysis and results but the code can also be brittle. Knitting this full book can be stopped by one small error.
 
--   Make sure to get your header information correct. Small typos can cause problems preventing knitting from occuring.
--   Name your code chunks uniquely. Not naming code chunks can make it harder to find errors or to navigate complex documents. Once you start naming code chunks though and copying code chunks for building more complex models, you run into duplicate code chunk problems. Each name must be unique.\
+-   Make sure to get your header information correct. Small typos can cause problems preventing knitting from occurring.
+-   Name your code chunks uniquely. Not naming code chunks can make it harder to find errors or to navigate complex documents. Once you start naming code chunks though and copying code chunks for building more complex models, you run into duplicate code chunk problems. Each name must be unique.
 -   Use code chunk options smartly. Look over the list of common options such as `eval` and `echo` which are particularly helpful and used a lot in this book.
 -   Remember to put a blank line before a bulleted or numbered list.
--   Putting two blank spaces at the end of a paragraphy will give a little more spacing between paragraphs.\
+-   Putting two blank spaces at the end of a paragraph will give a little more spacing between paragraphs.
 -   Sometimes running all chunks will make more visible where a problem is than when an RMD is knitted.
 -   Look over the generated PDF for issues like misrendered section headings or bullet lists.
 -   In a bookdown project with multiple RMDs such as this book, it is much quicker to render just a chapter. This can be done by doing a command like this: `library(rmarkdown); rmarkdown::render("02-A_First_LP.Rmd", "tufte_book2")`
@@ -992,7 +992,7 @@ RMarkdown is very helpful for integrating analysis and results but the code can 
 
 -   If you are getting an error message read it carefully. You may also be able to google generic parts that do not reference your own R code to get clues.
 -   R is case sensitive. Be careful in watching for typos regarding case. A student spent many hours trying to find why a document was no longer knitting before discovering that `echo=FALSE` in one code chunk was typed in as `echo=False`.
--   Many problems might be due to R data objects now having the data as you think it is. Displying the data or a part using the `head()` or `tail()` functions can be helpful for debugging.
+-   Many problems might be due to R data objects now having the data as you think it is. Displaying the data or a part using the `head()` or `tail()` functions can be helpful for debugging.
 
 ## LaTeX Tips and Tricks
 
