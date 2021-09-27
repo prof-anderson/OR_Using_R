@@ -8,7 +8,7 @@ output_dir: docs
 lof: True
 lot: True
 new_session: yes
+biblio-style: 
 bibliography: ["Master4Bookdowns.bib", "another.bib"]
-biblio-style: "apalike"
 link-citations: true
 date: "`r format(Sys.time(), '%p, %d %B, %Y')`"

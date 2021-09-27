@@ -13,6 +13,7 @@ highlight: monochrome
 documentclass: book
 bibliography: Master4Bookdowns.bib
 github-repo: prof-anderson/OR_Using_R
+suppress-bibliography: true
 ---
 
 # Preface {-}
