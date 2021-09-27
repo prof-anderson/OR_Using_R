@@ -162,23 +162,23 @@ This now results in a feasible region that satisfies all of the contraints simul
 knitr::include_graphics("images/Fig02-05-Feasible_Region.PNG")
 ```
 
-Given that we are doing linear programming and we are trying to maximize or minimize a certain ojective function, the optimal solution will be at a corner point or more formally, a vertex. In our example, we can narrow our attention from the full feasible region to just the five vertices or candidate solutions.\
+Given that we are doing linear programming and we are trying to maximize or minimize a certain objective function, the optimal solution will be at a corner point or more formally, a vertex. In our example, we can narrow our attention from the full feasible region to just the five vertices or candidate solutions.\
 \vspace{24pt}
 
 ```{r Fig-Candidate_Solutions, echo=FALSE, fig.margin=TRUE, out.width="2in"}
 knitr::include_graphics("images/Fig02-06-Candidate_Solutions.PNG")
 ```
 
-Lastly, we can pick from among these possible solutions by drawing parallel, equal profit lines radiating out from the origin to find the last line that still touches the feasibile region. The figure to the right shows one line with a profit of $\$ 1400$. A second line is drawn that last touches the feasible region is at $\$ 1980$. \vspace{24pt}
+Lastly, we can pick from among these possible solutions by drawing parallel, equal profit lines radiating out from the origin to find the last line that still touches the feasible region. The figure to the right shows one line with a profit of $\$ 1400$. A second line is drawn that last touches the feasible region is at $\$ 1980$. \vspace{24pt}
 
 ```{r Fig-Iso_Profit, echo=FALSE, fig.margin=TRUE, out.width="2in"}
 knitr::include_graphics("images/Fig02-07-Iso_Profit.PNG")
 ```
 
-Graphically, we could read the number of Ants and number of Bats to produce. Accuracy would be limited to the drawing skills. Also, each point in a two dimensional space is defined by the intersection of two lines.\
+Graphically, we could read the number of Ants and number of Bats to produce. Accuracy would be limited to the drawing skills and tools used. \
 \vspace{12pt}
 
-In this case, the optimal solution (and all of the other candidate solutions too) can be defined by the intersection of two constraint lines, listed as exact inequalities. These can be solved as a system of equations with two equations and two unknowns. The optimal solution here is defined by the intersection of the Assembly (Red) and the Testing (Green) constraints. Just solve $3A+6B=900$ and $2A+2B=480$ for $A$ and $B$. \vspace{24pt}
+Rather than relying on this graphical approach for determining the coordinates of each point drawn, each point in a two dimensional space is defined by the intersection of two lines. In this case, the optimal solution (and all of the other candidate solutions too) can be defined by the intersection of two constraint lines, rewritten as exact equalities. These can be solved as a system of equations with two equations and two unknowns. The optimal solution here is defined by the intersection of the Assembly (Red) and the Testing (Green) constraints. Just solve $3A+6B=900$ and $2A+2B=480$ for $A$ and $B$. \vspace{24pt}
 
 ```{r Fig-Optimal_Solution, echo=FALSE, fig.margin=TRUE, out.width="2in"}
 knitr::include_graphics("images/Fig02-08-Optimal_Solution.PNG")
