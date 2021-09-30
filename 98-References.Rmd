@@ -3,19 +3,36 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = F)
 library (tufte)
 library (pander)
-library (tidyr)
-library (ggplot2)
-library (ggrepel)
-library (ompr)
-library (magrittr)
-library (ompr.roi)
-library (ROI.plugin.glpk)
-library (sudokuAlt)
-suppressPackageStartupMessages(library(dplyr))
-suppressPackageStartupMessages(library (tint, quietly = TRUE))
-    # Loading this last masks margin_note, newthought,
-    #    quote_footer, sans_serif from the tufte package.
 ```
 
 # References
 
+There currently appears to be an incompatibility between the current version of pandoc (2.14.0.3) used by RStudio, the bibliography styles, and LaTeX such that direct generation of the bibliography fails. As a temporary fix, the header for `index.rmd` disables live generation of the bibliography by using `suppress-bibliography: true`. The bibliography generation can be re-enabled by simply changing this to `false`.
+
+These references are provided from the 7/22/2021 version of this book.
+
+-   Adler, Joseph. 2012. *R in a Nutshell*. Sebastopol, CA: O'Reilly.
+
+-   Anderson, Timothy R., Tugrul U. Daim, and Francois F. Lavoie. 2007. Measuring the Efficiency of University Technology Transfer. *Technovation* 27 (5): 30618. <https://doi.org/10.1016/j.technovation.2006.10.003.>
+
+-   Baker, Kenneth R. 2015. *Optimization Modeling with Spreadsheets*. 3rd Edition. Hoboken: Wiley.
+
+-   Banker, R. D., A. Charnes, and W. W. Cooper. 1984. Some Models for Estimating Technical and Scale Ineciencies in Data Envelopment Analysis. *Management Science*, 107892.
+
+-   Bogetoft, Peter, and Lars Otto. 2013. *Benchmarking with DEA, SFA, and R.* 2011 edition. New York u.a.: Springer.
+
+-   Charnes, A., William W. Cooper, and E. Rhodes. 1978. A Data Envelopment Analysis Approach to Evaluation of the ProgramFollow Through Experiment in U.S. Public School Education. Boston: Division of Research Graduate School of Business Administration Harvard University.
+
+-   Hillier, Frederick, and Gerald Lieberman. 2020. *Introduction to Operations Research*. 11th edition. Dubuque: McGraw-Hill Education.
+
+-   Ismay, Chester, and Albert Y. Kim. 2019. *Statistical Inference via Data Science: A Modern Dive into r and the Tidyverse*. 1st edition. Boca Raton: Chapman; Hall/CRC.
+
+-   Kabaco, Robert. 2011. *R in Action: Data Analysis and Graphics with R*. Shelter Island, NY; London: Manning ; Pearson Education
+
+-   Ragsdale, Cliff. 2017. *Spreadsheet Modeling & Decision Analysis: A Practical Introduction to Business Analytics*. 8 edition. Boston, MA: Cengage Learning.
+
+-   Rhodes, Edwardo Lao. 1978. *Data Envelopment Analysis and Approaches For Measuring the Efficiency of Decision-Making Units With an Application to Program Follow-Through in U. S. Education*. PhD thesis.
+
+-   Tovey, Craig A., *Linear Optimization and Duality: A Modern Exposition*.
+
+-   Winston, Wayne L. 2003. *Operations Research: Applications and Algorithms*. 4th edition. Belmont, Calif: Cengage Learning.

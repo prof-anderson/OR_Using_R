@@ -159,7 +159,7 @@ b
 
 This table is still not that "nice" looking. Let's use a package that does a nicer job of formatting tables. To do this, we will use an extra package. Up to this point, everything that we have done just simply uses standard built in functions of R. The package that we will use is `pander` but there are plenty of others available such as `pander`, `kable`, `xtable`, and `huxtable`. Let's start by loading the package. \vspace{12pt}
 
-```{r Installing_a_Package}
+```{r Loading_a_Package}
 library (pander)
 ```
 
@@ -211,7 +211,7 @@ Oops, notice that row and column names are also transposed. The result is that w
 
 Now we have done some basic operations within R. Try your hand at the following exercises.
 
-**Exercise 1.1** (Changing Row and Column Names). Change the row and column names for the transposed matrix above. 
+**Exercise 1.1** (Changing Row and Column Names). Change the row and column names for the transposed matrix above.
 
 Here is my solution to that.
 
@@ -379,12 +379,8 @@ Data organizing is a less glamorous part of the job for practicing analytics pro
 
 \vspace{12pt}
 
-**Exercise 1.2** (Creating a Matrix of Daily Demand for Four Weeks)
-Assume that your company's product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday. Build a matrix of four weeks of demand where each row is a separate week. Each Monday starts over with the same demand.  The rows should be named Week1, Week2, etc. The columns should have names corresponding to the day of the week.
-
+**Exercise 1.2** (Creating a Matrix of Daily Demand for Four Weeks) Assume that your company's product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday. Build a matrix of four weeks of demand where each row is a separate week. Each Monday starts over with the same demand. The rows should be named Week1, Week2, etc. The columns should have names corresponding to the day of the week.
 
 \vspace{12pt}
 
-**Exercise 1.1** (Creating a Matrix of Demand for Two Products)
-Assume that your company's product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday. Gadgets have a demand of 20 on Monday, increasing by 3 units a day through Sunday. Build a matrix showing each product as a separate row.  Rows should have names for the products and columns for the days of the week.
-
+**Exercise 1.3** (Creating a Matrix of Demand for Two Products) Assume that your company's product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday. Gadgets have a demand of 20 on Monday, increasing by 3 units a day through Sunday. Build a matrix showing each product as a separate row. Rows should have names for the products and columns for the days of the week.
