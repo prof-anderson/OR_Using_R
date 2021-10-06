@@ -89,7 +89,7 @@ $$
 & 3\cdot Ants + 6 \cdot Bats \leq 900 \\
 & 2\cdot Ants + 2 \cdot Bats \leq 480 \\
 & 2\cdot Ants + 10 \cdot Bats \leq 1200 \\
-& Ants, Bats \geq 0  
+& Ants, \; Bats \geq 0  
   \end{aligned}
   \end{split}
 $$
@@ -474,7 +474,7 @@ $$
 & 3\cdot Ants + 6\cdot Bats +2\cdot Cats \leq 900 \\
 & 2\cdot Ants + 2\cdot Bats +1\cdot Cats \leq 480 \\
 & 2\cdot Ants + 10\cdot Bats +2\cdot Cats \leq 1200 \\
-& Ants, Bats, Cats \geq 0  
+& Ants, \; Bats, \; Cats \geq 0  
   \end{aligned}
   \end{split}
 $$
@@ -560,7 +560,7 @@ $$
 & 2\cdot Ants + 2 \cdot Bats  +4\cdot Cats \leq 480 \\
 & 2\cdot Ants + 10 \cdot Bats  +1\cdot Cats \leq 1200 \\
 & Ants \geq 400 \\
-& Ants, Bats, Cats \geq 0  
+& Ants, \;Bats, \; Cats \geq 0  
 \end{aligned}
 \end{split}
 $$
@@ -613,7 +613,7 @@ $$
 & 3\cdot Ants + 6 \cdot Bats  +6\cdot Cats \leq 900 \\
 & 2\cdot Ants + 2 \cdot Bats  +4\cdot Cats \leq 480 \\
 & 2\cdot Ants + 10 \cdot Bats  +4\cdot Cats \leq 1200 \\
-& Ants, Bats, Cats \geq 0  
+& Ants, \; Bats, \; Cats \geq 0  
 \end{aligned}
 \end{split}
 $$
@@ -629,7 +629,7 @@ The implementation can be simplified again since we are only changing the object
 model2a <- MIPModel() %>%
   add_variable(Ants, type = "continuous", lb = 0) %>%
   add_variable(Bats, type = "continuous",lb = 0) %>%
-  add_variable(Cats, type = "continuous", lb = 0, ub = 200) %>%
+  add_variable(Cats, type = "continuous", lb = 0) %>%
   
   set_objective(7*Ants + 12*Bats + 14*Cats,"max")%>%
   
@@ -747,7 +747,7 @@ $$
 & 2\cdot Ants + 2 \cdot Bats  +1\cdot Cats \leq 480 \\
 & 2\cdot Ants + 10 \cdot Bats  +2\cdot Cats \leq 1200 \\
 &  Ants +  Bats  + Cats \leq 500 \\
-&  Ants, /; Bats, /; Cats \geq 0 \\
+&  Ants, \; Bats, \; Cats \geq 0 \\
  \end{aligned}
  \end{split}
 $$
@@ -845,7 +845,7 @@ get_solution(result4, Bats)
 get_solution(result4, Cats)
 ```
 
-The solver status reports that the problem is *infeasible* rather than *unbounded* but by inspection, the solution is feasible in that it satisfies all of the constraints of $/geq$ and therefore the LP is feasible. \vspace{12pt}
+The solver status reports that the problem is *infeasible* rather than *unbounded* but by inspection, the solution is feasible in that it satisfies all of the constraints of $\geq$ and therefore the LP is feasible. \vspace{12pt}
 
 ```{marginfigure}
 **Infeasible vs Unbounded**. This is a known issue in ompr as of 0.8.0 reported on github. It is caused by not distinguishing between the different status conditions for situations other than solved to guaranteed optimality.  The result is that you should read the ompr status of "infeasible" to indicate not assured of  optimal solution.
@@ -868,7 +868,7 @@ We could adopt a variety of naming or notation conventions of the variables:
 -   Ants, Bats, Cats
 -   Product1, Product2, Product3
 -   X1, X2, X3
--   X\[1\], X\[2\], X\[3\]
+-   `X[1], X[2], X[3]`
 -   $X_1, X_2, X_3$
 -   $X_i, \; i=1,\ldots,3$
 
@@ -876,7 +876,7 @@ We could adopt a variety of naming or notation conventions of the variables:
 
 Each of these conventions can have its place.
 
-The notation with brackets, X\[1\] is consistent R notation and that of many other computer languages. This allows us to simply use a vector of X where we can use each element of the vector for each of the products to use. This connects in very well with the data structures available to us in R (and other languages.) It would also allow us to handle any number of products. If we had a thousand products, the thousandth product is simply X\[1000\].\
+The notation with brackets, `X[1]` is consistent R notation and that of many other computer languages. This allows us to simply use a vector of X where we can use each element of the vector for each of the products to use. This connects in very well with the data structures available to us in R (and other languages.) It would also allow us to handle any number of products. If we had a thousand products, the thousandth product is simply `X[1000]`.\
 \vspace{12pt}
 
 The latter use subscripting to more succinctly and compactly express the same concept. The reader can think of this being a much more concise notation than the computer notation.\
@@ -960,7 +960,7 @@ At this point, you are able to build your own optimization model. Here are a col
 
 ## `ompr` Related Tips and Tricks
 
--   `ompr` will complain if you use the same variable name for a data object in R and in `ompr`. For example, if you have variables *x* and y in a formulation, then build an `ompr` model with `x` and `y` variables. You might then assign the results to `x` and `y` objects in R, and run it again. You will then get a notification of a name space conflict from `ompr`. One work around is to prefix the `ompr` variables with a V to indicate variable thereby using `Vx` and `Vy` in `ompr` for is assigned to x and y in r.
+-   `ompr`will complain if you use the same variable name for a data object in R and in `ompr`. For example, if you have variables *x* and y in a formulation, then build an `ompr` model with `x` and `y` variables. You might then assign the results to `x` and `y` objects in R, and run it again. You will then get a notification of a name space conflict from `ompr`. One work around is to prefix the `ompr` variables with a V to indicate variable thereby u===sing `Vx` and `Vy` in `ompr` for is assigned to x and y in r.
 -   Typos can happen easily in piped models being built but are not typically localized. Try commenting in and out lines until the problem goes away. This will help to identify where the problem is.
 -   Check for `ompr` updates. It is under active development. You may find versions on the author's github repository that are not yet available through CRAN.
 -   The author of `ompr` is testing a much faster form of model building with a different syntax using `MILPmodel` rather than "MIPmodel". If you are running into delays building an `ompr` model but not solving the problem, this may be worth investigating.
