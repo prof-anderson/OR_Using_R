@@ -38,8 +38,8 @@ $$
  \begin{split}
  \begin{aligned}
     \text{Maximize  }   &  \sum_{i=1}^3 P_i x_i \\
-    \text{subject to } & \sum_{i=1}^3 R_{i,j}x_i \leq A_j \;, \; j=1, 2, 3, 4\\
-                       & x_1,x_2,x_3 \geq 0  \; 
+    \text{subject to } & \sum_{i=1}^3 R_{i,j}x_i \leq A_j, \; j=1, 2, 3, 4\\
+                       & x_1, \; x_2, \;x_3 \geq 0 
   \end{aligned}
   \end{split}
 $$
@@ -741,7 +741,7 @@ Similarly, if we try to use equality constraints for both the supply and demand 
 `add_variable(x[i, j], type = "continuous", i = 1:10, j = 1:10, lb=0)`
 ```
 
-Let's show how to set up a basic implementation of the tranportation problem in `ompr`. This demonstrates the use of double subscripted variables. Also, it should be customized for a particular application of being demand or supply constrained but it will give a good running head start.
+Let's show how to set up a basic implementation of the transportation problem in `ompr`. This demonstrates the use of double subscripted variables. Also, it should be customized for a particular application of being demand or supply constrained but it will give a good running head start.
 \vspace{12pt}
 
 ```{r transp_data}
@@ -749,7 +749,8 @@ NSupply <- 3   # 3 Supply nodes
 NDest   <- 4   # 4 Destination nodes
 snames <- list("MN", "PA", "WY")
 dnames <- list("Atl", "Bos", "Chi", "Den")
-Cost <- matrix (c(65, 36, 65, 57, 30, 70, 22, 30, 55, 42, 60, 42),
+Cost <- matrix (c(65, 36, 65, 57, 30, 70, 
+                  22, 30, 55, 42, 60, 42),
                 nrow = NSupply,
                 dimnames =list(snames,dnames))
 S <- c(1000, 1500, 1500)
@@ -762,7 +763,7 @@ D <- c(700,  900, 1200, 900)
 
 At this point, it may be a good idea to look at the arcs and see if you can expect which routes are likely to be heavily used and which are likely to be unused.  You can also do this by looking at the matrix of transportation costs to the right.
 
-```{r Show_Transp_Cost, eval=FALSE, fig.margin=TRUE}
+```{r Show_Transp_Cost, eval=TRUE, fig.margin=TRUE}
 grid.table (Cost)
 ```
 
@@ -783,19 +784,20 @@ transportationmodel <- MIPModel() %>%
                           i=1:NSupply, 
                           j=1:NDest ), "min") %>%
  add_constraint (sum_expr(Vx[i,j], i=1:NSupply) 
-                # Left hand side of Demand constraints
+  # Left hand side of Demand constraints
                 >= D[j],   
-                # Inequality and Right side of constraint
-                j=1:NDest)%>% #Repeat for each demand node j.  
+  # Inequality and Right side of constraint
+                j=1:NDest)%>% 
+  # Repeat for each demand node j.  
  add_constraint (sum_expr(Vx[i,j], j=1:NDest)
-                # Left hand side of Supply constraints
+  # Left hand side of Supply constraints
                 <= S[i],    
-                # Inequality and Right side of constraints
+  # Inequality and Right side of constraints
                 i=1:NSupply)  
-                # Repeat for each supply node i.  
+  # Repeat for each supply node i.  
 
-res.transp <-solve_model(transportationmodel, 
-                                    with_ROI(solver ="glpk"))
+res.transp <-solve_model(
+  transportationmodel, with_ROI(solver ="glpk"))
 
 ```
 \vspace{12pt}
@@ -830,7 +832,7 @@ grid.table (Transp)
 
 \vspace{12pt}
 
-A generalization of the transportation model is that of transhipment where some nodes are intermediate nodes that are neither pure sources or destinations but can have both inflow and outflow.  We could extend our previous example with factories in Vietnam and Thailand.  Note that the facilities in the middle (Minnesota, Pennsylvania, and Wyoming) are better described as distribution centers rather than warehouses.
+A generalization of the transportation model is that of transshipment where some nodes are intermediate nodes that are neither pure sources or destinations but can have both inflow and outflow.  We could extend our previous example with factories in Vietnam and Thailand.  Note that the facilities in the middle (Minnesota, Pennsylvania, and Wyoming) are better described as distribution centers rather than warehouses.
 
 ```{r Fig-Transshipment, echo=FALSE, fig.margin=TRUE, out.width="2in"}
 knitr::include_graphics("images/Fig03-02-Transshipment.PNG")
@@ -844,7 +846,7 @@ knitr::include_graphics("images/Fig03-02-Transshipment.PNG")
 In this case, the standard convention might be to work from left to right and index the set of factories by _i_, the set of distribution centers by _j_ and the set of customers by _k_.  We might also use $x_{i,j}$ to be the amount to ship from factory _i_ to distribution center _j_ and $y_{j,k}$ to be the amount to ship from distribution center _j_ to customer _k_.
 \vspace{12pt}
 
-A common characteristic of this kind of problem is then that the inflow at each distribution center must equal the outflow.  This means that for Minnesota, $(i=1)$, we would would have a relationship of the following.
+A common characteristic of this kind of problem is then that the inflow at each distribution center must equal the outflow.  This means that for Minnesota, $(j=1)$, we would would have a relationship of the following.
 \vspace{12pt}
 
 $$x_{1,1}+x_{2,1}=y_{1,1}+y_{1,2}+y_{1,3}+y_{1,4}$$ 
@@ -883,7 +885,7 @@ $$
 The directions of the supply and demand constraint inequalities must again be considered as to whether the problem is supply or demand constrained, lest we find an optimal solution of doing nothing.
 \vspace{12pt}
 
-This transhipment application can be further enhanced to allow for losses along arcs.  In this case there might be affect amount that reaches the distribution center based on losses enroute.  For example, we might use $L_{i,j}$ to capture this effect with $L_{1,2}=0.9$ to indicate that only 90% of the material makes it from factory _1_ to distribution center _2_. We would then modify the balance constraints to take the following form  $\sum_{i} L_{i,j} \cdot x_{i,j}=\sum_{k} y_{j,k} \; \forall \; j$.  Losses might also apply in the transportation to the end customer with similar modifications to the model.
+This transshipment application can be further enhanced to allow for losses along arcs.  In this case there might be affect amount that reaches the distribution center based on losses enroute.  For example, we might use $L_{i,j}$ to capture this effect with $L_{1,2}=0.9$ to indicate that only 90% of the material makes it from factory _1_ to distribution center _2_. We would then modify the balance constraints to take the following form  $\sum_{i} L_{i,j} \cdot x_{i,j}=\sum_{k} y_{j,k} \; \forall \; j$.  Losses might also apply in the transportation to the end customer with similar modifications to the model.
 \vspace{12pt}
 
 Another common situation is to add capacity limits to each arc, perhaps both upper and lower bounds on capacity.
