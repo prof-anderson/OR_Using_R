@@ -19,11 +19,11 @@ Linear programming is a tool for optimization. It is a widely used tool for plan
 
 ## Two Variable Base Case
 
-We will use a recurring example throughout the next couple of chapters of being a small specialty drone manufacturer making animal inspired exploring robots. These robots can be used in search and rescue operations or other functions where a wheeled vehicle may not suffice. Each of the products is named after an animal that describes its general design and function. The first two types of robots are named the Ant and the Bat. The Ant is a small but precise device while the Bat is a flying device. \vspace{12pt}
+We will use a recurring example throughout the next couple of chapters of being a small specialty drone manufacturer making animal inspired exploring robots. These robots can be used in search and rescue operations or other functions where a wheeled vehicle may not suffice. Each of the products is named after an animal that describes its general design and function. The first two types of robots are named the Ant and the Bat. The Ant is a small but precise drone while the Bat is a flying drone. \vspace{12pt}
 
 The goal is to make the most profitable mix of robots. \vspace{12pt}
 
-Each robot requires time in machining, assembly, and testing and sensors. For example, an Ant requires one hour of machining time, three hours of assembly, and two hours of testing. It uses three sensors and the net profit is \$10. The characteristics of Bats are similar but different as shown in the Table 1 on the right as well as the available amount of each limited resource. \vspace{12pt}
+Each drone requires time in machining, assembly, and testing and sensors. For example, an Ant requires one hour of machining time, three hours of assembly, and two hours of testing. It uses three sensors and the net profit is \$10. The characteristics of Bats are similar but different as shown in the Table 1 on the right as well as the available amount of each limited resource. \vspace{12pt}
 
 ```{marginfigure}
 | Characteristic | Ants  | Bats   |  Available | 
@@ -126,11 +126,7 @@ library(knitr)
 knitr::include_graphics("images/Fig02-01-First_Constraint.PNG")
 ```
 
-The constraints are differentiated by color and the diagonal lines of the same color drawn off the constraint are a hatching line indicating the directionaly of the inequality constraint. In this case, each of the constraints are less than or equal to constraints and are indicating that this constrain includes the line and the region under the line. If it had been a greater than or equal to constraint, the hatching would have been rising above the constraint line. If it had been an exact equality constraint rather than equality constraint, it would have been just the line with no hatching. \vspace{12pt}
-
-$$
-\frac{\alpha }{\beta }
-$$
+The constraints are differentiated by color and the diagonal lines of the same color drawn off the constraint are a hatching line indicating the direction of the inequality constraint. In this case, each of the constraints are less than or equal to constraints and are indicating that this constraint includes the line and the region under the line. If it had been a greater than or equal to constraint, the hatching would have been rising above the constraint line. If it had been an exact equality constraint rather than inequality constraint, it would have been just the line with no hatching above or below. \vspace{12pt}
 
 In each figure, we illustrate the feasible region as a grayed oval but it is the whole region.\
 \vspace{24pt}
@@ -155,7 +151,7 @@ knitr::include_graphics("images/Fig02-04-Fourth_Constraint.PNG")
 We now draw our fourth and final constraint - Sensors. This constraint is done in yellow so it may be more difficult to see but it goes from an Ants only production plan of 600 units to a bats only production plan of 120.\
 \vspace{24pt}
 
-This now results in a feasible region that satisfies all of the contraints simultaneously. Every point in this region is feasible or possible in that it does not violate any of the constraints. There is an infinite number of possible points in this feasible region.\
+This now results in a feasible region that satisfies all of the constraints simultaneously. Every point in this region is feasible or possible in that it does not violate any of the constraints. There is an infinite number of possible points in this feasible region.\
 \vspace{24pt}
 
 ```{r Fig-Feasible_Region, echo=FALSE, fig.margin=TRUE, out.width="2in"}
