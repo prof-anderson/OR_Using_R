@@ -175,7 +175,7 @@ Lastly, we can pick from among these possible solutions by drawing parallel, equ
 knitr::include_graphics("images/Fig02-07-Iso_Profit.PNG")
 ```
 
-Graphically, we could read the number of Ants and number of Bats to produce. Accuracy would be limited to the drawing skills and tools used. \
+Graphically, we could read the number of Ants and number of Bats to produce. Accuracy would be limited to the drawing skills and tools used.\
 \vspace{12pt}
 
 Rather than relying on this graphical approach for determining the coordinates of each point drawn, each point in a two dimensional space is defined by the intersection of two lines. In this case, the optimal solution (and all of the other candidate solutions too) can be defined by the intersection of two constraint lines, rewritten as exact equalities. These can be solved as a system of equations with two equations and two unknowns. The optimal solution here is defined by the intersection of the Assembly (Red) and the Testing (Green) constraints. Just solve $3A+6B=900$ and $2A+2B=480$ for $A$ and $B$. \vspace{24pt}
