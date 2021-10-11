@@ -13,9 +13,8 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = FALSE)
 knitr::opts_chunk$set(cache = FALSE)
 knitr::opts_chunk$set(width = 30)
+#knitr::opts_chunk$set(fig.lp='fig:')
 #library(bookdown); library(rmarkdown); rmarkdown::render("02-A_First_LP.Rmd", "tufte_book2")
-knitr::opts_chunk$set(fig.lp='fig:')
-# 
 ```
 
 ## What is Linear Programming
