@@ -1,3 +1,7 @@
+---
+---
+---
+
 # Introduction to Linear Programming
 
 ```{r ch2setup, include=FALSE}
@@ -9,8 +13,9 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = FALSE)
 knitr::opts_chunk$set(cache = FALSE)
 knitr::opts_chunk$set(width = 30)
-# knitr::opts_chunk$set(fig.lp='fig:')
-# library(bookdown); library(rmarkdown); rmarkdown::render("02-A_First_LP.Rmd", "tufte_book2")
+#library(bookdown); library(rmarkdown); rmarkdown::render("02-A_First_LP.Rmd", "tufte_book2")
+knitr::opts_chunk$set(fig.lp='fig:')
+# 
 ```
 
 ## What is Linear Programming
@@ -922,7 +927,7 @@ In particular, you might want to look over this document with respect to:
 
 **Exercise 2.1** (Adding a Dog drone)
 
-Your company has extended production to allow for producing the dog drone and is now including a finishing department that primes and paints (or stains) the furniture. See Table to the right.
+Your company has extended production to allow for producing the dog drone and is now including a finishing department that primes and paints the drones. See Table to the right for all the data.
 
 a)  Use R Markdown to create your own description of the model.
 
@@ -951,7 +956,7 @@ e)  Discuss how one parameter would need to change in order to result in a diffe
 **Table 2.8**: Exercise 2.1
 ```
 
-**Hint:**Knit your RMarkdown as a PDF or open the HTML version in your browser and print to PDF.\
+**Hint:** Knit your RMarkdown as a PDF.\
 \vspace{12pt}
 
 ## Miscellaneous Tips and Tricks
