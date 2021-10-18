@@ -279,6 +279,8 @@ Let's start by examining the shadow prices of the resources along with the numbe
 ```{r Shadow_Price_Single_Ant, fig.margin=TRUE}
 ant_res_used<-cbind(rduals1,c(1,3,2,2))
 colnames(ant_res_used)<-c("Row Duals", "Resources Used")
+ant_res_used <- rbind(ant_res_used,
+                      c("TOTAL",t(rduals1)%*%c(1,3,2,2)))
 grid.table(format(ant_res_used, digits=4))
 ```
 
@@ -294,11 +296,13 @@ We can repeat the same process and calculations for Cats
 ```{r Shadow_Price_Bats,fig.margin=TRUE }
 cat_res_used<-cbind(rduals1,c(2,2,1,2))
 colnames(cat_res_used)<-c("Row Duals", "Resources Used")
+cat_res_used <- rbind(cat_res_used,
+                      c("TOTAL",t(rduals1)%*%c(2,2,1,2)))
 grid.table(format(cat_res_used, digits=4))
 ```
 
 ```{marginfigure}
-**Table 4.7**: Resources Used by a Bat and their Shadow Prices
+**Table 4.7**: Resources Used by a Cat and their Shadow Prices
 ```
 
 In this case, using the columns from Table 4.6 we can calulate the marginal value as $2\cdot 0.25+2\cdot2.25+1\cdot0+2\cdot0=5$. Since the profit per Cat (from the objective function coefficient on Cats) is also $\$ 5$, they are in balance and the difference between them is zero which is why the reduced cost for the *Cats* variable is also zero. \vspace{12pt}
@@ -310,9 +314,11 @@ The situation is more interesting for Bats. The production plan does not call fo
 Let's go ahead and test this interpretation by again looking at the value of the resources consumed in the production of a Bat and the amount of each resource used.
 
 ```{r Shadow_Price_Bat, fig.margin=TRUE}
-Bat_res_used<-cbind(rduals1,c(4,6,2,10))
-colnames(Bat_res_used)<-c("Row Duals", "Resources Used")
-grid.table(Bat_res_used)
+bat_res_used<-cbind(rduals1,c(4,6,2,10))
+colnames(bat_res_used)<-c("Row Duals", "Resources Used")
+bat_res_used <- rbind(bat_res_used,
+                      c("TOTAL",t(rduals1)%*%c(4,6,2,10)))
+grid.table(bat_res_used)
 ```
 
 ```{marginfigure}
@@ -374,6 +380,8 @@ Let's consider a design proposal for a Dog drone. The Dog has a projected profit
 dog_res_used<-cbind(rduals1,c(8,12,4,4))
 colnames(dog_res_used)<-c("Row Duals", 
                                "Resources Used")
+dog_res_used <- rbind(dog_res_used,
+                      c("TOTAL",t(rduals1)%*%c(8,12,4,4)))
 grid.table(format(dog_res_used,digits=4))
 ```
 
