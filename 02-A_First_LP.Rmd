@@ -924,7 +924,7 @@ In particular, you might want to look over this document with respect to:
 -   Organizing information in tables for display is helpful. Raw output can be verbose. I hard coded a table at the beginning that works for simple data in explicit LPs. For richer data models and nicer tables, see Chapter 2 again. The `gridExtra` package makes it easy to display matrices and data tables nicely in HTML and PDF outputs.
 -   Use of section and subsection headings to organize your writeups.
 
-**Exercise 2.1** (Adding a Dog drone)
+**Exercise 2.1** (Adding a Dog Drone)
 
 Your company has extended production to allow for producing the dog drone and is now including a finishing department that primes and paints the drones. See Table to the right for all the data.
 
@@ -940,7 +940,6 @@ e)  Discuss how one parameter would need to change in order to result in a diffe
 
 ```{marginfigure, fig.align='left', fig.width = 2}
 
-
 |Char.|Ants|Bats|Cats|Dogs|Avail.| 
 |----------:|:--:|:--:|:--:|:---:|:-----:|
 | Prof.     | $7 |$10 | $5 | $24 |       |
@@ -955,7 +954,8 @@ e)  Discuss how one parameter would need to change in order to result in a diffe
 **Table 2.8**: Exercise 2.1
 ```
 
-**Hint:** Knit your RMarkdown as a PDF.\
+**Hint:** Knit your RMarkdown as a PDF.  Also, don't be bothered by fractional values for a possible production plan at this time.  It is only a high level production plan so if a drone(s) are only partially finished, assume that work on them will continue in the next planning period.  We will deal with fractional variable values much more formally in Chapter 6 but for now, consider the expression "close enough for government work" to apply.
+
 \vspace{12pt}
 
 ## Miscellaneous Tips and Tricks
