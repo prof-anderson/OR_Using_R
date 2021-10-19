@@ -62,12 +62,12 @@ Base3VarModel <- MIPModel() %>%
   add_variable(Bats, type = "continuous",lb = 0) %>%
   add_variable(Cats, type = "continuous", lb = 0) %>%
   
-  set_objective(7*Ants + 12*Bats + 5*Cats,"max")%>%
+  set_objective(7*Ants + 12*Bats + 5*Cats,"max") %>%
   
-  add_constraint(1*Ants + 4*Bats + 2*Cats<=800)%>% 
-  add_constraint(3*Ants + 6*Bats + 2*Cats<=900)%>% 
-  add_constraint(2*Ants + 2*Bats + 1*Cats<=480)%>% 
-  add_constraint(2*Ants + 10*Bats + 2*Cats<=1200)%>% 
+  add_constraint(1*Ants + 4*Bats + 2*Cats<=800) %>% 
+  add_constraint(3*Ants + 6*Bats + 2*Cats<=900) %>% 
+  add_constraint(2*Ants + 2*Bats + 1*Cats<=480) %>% 
+  add_constraint(2*Ants + 10*Bats + 2*Cats<=1200) %>% 
   solve_model(with_ROI(solver="glpk"))
 
 base_case_res <- cbind(objective_value(Base3VarModel),
@@ -153,12 +153,12 @@ IncAssemHrs <- MIPModel() %>%
   add_variable(Bats, type = "continuous",lb = 0) %>%
   add_variable(Cats, type = "continuous", lb = 0) %>%
   
-  set_objective(7*Ants + 12*Bats + 5*Cats,"max")%>%
+  set_objective(7*Ants + 12*Bats + 5*Cats,"max") %>%
   
-  add_constraint(1*Ants + 4*Bats + 2*Cats<= 800)%>% 
-  add_constraint(3*Ants + 6*Bats + 2*Cats<= 901)%>% 
-  add_constraint(2*Ants + 2*Bats + 1*Cats<= 480)%>% 
-  add_constraint(2*Ants + 10*Bats + 2*Cats<= 1200)%>% 
+  add_constraint(1*Ants + 4*Bats + 2*Cats<= 800) %>% 
+  add_constraint(3*Ants + 6*Bats + 2*Cats<= 901) %>% 
+  add_constraint(2*Ants + 2*Bats + 1*Cats<= 480) %>% 
+  add_constraint(2*Ants + 10*Bats + 2*Cats<= 1200) %>% 
 
   solve_model(with_ROI(solver = "glpk"))
 
@@ -221,12 +221,12 @@ IncSensor<- MIPModel() %>%
   add_variable(Bats, type = "continuous",lb = 0) %>%
   add_variable(Cats, type = "continuous", lb = 0) %>%
   
-  set_objective(7*Ants + 12*Bats + 5*Cats,"max")%>%
+  set_objective(7*Ants + 12*Bats + 5*Cats,"max") %>%
 
-  add_constraint(1*Ants+4*Bats + 2*Cats<= 800)%>% 
-  add_constraint(3*Ants+6*Bats + 2*Cats<=900)%>% 
-  add_constraint(2*Ants+2*Bats+1*Cats<=480)%>% 
-  add_constraint(2*Ants+10*Bats+2*Cats<=11200)%>% 
+  add_constraint(1*Ants+4*Bats + 2*Cats<= 800) %>% 
+  add_constraint(3*Ants+6*Bats + 2*Cats<=900) %>% 
+  add_constraint(2*Ants+2*Bats+1*Cats<=480) %>% 
+  add_constraint(2*Ants+10*Bats+2*Cats<=11200) %>% 
   solve_model(with_ROI(solver = "glpk"))
 
 inc_sensor_res  <- cbind(objective_value(IncSensor),
@@ -336,12 +336,12 @@ Bat1Model <- MIPModel() %>%
   add_variable(Bats, type = "continuous",lb = 1) %>%
   add_variable(Cats, type = "continuous", lb = 0) %>%
   
-  set_objective(7*Ants + 12*Bats + 5*Cats,"max")%>%
+  set_objective(7*Ants + 12*Bats + 5*Cats,"max") %>%
 
-  add_constraint(1*Ants+4*Bats+2*Cats<=800)%>% 
-  add_constraint(3*Ants+6*Bats+2*Cats<=900)%>% 
-  add_constraint(2*Ants+2*Bats+1*Cats<=480)%>% 
-  add_constraint(2*Ants+10*Bats+2*Cats<=1200)%>% 
+  add_constraint(1*Ants+4*Bats+2*Cats<=800) %>% 
+  add_constraint(3*Ants+6*Bats+2*Cats<=900) %>% 
+  add_constraint(2*Ants+2*Bats+1*Cats<=480) %>% 
+  add_constraint(2*Ants+10*Bats+2*Cats<=1200) %>% 
 
   solve_model(with_ROI(solver = "glpk"))
 
