@@ -4,6 +4,8 @@
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = FALSE)
 knitr::opts_chunk$set(cache = FALSE)
+knitr::opts_chunk$set(asis_output = FALSE)
+
 suppressPackageStartupMessages(library(magrittr))  # Used for pipes
 suppressPackageStartupMessages(library(dplyr))     # Used for data management
 suppressPackageStartupMessages(library(ROI))
@@ -17,6 +19,11 @@ library (knitr)
 library (png)
 library (gridExtra)
 # library(bookdown); library(rmarkdown); rmarkdown::render("06-Integer-Programming.Rmd", "tufte_book2")
+```
+
+```{r, eval=FALSE, include=FALSE}
+library(bookdown); library(rmarkdown)
+rmarkdown::render("06-Integer-Programming.Rmd", "tufte_book2")
 ```
 
 Up until this point, we have always assumed that variables could take on fractional (or non-integer) values. In other words, they were continuous variables. Sometimes the values conveniently turned out to be integer-valued, in other cases, we would brush off the non-integer values of the results. \vspace{12pt}
@@ -75,6 +82,8 @@ result1 <-  solve_model(model1, with_ROI(solver="glpk"))
 inc_as_res <- cbind (result1$objective_value, 
                      t(result1$solution))
 colnames(inc_as_res)<-c("Profit", "Ants", "Bats", "Cats")
+#grid.table(format(inc_as_res,digits=6))
+panderOptions('knitr.auto.asis', FALSE)
 pander(inc_as_res, digits=6,
        caption="Production Plan with Continuous Variables")
 ```
@@ -110,9 +119,12 @@ The `ompr` implementation has a similar, straightforward change. In the declarat
 \vspace{12pt}
 
 ```{r IncAssemHrs_ch6, fig.margin=FALSE}
-model1 <- add_variable(model1, Ants, type = "integer", lb = 0)
-model1 <- add_variable(model1, Bats, type = "integer", lb = 0)
-model1 <- add_variable(model1, Cats, type = "integer", lb = 0)
+model1 <- add_variable(model1, Ants, 
+                       type = "integer", lb = 0)
+model1 <- add_variable(model1, Bats, 
+                       type = "integer", lb = 0)
+model1 <- add_variable(model1, Cats, 
+                       type = "integer", lb = 0)
 ```
 
 Let's confirm that the implemented model is of the form desired.
@@ -126,7 +138,8 @@ result1 <-  solve_model(model1, with_ROI(solver="glpk"))
 
 inc_as_res_int <- cbind (result1$objective_value, 
                          t(result1$solution))
-colnames(inc_as_res_int)<-c("Profit", "Ants", "Bats", "Cats")
+colnames(inc_as_res_int)<-
+  c("Profit", "Ants", "Bats", "Cats")
 
 temp1 <- rbind(inc_as_res, inc_as_res_int)
 

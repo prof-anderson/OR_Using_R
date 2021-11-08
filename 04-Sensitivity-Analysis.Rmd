@@ -20,9 +20,13 @@ library (ompr.roi, quietly = TRUE)
 library (pander, quietly = TRUE)
 library (gridExtra)
 library (formatR)
-# knitr::opts_chunk$set(fig.lp='fig:')
-# library(bookdown); library(rmarkdown); rmarkdown::render("04-Sensitivity-Analysis.Rmd", "tufte_book2")
 ```
+
+```{r, eval=FALSE, include=FALSE}
+library(bookdown); library(rmarkdown)
+rmarkdown::render("04-Sensitivity-Analysis.Rmd", "tufte_book2")
+```
+
 
 We can get a lot more than just the objective function value and the decision variable values from a solved linear program. In particular, we can potentially explore the impact of changes in constrained resources, changes in the objective function, forced changes in decision variables, and the introduction of additional decision variables.
 

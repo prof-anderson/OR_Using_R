@@ -4,6 +4,11 @@ output:
   html_document: default
 ---
 
+```{r, include=FALSE, eval=FALSE}
+library(bookdown); library(rmarkdown); rmarkdown::render("05-DEA.Rmd", "tufte_book2")
+# library(bookdown); library(rmarkdown); rmarkdown::render("05-DEA.Rmd", "pdf_book")
+```
+
 # Data Envelopment Analysis
 
 ```{r Ch5setup, warning=FALSE, include=FALSE}
@@ -23,11 +28,13 @@ library (knitr)
 library (DiagrammeRsvg, quietly=TRUE) 
 library (rsvg, quietly=TRUE) 
 library (htmltools, quietly=TRUE)
+library (kableExtra)
+library (huxtable)
 library (TRA) # Requires installation from github
      # DiagrammeRsvg, rsvg, htmltools are used for IO diagrams
-# library(bookdown); library(rmarkdown); rmarkdown::render("05-DEA.Rmd", "tufte_book2")
-# library(bookdown); library(rmarkdown); rmarkdown::render("05-DEA.Rmd", "pdf_book")
+
 ```
+
 
 ## Introduction
 
@@ -109,8 +116,10 @@ colnames(temp)<-c("Store Name", "Employees (x)",
                   "Sales (y)")
 ```
 
-```{r first_dataset_table, fig.margin=TRUE}
-pander(temp, caption="First Dataset for DEA")
+```{r first_dataset_table, fig.margin=FALSE}
+# pander(temp, caption="First Dataset for DEA")
+kable(temp, caption="First Dataset for DEA", 
+      format="latex")
 ```
 
 The above commands create matrices that hold the data and have named rows and columns to match. The `<-` symbol is a key function in R and means to assign what is in the right to the object on the left. \vspace{12pt}
@@ -362,7 +371,7 @@ results.lambda <- t(omprlambda[3])
 colnames(results.lambda) <- 
   c("$\\lambda_A$", "$\\lambda_B$",
     "$\\lambda_C$", "$\\lambda_D$")
-pander(cbind(results.efficiency, results.lambda), 
+kable(cbind(results.efficiency, results.lambda), 
  caption=
    "Input-Oriented Envelopment Analysis for DMU B (CCR-IO)")
 ```
@@ -398,7 +407,7 @@ results.lambda <- t(omprlambda[3])
 
 colnames(results.lambda) <- c("$\\lambda_A$", "$\\lambda_B$",
                               "$\\lambda_C$", "$\\lambda_D$")
-pander(cbind(results.efficiency, results.lambda), 
+kable(cbind(results.efficiency, results.lambda), 
        caption=
          "Input-Oriented Envelopment Analysis for DMU A")
 ```
@@ -448,14 +457,14 @@ DMUnames <- list("A", "B", "C", "D")
 dimnames(results.efficiency)<-list(DMUnames,"CCR-IO")
 eff.crs <- results.efficiency
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
-pander (cbind(results.efficiency, results.lambda),
+kable (cbind(results.efficiency, results.lambda),
         caption="Input-Oriented Efficiency Results")
 ```
 
 Next, let's demonstrate the use of a small helper function, `poscol` from the `TRA` package. The `poscol` function simply filters out any column of all zero. For standard DEA models, the columns for inefficient DMUs will be zero. The result is that if only 10% of DMUs are efficient, 90% of the columns are zero and not informative. This function does a simple filter of the columns to eliminate those that are zero. This simple function was developed with the assistance of Chester Ismay [@ismay2019].
 
 ```{r, echo=FALSE}
-pander(cbind(results.efficiency, poscol(results.lambda)), 
+kable(cbind(results.efficiency, poscol(results.lambda)), 
        caption=
 "Results with Inefficient DMU Columns Removed.")
 ```
@@ -517,7 +526,7 @@ result <- solve_model(result, with_ROI (solver = "glpk"))
 dimnames(results.efficiency)<-list(DMUnames,"BCC-IO")
 eff.vrs <- results.efficiency
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
-pander (cbind(results.efficiency, results.lambda), 
+kable (cbind(results.efficiency, results.lambda), 
         caption="Input-Oriented VRS Envelopment Results")
 ```
 
@@ -581,7 +590,7 @@ result <- solve_model(result, with_ROI(solver = "glpk"))
 dimnames(results.efficiency)<-list(DMUnames,"DRS-IO")
 eff.drs <- results.efficiency
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
-pander (cbind(results.efficiency, results.lambda), 
+kable (cbind(results.efficiency, results.lambda), 
         caption="Input-Oriented Model with  
         Decreasing Returns to Scale")
 ```
@@ -622,7 +631,7 @@ DMUnames <- list("A", "B", "C", "D")
 dimnames(results.efficiency)<-list(DMUnames,"IRS-IO")
 eff.irs <- results.efficiency
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
-pander (cbind(results.efficiency, results.lambda), 
+kable (cbind(results.efficiency, results.lambda), 
         caption="Input-Oriented Increasing Returns 
         to Scale Model Results")
 ```
@@ -652,7 +661,7 @@ dea.plot(x, y, RTS="drs", ORIENTATION="in-out",
 ```
 
 ```{r Compare_RTS_Results}
-pander(cbind(eff.crs, eff.vrs, eff.drs, eff.irs), 
+kable(cbind(eff.crs, eff.vrs, eff.drs, eff.irs), 
        caption="Comparison of Efficiency under 
        Alternate Returns to Scale Assumptions")
 ```
@@ -685,7 +694,7 @@ utt2007 <- univ_lic_2007 [1:25,]
 utt2007 <- utt2007 [,-5]   
            # Drop the fifth column (Patents Filed)
 
-pander (head(utt2007),
+kable (head(utt2007),
         caption="Simplified data for University Technology Transfer")
 ```
 
@@ -731,7 +740,7 @@ DMUnames_printable <- as.matrix(utt2007[,1])
 As usual, let's preview the data.\vspace{12pt}
 
 ```{r}
-pander(head(cbind(xdata,ydata)), 
+kable(head(cbind(xdata,ydata)), 
        caption="Selected university technology transfer characteristics from 2004.")
 
 ```
@@ -778,9 +787,9 @@ for (k in 1:ND) {
 ```
 
 ```{r full-table, fig.fullwidth=TRUE}
-pander (cbind(res.efficiency, poscol(res.lambda)), 
+kable (cbind(res.efficiency, poscol(res.lambda)), 
         caption="Results from University Technology Transfer Example (CRS)", 
-        round=6)
+        digits=6)
 UTT_CCR.Res<-cbind(res.efficiency, res.lambda)
 ```
 
@@ -826,8 +835,8 @@ colnames(UTT_BCC.Res)[1] <- "BCC-IO"
 ```
 
 ```{r Compare_CRS_to_VRS, fig.fullwidth = TRUE}
-pander(cbind(UTT_CCR.Res[,1, drop=FALSE],
-             UTT_BCC.Res), round=6,
+kable(cbind(UTT_CCR.Res[,1, drop=FALSE],
+             UTT_BCC.Res), digits=6,
        caption=
          "Comparison of CRS vs. VRS Efficiency Scores")
 ```
@@ -867,7 +876,7 @@ res.vweight[k,] <- -1*rduals[1:NX]
 res.uweight[k,] <- rduals[(NX+1):(NX+NY)]
    # Extract next NY row duals, assuming output 
    #    constraints follow inputs 
-pander(c(res.vweight[k,],res.uweight[k,]),
+kable(c(res.vweight[k,],res.uweight[k,]),
        caption="Input and output weights for last DMU")
 ```
 
@@ -914,8 +923,8 @@ for (k in 1:ND) {
       # Extract next NY row duals 
       #   Assumes output constraints follow inputs 
     }
-pander (cbind(res.efficiency, res.vweight, 
-              res.uweight),round=6, 
+kable (cbind(res.efficiency, res.vweight, 
+              res.uweight),digits=6, 
         caption="Multiplier Weights from UTT Example")
 ```
 
@@ -1035,10 +1044,14 @@ for (k in 1:ND) {
 
 <!--The rightmost columns, denoted by "L_" are the resulting lambda values.  -->
 
-```{r}
-pander(head(cbind(res.efficiency,poscol(res.lambda[1:25,]))), 
-       round=4, caption="Selected Input-oriented Efficiency Results with Slack Maximization")
+```{r, eval=FALSE}
 
+#pander(head(cbind(res.efficiency,poscol(res.lambda[1:25,]))), 
+#       round=4, caption="Selected Input-oriented Efficiency Results with Slack Maximization")
+kable(head(cbind(res.efficiency,poscol(res.lambda[1:25,]))),
+      caption="Selected Input-oriented Efficiency Results with Slack Maximization",
+      format="latex", booktabs=TRUE)%>%
+  kable_styling(latex_options="scale_down")
 ```
 
 ## DEA Packages

@@ -30,7 +30,10 @@ suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library (tint, quietly = TRUE))
     # Loading this last masks margin_note, newthought,
     #    quote_footer, sans_serif from the tufte package.
-#library(bookdown); library(rmarkdown); rmarkdown::render("07-More-Mixed-MIP.Rmd", "tufte_book2")
+```
+
+```{r, eval=FALSE, include=FALSE}
+library(bookdown); library(rmarkdown); rmarkdown::render("07-More-Mixed-MIP.Rmd", "tufte_book2")
 ```
 
 ## Overview
@@ -39,7 +42,7 @@ This chapter consists of a collection of rich MILP models that can be used for i
 Some of these cases are expansions of Dirk Schumacher's ompr vignettes.
 These make for excellent resources demonstrating a variety of features such as creation of simulated data and visualization of results.
 I strongly recommend reading the original.
-These vignettes can be viewed from the package documentation, Dirk's github web [site](https://dirkschumacher.github.io/ompr/articles/index.html), or downloading his github repository.
+These vignettes can be viewed from the package documentation, Dirk Schumacher's github web [site](https://dirkschumacher.github.io/ompr/articles/index.html), or downloading his github repository.
 
 -   All text from Dirk Schumacher's articles are set in block quotes.\
 -   Code chunks are generally based on Dirk Schumacher's articles unless stated otherwise.
@@ -418,7 +421,7 @@ pander (head(plot_assignment),
 Notice that this gives the beginning and ending coordinates of what will soon be lines to show the connections between customers and warehouses.
 \vspace{12pt}
 
-Now, let's calcuate how many customers each warehouse serves.
+Now, let's calculate how many customers each warehouse serves.
 
 ```{r customer-count}
 customer_count <- matching %>% 
@@ -618,7 +621,7 @@ symphonytimeff <- c("symphony first feas.",
 
 Several interesing and important things should be noted here.
 First, `ompr` interprets the status message from the solver as not being solved to optimality to indicate that the problem is not feasible.
-This is a known issue in `ompr` and `ompr.ROI`as of version 0.8.0.0.
+This is a known issue in `ompr` and `ompr.ROI`as of version 0.8.1.
 It highlights that "infeasible" status from the `ompr` should be thought of as meaning that an optimal solution was not found for *some* reason such as being told to terminate after the first feasible solution was found, time limit reached, node limit reached, the MIP was infeasible, the MIP was unbounded, or some other issue.
 \vspace{12pt}
 

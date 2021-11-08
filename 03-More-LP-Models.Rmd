@@ -12,9 +12,13 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = F)
 knitr::opts_chunk$set(cache = FALSE)
 knitr::opts_chunk$set(width = 30)
-#knitr::opts_chunk$set(fig.lp='fig:')
-# library(bookdown); library(rmarkdown); rmarkdown::render("03-More-LP-Models.Rmd", "tufte_book2")
+
 ```
+
+```{r, eval=FALSE, include=FALSE}
+library(bookdown); library(rmarkdown); rmarkdown::render("03-More-LP-Models.Rmd", "tufte_book2")
+```
+
 
 ## Types of LP Models
 
