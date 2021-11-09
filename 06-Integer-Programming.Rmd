@@ -18,7 +18,6 @@ library (tufte)
 library (knitr)
 library (png)
 library (gridExtra)
-# library(bookdown); library(rmarkdown); rmarkdown::render("06-Integer-Programming.Rmd", "tufte_book2")
 ```
 
 ```{r, eval=FALSE, include=FALSE}
@@ -31,7 +30,7 @@ Up until this point, we have always assumed that variables could take on fractio
 Allowing for integer values opens up many more important areas of applications as we will see.\
 \vspace{12pt} Let's look at two numerical examples. The first shows a case where integrality makes little difference, the second where it has a major impact. \vspace{12pt}
 
-Unfortunately, there is no such thing as a free lunch-adding integrality can make problems much more computationally demanding. We will go through an example of how many optimization routines do integer optimization to demonstrate why it can be more difficult algorithmically even if looks trivially easy from the perspective of the change in the ompr function.
+Unfortunately, there is no such thing as a free lunch-adding integrality can make problems much more computationally demanding. We will go through an example of how many optimization routines do integer optimization to demonstrate why it can be more difficult algorithmically even if looks trivially easy from the perspective of the change in the `ompr`function.
 
 ## Example of Minor Integrality Impact
 
@@ -370,7 +369,7 @@ This results in integer values for both $x_1$ and $x_2$ so it is feasible with r
 
 *Subproblem IV* \vspace{12pt}
 
-Next, let's look at Subproblem IV. This problem adds the bound of $x_2\ge3.0$ to subproblem I. Notice that in the MIPModel, the variable for $x_1$ has an upperbound (ub) of 2 in order to implement bounding constraint for subproblem I and the lower bound on $x_2$ of 3 in the variable declarations.
+Next, let's look at Subproblem IV. This problem adds the bound of $x_2\ge3.0$ to subproblem I. Notice that in the `MIPModel` implementation the variable for $x_1$ (Vx1) has an upperbound of 2, (`ub=2`) in order to implement the bounding constraint for subproblem I and the lower bound on $x_2$ of 3 in the variable declarations.
 
 ```{r SolveLPSubIV}
 LPSubIV <- MIPModel() %>%
@@ -552,19 +551,19 @@ Therefore, they want to ensure that at most one of the two projects can be pursu
 
 Let's start with a truth table summarizing the interaction between projects (variable values) and the "Top Chip Architects" relationship.\vspace{12pt}
 
-+-----------+-----------+---------------------------------------------+
-| Project A | Project B | Violates "Top Chip Architects" Relationship |
-|           |           |                                             |
-| $y_A$     | $y_B$     |                                             |
-+:=========:+:=========:+:===========================================:+
-| 0         | 0         | No                                          |
-+-----------+-----------+---------------------------------------------+
-| 0         | 1         | No                                          |
-+-----------+-----------+---------------------------------------------+
-| 1         | 0         | No                                          |
-+-----------+-----------+---------------------------------------------+
-| 1         | 1         | Yes                                         |
-+-----------+-----------+---------------------------------------------+
++------------+------------+---------------------------------------------+
+| Project A  | Project B  | Violates "Top Chip Architects" Relationship |
+|            |            |                                             |
+| $y_A$      | $y_B$      |                                             |
++:==========:+:==========:+:===========================================:+
+| 0          | 0          | No                                          |
++------------+------------+---------------------------------------------+
+| 0          | 1          | No                                          |
++------------+------------+---------------------------------------------+
+| 1          | 0          | No                                          |
++------------+------------+---------------------------------------------+
+| 1          | 1          | Yes                                         |
++------------+------------+---------------------------------------------+
 
 : Relationships between Projects A, B, and the need for Chip Architects.
 
@@ -620,29 +619,29 @@ Widget Inc. is re-evaluating their product production mix. As the plant manager,
 
 The profit for each Widget is shown below, as well as the setup costs (if you decide to produce any of that that Widget). The materials you have sourced allow you to only produce each Widget up to its capacity.
 
-+----------+--------+------------+------------+
-| Product  | Profit | Setup Cost | Capacity   |
-+=========:+:======:+:==========:+:==========:+
-| Widget 1 | \$15   | \$1000     | 500        |
-+----------+--------+------------+------------+
-| Widget 2 | \$10   | \$1500     | 1000       |
-+----------+--------+------------+------------+
-| Widget 3 | \$25   | \$2000     | 750        |
-+----------+--------+------------+------------+
++----------+----------+------------+----------+
+| Product  | Profit   | Setup Cost | Capacity |
++=========:+:========:+:==========:+:========:+
+| Widget 1 | \$15     | \$1000     | 500      |
++----------+----------+------------+----------+
+| Widget 2 | \$10     | \$1500     | 1000     |
++----------+----------+------------+----------+
+| Widget 3 | \$25     | \$2000     | 750      |
++----------+----------+------------+----------+
 
 To produce each Widget, the hours required at each step of the manufacturing process are shown below. Also shown are the availability (in hours) of the equipment at each step.
 
-+-------------------+----------+----------+----------+-----------+
-| Production        | Widget 1 | Widget 2 | Widget 3 | Available |
-+==================:+:========:+:========:+:========:+:=========:+
-| Pre-process       | 2        | 1        | 4        | 1000      |
-+-------------------+----------+----------+----------+-----------+
-| Machining         | 1        | 5        | 2        | 2000      |
-+-------------------+----------+----------+----------+-----------+
-| Assembly          | 2        | 1        | 1        | 1000      |
-+-------------------+----------+----------+----------+-----------+
-| Quality Assurance | 3        | 2        | 1        | 1500      |
-+-------------------+----------+----------+----------+-----------+
++-------------------+-----------+-----------+-----------+-----------+
+| Production        | Widget 1  | Widget 2  | Widget 3  | Available |
++==================:+:=========:+:=========:+:=========:+:=========:+
+| Pre-process       | 2         | 1         | 3         | 1000      |
++-------------------+-----------+-----------+-----------+-----------+
+| Machining         | 1         | 5         | 2         | 2000      |
++-------------------+-----------+-----------+-----------+-----------+
+| Assembly          | 2         | 1         | 1         | 1000      |
++-------------------+-----------+-----------+-----------+-----------+
+| Quality Assurance | 3         | 2         | 1         | 1500      |
++-------------------+-----------+-----------+-----------+-----------+
 
 In order to develop our optimization model, we determine the objective function (goal), decision variables (decisions) and constraints (limitations). \vspace{12pt}
 
@@ -674,7 +673,7 @@ $$
  \begin{split}
  \begin{aligned}
     \text{Max  }   & 15W_1+10W_2+25W_3 - 1000Y_1 - 1500Y_2 - 2000Y_3 \\
-    \text{subject to } & 2W_1+1W_2+4W_3 \leq 1000 \\
+    \text{subject to } & 2W_1+1W_2+3W_3 \leq 1000 \\
                        & 1W_1+5W_2+2W_3 \leq 2000 \\
                        & 2W_1+1W_2+1W_3 \leq 1000 \\
                        & 3W_1+2W_2+1W_3 \leq 1500 \\
@@ -708,7 +707,7 @@ fc_base_model <- MIPModel() %>%
  set_objective(15*Vw1 + 10*Vw2 + 25*Vw3 
                - 1000*Vy1 - 1500*Vy2 - 2000*Vy3, 
                "max") %>%
- add_constraint(2*Vw1 + 1*Vw2 + 4*Vw3 <= 1000) %>% 
+ add_constraint(2*Vw1 + 1*Vw2 + 3*Vw3 <= 1000) %>% 
              # Pre-process availability 
  add_constraint(1*Vw1 + 5*Vw2 + 2*Vw3 <= 2000) %>% 
              # Machining  
@@ -789,7 +788,7 @@ More formally, using the non-negative lower bounds on widget production, we can 
 $$
  \begin{split}
  \begin{aligned}
-      2 \cdot w_1+1 \cdot 0+4 \cdot 0 \leq 1000 \\
+      2 \cdot w_1+1 \cdot 0+3 \cdot 0 \leq 1000 \\
       1 \cdot w_1+5 \cdot 0+2 \cdot 0 \leq 2000 \\
       2 \cdot w_1+1 \cdot 0+1 \cdot 0 \leq 1000 \\
       3 \cdot w_1+2 \cdot 0+1 \cdot 0 \leq 1500 \\
@@ -838,21 +837,21 @@ Therefore, $$w_1 \leq min \{ \frac{1000}{2}, \frac{2000}{1}, \frac{1000}{2}, \fr
 or $$w_1 \leq min \{ 500, 2000, 500, 500, 500 \} = 500$$ Therefore, we know that Widget 1 production can never exceed 500 units regardless of the amount of other Widgets ($w_2$ and $w_3$) produced. We can then safely set the Big M value for Widget 1 to be 500. In other words, $M_1=500$.\
 \vspace{12pt}
 
-We can follow the same process for setting Big M values for widget 2. We start by setting $w_2=w_3 = 0$. We know that $w_2$ must be no larger than the most restrict constraint. I'll skip rewriting the constraints and jump a little ahead.
+We can follow the same process for setting Big M values for widget 2. We start by setting $w_1=w_3 = 0$. We know that $w_2$ must be no larger than the most restrict constraint. I'll skip rewriting the constraints and jump a little ahead.
 
-$$W_2 \leq min \{ \frac{1000}{2}, \frac{2000}{5}, \frac{1000}{2}, \frac{1500}{2}, 1000 \}=400$$
+$$W_2 \leq min \{ \frac{1000}{1}, \frac{2000}{5}, \frac{1000}{1}, \frac{1500}{2}, 1000 \}=400$$
 
 Therefore, we can safely use a Big M value for $w_2$ of $M_2=400$. \vspace{12pt}
 
 Again we can follow the same process for $w_3$ to find a small Big M value.
 
-$$w_3 \leq min \{ \frac{1000}{4}, \frac{2000}{2}, \frac{1000}{2}, \frac{1500}{1}, 750 \}=250$$ \vspace{12pt} Our updated model with "Big M":
+$$w_3 \leq min \{ \frac{1000}{3}, \frac{2000}{2}, \frac{1000}{1}, \frac{1500}{1}, 750 \}=333.3$$ \vspace{12pt} Since the Big M value is setting a lower bound, in this way, we can round up from 333.33 to 334. Our updated model with "Big M":
 
 $$
  \begin{split}
  \begin{aligned}
     \text{Max  }   & 15w_1+10w_2+25w_3 - 1000y_1 - 1500y_2 - 2000y_3 \\
-    \text{subject to } & 2w_1+1w_2+4w_3 \leq 1000 \\
+    \text{subject to } & 2w_1+1w_2+3w_3 \leq 1000 \\
                        & 1w_1+5w_2+2w_3 \leq 2000 \\
                        & 2w_1+1w_2+1w_3 \leq 1000 \\
                        & 3w_1+2w_2+1w_3 \leq 1500 \\
@@ -861,7 +860,7 @@ $$
                        & w_3 \leq 750 \\
                        & w_1 - 500y_1 \leq 0 \\
                        & w_2 - 400y_2 \leq 0 \\
-                       & w_3 - 250y_3 \leq 0 \\
+                       & w_3 - 334y_3 \leq 0 \\
                        & w_1, w_2, w_3 \geq 0 \\
                        & y_1, y_2, y_3 \in \{0,1\}  \\
   \end{aligned}
@@ -897,8 +896,9 @@ fc_base_summary_rev <- fc_base_summary
 fc_base_summary_rev [1] <- fc_base_summary_rev [1] - 4500
 fc_M_summary <- cbind(fc_bigM_res$objective_value,
                          t(as.matrix(fc_bigM_res$solution)))
-colnames(fc_M_summary)<-c("Obj Func Value", "$w_1$","$w_2$","$w_3$",
-                             "$y_1$","$y_2$","$y_3$")
+colnames(fc_M_summary)<-c("Obj Func Value", 
+                          "$w_1$","$w_2$","$w_3$",
+                          "$y_1$","$y_2$","$y_3$")
 fc_combined_res <- rbind (fc_base_summary, 
                           fc_base_summary_rev, fc_M_summary)
 rownames(fc_combined_res)<-c("Base Case w/o Setup", 
@@ -927,7 +927,7 @@ fc_bigM_res.df <- data.frame(c(fc_bigM_res.W1,
                                fc_bigM_res.W3)) 
 fc_bigM_res.r1 <- t(data.frame(c(fc_bigM_res.W1*2,
                                  fc_bigM_res.W2*1,
-                                 fc_bigM_res.W3*4)))
+                                 fc_bigM_res.W3*3)))
                #multiply results with hours used
 rownames(fc_bigM_res.r1) <- "Pre-process"
 fc_bigM_res.r2 <- t(data.frame(c(fc_bigM_res.W1*1,
