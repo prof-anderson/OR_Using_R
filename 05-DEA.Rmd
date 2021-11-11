@@ -30,6 +30,7 @@ library (rsvg, quietly=TRUE)
 library (htmltools, quietly=TRUE)
 library (kableExtra)
 library (huxtable)
+library (gridExtra)
 library (TRA) # Requires installation from github
      # DiagrammeRsvg, rsvg, htmltools are used for IO diagrams
 
@@ -64,7 +65,7 @@ In contrast, outputs are the "good" items that are being produced by the actions
 Let's start by creating a simple dataset - assume that you are a regional manager of a grocery chain. You have four stores and would like to assess the performance of the store managers using number of employees, *x*, as an input and the weekly sales, *y*, as an output. The function `DrawIOdiagram` is from the `TRA` package and allows for creating a nicely formatted input-output diagram.\
 \vspace{12pt}
 
-```{r DEA_IO_Plot1, fig.margin=TRUE, out.width="2in", cache=TRUE}
+```{r DEA_IO_Plot1, fig.margin=TRUE, out.width="2in"}
 library (TRA) # Note, may need to install directly from github
               # devtools::install_github("prof-anderson/TRA")
 
@@ -75,7 +76,6 @@ Figure <- DrawIOdiagram (c("Employees\n(FTE)" ),
 tmp<-capture.output(rsvg_png(charToRaw(export_svg(Figure)),
                              'images/DEA_IO_stores.PNG')) 
 knitr::include_graphics("images/DEA_IO_stores.PNG")
-
 
 ```
 
@@ -109,17 +109,20 @@ x <- matrix(c(10,20,30,50),ncol=1,
 y <- matrix(c(75,100,300,400),ncol=1,
             dimnames=list(LETTERS[1:4],"y"))
 
-storenames<- c("Al's Pantry", "Bob's Mill", 
-               "Trader Carrie's", "Dilbertson's")
+storenames<- c("Al\'s Pantry", 
+               "Bob\'s Mill", 
+               "Trader Carrie\'s", 
+               "Dilbertson\'s")
 temp<-cbind(storenames,x,y)
 colnames(temp)<-c("Store Name", "Employees (x)", 
                   "Sales (y)")
 ```
 
 ```{r first_dataset_table, fig.margin=FALSE}
-# pander(temp, caption="First Dataset for DEA")
-kable(temp, caption="First Dataset for DEA", 
-      format="latex")
+# grid.table(temp, caption="First Dataset for DEA")
+pander(temp, caption="First Dataset for DEA")
+#kable(temp, caption="First Dataset for DEA", 
+#      format="latex")
 ```
 
 The above commands create matrices that hold the data and have named rows and columns to match. The `<-` symbol is a key function in R and means to assign what is in the right to the object on the left. \vspace{12pt}
@@ -170,24 +173,6 @@ A key way to begin the mathematical development of the envelopment model is to a
 We could express the evaluation of store B as a linear program as follows.\
 \vspace{12pt}
 
-```{marginfigure}
-$$
- \begin{split}
- \begin{aligned}
-    \text{Min: } & \theta \\
-    \text{S.t.:} & \\
-                  & 10 \lambda_A + 20 \lambda_B +
-                    30 \lambda_C + 50 \lambda_D 
-                    \leq 20 \theta \\
-                  & 75 \lambda_A + 100 \lambda_B +
-                    300 \lambda_C + 400 \lambda_D 
-                    \geq 100 \\
-                  & \theta , \lambda_A , \lambda_B , \lambda_D , \lambda_D \geq 0  
-  \end{aligned}
-  \end{split}
-$$
-```
-
 $$
  \begin{split}
  \begin{aligned}
@@ -204,9 +189,6 @@ $$
   \end{split}
 $$
 
-```{marginfigure}
-**Formulation 5.1**: Explicit optimization model for evaluating store B. 
-```
 
 Implementing this formulation in `ompr` or another system is straightforward and similar to the production planning linear programs examined in earlier chapters. \vspace{12pt}
 
@@ -369,9 +351,10 @@ results.lambda <- t(omprlambda[3])
    # Takes third column from results and transposes results
    #  to be structured correctly for later viewing
 colnames(results.lambda) <- 
-  c("$\\lambda_A$", "$\\lambda_B$",
-    "$\\lambda_C$", "$\\lambda_D$")
-kable(cbind(results.efficiency, results.lambda), 
+#  c("$\\lambda_A$", "$\\lambda_B$",
+#    "$\\lambda_C$", "$\\lambda_D$")
+   c("L_A", "L_B", "L_C", "L_D")   
+pander(cbind(results.efficiency, results.lambda), 
  caption=
    "Input-Oriented Envelopment Analysis for DMU B (CCR-IO)")
 ```
@@ -385,7 +368,7 @@ The results in the table indicate that DMU *B* has an efficiency score of 50%. T
 
 Let's now extend it to handle multiple inputs, *NX,* and outputs, *NY.* Of course this doesn't have any impact on our results just yet since we are still only using a single input and output but we now have the structure to accommodate the more general case of DEA. To provide a little variety, we'll change it to the first DMU, A, to give a little more variety.
 
-```{r ompr_mult_IO, message=FALSE}
+```{r ompr_mult_IO, message=FALSE, results='asis'}
 k<-1    # Analyze first unit, DMU A.
 result <- MIPModel() %>%
   add_variable(vlambda[j], j = 1:ND, type = "continuous", 
@@ -407,8 +390,7 @@ results.lambda <- t(omprlambda[3])
 
 colnames(results.lambda) <- c("$\\lambda_A$", "$\\lambda_B$",
                               "$\\lambda_C$", "$\\lambda_D$")
-kable(cbind(results.efficiency, results.lambda), 
-       caption=
+pander(cbind(results.efficiency, results.lambda),  caption=
          "Input-Oriented Envelopment Analysis for DMU A")
 ```
 
@@ -532,16 +514,12 @@ kable (cbind(results.efficiency, results.lambda),
 
 Notice that the efficiencies have generally increased or stayed the same. Whereas earlier three out of four DMUs were inefficient, now three out of four are efficient. One way of thinking of returns to scale is whether doubling the inputs should be expected to result in doubling the outputs that should be achieved. Another way to think of it is whether it is fair to think of scaling up or down an efficient significantly to set a performance target for a much bigger or smaller unit. For example, would it be *fair* to compare a small convenience store such as Al's Pantry or to use a common realworld example, 7-11, to a CostCo store scaled down by a factor of a 100? Much more could be said about returns to scale.
 
-```{r DEA_VRS_Frontier_Plot, echo=FALSE, fig.margin=TRUE, fig.height=4}
+```{r DEA_VRS_Frontier_Plot, echo=FALSE, fig.margin=TRUE, fig.height=4, fig.cap="BCC (VRS) Efficiency Frontier"}
 library(Benchmarking, quietly=TRUE)
 dea.plot(x, y, RTS="vrs", ORIENTATION="in-out", 
          txt=LETTERS[1:length(x)], 
          add=FALSE, wx=NULL, wy=NULL, TRANSPOSE=FALSE, 
          fex=1, GRID=TRUE, RANGE=FALSE, param=NULL)
-```
-
-```{marginfigure}
-**Table 5.2**: BCC (VRS) Efficiency Frontier
 ```
 
 \vspace{12pt}
@@ -636,7 +614,7 @@ kable (cbind(results.efficiency, results.lambda),
         to Scale Model Results")
 ```
 
-```{r DEA_IRS_Frontier_Plot, echo=FALSE, fig.margin=TRUE, fig.height=4}
+```{r DEA_IRS_Frontier_Plot, echo=FALSE, fig.margin=TRUE, fig.height=4, fig.cap="Increasing (Non-Decreasing) Returns to Scale Efficiency Frontier"}
 library(Benchmarking, quietly=TRUE)
 dea.plot(x, y, RTS="irs", ORIENTATION="in-out", 
          txt=LETTERS[1:length(x)], 
@@ -644,20 +622,12 @@ dea.plot(x, y, RTS="irs", ORIENTATION="in-out",
          fex=1, GRID=TRUE, RANGE=FALSE, param=NULL)
 ```
 
-```{marginfigure}
-**Table 5.3**: Increasing  (Non-Decreasing) Returns to Scale Efficiency Frontier
-```
-
-```{r DEA_DRS_Frontier_Plot, echo=FALSE, fig.margin=TRUE, fig.height=4}
+```{r DEA_DRS_Frontier_Plot, echo=FALSE, fig.margin=TRUE, fig.height=4, fig.cap="Decreasing  (Non-Increasing) Returns to Scale Efficiency Frontier"}
 library(Benchmarking, quietly=TRUE)
 dea.plot(x, y, RTS="drs", ORIENTATION="in-out", 
          txt=LETTERS[1:length(x)], 
          add=FALSE, wx=NULL, wy=NULL, TRANSPOSE=FALSE, 
          fex=1, GRID=TRUE, RANGE=FALSE, param=NULL)
-```
-
-```{marginfigure}
-**Table 5.4**: Decreasing  (Non-Increasing) Returns to Scale Efficiency Frontier
 ```
 
 ```{r Compare_RTS_Results}
@@ -841,15 +811,12 @@ kable(cbind(UTT_CCR.Res[,1, drop=FALSE],
          "Comparison of CRS vs. VRS Efficiency Scores")
 ```
 
-```{marginfigure}
-**Hint**: drop=FALSE in the subsetting of UTT_CCR.Res enables retaining the original structure of the matrix, which allows the column name to remain.  The default is drop=TRUE which simplifies the data object into a form that doesn't have a column name. 
-```
-
 A few takeaways from these results: \vspace{12pt}
 
 -   Switching from CRS to VRS will never hurt the efficiency of a DMU. From an optimization perspective, think of this as adding a constraint which will increase or leave unchanged the objective function value from a minimization linear program.
 -   Another way to view the impact of adding a returns to scale assumption is that this makes it *easier* for a DMU to find some way of being *best* or efficient. They can do this by now having the largest of any output or the smallest of input as well as many other ways.
--   At a simple level, the CCR (CRS) efficiency score can be thought of as a combination of how efficient someone is considering their operational and size efficiency. The BCC (VRS) efficiency is how efficient they are given their current operating size.\vspace{12pt}
+-   At a simple level, the CCR (CRS) efficiency score can be thought of as a combination of how efficient someone is considering their operational and size efficiency. The BCC (VRS) efficiency is how efficient they are given their current operating size.
+-   The use of `drop=FALSE` in the subsetting of UTT_CCR.Res enables retaining the original structure of the matrix, which allows the column name to remain.  The default is drop=TRUE which simplifies the data object into a form that doesn't have a column name. \vspace{12pt}
 
 ## Extracting Multiplier Weights from Sensitivity Analysis
 
@@ -1091,11 +1058,7 @@ It is always critical to bring solid application expertise to any DEA study in a
 
 There is no detailed statistical test for the validity of a DEA model and results. This means that there is greater responsibility on the analyst to ensure that a meaningful model was built and appropriate model options were used.
 
-Lastly, it is always helpful to look to the literature. With over 10,000 published DEA papers since 1977, you can almost always find a paper in the same or similar application area. Look at the authors' choices of inputs and output as well as the particulars of the DEA model being used. This can serve as a starting point for building an even better paper.
-
-```{marginfigure}
-A recent presentation at a major international conference highlights that previous studies are not always great examples.  The authors conducted a benchmarking study of hospitals. The inputs were relatively traditional such as number of nurses and hospital beds.  Outputs included traditional measures such as the number of patients served but one output was unique, *number of deaths* - yes, the route to efficiency for inefficient hospitals was to increase the number of deaths!
-```
+Lastly, it is always helpful to look to the literature. With over 10,000 published DEA papers since 1977, you can almost always find a paper in the same or similar application area. Look at the authors' choices of inputs and output as well as the particulars of the DEA model being used. This can serve as a starting point for building an even better paper.  Having said that, just because a paper or presentation uses a particular input-output model doesn't mean that it is a good model.  A recent presentation at a major international conference highlights that previous studies are not always great examples.  The authors conducted a benchmarking study of hospitals. The inputs were relatively traditional such as number of nurses and hospital beds.  Outputs included traditional measures such as the number of patients served but one output was unique, *number of deaths* - yes, the route to efficiency for inefficient hospitals was to increase the number of deaths!
 
 ## Further Reading
 
