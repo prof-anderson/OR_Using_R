@@ -432,21 +432,21 @@ for (k in 1:ND) {
 
 Success! This indicates each of the four linear programs was solved to optimality. By itself, it doesn't help much though. We need to now display each column of results. Lambda, $\lambda$, reflects the way that a best target is made for that unit.
 
-```{r Display_Envelopment_Results}
+```{r Display_Envelopment_Results, results='asis'}
 Lambdanames <- list("$\\lambda_A$", "$\\lambda_B$", 
                     "$\\lambda_C$", "$\\lambda_D$")
 DMUnames <- list("A", "B", "C", "D")
 dimnames(results.efficiency)<-list(DMUnames,"CCR-IO")
 eff.crs <- results.efficiency
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
-kable (cbind(results.efficiency, results.lambda),
+pander (cbind(results.efficiency, results.lambda),
         caption="Input-Oriented Efficiency Results")
 ```
 
 Next, let's demonstrate the use of a small helper function, `poscol` from the `TRA` package. The `poscol` function simply filters out any column of all zero. For standard DEA models, the columns for inefficient DMUs will be zero. The result is that if only 10% of DMUs are efficient, 90% of the columns are zero and not informative. This function does a simple filter of the columns to eliminate those that are zero. This simple function was developed with the assistance of Chester Ismay [@ismay2019].
 
 ```{r, echo=FALSE}
-kable(cbind(results.efficiency, poscol(results.lambda)), 
+pander(cbind(results.efficiency, poscol(results.lambda)), 
        caption=
 "Results with Inefficient DMU Columns Removed.")
 ```
@@ -508,7 +508,7 @@ result <- solve_model(result, with_ROI (solver = "glpk"))
 dimnames(results.efficiency)<-list(DMUnames,"BCC-IO")
 eff.vrs <- results.efficiency
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
-kable (cbind(results.efficiency, results.lambda), 
+pander (cbind(results.efficiency, results.lambda), 
         caption="Input-Oriented VRS Envelopment Results")
 ```
 
@@ -568,7 +568,7 @@ result <- solve_model(result, with_ROI(solver = "glpk"))
 dimnames(results.efficiency)<-list(DMUnames,"DRS-IO")
 eff.drs <- results.efficiency
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
-kable (cbind(results.efficiency, results.lambda), 
+pander (cbind(results.efficiency, results.lambda), 
         caption="Input-Oriented Model with  
         Decreasing Returns to Scale")
 ```
@@ -609,7 +609,7 @@ DMUnames <- list("A", "B", "C", "D")
 dimnames(results.efficiency)<-list(DMUnames,"IRS-IO")
 eff.irs <- results.efficiency
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
-kable (cbind(results.efficiency, results.lambda), 
+pander (cbind(results.efficiency, results.lambda), 
         caption="Input-Oriented Increasing Returns 
         to Scale Model Results")
 ```
@@ -631,7 +631,7 @@ dea.plot(x, y, RTS="drs", ORIENTATION="in-out",
 ```
 
 ```{r Compare_RTS_Results}
-kable(cbind(eff.crs, eff.vrs, eff.drs, eff.irs), 
+pander(cbind(eff.crs, eff.vrs, eff.drs, eff.irs), 
        caption="Comparison of Efficiency under 
        Alternate Returns to Scale Assumptions")
 ```
@@ -664,7 +664,7 @@ utt2007 <- univ_lic_2007 [1:25,]
 utt2007 <- utt2007 [,-5]   
            # Drop the fifth column (Patents Filed)
 
-kable (head(utt2007),
+pander (head(utt2007),
         caption="Simplified data for University Technology Transfer")
 ```
 
@@ -710,7 +710,7 @@ DMUnames_printable <- as.matrix(utt2007[,1])
 As usual, let's preview the data.\vspace{12pt}
 
 ```{r}
-kable(head(cbind(xdata,ydata)), 
+pander(head(cbind(xdata,ydata)), 
        caption="Selected university technology transfer characteristics from 2004.")
 
 ```
@@ -757,7 +757,7 @@ for (k in 1:ND) {
 ```
 
 ```{r full-table, fig.fullwidth=TRUE}
-kable (cbind(res.efficiency, poscol(res.lambda)), 
+pander (cbind(res.efficiency, poscol(res.lambda)), 
         caption="Results from University Technology Transfer Example (CRS)", 
         digits=6)
 UTT_CCR.Res<-cbind(res.efficiency, res.lambda)
@@ -805,7 +805,7 @@ colnames(UTT_BCC.Res)[1] <- "BCC-IO"
 ```
 
 ```{r Compare_CRS_to_VRS, fig.fullwidth = TRUE}
-kable(cbind(UTT_CCR.Res[,1, drop=FALSE],
+pander(cbind(UTT_CCR.Res[,1, drop=FALSE],
              UTT_BCC.Res), digits=6,
        caption=
          "Comparison of CRS vs. VRS Efficiency Scores")
@@ -843,7 +843,7 @@ res.vweight[k,] <- -1*rduals[1:NX]
 res.uweight[k,] <- rduals[(NX+1):(NX+NY)]
    # Extract next NY row duals, assuming output 
    #    constraints follow inputs 
-kable(c(res.vweight[k,],res.uweight[k,]),
+pander(c(res.vweight[k,],res.uweight[k,]),
        caption="Input and output weights for last DMU")
 ```
 
@@ -890,7 +890,7 @@ for (k in 1:ND) {
       # Extract next NY row duals 
       #   Assumes output constraints follow inputs 
     }
-kable (cbind(res.efficiency, res.vweight, 
+pander (cbind(res.efficiency, res.vweight, 
               res.uweight),digits=6, 
         caption="Multiplier Weights from UTT Example")
 ```
@@ -1015,10 +1015,10 @@ for (k in 1:ND) {
 
 #pander(head(cbind(res.efficiency,poscol(res.lambda[1:25,]))), 
 #       round=4, caption="Selected Input-oriented Efficiency Results with Slack Maximization")
-kable(head(cbind(res.efficiency,poscol(res.lambda[1:25,]))),
+pander(head(cbind(res.efficiency,poscol(res.lambda[1:25,]))),
       caption="Selected Input-oriented Efficiency Results with Slack Maximization",
       format="latex", booktabs=TRUE)%>%
-  kable_styling(latex_options="scale_down")
+  pander_styling(latex_options="scale_down")
 ```
 
 ## DEA Packages
