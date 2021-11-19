@@ -60,7 +60,7 @@ $$
 
 The implementation that we did earlier for production planning was straightforward.
 
-```{r Base3VarModel, fig.margin=TRUE,fig.width=7}
+```{r Base3VarModelA, fig.margin=TRUE,fig.width=7}
 Base3VarModel <- MIPModel() %>%
   add_variable(Ants, type = "continuous", lb = 0) %>%
   add_variable(Bats, type = "continuous",lb = 0) %>%

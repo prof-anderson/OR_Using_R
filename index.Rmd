@@ -1,19 +1,21 @@
----
+--- 
 title: "Optimization Modeling Using R"
 author: "Timothy R. Anderson"
 date: "`r Sys.Date()`"
-output: pdf_document
-cover-image: images/Book_Cover-Optimization_Modeling_Using_R.png
-description: This book introduces optimization using R. The current focus is on linear
-  and mixed integer programming but may expand in the future.  It does not presume
-  R fluency and teaches some R along the way but does not aim to fully teach R.
+documentclass: krantz
+bibliography: [book.bib, packages.bib, Master4Bookdowns.bib]
+biblio-style: apalike
+link-citations: yes
+colorlinks: yes
+lot: yes
+lof: yes
 site: bookdown::bookdown_site
-monofont: Times New Roman
-highlight: monochrome
-documentclass: book
-bibliography: Master4Bookdowns.bib
+description: "This book introduces optimization using R."
 github-repo: prof-anderson/OR_Using_R
 suppress-bibliography: true
+graphics: yes
+highlight: monochrome
+#cover-image: images/Book_Cover-Optimization_Modeling_Using_R.png
 ---
 
 # Preface {-}

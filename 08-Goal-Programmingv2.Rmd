@@ -88,7 +88,7 @@ $$
   \end{split}
 $$
 
-```{r StdModel, echo=TRUE}
+```{r HomeModel, echo=TRUE}
 Home1Model <- MIPModel() %>%
  # To avoid name space conflicts, using a prefix of V
  #    for ompr variables.
@@ -273,14 +273,14 @@ Let's show the full R implementation of our minimax model.
 Home5Model <- MIPModel() %>%
  # To avoid name space conflicts, using a prefix of V
  #    for ompr variables.
-  add_variable(Q,  type = "continuous") %>%
+  add_variable(VQ,  type = "continuous") %>%
   add_variable(VH, type = "integer", lb = 0) %>%
   add_variable(VR, type = "integer",lb = 0) %>%
   add_variable(Vd1, type = "continuous",lb = 0) %>%
   add_variable(Vd2, type = "continuous",lb = 0) %>%
-  set_objective(Q ,"min") %>%
-  add_constraint(Q>=Vd1/T1) %>%
-  add_constraint(Q>=Vd2/T2) %>%
+  set_objective(VQ ,"min") %>%
+  add_constraint(VQ>=Vd1/T1) %>%
+  add_constraint(VQ>=Vd2/T2) %>%
   add_constraint(1.1*VH + 2.25*VR + Vd1 == T1) %>%
   add_constraint(0.1*VH + 0.9*VR + Vd2 == T2) %>%
   add_constraint(10*VH + 25*VR <= 1000) %>% 

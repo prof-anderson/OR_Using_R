@@ -205,7 +205,7 @@ fixedcost <- round(rnorm(m, mean = grid_size * 10,
 
 The fixed costs to set up a warehouse are the following:
 
-```{r Fixedcost-histogram, fig.margin=TRUE, fig.height=3}
+```{r Fixedcost-histogram, fig.height=3}
 hist(fixedcost, main="Fixed Costs of Warehouses", 
      xlab="Cost")
 ```
@@ -235,7 +235,7 @@ transportcost(1, 3)
 
 We could look at a sample of the customer location data.
 
-```{r Customer_Location, fig.margin=TRUE}
+```{r Customer_Location}
 pander(head(customer_locations), 
        caption="Locations of First Six Customers")
 ```
@@ -827,7 +827,7 @@ This of course does not mean that `glpk` is better than the others but is intere
 The spikes in downloads could be driven by other packages that use this particular solver, visibility from vignettes, courses, other publications, or package updates.
 \vspace{12pt}
 
-```{r package_download_stats, fig.width=10, fig.height=6, fig.margin=TRUE}
+```{r package_download_stats, fig.width=10, fig.height=6}
 pkg_dl_data <- cran_stats(packages = c("ompr"))
 ggplot(pkg_dl_data, aes(end, downloads, group=package, 
                         color=package)) +
@@ -857,7 +857,7 @@ set.seed(1234)
 game1<-makeGame()
 ```
 
-```{r First_Sudoku, echo=FALSE, fig.margin=TRUE, fig.height=4}
+```{r First_Sudoku, echo=FALSE, fig.height=4}
 plot(game1)
 ```
 
@@ -1041,7 +1041,6 @@ Solution <- Sudoku_result %>%
 
 If you want to solve a specific Sudoku you can fix certain cells to specific values.
 For example here we solve a Sudoku that has the sequence from 1 to 9 in the first 3x3 matrix fixed.
-\vspace{12pt}
 
 ```{r Enter_specific_puzzle}
 Sudoku_model_specific <- Sudoku_model %>% 
@@ -1067,12 +1066,17 @@ Solution_specific <- Sudoku_result_specific %>%
   select(i, j, k) %>% 
   tidyr::spread(j, k) %>% 
   select(-i) 
-Solution_specific   # Display solution to Sudoku Puzzle
 ```
+
+```{r}
+pander(Solution_specific)   # Display solution to Sudoku Puzzle
+
+```
+
 
 Now, let's try printing it nicely using the `sudokuAlt` package from Bill Venables, available from CRAN.
 
-```{r printing_sudoku_solution_margin, echo=TRUE, fig.margin=TRUE, fig.height=4}
+```{r printing_sudoku_solution_margin, echo=TRUE, fig.height=4}
 plot(as.sudoku(as.matrix(Solution_specific, colGame="grey")))
 ```
 
@@ -1205,7 +1209,7 @@ Find a Sudoku puzzle from a newspaper or elsewhere and solve it using optimizati
 
 Solve the Sudoku problem from the beginning of this section.
 
-```{r First_Sudoku-exercise, echo=FALSE, fig.margin=TRUE, fig.height=4}
+```{r First_Sudoku-exercise, echo=FALSE, fig.height=4}
 plot(game1)
 ```
 
@@ -1235,7 +1239,7 @@ Add a digit one at a time to an existing Sudoku puzzle board that does not immed
 **Ultra-Challenge:** Solver the 16 letter Sudoku puzzle using R.
 It consists of 4x4 grids and uses the letters starting with A in place of numbers.
 
-```{r Sudoku_exercise_4x4, fig.margin=TRUE, echo=FALSE, fig.height=4}
+```{r Sudoku_exercise_4x4, echo=FALSE, fig.height=4}
 set.seed(1234); plot(makeGame(n=4))
 ```
 

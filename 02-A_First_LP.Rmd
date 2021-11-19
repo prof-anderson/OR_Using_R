@@ -1,6 +1,3 @@
----
----
----
 
 # Introduction to Linear Programming
 
@@ -441,7 +438,7 @@ print(get_solution(result0, Ants))
 print(get_solution(result0, Bats))
 ```
 
-In summary, our optimal production plan is to make a mix of Ant and Bat robot models. More specifically, should produce `r get_solution(result0, Ants)` Ants and `r get_solution(result0, Bats)` Bats to generate a total profit of `r objective_value(result0)`. Given the situation, this is the optimal or most profitable possible production plan.
+In summary, our optimal production plan is to make a mix of Ant and Bat robot models. More specifically, should produce `r ompr::get_solution(result0, Ants)` Ants and `r ompr::get_solution(result0, Bats)` Bats to generate a total profit of `r ompr::objective_value(result0)`. Given the situation, this is the optimal or most profitable possible production plan.
 
 ## Adding a Third Product (Variable)
 

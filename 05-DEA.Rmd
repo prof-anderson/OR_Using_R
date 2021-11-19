@@ -514,7 +514,7 @@ pander (cbind(results.efficiency, results.lambda),
 
 Notice that the efficiencies have generally increased or stayed the same. Whereas earlier three out of four DMUs were inefficient, now three out of four are efficient. One way of thinking of returns to scale is whether doubling the inputs should be expected to result in doubling the outputs that should be achieved. Another way to think of it is whether it is fair to think of scaling up or down an efficient significantly to set a performance target for a much bigger or smaller unit. For example, would it be *fair* to compare a small convenience store such as Al's Pantry or to use a common realworld example, 7-11, to a CostCo store scaled down by a factor of a 100? Much more could be said about returns to scale.
 
-```{r DEA_VRS_Frontier_Plot, echo=FALSE, fig.margin=TRUE, fig.height=4, fig.cap="BCC (VRS) Efficiency Frontier"}
+```{r DEA_VRS_Frontier_Plot, echo=FALSE, fig.margin=TRUE, fig.cap="BCC (VRS) Efficiency Frontier"}
 library(Benchmarking, quietly=TRUE)
 dea.plot(x, y, RTS="vrs", ORIENTATION="in-out", 
          txt=LETTERS[1:length(x)], 
