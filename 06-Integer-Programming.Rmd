@@ -837,7 +837,7 @@ Therefore, we can safely use a Big M value for $w_2$ of $M_2=400$. \vspace{12pt}
 
 Again we can follow the same process for $w_3$ to find a small Big M value.
 
-$$w_3 \leq min \{ \frac{1000}{3}, \frac{2000}{2}, \frac{1000}{1}, \frac{1500}{1}, 750 \}=333.3$$ \vspace{12pt} Since the Big M value is setting a lower bound, in this way, we can round up from 333.33 to 334. Our updated model with "Big M":
+$$w_3 \leq min \{ \frac{1000}{3}, \frac{2000}{2}, \frac{1000}{1}, \frac{1500}{1}, 750 \}=333.33$$ \vspace{12pt} Since the Big M value is setting a lower bound, in this way, we can round up from 333.33 to 334. Our updated model with "Big M":
 
 $$
  \begin{split}
@@ -870,7 +870,7 @@ fc_bigM_model <- add_constraint(fc_base_model,
               # W1's Big M linking constraint 
  add_constraint(Vw2 - 400*Vy2 <= 0) %>%  
               # W2's Big M linking constraint 
- add_constraint(Vw3 - 250*Vy3 <= 0)  
+ add_constraint(Vw3 - 334*Vy3 <= 0)  
               # W3's Big M linking constraint
   
 fc_bigM_res <- solve_model(fc_bigM_model, 
