@@ -1073,7 +1073,6 @@ pander(Solution_specific)   # Display solution to Sudoku Puzzle
 
 ```
 
-
 Now, let's try printing it nicely using the `sudokuAlt` package from Bill Venables, available from CRAN.
 
 ```{r printing_sudoku_solution_margin, echo=TRUE, fig.height=4}
@@ -1371,3 +1370,55 @@ prores$status
 prores$objective_value
 prores$solution
 ```
+
+## Additional Exercises
+
+**Exercise 7.15** (Production Planning) Antenna Engineering has received an order for a key component of 5G base stations from a major telecommunications company.
+They must provide 250 products and they have 6 machines that can be used to produce these products.
+The machines have differing characteristics described in the following table.
+
+| Machine | Fixed Cost | Variable Cost | Capacity |     |     |
+|--------:|:----------:|:-------------:|:--------:|:---:|:---:|
+|       1 |    100     |      2.1      |    50    |     |     |
+|       2 |     95     |      2.3      |    60    |     |     |
+|       3 |     87     |      2.5      |    75    |     |     |
+|       4 |     85     |      2.4      |    40    |     |     |
+|       5 |     80     |      2.0      |    60    |     |     |
+|       6 |     70     |      2.6      |    80    |     |     |
+
+The goal is to develop a production plan at the lowest possible cost.
+
+Formulate an explicit mathematical optimization model for this problem using LaTeX in RMarkdown.
+
+Implement and solve your optimization model using ompr.
+
+Interpret the solution to the problem.
+
+Create your own unique variation.
+
+Create your own variation of the above problem by adding a logical relationship between machines that changes the solution.
+Explain the modification in terms of the application, implement the change in the model, solve the revised model.
+Compare and discuss your solution with respect to the original solution.
+
+Create a generalized algebraic model in LaTeX, implement in ompr, and solve.
+Compare results to the explicit model.
+
+\*\*Exercise 7.16\*\* (Warehouse Optimization)
+
+> The warehouse optimization example in chapter 7 had a solution resulting in three warehouses.
+> Assume that you had been responsible for creating the plan and presented the recommendation to the Vice President of Supply Chain Management who stated that they don't want to pay for the construction of three warehouses.
+> It should be at most two warehouses.
+> Without changing the model and only relying on the information from the book, give your quick response as to how this would affect the solution.
+> Assume that the VP is unfamiliar with optimization.
+
+Explain your answer in operations research terms
+
+> Another employee familiar with optimization overhears your conversation with the VP.
+> Explain your answer succinctly in optimization terms.
+
+Write the constraint(s) to reflect the VP's suggestion.
+
+> Write the LaTeX constraint(s) in terms of variables and/or data from the warehouse example in Chapter 7.
+> Explain in your own words how the constraint(s) implement the suggestion modification.
+
+Challenge: Solve the revised problem.

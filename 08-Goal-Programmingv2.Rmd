@@ -548,3 +548,16 @@ This application and model can be adjusted to fit a wide variety of other situat
 * Incorporating a secondary goal of finishing the mailing in as few weeks as possible.
 * Applying this approach to other applications such as assigning customers to salespeople.
 
+
+## Exercises
+
+**Exercise 8.1** (Extending State Mailing) 
+The mailing by state example in chapter 8 is just another example of mixed integer programming.
+
+Write the optimization model using LaTeX to ensure that no week has more than 8 states assigned to the week.
+
+Write a constraint or set of constraints using LaTeX that would ensure state 3 is done before state 7.
+
+Write a constraint or set of constraints to ensure that state 9 and 24 are done in the same week.
+
+Given the minimax objective function, how do you think the above requirements will affect the solution in terms of an objective function and characteristics of managerial interest?

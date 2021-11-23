@@ -6,10 +6,8 @@
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = F)
 knitr::opts_chunk$set(cache = TRUE)
-library(tufte)
-library(tint)
 library(knitr)
-library(pander)
+library(kableExtra)
 ```
 
 ## What is Operations Research
@@ -65,9 +63,7 @@ As time has gone by, R has developed robust toolsets such as RStudio making it m
 
 As should be expected, new tools continue to arise. In particular, Julia is a new, modern language developed around numerical analysis. Industry adoption of Julia is far behind R and Python given their head start of multiple decades. Even if Julia or some other environment does someday become more popular, skills developed using R will be readily transferable and provide an excellent foundation for learning new languages. \vspace{12pt}
 
-```{marginfigure}
 A PhD student that I knew was preparing for his final defense and did a practice presentation with his advisor and a professor. He was proud of a well polished 250 page thesis with dozens of tables of numerical results. The analysis included dozens of regressions, all with similar form and dependent variables. The professor asked him why his dependent variables was the number of projects rather than projects per year. The student thought for a moment and realized that all of his analysis needed to be redone. This would take days or weeks if he had used a GUI based tool. Using R he did a search and replace for the dependent variable, cross-checked results, and met the next day to update that professor and his advisor of the new (and much better!) results. He successfully defended his thesis a couple weeks later.
-```
 
 ## Conventions Used in this Book
 
@@ -159,10 +155,10 @@ Let's confirm that it works. \vspace{12pt}
 b
 ```
 
-This table is still not that "nice" looking. Let's use a package that does a nicer job of formatting tables. To do this, we will use an extra package. Up to this point, everything that we have done just simply uses standard built in functions of R. The package that we will use is `pander` but there are plenty of others available such as `pander`, `kable`, `xtable`, and `huxtable`. Let's start by loading the package. \vspace{12pt}
+This table is still not that "nice" looking. Let's use a package that does a nicer job of formatting tables. To do this, we will use an extra package. Up to this point, everything that we have done just simply uses standard built in functions of R. The package that we will use is `pander` but there are plenty of others available such as `pander`, `kable`, `xtable`, and `huxtable`.  Let's start by loading the package. \vspace{12pt}
 
 ```{r Loading_a_Package}
-library (pander)
+library (kableExtra)
 ```
 
 If R indicates that you don't have the `pander` package installed on your computer, you can press the "Install" command under the Packages tab and then type in pander or use the `install.packages` command.
@@ -170,12 +166,6 @@ If R indicates that you don't have the `pander` package installed on your comput
 \vspace{12pt}
 
 Notice the hash symbol is used to mark comment in the above code chunk. It is also used to "comment out" a command that I don't need to use at the current time. Using comments to explain what a command is doing can be helpful to anyone that needs to revisit your code in the future, including yourself! \vspace{12pt}
-
-```{marginfigure}
-**pander**: Provides a number of user-level functions to work with tables.
-```
-
-Now, we have several options to draw a table. We could use the `kable` , `grid.table`, `huxtable`, `dt`, or many others but for now we'll use one of the simplest and most common table packages, `pander` .\^\[The `tufte` package in R does not deal well with complicated material in the margin. Yihui Xie, the author of `Bookdown` and many packages recommends avoiding using things such as bulleted lists in marginfigures. The only way that I have found to place tables in marginfigures reliably is `grid.table` in the `gridExtra` package.\]
 
 ```{r Using_pander, fig.margin=TRUE}
 pander(b)
