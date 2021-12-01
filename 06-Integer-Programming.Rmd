@@ -12,12 +12,9 @@ suppressPackageStartupMessages(library(ROI))
 suppressPackageStartupMessages(library(ROI.plugin.glpk))
 suppressPackageStartupMessages(library(ompr))
 suppressPackageStartupMessages(library(ompr.roi))
-suppressPackageStartupMessages(library(pander))    # Used for nice tables
-library (tint)
-library (tufte)
 library (knitr)
 library (png)
-library (gridExtra)
+library (kableExtra)
 library (TRA)
 ```
 
@@ -37,8 +34,7 @@ Unfortunately, there is no such thing as a free lunch-adding integrality can mak
 
 Let's revisit the earlier example of producing drones with one additional hour in assembly as we did in Chapter 4. As a reminder, the LP is the same three variable case we have been using with a change of 901 instead of 900 for the second constraint's right hand side.
 
-```{marginfigure}
-$$
+```{$$}
  \begin{split}
  \begin{aligned}
     \text{Max  }   & 7\cdot Ants +12 \cdot Bats +5\cdot Cats \\
@@ -60,7 +56,7 @@ $$
 
 We use the following implementation.
 
-```{r base_case_3varB}
+```{r base-case-3varB}
 model1 <- MIPModel() %>%
   add_variable(Ants, type = "continuous", lb = 0) %>%
   add_variable(Bats, type = "continuous",lb = 0) %>%
@@ -82,9 +78,7 @@ result1 <-  solve_model(model1, with_ROI(solver="glpk"))
 inc_as_res <- cbind (result1$objective_value, 
                      t(result1$solution))
 colnames(inc_as_res)<-c("Profit", "Ants", "Bats", "Cats")
-#grid.table(format(inc_as_res,digits=6))
-panderOptions('knitr.auto.asis', FALSE)
-pander(inc_as_res, digits=6,
+kbl (inc_as_res, digits=6, booktabs=T,
        caption="Production Plan with Continuous Variables")
 ```
 
@@ -148,11 +142,7 @@ rownames(temp1)<-c("Continuous", "Integer")
 ```
 
 ```{r, fig.margin=TRUE}
-grid.table(temp1)
-```
-
-```{marginfigure}
-**Table 4.3**: Production plans with an additional assembly hour based on variable type.
+kbl (temp1, booktabs=T, caption="Production plans with an additional assembly hour based on variable type.")
 ```
 
 Notice that in this case, there was a small adjustment to the production plan and a small decrease to the optimal objective function value. This is not always the case, sometimes the result can be unchanged. In other cases, it may be changed in a very large way. In still others, the problem may in fact even become infeasible. \vspace{12pt}
@@ -222,8 +212,9 @@ x2  <- get_solution (IPSoln, 'Vx2')
   acme_res_ip  <- cbind(x1,x2,obj_val)
 colnames(acme_res_ip) <- list("x1", "x2", "Profit")
 rownames(acme_res_ip) <- "IP Solution"
-pander(rbind(acme_res_lp,acme_res_ip),
-       caption="Production Plan-Continuous vs. Integer")
+kbl (rbind(acme_res_lp,acme_res_ip),
+     booktabs=T, caption=
+       "Production Plan-Continuous vs. Integer")
 ```
 
 ```{r Fig-LP_Feasible_Region, echo=FALSE, fig.margin=TRUE, out.width="2in"}
@@ -269,12 +260,11 @@ $$
 This is a problem that we **can** solve using linear programming so let's go ahead do it! Well, we already did so let's just review the results for what is now called the LP Relaxation because we are *relaxing* the integrality requirements. \vspace{12pt}
 
 ```{r SolveLPRelaxation}
-pander(acme_res_lp,
-       caption="Acme's Production Plan based 
-       on the LP Relaxation")
+kbl (acme_res_lp, booktabs=T, 
+     caption="Acme's Production Plan based on the LP Relaxation")
 ```
 
-```{r Fig-LP_Relaxation, echo=FALSE, fig.margin=TRUE, out.width="2in"}
+```{r Fig-LPRelaxation, echo=FALSE, fig.margin=TRUE, out.width="2in"}
 knitr::include_graphics("images/Fig06-3-LP_Relaxation.PNG")
 
 ```
@@ -303,7 +293,9 @@ $$
   \end{aligned}
   \end{split}
   (\#eq:Sub1)
-$$Since this is just a bound on the decision variable, we can implement it by just modifying the LP Relaxation's model `LPRmod` that we created earlier by redefining the \$x_1\$ variable (`Vx1`).
+$$
+
+Since this is just a bound on the decision variable, we can implement it by just modifying the LP Relaxation's model `LPRmod` that we created earlier by redefining the \$x_1\$ variable (`Vx1`).
 
 ```{r SolveLPSub1}
 LPSubI <- add_variable(LPRmod, Vx1, type = "continuous", 
@@ -316,8 +308,8 @@ x2  <- get_solution (LPSubI, 'Vx2')
 
 LPSubI_res  <- cbind(x1,x2,obj_val)
 rownames(LPSubI_res) <- ""
-pander(LPSubI_res,
-       caption="Production Plan based on Subproblem I")
+kbl (LPSubI_res, booktabs=T, 
+     caption="Production Plan based on Subproblem I")
 ```
 
 ```{r Fig-Subproblem_I, echo=FALSE, fig.margin=TRUE, out.width="2in"}
@@ -356,7 +348,7 @@ x1 <- get_solution (LPSubIII , 'Vx1')
 x2  <- get_solution (LPSubIII , 'Vx2')
 LPSubIII_res  <- cbind(x1,x2,obj_val)
 rownames(LPSubIII_res) <- ""
-pander(LPSubIII_res,
+kbl (LPSubIII_res, booktabs=T,
        caption="Production Plan based on Subproblem III")
 ```
 
@@ -384,8 +376,8 @@ x2  <- get_solution (LPSubIV , 'Vx2')
 LPSubIV_res  <- cbind(x1,x2,obj_val)
 LPSubIV$status
 rownames(LPSubIV_res) <- ""
-pander(LPSubIV_res,
-       caption=
+kbl (LPSubIV_res, booktabs=T,
+     caption=
 "Infeasible Production Plan based on Subproblem IV")
 ```
 
@@ -422,8 +414,8 @@ x2  <- get_solution (LPSubII , 'Vx2')
 LPSubII_res  <- cbind(x1,x2,obj_val)
 cat("Status of Subproblem II:",LPSubII$status)
 rownames(LPSubII_res) <- ""
-pander(LPSubII_res,
-       caption="Production Plan based on LP Subproblem II")
+kbl (LPSubII_res, booktabs=T,
+     caption="Production Plan based on LP Subproblem II")
 ```
 
 At this point, our first reaction may be to breathe deeply and do the same branch and bound off of $x_2$. On the other hand, if we step back and take note that the objective function value is 9.75, while optimal for this subproblem, it is less than what we found from a feasible, fully integer-valued solution to subproblem III. Given that adding constraints can't improve an objective function value, we can cleverly trim all branches below subproblem II.\
@@ -431,9 +423,9 @@ At this point, our first reaction may be to breathe deeply and do the same branc
 
 Given that we now no longer have any branches to explore, we can declare that we have found the optimal solution. The optimal solution can now be definitively stated to be what we found from Subproblem III.
 
-```{r create_table_subproblem_III}
-pander(LPSubIII_res,
-       caption="Acme's Optimal Production Plan 
+```{r create-table-subproblem-III}
+kbl (LPSubIII_res,
+       booktabs=T, caption="Acme's Optimal Production Plan 
        based on Subproblem III")
 ```
 
@@ -441,7 +433,7 @@ Before this, we could only say that it was feasible solution and candidate to be
 
 Let's summarize the results of the series of LPs solved. \vspace{12pt}
 
-```{r create_table_of_subproblem_results}
+```{r create-table-of-subproblem-results}
 LPSubIV_res <- c("-", "-", "Infeasible")
         # Make adjustment for misinterpretation of status
 BandB <- rbind(format(round(acme_res_lp,  3), nsmall = 3), 
@@ -452,7 +444,8 @@ BandB <- rbind(format(round(acme_res_lp,  3), nsmall = 3),
 rownames(BandB) <- list("LP Relaxation", "Subproblem I", 
                         "Subproblem III", "Subproblem IV", 
                         "Subproblem II")
-pander(BandB, caption="Branch and Bound's Sequence of LPs")
+kbl (BandB, booktabs=T, 
+     caption="Branch and Bound's Sequence of LPs")
 ```
 
 ```{r Fig-B_and_B_Summary, echo=FALSE, fig.margin=TRUE, out.width="2in"}
@@ -513,13 +506,13 @@ E)  New interconnect technology\
 
 The key data is described as follows. *NPV* is Net Present Value of the project factoring in costs. *Inv* is the capital expenditures or investment required for each project. The company has \$40 Billion in capital available to fund a portfolio of projects. Let's set up the data as matrices in R.
 
-```{r capital_budgeting_data}
+```{r capital-budgeting-data}
 I <- matrix(c(12,24,20,8, 16), ncol=1, 
             dimnames=list(LETTERS[1:5],"Inv"))
 N <- matrix(c(2.0, 3.6, 3.2, 1.6, 2.8), ncol=1,
             dimnames=list(LETTERS[1:5],"NPV"))
-pander (cbind(I,N), 
-        caption="Data for the Outtel Example")
+kbl (cbind(I,N), booktabs=T, 
+     caption="Data for the Outtel Example")
 ```
 
 These projects all carry their own expenses and engineering support. There are limits to both the capital investment and engineering resources available. To start, consider all of these project to be independent. \vspace{12pt}
@@ -552,21 +545,21 @@ Therefore, they want to ensure that at most one of the two projects can be pursu
 
 Let's start with a truth table summarizing the interaction between projects (variable values) and the "Top Chip Architects" relationship.\vspace{12pt}
 
-+-----------+-----------+---------------------------------------------+
-| Project A | Project B | Violates "Top Chip Architects" Relationship |
-|           |           |                                             |
-| $y_A$     | $y_B$     |                                             |
-+:=========:+:=========:+:===========================================:+
-| 0         | 0         | No                                          |
-+-----------+-----------+---------------------------------------------+
-| 0         | 1         | No                                          |
-+-----------+-----------+---------------------------------------------+
-| 1         | 0         | No                                          |
-+-----------+-----------+---------------------------------------------+
-| 1         | 1         | Yes                                         |
-+-----------+-----------+---------------------------------------------+
++-------------+-------------+---------------------------------------------+
+| Project A   | Project B   | Violates "Top Chip Architects" Relationship |
+|             |             |                                             |
+| $y_A$       | $y_B$       |                                             |
++:===========:+:===========:+:===========================================:+
+| 0           | 0           | No                                          |
++-------------+-------------+---------------------------------------------+
+| 0           | 1           | No                                          |
++-------------+-------------+---------------------------------------------+
+| 1           | 0           | No                                          |
++-------------+-------------+---------------------------------------------+
+| 1           | 1           | Yes                                         |
++-------------+-------------+---------------------------------------------+
 
-: Relationships between Projects A, B, and the need for Chip Architects.
+Table: Relationships between Projects A, B, and the need for Chip Architects.
 
 \vspace{12pt}
 
@@ -590,7 +583,7 @@ Outtel knows that staying aggressive in manufacturing is important in this compe
 
 **Exercise 6.6** (Solving Each Case)
 
-Solve for the base case and then show the results of just each constraint at once. Combine the results into a single pander table. Discuss the results.
+Solve for the base case and then show the results of just each constraint at once. Combine the results into a single, well-formatted table. Discuss the results.
 
 \vspace{12pt}
 
@@ -626,6 +619,8 @@ The profit for each Widget is shown below, as well as the setup costs (if you de
 | Widget 2 |  \$10  |   \$1500   |   1000   |
 | Widget 3 |  \$25  |   \$2000   |   750    |
 
+Table: Widget Characteristics.
+
 To produce each Widget, the hours required at each step of the manufacturing process are shown below. Also shown are the availability (in hours) of the equipment at each step.
 
 |        Production | Widget 1 | Widget 2 | Widget 3 | Available |
@@ -634,6 +629,8 @@ To produce each Widget, the hours required at each step of the manufacturing pro
 |         Machining |    1     |    5     |    2     |   2000    |
 |          Assembly |    2     |    1     |    1     |   1000    |
 | Quality Assurance |    3     |    2     |    1     |   1500    |
+
+Table: Widget Production Requirements.
 
 In order to develop our optimization model, we determine the objective function (goal), decision variables (decisions) and constraints (limitations). \vspace{12pt}
 
@@ -715,15 +712,16 @@ fc_base_res
 
 Let's now examine the results in more detail.
 
-```{r reviewing_base_case_results}
+```{r reviewing-base-case-results}
 fc_base_summary <- 
   cbind(fc_base_res$objective_value,
         t(as.matrix(fc_base_res$solution)))
 colnames(fc_base_summary)<-
   c("Obj Func Value", "$w_1$","$w_2$","$w_3$",
     "$y_1$","$y_2$","$y_3$")
-pander(fc_base_summary, caption = 
-         "Base Case Solution for Fixed Charge Problem")
+kbl (fc_base_summary, booktabs=T, escape=F, 
+     caption = 
+       "Base Case Solution for Fixed Charge Problem")
 ```
 
 We are producing all three products since $w_1$, $w_2$, and $w_3$ are all positive but $y_1=y_2=y_3=0$. This is a nice, very high profit situation because we are not paying for the production setups. It may not be surprising that the optimization model chooses to avoid "paying" the fixed charge for production. This is a "penalty" in the objective function. What we need is a way of connecting the amount to produce of a widget and the decision to produce any of that widget. In reality, it would be necessary to pay the 4500 setup cost bring the total profit down to 3660. Perhaps a higher profit could be found if we could streamline our product offerings!
@@ -883,7 +881,7 @@ Our model was able to find an `r {fc_bigM_res$status}` solution with an objectiv
 Interesting---the objective function value has gone down significantly.\
 Let's look this over in more detail and compare it to the results that we had when we avoided paying for setups. \vspace{12pt}
 
-```{r reviewing_bigM_case_results}
+```{r reviewing-bigM-case-results}
 fc_base_summary_rev <- fc_base_summary
 fc_base_summary_rev [1] <- fc_base_summary_rev [1] - 4500
 fc_M_summary <- cbind(fc_bigM_res$objective_value,
@@ -896,8 +894,8 @@ fc_combined_res <- rbind (fc_base_summary,
 rownames(fc_combined_res)<-c("Base Case w/o Setup", 
                              "Base Case with Setup", 
                              "Optimal Fixed Charge")
-pander(fc_combined_res, 
-       caption = "Fixed Charge Problem")
+kbl (fc_combined_res, booktabs=T,
+     caption = "Fixed Charge Problem")
 ```
 
 Notice that the the high setup costs have caused us to focus our production planning decisions. Rather than spreading ourselves across three different product lines, we are producing as many of widget 1 as we can.\
@@ -907,7 +905,7 @@ Notice that the the high setup costs have caused us to focus our production plan
 
 We can also calculate our resource usage. \vspace{12pt}
 
-```{r fixed_charge_usage}
+```{r fixed-charge-usage}
 fc_bigM_res.W1 <- get_solution(fc_bigM_res, Vw1) 
         # Extract solution value for decision variable, W1
 fc_bigM_res.W2 <- get_solution(fc_bigM_res, Vw2) 
@@ -947,11 +945,12 @@ fc_bigM_res.avail <- data.frame(
   c("1000","2000","1000","1500"))
                #print available hours for each step
 colnames(fc_bigM_res.avail) <- "Available"
-pander(cbind(rbind(fc_bigM_res.r1,fc_bigM_res.r2,
-                   fc_bigM_res.r3,fc_bigM_res.r4),
-                   fc_bigM_res.tot,
-                   fc_bigM_res.avail),
-       caption = "Manufacturing Resource Usage")
+kbl (cbind(rbind(fc_bigM_res.r1,fc_bigM_res.r2,
+                 fc_bigM_res.r3,fc_bigM_res.r4),
+                 fc_bigM_res.tot,
+                 fc_bigM_res.avail),
+     booktabs=T, caption = 
+       "Manufacturing Resource Usage")
 ```
 
 As can be seen, we used all of our Pre-processing hours, Assembly hours, and Quality Assurance hours. There is a significant amount of time available in Machining though. \vspace{12pt}

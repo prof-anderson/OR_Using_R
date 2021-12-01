@@ -17,18 +17,17 @@ library (ROI, quietly = TRUE)
 library (ROI.plugin.glpk, quietly = TRUE)
 library (ompr, quietly = TRUE)
 library (ompr.roi, quietly = TRUE)
-library (pander, quietly = TRUE)
-library (gridExtra)
+library (kableExtra, quietly = TRUE)
 library (formatR)
 ```
 
 ```{r, eval=FALSE, include=FALSE}
 library(bookdown); library(rmarkdown)
-rmarkdown::render("04-Sensitivity-Analysis.Rmd", "tufte_book2")
+rmarkdown::render("04-Sensitivity-Analysis.Rmd", "pdf_book")
 ```
 
 
-We can get a lot more than just the objective function value and the decision variable values from a solved linear program. In particular, we can potentially explore the impact of changes in constrained resources, changes in the objective function, forced changes in decision variables, and the introduction of additional decision variables.
+We can get a lot more than just the objective function value and the decision variable values from a solved linear program. In particular, we can potentially lexplore the impact of changes in constrained resources, changes in the objective function, forced changes in decision variables, and the introduction of additional decision variables.
 
 ## Base Case
 
@@ -81,11 +80,8 @@ base_case_res <- cbind(objective_value(Base3VarModel),
 colnames(base_case_res)<-list("Profit", "Ants", 
                               "Bats", "Cats")
 rownames(base_case_res)<-list("Base Case")
-grid.table(base_case_res)
-```
-
-```{marginfigure}
-**Table 4.1**: Base Case Production Plan
+kbl(base_case_res, booktabs=T,
+    caption="Base Case Production Plan")
 ```
 
 In the base case, we are producing Ants and Cats but not Bats to generate a total profit of $\$2225$.
@@ -99,17 +95,14 @@ There are many resources, some are fully used while some are not fully utilized.
 
 Let's begin by examining the row duals, also known as shadow prices.
 
-```{r rduals_3var,fig.margin=TRUE,fig.width=5}
+```{r rduals-3var,fig.margin=TRUE,fig.width=5}
 #rduals1 <-as.matrix(get_row_duals(result1), ncol=5)
 rduals1 <-as.matrix(get_row_duals(Base3VarModel))
 dimnames(rduals1)<-list(c("Machining", "Assembly", 
                           "Testing", "Sensors"), 
                           c("Row Duals"))
-grid.table(format(rduals1,digits=4))
-```
-
-```{marginfigure}
-**Table 4.2**: Shadow Prices of Constrained Resources
+kbl(format(rduals1,digits=4), booktabs=T,
+    caption="Shadow Prices of Constrained Resources")
 ```
 
 The row duals or shadow prices for testing is zero. This means that the marginal value of one additional hour of testing labor time is $\$0$. This makes sense if you examine the amount of testing time used and realize that the company is not using all of the 480 hours available. Therefore adding more testing hours certainly can't help improve the production plan.\
@@ -151,7 +144,7 @@ $$
 
 And the code is showed in the following chunk, with Table 4.3 showing the optimal model result.
 
-```{r IncAssemHrs, fig.margin=TRUE}
+```{r IncAssemHrs}
 IncAssemHrs <- MIPModel() %>%
   add_variable(Ants, type = "continuous", lb = 0) %>%
   add_variable(Bats, type = "continuous",lb = 0) %>%
@@ -176,11 +169,8 @@ colnames(inc_assem_res)<-list("Profit",
                            "Cats")
 rownames(inc_assem_res)<-list("+1 Assembly Hr")
 temp1 <- rbind(base_case_res, inc_assem_res)
-grid.table(temp1)
-```
-
-```{marginfigure}
-**Table 4.3**: Production Plan with One Additional Assembly Hour
+kbl(temp1, booktabs=T,
+    caption="Production Plan with One Additional Assembly Hour")
 ```
 
 \vspace{12pt}
@@ -243,12 +233,11 @@ colnames(inc_sensor_res)<-list("Profit",
                            "Cats")
 rownames(inc_sensor_res)<-list("Increased Sensors")
 temp2 <- rbind(base_case_res, inc_assem_res, inc_sensor_res)
-       grid.table(temp2)
+
+kbl(temp2, booktabs=T,
+    caption="Production Plan with 10,000 More Sensors.")
 ```
 
-```{marginfigure}
-**Table 4.4**: Production Plan with 10,000 More Sensors.
-```
 
 Even this massive increase of sensors does not result in any increase in profit or change the production plan.
 
@@ -264,32 +253,26 @@ Let's start by examining the Ants. The reduced cost for *Ants* is the per unit m
 
 Let's extract the reduced costs from the results just as we did for the shadow prices. Note that the reduced costs are referred to as column duals in `ompr`.
 
-```{r cduals_3var, fig.margin=TRUE}
+```{r cduals-3var, fig.margin=TRUE}
 #cduals1 <-as.matrix(get_column_duals(result1), ncol=1 )
 cduals1 <-as.matrix(get_column_duals(Base3VarModel) )
 dimnames(cduals1)<-list(c("Ants", "Bats", "Cats"), 
                         c("Column Duals"))
-grid.table(format(cduals1,digits=4))
-```
-
-```{marginfigure}
-**Table 4.5**: Reduced Costs of Variables
+kbl(format(cduals1,digits=4), booktabs=T,
+    caption="Reduced Costs of Variables")
 ```
 
 These results are interesting. The reduced costs of variables that are between simple upper and lower bounds will be zero. Again, the reduced cost of a variable is the difference between the value of the resources consumed by the product and the value of the product in the objective function. All of our product's variables have simple lower bounds of zero and no upper bounds. Ants and Cats have zero reduced cost while Bats have a negative reduced cost. Let's see if this is consistent with the interpretation of reduced costs.
 
 Let's start by examining the shadow prices of the resources along with the number of each resource used in the production of a single Ant.
 
-```{r Shadow_Price_Single_Ant, fig.margin=TRUE}
+```{r Shadow-Price-Single-Ant, fig.margin=TRUE}
 ant_res_used<-cbind(rduals1,c(1,3,2,2))
 colnames(ant_res_used)<-c("Row Duals", "Resources Used")
 ant_res_used <- rbind(ant_res_used,
                       c("TOTAL",t(rduals1)%*%c(1,3,2,2)))
-grid.table(format(ant_res_used, digits=4))
-```
-
-```{marginfigure}
-**Table 4.6**: Resources Used by an Ant and shadow prices of resources
+kbl(format(ant_res_used, digits=4), booktabs=T,
+    caption="Resources Used by an Ant and shadow prices of resources")
 ```
 
 Taking the product in each row and adding them up will give the marginal value of the resources consumed by an incremental change in production of Ants. In this case, the marginal value is $1\cdot 0.25+3\cdot2.25+2\cdot0+2\cdot0=7$. Since the profit per Ant (from the objective function coefficient on Ants) is also $\$ 7$, they are in balance and the difference between them is zero which is why the reduced cost for Ants is zero. This can be thought of saying that the marginal benefit is equal to the marginal cost of a very small forced change in the value of the Ants variable. The value of the resources used in producing an Ant equals that of the profit of an Ant at the optimal solution.\
@@ -297,16 +280,13 @@ Taking the product in each row and adding them up will give the marginal value o
 
 We can repeat the same process and calculations for Cats
 
-```{r Shadow_Price_Bats,fig.margin=TRUE }
+```{r Shadow-Price-Bats,fig.margin=TRUE }
 cat_res_used<-cbind(rduals1,c(2,2,1,2))
 colnames(cat_res_used)<-c("Row Duals", "Resources Used")
 cat_res_used <- rbind(cat_res_used,
                       c("TOTAL",t(rduals1)%*%c(2,2,1,2)))
-grid.table(format(cat_res_used, digits=4))
-```
-
-```{marginfigure}
-**Table 4.7**: Resources Used by a Cat and their Shadow Prices
+kbl(format(cat_res_used, digits=4), booktabs=T,
+    caption="Resources Used by a Cat and their Shadow Prices")
 ```
 
 In this case, using the columns from Table 4.6 we can calulate the marginal value as $2\cdot 0.25+2\cdot2.25+1\cdot0+2\cdot0=5$. Since the profit per Cat (from the objective function coefficient on Cats) is also $\$ 5$, they are in balance and the difference between them is zero which is why the reduced cost for the *Cats* variable is also zero. \vspace{12pt}
@@ -317,16 +297,13 @@ The situation is more interesting for Bats. The production plan does not call fo
 
 Let's go ahead and test this interpretation by again looking at the value of the resources consumed in the production of a Bat and the amount of each resource used.
 
-```{r Shadow_Price_Bat, fig.margin=TRUE}
+```{r Shadow-Price-Bat, fig.margin=TRUE}
 bat_res_used<-cbind(rduals1,c(4,6,2,10))
 colnames(bat_res_used)<-c("Row Duals", "Resources Used")
 bat_res_used <- rbind(bat_res_used,
                       c("TOTAL",t(rduals1)%*%c(4,6,2,10)))
-grid.table(bat_res_used)
-```
-
-```{marginfigure}
-**Table 4.8**: Resources Used by a Bat and their Shadow Prices
+kbl(bat_res_used, booktabs=T,
+    caption="Resources Used by a Bat and their Shadow Prices")
 ```
 
 Notice that the values based on shadow prices of the resources used by a Bat are $4\cdot 0.25+6\cdot2.25+2\cdot0+10\cdot0=14.5$. Alas, the profit for each Bat is just $\$12$ which means that forcing the production of a single Bat will decrease the production plan's profit by $\$12-14.5=-2.5$. In other words, the impact on the objective function is $\$-2.5$ which is the same as the reduced price of Bats.\
@@ -359,16 +336,14 @@ Bat1Model <- MIPModel() %>%
 
 Let's compare the results for the new production plan and the original base case looking at the Table 4.9.
 
-```{r Base_vs_Forced_Cat, fig.margin=TRUE}
+```{r Base-vs-Forced-Cat, fig.margin=TRUE}
 rownames(base_case_res) <- "Base Case"
 rownames(Bat1_case_res) <- "Force one Bat"
 temp3 <-rbind(base_case_res,Bat1_case_res)
-grid.table(temp3)
+kbl(temp3, booktabs=T, 
+    caption="Impact of a Forced Change in Bats")
 ```
 
-```{marginfigure}
-**Table 4.10**: Impact of a Forced Change in Bats
-```
 
 As we expected, the forced change of making one additional Bat resulted in a decrease of the overall profit from $\$2225$ to $\$2222.5$. This occurred because making one Bat meant that we had fewer of the precious, limited resources, decreasing overall profit due to limiting our possible production of Ants and Cats. \vspace{12pt}
 
@@ -380,17 +355,14 @@ Another way to view the reduced costs for Bats is to think of it as an opportuni
 
 Let's consider a design proposal for a Dog drone. The Dog has a projected profit of $\$20$ each and uses 8 hours of machining time, 12 of assembly, and 4 of testing. Each dog drone also uses 4 sensors.
 
-```{r New_Prod_with_Shadow_Prices,fig.margin=TRUE}
+```{r New-Prod-with-Shadow-Prices,fig.margin=TRUE}
 dog_res_used<-cbind(rduals1,c(8,12,4,4))
 colnames(dog_res_used)<-c("Row Duals", 
                                "Resources Used")
 dog_res_used <- rbind(dog_res_used,
                       c("TOTAL",t(rduals1)%*%c(8,12,4,4)))
-grid.table(format(dog_res_used,digits=4))
-```
-
-```{marginfigure}
-**Table 4.11**: Resources Used by a Dog and their Shadow Prices
+kbl(format(dog_res_used,digits=4), booktabs=T,
+    caption="Resources Used by a Dog and their Shadow Prices")
 ```
 
 Even without adding it to the model, we can check to see if it is worthwhile to consider seriously. The opportunity cost of producing one Dog drone would result in the $\$20-(8\cdot 0.25+12\cdot2.25+4\cdot0+4\cdot0)=-9.0$. In other words, even though a Dog drone has a much higher profit than the other products, producing one would cost the company nine dollars of overall profit in terms of the opportunity cost in lost profit of other production. \vspace{12pt}
@@ -411,6 +383,8 @@ Your company has extended production to allow for producing aquatic Eels and is 
 |        Testing |  2   |  2   |  1   |  25  |    480    |
 |         Sensor |  2   |  10  |  2   |  16  |   1200    |
 |       Painting |  1   |  1   |  1   |  12  |    500    |
+
+Table: Adding Eels
 
 a)  Use R Markdown to create your own description of the model.
 b)  Extend the R Markdown to show your LP Model. Be sure to define models.

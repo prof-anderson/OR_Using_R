@@ -337,7 +337,7 @@ prodmodel
 
 Note that the objective function has changed.
 
-```{r Examine_Results_of_Changed_Model, fig.margin=TRUE}
+```{r Examine-Results-of-Changed-Model, fig.margin=TRUE}
 results.products <- matrix (rep(-1.0,NProd), 
                             nrow = NProd, 
                             ncol=1,
@@ -351,11 +351,8 @@ results.products <- matrix (results.products,
                             ncol=NProd,
                             dimnames=c(c("x"),ProdNames))  
    # Resizes and renames
-grid.table(results.products) 
-```
-
-```{marginfigure}
-**Table 3.7**: Revised Optimal Production Plan
+kbl(results.products, booktabs=T,
+    caption="Revised Optimal Production Plan") 
 ```
 
 The table on the right displays the new Production plan and the optimal distribution of the resources.
@@ -410,7 +407,8 @@ rownames(base_case_res) <- "Amount"
 ```
 
 ```{r}
-kbl(base_case_res, booktabs=T, caption="Production Plan for Base Case")
+kbl(base_case_res, booktabs=T, 
+    caption="Production Plan for Base Case")
 ```
 
 The table on the right displays the optimal production plan for the original formulation without the limit on production of ants.
@@ -554,10 +552,6 @@ See the Formula 3.6 on the right to understand the mathematical expression.
 Consider the case of Trevor's Trail Mix Company.
 Trevor creates a variety of custom trail mixes for health food fans.
 He can use a variety of ingredients displayed in the table on the right.
-
-```{marginfigure}
-
-```
 
 \vspace{12pt}
 
@@ -785,7 +779,8 @@ Now we can display the table of optimal transportation decisions from supply poi
 \vspace{12pt}
 
 ```{r}
-grid.table (Transp)
+kbl (Transp, booktabs=T,
+     caption="Optimal Transportation Plan")
 ```
 
 \vspace{12pt}

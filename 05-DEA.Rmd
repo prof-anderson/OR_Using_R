@@ -5,8 +5,8 @@ output:
 ---
 
 ```{r, include=FALSE, eval=FALSE}
-library(bookdown); library(rmarkdown); rmarkdown::render("05-DEA.Rmd", "tufte_book2")
-# library(bookdown); library(rmarkdown); rmarkdown::render("05-DEA.Rmd", "pdf_book")
+# library(bookdown); library(rmarkdown); rmarkdown::render("05-DEA.Rmd", "tufte_book2")
+library(bookdown); library(rmarkdown); rmarkdown::render("05-DEA.Rmd", "pdf_book")
 ```
 
 # Data Envelopment Analysis
@@ -21,16 +21,11 @@ library (ROI, quietly = TRUE)
 library (ROI.plugin.glpk, quietly = TRUE)
 library (ompr, quietly = TRUE)
 library (ompr.roi, quietly = TRUE)
-library (pander, quietly = TRUE)
-library (tufte, quietly = TRUE)
-library (tint)
 library (knitr)
 library (DiagrammeRsvg, quietly=TRUE) 
 library (rsvg, quietly=TRUE) 
 library (htmltools, quietly=TRUE)
 library (kableExtra)
-library (huxtable)
-library (gridExtra)
 library (TRA) # Requires installation from github
      # DiagrammeRsvg, rsvg, htmltools are used for IO diagrams
 
@@ -62,12 +57,22 @@ Let's start by defining data. DEA applications can have multiple inputs and outp
 
 In contrast, outputs are the "good" items that are being produced by the actions of the producers. Examples of outputs might include automobiles produced, customers served, or graduating students. \vspace{12pt}
 
-Let's start by creating a simple dataset - assume that you are a regional manager of a grocery chain. You have four stores and would like to assess the performance of the store managers using number of employees, *x*, as an input and the weekly sales, *y*, as an output. The function `DrawIOdiagram` is from the `TRA` package and allows for creating a nicely formatted input-output diagram.\
+Let's start by creating a simple application - assume that you are a regional manager of a grocery chain. You have four stores and would like to assess the performance of the store managers using number of employees, *x*, as an input and the weekly sales, *y*, as an output. 
+
+As the manager responsible for the stores in the region, there are many questions that you may want answered:
+
+-   Which of these stores are the best?
+-   Which stores are laggards?
+-   For those that are underperforming, are there objective performance targets they should be able to reach?
+-   Which stores might be employing best practices that could be adopted by other stores?
+-   Among the stores that are lagging in performance, are there particular stores they should focus attention on for learning best practices?
+
+We'll start by drawing a visual representation of the input-output model. The function `DrawIOdiagram` is from the `TRA` package and allows for creating a nicely formatted input-output diagram.
 \vspace{12pt}
 
 ```{r DEA_IO_Plot1, fig.margin=TRUE, out.width="2in"}
 library (TRA) # Note, may need to install directly from github
-              # devtools::install_github("prof-anderson/TRA")
+              # remotes::install_github("prof-anderson/TRA")
 
 # fig.cap='A Simple DEA Model for Store Management'
 Figure <- DrawIOdiagram (c("Employees\n(FTE)" ), 
@@ -93,13 +98,6 @@ Note that it assumes that there is a subdirectory for images - if there isn't a 
 
 Furthermore, note that the text passed to the function such as `"Sales\n($/week)"` allows for a line return character such as `"\n"`
 
-As the manager responsible for the stores in the region, there are many questions that you may want answered:
-
--   Which of these stores are the best?
--   Which stores are laggards?
--   For those that are underperforming, are there objective performance targets they should be able to reach?
--   Which stores might be employing best practices that could be adopted by other stores?
--   Among the stores that are lagging in performance, are there particular stores they should focus attention on for learning best practices?
 
 Let's get started now with R.
 
@@ -118,11 +116,9 @@ colnames(temp)<-c("Store Name", "Employees (x)",
                   "Sales (y)")
 ```
 
-```{r first_dataset_table, fig.margin=FALSE}
-# grid.table(temp, caption="First Dataset for DEA")
-pander(temp, caption="First Dataset for DEA")
-#kable(temp, caption="First Dataset for DEA", 
-#      format="latex")
+```{r first-dataset-table}
+kbl (temp, booktabs=T, escape=F,
+     caption="First Dataset for DEA")
 ```
 
 The above commands create matrices that hold the data and have named rows and columns to match. The `<-` symbol is a key function in R and means to assign what is in the right to the object on the left. \vspace{12pt}
@@ -135,7 +131,7 @@ Can you tell which stores represent the best tradeoff between inputs and outputs
 
 Let's start by doing a simple plot of the data. For now, I'm going to make use of a function in Peter Bogetoft and Lars Otto's `Benchmarking` package [@BogetoftBenchmarkingDEASFA2013] which provides a very handy and nicely formatted two-dimensional plot in the format often used for showing production. Many of the functions in the package are also described in their book.
 
-```{r DEA_Isoquant_Plot, fig.margin=TRUE, fig.height=4}
+```{r DEA-Isoquant-Plot, fig.margin=TRUE, fig.height=4}
 library(Benchmarking, quietly=TRUE)
 dea.plot(x, y, RTS="crs", ORIENTATION="in-out", 
          txt=LETTERS[1:length(x)], 
@@ -324,7 +320,7 @@ Now that we have loaded all of the packages that we use as building blocks, we c
 
 We are going to start by building a model for just one DMU, in this case, the second DMU (B). \vspace{12pt}
 
-```{r first_ompr_model}
+```{r first-ompr-model}
 k<-2    # DMU to analyze.  
         # Let's start with just one DMU, B, for now.
 result <- MIPModel() %>%
@@ -351,12 +347,12 @@ results.lambda <- t(omprlambda[3])
    # Takes third column from results and transposes results
    #  to be structured correctly for later viewing
 colnames(results.lambda) <- 
-#  c("$\\lambda_A$", "$\\lambda_B$",
-#    "$\\lambda_C$", "$\\lambda_D$")
-   c("L_A", "L_B", "L_C", "L_D")   
-pander(cbind(results.efficiency, results.lambda), 
- caption=
-   "Input-Oriented Envelopment Analysis for DMU B (CCR-IO)")
+  c("$\\lambda_A$", "$\\lambda_B$",
+    "$\\lambda_C$", "$\\lambda_D$")
+#   c("L_A", "L_B", "L_C", "L_D")   
+kbl(cbind(results.efficiency, results.lambda),
+    booktabs=T, escape=F, caption=
+      "Input-Oriented Envelopment Analysis for DMU B (CCR IO)")
 ```
 
 The above table follows a few convenient conventions. First, rather than using $\theta$, we label the efficiency score by the model used for the model, in this case the constant returns to scale is labeled as CCR after Charnes, Cooper, and Rhodes [@RhodesDataEnvelopmentAnalysis1978]. Later we will cover other models including the variable returns to scale model, labeled BCC after Banker, Charnes, and Cooper [@banker1984].
@@ -368,7 +364,7 @@ The results in the table indicate that DMU *B* has an efficiency score of 50%. T
 
 Let's now extend it to handle multiple inputs, *NX,* and outputs, *NY.* Of course this doesn't have any impact on our results just yet since we are still only using a single input and output but we now have the structure to accommodate the more general case of DEA. To provide a little variety, we'll change it to the first DMU, A, to give a little more variety.
 
-```{r ompr_mult_IO, message=FALSE, results='asis'}
+```{r ompr-mult-IO, message=FALSE, results='asis'}
 k<-1    # Analyze first unit, DMU A.
 result <- MIPModel() %>%
   add_variable(vlambda[j], j = 1:ND, type = "continuous", 
@@ -390,15 +386,16 @@ results.lambda <- t(omprlambda[3])
 
 colnames(results.lambda) <- c("$\\lambda_A$", "$\\lambda_B$",
                               "$\\lambda_C$", "$\\lambda_D$")
-pander(cbind(results.efficiency, results.lambda),  caption=
-         "Input-Oriented Envelopment Analysis for DMU A")
+kbl(cbind(results.efficiency, results.lambda),  
+    booktabs=T, escape=F, caption=
+      "Input-Oriented Envelopment Analysis for DMU A")
 ```
 
 Again, the results match what would be expected from Figure 5.1. \vspace{12pt}
 
 Now we should extend this to handle all four of the decision making units.
 
-```{r ompr_mult_DMUs, message=FALSE}
+```{r ompr-mult-DMUs, message=FALSE}
 results.efficiency <- matrix(rep(-1.0, 1), nrow=ND, ncol=1)
 results.lambda     <- matrix(rep(-1.0, ND), nrow=ND,ncol=ND)
 for (k in 1:ND) {
@@ -432,22 +429,21 @@ for (k in 1:ND) {
 
 Success! This indicates each of the four linear programs was solved to optimality. By itself, it doesn't help much though. We need to now display each column of results. Lambda, $\lambda$, reflects the way that a best target is made for that unit.
 
-```{r Display_Envelopment_Results, results='asis'}
+```{r Display-Envelopment-Results, results='asis'}
 Lambdanames <- list("$\\lambda_A$", "$\\lambda_B$", 
                     "$\\lambda_C$", "$\\lambda_D$")
 DMUnames <- list("A", "B", "C", "D")
 dimnames(results.efficiency)<-list(DMUnames,"CCR-IO")
 eff.crs <- results.efficiency
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
-pander (cbind(results.efficiency, results.lambda),
-        caption="Input-Oriented Efficiency Results")
+kbl (cbind(results.efficiency, results.lambda),
+     booktabs=T, escape=F, caption=
+       "Input-Oriented Efficiency Results")
 ```
 
-Next, let's demonstrate the use of a small helper function, `poscol` from the `TRA` package. The `poscol` function simply filters out any column of all zero. For standard DEA models, the columns for inefficient DMUs will be zero. The result is that if only 10% of DMUs are efficient, 90% of the columns are zero and not informative. This function does a simple filter of the columns to eliminate those that are zero. This simple function was developed with the assistance of Chester Ismay [@ismay2019].
-
 ```{r, echo=FALSE}
-pander(cbind(results.efficiency, poscol(results.lambda)), 
-       caption=
+kbl(cbind(results.efficiency, poscol(results.lambda)), 
+       booktabs=T, caption=
 "Results with Inefficient DMU Columns Removed.")
 ```
 
@@ -480,7 +476,7 @@ To incorporate this, we can add another constraint to our previous model and sol
 
 The other very common returns to scale option is constant returns to scale or CRS which is what we have used up to this point. For CRS, you can delete the VRS constraint but it may be helpful in some implementations to maintain a consistent model size for reading out sensitivity information. To maintain the number of rows (constraints) we can make it a redundant constraint by constraining the sum of $\lambda$ to be greater than or equal to zero, $\sum_{j=1}^{n} \lambda_j \geq 0$ Since $\lambda$'s are by definition non-negative, the sum of $\lambda$'s is also non-negative and therefore the constraint is superfluous or redundant.
 
-```{r Adding_VRS}
+```{r Adding-VRS}
 RTS<-"VRS"
 for (k in 1:ND) {
   
@@ -508,8 +504,9 @@ result <- solve_model(result, with_ROI (solver = "glpk"))
 dimnames(results.efficiency)<-list(DMUnames,"BCC-IO")
 eff.vrs <- results.efficiency
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
-pander (cbind(results.efficiency, results.lambda), 
-        caption="Input-Oriented VRS Envelopment Results")
+kbl (cbind(results.efficiency, results.lambda),
+     booktabs=T, caption=
+       "Input-Oriented VRS Envelopment Results")
 ```
 
 Notice that the efficiencies have generally increased or stayed the same. Whereas earlier three out of four DMUs were inefficient, now three out of four are efficient. One way of thinking of returns to scale is whether doubling the inputs should be expected to result in doubling the outputs that should be achieved. Another way to think of it is whether it is fair to think of scaling up or down an efficient significantly to set a performance target for a much bigger or smaller unit. For example, would it be *fair* to compare a small convenience store such as Al's Pantry or to use a common realworld example, 7-11, to a CostCo store scaled down by a factor of a 100? Much more could be said about returns to scale.
@@ -533,9 +530,11 @@ The Constant Returns to Scale, CRS, model is often referred to in the DEA litera
 | IRS/NDRS         | $\sum_{j=1}^{N^D} \lambda_j \geq 1$ |
 | DRS/NIRS         | $\sum_{j=1}^{N^D} \lambda_j \leq 1$ |
 
+Table: Returns to Scale Envelopment Constraints
+
 Now, we will generalize this by allowing a parameter to set the returns to scale.
 
-```{r Adding_RTS}
+```{r Adding-RTS}
 RTS<-"DRS"
 for (k in 1:ND) {
   
@@ -568,12 +567,12 @@ result <- solve_model(result, with_ROI(solver = "glpk"))
 dimnames(results.efficiency)<-list(DMUnames,"DRS-IO")
 eff.drs <- results.efficiency
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
-pander (cbind(results.efficiency, results.lambda), 
-        caption="Input-Oriented Model with  
+kbl (cbind(results.efficiency, results.lambda),
+     booktabs=T, caption="Input-Oriented Model with  
         Decreasing Returns to Scale")
 ```
 
-```{r stores_IRS, echo=FALSE}
+```{r stores-IRS, echo=FALSE}
 RTS<-"IRS"
 for (k in 1:ND) {
   
@@ -609,8 +608,8 @@ DMUnames <- list("A", "B", "C", "D")
 dimnames(results.efficiency)<-list(DMUnames,"IRS-IO")
 eff.irs <- results.efficiency
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
-pander (cbind(results.efficiency, results.lambda), 
-        caption="Input-Oriented Increasing Returns 
+kbl (cbind(results.efficiency, results.lambda), 
+     booktabs=T, escape=F, caption="Input-Oriented Increasing Returns 
         to Scale Model Results")
 ```
 
@@ -630,9 +629,9 @@ dea.plot(x, y, RTS="drs", ORIENTATION="in-out",
          fex=1, GRID=TRUE, RANGE=FALSE, param=NULL)
 ```
 
-```{r Compare_RTS_Results}
-pander(cbind(eff.crs, eff.vrs, eff.drs, eff.irs), 
-       caption="Comparison of Efficiency under 
+```{r Compare-RTS-Results}
+kbl (cbind(eff.crs, eff.vrs, eff.drs, eff.irs), 
+     booktabs=T, caption="Comparison of Efficiency under 
        Alternate Returns to Scale Assumptions")
 ```
 
@@ -649,7 +648,7 @@ univ_lic_2007 <- read_csv("univ_lic_2007.csv")
 
 Next, it is always helpful to look over the dataset. The names of the columns will be long and awkward for displaying results. Let's abbreviate the names to make it more manageable.\vspace{12pt}
 
-```{r Simplify_data}
+```{r Simplify-data}
 colnames(univ_lic_2007) <- c("University", 
                              "LicInc", 
                              "LicOpt",
@@ -664,8 +663,8 @@ utt2007 <- univ_lic_2007 [1:25,]
 utt2007 <- utt2007 [,-5]   
            # Drop the fifth column (Patents Filed)
 
-pander (head(utt2007),
-        caption="Simplified data for University Technology Transfer")
+kbl (head(utt2007), booktabs=T, 
+     caption="Simplified data for University Technology Transfer")
 ```
 
 Rather than using the full dataset. We are going to simplify the data a little. First we limit it to just the first 25 universities instead of the full set of 54. Second, we will drop the measure of patents filed.
@@ -710,9 +709,9 @@ DMUnames_printable <- as.matrix(utt2007[,1])
 As usual, let's preview the data.\vspace{12pt}
 
 ```{r}
-pander(head(cbind(xdata,ydata)), 
-       caption="Selected university technology transfer characteristics from 2004.")
-
+kbl (head(cbind(xdata,ydata)), booktabs=T, 
+     caption="Selected university technology 
+     transfer characteristics from 2004.")
 ```
 
 Now, let's move on to the DEA input-output diagram. We use the total research spending as an input and then five separate outputs for the various dimensions of technology transfer success measured by AUTM. This can be visualized with our input-output diagram.\vspace{12pt}
@@ -757,9 +756,9 @@ for (k in 1:ND) {
 ```
 
 ```{r full-table, fig.fullwidth=TRUE}
-pander (cbind(res.efficiency, poscol(res.lambda)), 
-        caption="Results from University Technology Transfer Example (CRS)", 
-        digits=6)
+kbl (cbind(res.efficiency, poscol(res.lambda)),
+     booktabs=T, digits=6,
+     caption="Results from University Technology Transfer Example (CRS)")
 UTT_CCR.Res<-cbind(res.efficiency, res.lambda)
 ```
 
@@ -804,10 +803,10 @@ UTT_BCC.Res<-res.efficiency
 colnames(UTT_BCC.Res)[1] <- "BCC-IO"
 ```
 
-```{r Compare_CRS_to_VRS, fig.fullwidth = TRUE}
-pander(cbind(UTT_CCR.Res[,1, drop=FALSE],
-             UTT_BCC.Res), digits=6,
-       caption=
+```{r Compare-CRS-to-VRS, fig.fullwidth = TRUE}
+kbl (cbind(UTT_CCR.Res[,1, drop=FALSE],
+           UTT_BCC.Res), digits=6, booktabs=T,
+     caption=
          "Comparison of CRS vs. VRS Efficiency Scores")
 ```
 
@@ -822,7 +821,7 @@ A few takeaways from these results: \vspace{12pt}
 
 The following process can be used for extracting the row duals from the linear program results. This extraction is based upon knowing the structure of the model that was built. \vspace{12pt}
 
-```{r Multiplier_Weights_from_Env_Model}
+```{r Multiplier-Weights-from-Env-Model}
 res.vweight    <- matrix(rep(-1.0, ND*NX), nrow=ND,ncol=NX) 
 res.uweight    <- matrix(rep(-1.0, ND*NY), nrow=ND,ncol=NY) 
 
@@ -843,7 +842,7 @@ res.vweight[k,] <- -1*rduals[1:NX]
 res.uweight[k,] <- rduals[(NX+1):(NX+NY)]
    # Extract next NY row duals, assuming output 
    #    constraints follow inputs 
-pander(c(res.vweight[k,],res.uweight[k,]),
+kbl (c(res.vweight[k,],res.uweight[k,]), booktabs=T,
        caption="Input and output weights for last DMU")
 ```
 
@@ -853,7 +852,7 @@ These results are for just the last unit examined.\
 Let's now wrap this into the full series of linear programs so as to calculate the multiplier weights for each unit.\
 \vspace{12pt}
 
-```{r UTT_example_w_mult_weight}
+```{r UTT-example-w-mult-weight}
 RTS<-"CRS"
 for (k in 1:ND) {
   
@@ -890,8 +889,8 @@ for (k in 1:ND) {
       # Extract next NY row duals 
       #   Assumes output constraints follow inputs 
     }
-pander (cbind(res.efficiency, res.vweight, 
-              res.uweight),digits=6, 
+kbl (cbind(res.efficiency, res.vweight, 
+              res.uweight), booktabs=T, digits=6, 
         caption="Multiplier Weights from UTT Example")
 ```
 
@@ -960,7 +959,7 @@ $$
 
 Implementing this is straightforward.
 
-```{r Slack_max}
+```{r Slack-max}
 RTS<-"CRS"
 for (k in 1:ND) {
   
@@ -1015,10 +1014,9 @@ for (k in 1:ND) {
 
 #pander(head(cbind(res.efficiency,poscol(res.lambda[1:25,]))), 
 #       round=4, caption="Selected Input-oriented Efficiency Results with Slack Maximization")
-pander(head(cbind(res.efficiency,poscol(res.lambda[1:25,]))),
-      caption="Selected Input-oriented Efficiency Results with Slack Maximization",
-      format="latex", booktabs=TRUE)%>%
-  pander_styling(latex_options="scale_down")
+kbl(head(cbind(res.efficiency,poscol(res.lambda[1:25,]))),
+    booktabs=T, escape=F,
+    caption="Selected Input-oriented Efficiency Results with Slack Maximization")
 ```
 
 ## DEA Packages
@@ -1120,3 +1118,7 @@ a)  Describe the application.
 b)  Describe and justify the data including the inputs and outputs used as well as items explicitly not used.
 c)  Select an appropriate DEA model and conduct the analysis.
 d)  Discuss the results.
+
+**Exercise 5.8** (DEA Technique Choices)
+
+Choosing Inputs and Outputs:  The DEA store example in chapter 5 uses an input-output model of sales and employees.  Describe a richer input-output model that you feel would make for a better case.  Be sure to discuss tradeoffs and other DEA model choices, including how results could be used.

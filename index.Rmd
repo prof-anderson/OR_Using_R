@@ -1,9 +1,9 @@
---- 
+---
 title: "Optimization Modeling Using R"
 author: "Timothy R. Anderson"
 date: "`r Sys.Date()`"
 documentclass: krantz
-bibliography: [book.bib, packages.bib, Master4Bookdowns.bib]
+bibliography: [book.bib, bib-my-library.bib, Master4Bookdowns.bib]
 biblio-style: apalike
 link-citations: yes
 colorlinks: yes
@@ -18,69 +18,67 @@ highlight: monochrome
 #cover-image: images/Book_Cover-Optimization_Modeling_Using_R.png
 ---
 
-# Preface {-}
+# Preface {.unnumbered}
 
 This book covers using R for doing optimization, a key area of operations research, which has been applied to virtually every industry. The current focus is on linear and mixed integer optimization. In the future it may grow to include a broader range of Operations Research methods. \vspace{12pt}
 
-Pedagogically, since the late 1990s, I had been a proponent of teaching introductory optimization using spreadsheets as a way to bridge the barrier between data and applications as well as teaching better spreadsheet practices.  While this worked well, the disconnect with algebraic modeling was always a problem.  Excel add-ins enabling algebraic tools were rich but not seamless.  In 2018, I decided to switch to R for a variety of reasons:
+Pedagogically, since the late 1990s, I had been a proponent of teaching introductory optimization using spreadsheets as a way to bridge the barrier between data and applications as well as teaching better spreadsheet practices. While this worked well, the disconnect with algebraic modeling was always a problem. Excel add-ins enabling algebraic tools were rich but not seamless. In 2018, I decided to switch to R for a variety of reasons:
 
-* With the rapid rise of interest in data analytics, it became important to introduce a data analytics platform.
-* Working technology and business professionals should have an awareness of the tools and langauge of data analytis to deal with consultants, data scientists, and others.
-* New software and extensions reduced the barrier to entry for people to start using data analytics tools.
+-   With the rapid rise of interest in data analytics, it became important to introduce a data analytics platform.
+-   Working technology and business professionals should have an awareness of the tools and langauge of data analytis to deal with consultants, data scientists, and others.
+-   New software and extensions reduced the barrier to entry for people to start using data analytics tools.
 
-This book has been used multiple times for a ten week graduate course on operations research emphasizing optimization.  It can be used for graduate and undergraduate courses for people without a background in optimization and varying levels of mathematical backgrounds. The focus is on applications (formulating, implementing, and interpreting rather than algorithms.  The book could be used as a supplement in a more theoretical or algorithm-oriented class. Key principles in the development of the book include the following:
+This book has been used multiple times for a ten week graduate course on operations research emphasizing optimization. It can be used for graduate and undergraduate courses for people without a background in optimization and varying levels of mathematical backgrounds. The focus is on applications (formulating, implementing, and interpreting rather than algorithms. The book could be used as a supplement in a more theoretical or algorithm-oriented class. Key principles in the development of the book include the following:
 
-* An assumption the reader is willing to use R and getting their hands dirty with experimenting.
-* Providing and explaining code, sometimes repeated in different places so that examples are relatively clear and self-contained.
-* Creating algebraic formulations before implementing.
-* An emphasis on application rather than algorithmic details.
-* Embodying the philosophy of reproducible research - the book is regularly rebuilt with all analyses automatically rerun and most tables and figures rebuilt.
-* Contributing to the open source community - all materials are available on the author's github repository.
-* Demonstrating common debugging practices with a troubleshooting emphasis specific to optimization using R.  
-* Providing code chunks liberally that readers can adopt and adapt to their own applications.
+-   An assumption the reader is willing to use R and getting their hands dirty with experimenting.
+-   Providing and explaining code, sometimes repeated in different places so that examples are relatively clear and self-contained.
+-   Creating algebraic formulations before implementing.
+-   An emphasis on application rather than algorithmic details.
+-   Embodying the philosophy of reproducible research - the book is regularly rebuilt with all analyses automatically rerun and most tables and figures rebuilt.
+-   Contributing to the open source community - all materials are available on the author's github repository.
+-   Demonstrating common debugging practices with a troubleshooting emphasis specific to optimization using R.\
+-   Providing code chunks liberally that readers can adopt and adapt to their own applications.
 
 \vspace{12pt}
 
-I would like to thank many people for their contributions, collaborations, and assistance over the years. All errors are my fault though.  
+I would like to thank many people for their contributions, collaborations, and assistance over the years. All errors are my fault though.
 
-* **Dirk Schumacher,** author of the `ompr` package used heavily throughout this book
-* **Dr. Dong-Joon Lim,** applications and methodological work in DEA
-* **Dr. Gerry Williams,** application of DEA to construction contracting
-* **Dr. Janice Forrester,** application of DEA to the energy industry
-* **Dr. Scott Leavengood,** application of DEA to wood products
-* **Dr. Oliver (Lane) Inman,** early work on TFDEA
-* **Dr. Maoloud Dabab,** , many suggestions over time
-* **Dr. K. Louis Luangkesorn,** author of the first vignette on using `glpk` in R
-* **Dr. Chester Ismay,** contributions to the Portland and broader R community
-* **Dr. Jili Hu,** rich interactions during his sabbatical in Portland
-* **Tom Shott,** primary author of the `TFDEA` package
-* **Nina Chaichi, PhD student,** many suggestions over time
-* **Aurobindh Kalathil Kumar,** PhD student, many suggestions over time
-* **Kevin van Blommestein,** earlier DEA & R work
-* **William (Ike) Eisenhauer,** LaTeX formulation improvements
-* **Andey Nunes,** coding improvements
-* **Christopher Davis,** graphical example of LP
-* **Thanh Thuy Nguyen,** fixed charge example 
-* **Roland Richards,** converted format to Tufte-style
-* **Caroline Blackledge,** co-author of summation introduction appendix
-* **Alexander Keller,** co-author of summation introduction appendix
-* **Shahram Khorasanizadeh,** co-author of summation introduction appendix
-* **Jose Banos,** contributor of more formatting in the spirit of Tufte
-* **Jon Syverson,** frequent and thoughtful feedback on early drafts
-* **Dawei Zhang,** further editorial work on the book 
+-   **Dirk Schumacher,** author of the `ompr` package used heavily throughout this book
+-   **Dr. Dong-Joon Lim,** applications and methodological work in DEA
+-   **Dr. Gerry Williams,** application of DEA to construction contracting
+-   **Dr. Janice Forrester,** application of DEA to the energy industry
+-   **Dr. Scott Leavengood,** application of DEA to wood products
+-   **Dr. Oliver (Lane) Inman,** early work on TFDEA
+-   **Dr. Maoloud Dabab,** , many suggestions over time
+-   **Dr. K. Louis Luangkesorn,** author of the first vignette on using `glpk` in R
+-   **Dr. Chester Ismay,** contributions to the Portland and broader R community
+-   **Dr. Jili Hu,** rich interactions during his sabbatical in Portland
+-   **Tom Shott,** primary author of the `TFDEA` package
+-   **Nina Chaichi, PhD student,** many suggestions over time
+-   **Aurobindh Kalathil Kumar,** PhD student, many suggestions over time
+-   **Kevin van Blommestein,** earlier DEA & R work
+-   **William (Ike) Eisenhauer,** LaTeX formulation improvements
+-   **Andey Nunes,** coding improvements
+-   **Christopher Davis,** graphical example of LP
+-   **Thanh Thuy Nguyen,** fixed charge example
+-   **Roland Richards,** converted format to Tufte-style
+-   **Caroline Blackledge,** co-author of summation introduction appendix
+-   **Alexander Keller,** co-author of summation introduction appendix
+-   **Shahram Khorasanizadeh,** co-author of summation introduction appendix
+-   **Jose Banos,** contributor of more formatting in the spirit of Tufte
+-   **Jon Syverson,** frequent and thoughtful feedback on early drafts
+-   **Dawei Zhang,** further editorial work on the book
 
 In addition, several groups have been of tremendous help:
 
-* The Portland Meetup, R User's Group 
-* The Extreme Technology Analytics Research Group
-* Past ETM 540/640 Operations Research Group classes, particularly the Fall 2018 and Winter 2019 classes which helped test the early versions of this book.  
+-   The Portland Meetup, R User's Group
+-   The Extreme Technology Analytics Research Group
+-   Past ETM 540/640 Operations Research Group classes, particularly the Fall 2018 and Winter 2019 classes which helped test the early versions of this book.
 
-Most of all, I would like to also express my appreciation for my family's patience while working on this book with many late nights:  Carrie, Trent, and Paige.
+Most of all, I would like to also express my appreciation for my family's patience while working on this book with many late nights: Carrie, Trent, and Paige.
 
-This version of the book was built with files from https://github.com/prof-anderson/OR_Using_R. 
-\vspace{12pt}
+This version of the book was built with files from <https://github.com/prof-anderson/OR_Using_R>. \vspace{12pt}
 
 > `r tufte::quote_footer('Tim Anderson')`
 
 > `r tufte::quote_footer(Sys.Date())`
-

@@ -40,14 +40,3 @@ bookdown::render_book("index.Rmd"):
   toc: yes
   includes:
     in_header: preamble.tex
-msmbstyle::msmb_html_book:
-  toc: TRUE
-  toc_depth: 1
-  split_by: chapter
-  split_bib: no
-  margin_references: FALSE
-tint::tintBook:
-  toc: yes
-  highlight: tango
-  includes:
-    in_header: preamble.tex

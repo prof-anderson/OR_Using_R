@@ -1,11 +1,8 @@
-
 # Introduction to Linear Programming
 
 ```{r ch2setup, include=FALSE}
-library(tufte)
-library(tint)
 library(knitr)
-library(gridExtra)
+library(kableExtra)
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = FALSE)
 knitr::opts_chunk$set(cache = FALSE)
@@ -13,9 +10,8 @@ knitr::opts_chunk$set(width = 30)
 ```
 
 ```{r, eval=FALSE, include=FALSE}
-library(bookdown); library(rmarkdown); rmarkdown::render("02-A_First_LP.Rmd", "tufte_book2")
+library(bookdown); library(rmarkdown); rmarkdown::render("02-A_First_LP.Rmd", "pdf_book")
 ```
-
 
 ## What is Linear Programming
 
@@ -26,6 +22,8 @@ Linear programming is a tool for optimization. It is a widely used tool for plan
 We will use a recurring example throughout the next couple of chapters of being a small specialty drone manufacturer making animal inspired exploring robots. These robots can be used in search and rescue operations or other functions where a wheeled vehicle may not suffice. Each of the products is named after an animal that describes its general design and function. The first two types of robots are named the Ant and the Bat. The Ant is a small but precise drone while the Bat is a flying drone. \vspace{12pt}
 
 The goal is to make the most profitable mix of robots. \vspace{12pt}
+
+[@hillier2020a\]\[@winston2003\]\[@baker2015\]\[@tovey\]\[@IsmayIntroductionStatisticalData\]\[@AdlerNutshell2012]
 
 Each drone requires time in machining, assembly, and testing and sensors. For example, an Ant requires one hour of machining time, three hours of assembly, and two hours of testing. It uses three sensors and the net profit is \$10. The characteristics of Bats are similar but different as shown in the Table 1 on the right as well as the available amount of each limited resource. \vspace{12pt}
 
@@ -195,8 +193,7 @@ For the sake of simplicity, we will implement our first R LP model using explici
 First, let us load the required libraries. Then we will move on to the actual implementation.
 
 ```{r warning = FALSE, message = FALSE}
-library (gridExtra, quietly=TRUE)
-   # Another nice option for tables
+library (kableExtra, quietly = TRUE)
 library (ROI, quietly = TRUE)      
    # R Optimization Interface
 library (ROI.plugin.glpk, quietly = TRUE) 
@@ -211,7 +208,7 @@ library (ompr.roi, quietly = TRUE)
 **quietly=TRUE**: This option will not display standard messages returned when loading libraries.
 ```
 
-The first line `gridExtra`, provide nice formatting of tables. \vspace{12pt} The following packages provide the optimization functions that we will be relying on frequently. The `ROI`package is the R Optimization Interface for for connecting various optimization solvers to R. The `ROI.plugin.glpk` provides a connection between the the `glpk`solver and R through ROI. While this would be sufficient, we are going to make use of the `ompr`package by Dirk Schumacher to provide algebraic representations for linear programs. The `ompr` package also requires a connector to ROI, aptly named `ompr.roi`. \vspace{12pt}
+This code chunk uses the `library` command to load a series of useful packages. THe first, `library (kableExtra)`, enhances `knitr's` built-in `kable` function to generate better formatted tables. The lines similarly load packages providing the optimization functions that we will be relying on frequently. The `ROI`package is the R Optimization Interface for for connecting various optimization solvers to R. The `ROI.plugin.glpk` provides a connection between the the `glpk`solver and R through ROI. While this would be sufficient, we are going to make use of the `ompr`package by Dirk Schumacher to provide algebraic representations for linear programs. The `ompr` package also requires a connector to ROI, aptly named `ompr.roi`. \vspace{12pt}
 
 ```{marginfigure}
 **HINT**: As noted earlier, if these packages are not preinstalled, you may need to install them using the install.packages function or from the Packages tab in RStudio.
@@ -223,7 +220,7 @@ Now we move on to implement and solve the linear program. Let's go through it st
 model0  <- MIPModel()     # Initialize an empty model
 ```
 
-The first line initializes an empty model and stores it in `model0`. We can see that the model is empty by simply displaying the summary of `model0`.
+The first line initializes an empty model and stores it in `model0`. We can see that the model is empty by simfply displaying the summary of `model0`.
 
 ```{marginfigure}
 **MIP**: The term MIP used in the function call is an acronym for Mixed Integer Program. This is a more general case of LP and will be discussed in greater detail later.
@@ -309,7 +306,7 @@ result0 <- solve_model(model0, with_ROI(solver = "glpk"))
 result0$solution
 ```
 
-Let's use the `grid.table` function to display the results nicely.
+Let's use the `kable` function to display the results nicely.
 
 ```{r}
 res0 <- cbind(objective_value (result0),
@@ -320,12 +317,9 @@ rownames(res0)<-list("Solution")
 
 ```
 
-```{r Base_2Var_Solution, fig.margin = T}
-grid.table(res0)
-```
-
-```{marginfigure}
-**Table 2.2**: Base Case Two Variable Solution
+```{r Base-2Var-Solution, fig.margin = T}
+kbl(res0, booktabs=T,
+    caption="Base Case Two Variable Solution")
 ```
 
 In this case, we take the previous command's output, `model0`, add an element to it, and then store it back in the same object, `model0`. We keep doing it for each element until we are done. \vspace{12pt}
@@ -354,7 +348,7 @@ extract_constraints(model0)
 
 This should look familiar. Let's see if we can arrange to make it look more similar to what we had given the model. Note that the term `RHS` represents the right hand side of the constraint.
 
-```{r construct_constraints_for_display, eval=TRUE, fig.margin=TRUE}
+```{r construct-constraints-for-display}
 constr0<-extract_constraints(model0)    
 # Pass the constraints out of  model
 constr00<- (cbind(as.matrix(constr0$matrix), 
@@ -367,11 +361,8 @@ dimnames(constr00)<-c(list(c("Machining",
                           "Assembly","Testing","Sensors")),
                       list(c("Ants", 
                           "Bats","Relationship","RHS")))
-grid.table(constr00)
-```
-
-```{marginfigure}
-**Table 2.3**: Elements of the Constraints
+kbl(constr00, booktabs=T,
+    caption="Elements of the Constraints")
 ```
 
 In the first version of the LP model implementation, we created many different versions of the model along the way while we really just keep adding stuff to the same model. This uses extra memory and will be slower. The second implementation keeps reusing the same model object until the very end when solving is done and it places the results into an object. This may be more memory efficient but is still likely slower and carries along a lot of extra notation. \vspace{12pt}
@@ -444,19 +435,15 @@ In summary, our optimal production plan is to make a mix of Ant and Bat robot mo
 
 We will now extend the previous model to account for a third product, the Cat robot. The goal is still to find the most profitable production plan. See the table to the right with a summary of the new situation.
 
-```{marginfigure}
-| | Ant| Bat | Cat |Available| 
-|-------------:|:-----:|:----:|:------:|:-------:|
-|  Profit      |  $7   | $12  |  $5    |       |
-|  Machining   |   1   |   4  |    2   |  800  |
-|  Assembly    |   3   |   6  |    2   |  900  |
-|  Testing     |   2   |   2  |    1   |  480  |
-|  Sensors     |   2   |  10  |    2   | 1200  |
-```
+|           | Ant | Bat  | Cat | Available |
+|----------:|:---:|:----:|:---:|:---------:|
+|    Profit | \$7 | \$12 | \$5 |           |
+| Machining |  1  |  4   |  2  |    800    |
+|  Assembly |  3  |  6   |  2  |    900    |
+|   Testing |  2  |  2   |  1  |    480    |
+|   Sensors |  2  |  10  |  2  |   1200    |
 
-```{marginfigure}
-**Table 2.4**: Three variable base case
-```
+Table Three Variable Base Case
 
 \vspace{12pt}
 
@@ -671,17 +658,14 @@ colnames(res2a)<-list("Profit","Ants","Bats","Cats")
 rownames(res2a)<-list("Solution 2a")
 ```
 
-```{r First_Solution_Multiple_Optima, fig.margin = T}
-grid.table(res2a)
-```
-
-```{marginfigure}
-**Table 2.5**: First Solution of Multiple Optima Case
+```{r First-Solution-Multiple-Optima, fig.margin = T}
+kbl(res2a, booktabs=T, 
+    caption="First Solution of Multiple Optima Case")
 ```
 
 Okay. When I ran it, all the production was focused on a mix of Ants and Bats but as discussed earlier, I think that there is an alternate solution producing Cats with the same total profit. The LP engine won't necessarily tell you that there is an alternate optimal solution. Let's see if we can "trick" the LP to show an alternate solution by preventing the use of any bat by adding a constraint, $Ants=0$ to `model2a` and naming this `model2b` and the solved object or solution as `result2b`.
 
-```{r Show_Second_Solution_from_Multiple_Optima,  fig.margin = T}
+```{r Show-Second-Solution-from-Multiple-Optima,  fig.margin = T}
 model2b <- add_constraint(model2a, Ants == 0) 
             # FORCING LP TO FIND A DIFFERENT SOLUTION
 result2b <- solve_model(model2b, with_ROI(solver = "glpk"))
@@ -692,11 +676,8 @@ res2b <- cbind(objective_value(result2b),
                get_solution(result2b, Cats))
 colnames(res2b)<-list("Profit","Ants","Bats","Cats")
 rownames(res2b)<-list("Solution 2b")
-grid.table(res2b)
-```
-
-```{marginfigure}
-**Table 2.6**: An Alternate Optimal Solution
+kbl (res2b, booktabs=T,
+     caption="An Alternate Optimal Solution")
 ```
 
 Again, a product mix is made but now instead and Ants and Bats, the mix is made up of Bats and Cats with exactly the same level of profit. This is an instance of multiple optima. Let's try one more situation by adding a constraint forcing the number of Ants to be 60 and solving.
@@ -716,16 +697,13 @@ rownames(res2c)<-list("Solution 2c")
 
 Let's summarize these results more clearly by displaying them in a single table.
 
-```{r Combine_Multiple_Optima_Results, echo=FALSE, include=FALSE}
+```{r Combine_Multiple_Optima_Results, echo=FALSE, include=TRUE}
 res2z <- rbind(res2a, res2b, res2c)
 ```
 
-```{r Summarize_Results_of_Multiple_Optima, fig.margin =T}
-grid.table(res2z)
-```
-
-```{marginfigure}
-**Table 2.7**: Examples of Alternate Optimal Solutions
+```{r Summarize-Results-of-Multiple-Optima}
+kbl(res2z, booktabs=T,
+    caption="Examples of Alternate Optimal Solutions")
 ```
 
 Notice that all three of these solutions have exactly the same profit but different production plans to generate this profit. Furthermore while we are listing three, there are actually many more solutions. You can force the system to find other solutions by setting the number of Ants to a number between 0 and 180 or Cats between 0 and 90. In fact, the number of solutions is infinite if we allow fractional solutions. More generally, when there are two alternate optimal in a linear program with continuous variables, there is actually an infinite number of other optimal solutions between them.\
@@ -740,7 +718,6 @@ Which solution is the best? Within the limits of this problem, we can't distingu
 
 For the redundant constraint, a new constraint for painting is created. Let's assume each item is painted and requires one liter of paint. We have 500 liters. The corresponding constraint is then added to the model.
 
-```{marginfigure}
 $$
  \begin{split}
  \begin{aligned}
@@ -755,7 +732,6 @@ $$
  \end{aligned}
  \end{split}
 $$
-```
 
 ```{marginfigure}
 **Formula 2.5**: Optimization model with a redundant constraint 
@@ -795,7 +771,6 @@ Note that not all non-binding constraints at an optimal solution are redundant. 
 
 As with other cases, there are multiple ways of triggering this condition. For the unbounded solution, instead of at *most* a certain amount of resources can be used, the constraints are changed to at *least* that amount of each resource must be used. This doesn't make a lot of sense in the setting of this application. Perhaps a cynic would say that in a cost-plus business arrangement or a situation where the factory manager has a limited purview and doesn't see issues such as downstream demand limits and cost impacts, it results in this kind of myopic perspective. More commonly, an unbounded solution might be a sign that the analyst had simply reversed one or more inequalities or the form of the objective (max vs. min).
 
-```{marginfigure}
 $$
  \begin{split}
  \begin{aligned}
@@ -809,7 +784,6 @@ $$
   \end{aligned}
   \end{split}
 $$
-```
 
 ```{marginfigure}
 **Formula 2.6**: Optimization model with an unbounded solution 
@@ -921,9 +895,6 @@ In particular, you might want to look over this document with respect to:
 **ompr**, Model mixed integer linear programs in an algebraic way directly in R. The model is solver-independent and thus offers the possibility to solve a model with different solvers. It currently only supports linear constraints and objective functions. See the 'ompr' website <https://dirkschumacher.github.io/ompr> for more information, documentation and examples
 ```
 
--   Organizing information in tables for display is helpful. Raw output can be verbose. I hard coded a table at the beginning that works for simple data in explicit LPs. For richer data models and nicer tables, see Chapter 2 again. The `gridExtra` package makes it easy to display matrices and data tables nicely in HTML and PDF outputs.
--   Use of section and subsection headings to organize your writeups.
-
 **Exercise 2.1** (Adding a Dog Drone)
 
 Your company has extended production to allow for producing the dog drone and is now including a finishing department that primes and paints the drones. See Table to the right for all the data.
@@ -938,23 +909,18 @@ d)  Interpret and discuss the model in R Markdown.
 
 e)  Discuss how one parameter would need to change in order to result in a different production plan. Demonstrate how this affects the results.
 
-```{marginfigure, fig.align='left', fig.width = 2}
+| Char. | Ants | Bats | Cats | Dogs | Avail. |
+|------:|:----:|:----:|:----:|:----:|:------:|
+| Prof. | \$7  | \$10 | \$5  | \$24 |        |
+| Fabr. |  1   |  3   |  2   |  2   |  800   |
+| Asse. |  3   |  4   |  2   |  2   |  900   |
+| Mach. |  2   |  3   |  1   |  2   |  480   |
+| Sens. |  3   |  5   |  2   |  4   |  1200  |
+| Pain. |  2   |  7   |  2   |  6   |  500   |
 
-|Char.|Ants|Bats|Cats|Dogs|Avail.| 
-|----------:|:--:|:--:|:--:|:---:|:-----:|
-| Prof.     | $7 |$10 | $5 | $24 |       |
-| Fabr.     | 1  |  3 |  2 |   2 | 800  |
-| Asse.     | 3  |  4 |  2 |   2 | 900  |
-| Mach.     | 2  |  3 |  1 |   2 |  480  |
-| Sens.     | 3  |  5 |  2 |   4 | 1200  |
-| Pain.     | 2  |  7 |  2 |   6 |  500  |
-```
+Table Exercise 2.1
 
-```{marginfigure}
-**Table 2.8**: Exercise 2.1
-```
-
-**Hint:** Knit your RMarkdown as a PDF.  Also, don't be bothered by fractional values for a possible production plan at this time.  It is only a high level production plan so if a drone(s) are only partially finished, assume that work on them will continue in the next planning period.  We will deal with fractional variable values much more formally in Chapter 6 but for now, consider the expression "close enough for government work" to apply.
+**Hint:** Knit your RMarkdown as a PDF. Also, don't be bothered by fractional values for a possible production plan at this time. It is only a high level production plan so if a drone(s) are only partially finished, assume that work on them will continue in the next planning period. We will deal with fractional variable values much more formally in Chapter 6 but for now, consider the expression "close enough for government work" to apply.
 
 \vspace{12pt}
 
