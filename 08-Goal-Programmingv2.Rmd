@@ -1,5 +1,9 @@
 # Goal Programming
 
+```{r, eval=FALSE, include=FALSE}
+library(bookdown); library(rmarkdown); rmarkdown::render("08-Goal-Programmingv2.Rmd", "pdf_book")
+```
+
 ```{r Ch8setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = FALSE)
@@ -11,10 +15,7 @@ library (ROI.plugin.glpk, quietly = TRUE)
 library (ROI.plugin.symphony, quietly = TRUE)
 library (ompr, quietly = TRUE)
 library (ompr.roi, quietly = TRUE)
-library (pander, quietly = TRUE)
 library (dplyr)
-library (tint)  
-library (tufte)
 ```
 
 ## Policies for Houselessness
@@ -46,6 +47,8 @@ Let's summarize the data for two programs.  Let's focus on expected numbers of p
 |  Expected total people served |  1.1     |  2.25  |
 |  Cost per unit ($\$K$)        |  $\$10$  | $\$25$ |
 |  Staff support per unit       |  0.1     | 0.1    |
+
+Table:  Policy Options for Addressing Houselessness
 
 One group on the city council wants to serve as many people (both children and adults) as possible while keeping under the total budget limit.  \vspace{12pt}
 
@@ -107,7 +110,7 @@ R  <- get_solution (res_Home1 , VR)
 sum_Home1           <- cbind(res_Home1$objective_value,H, R)
 colnames(sum_Home1) <- c("Obj. Func. Val.", "H", "R")
 rownames(sum_Home1) <- "Group 1: Max People"
-pander(sum_Home1)
+kbl(sum_Home1,booktabs=T)
 
 ```
 
@@ -137,7 +140,8 @@ sum_Home2           <- cbind(res_Home2$objective_value,H, R)
 colnames(sum_Home2) <- c("Obj. Func. Val.", "H", "R")
 rownames(sum_Home2) <- "Group 2: Max Children"
 
-pander(rbind(sum_Home1, sum_Home2))
+kbl (rbind(sum_Home1, sum_Home2), booktabs=T,
+     caption="Comparing Homelessness Solutions.")
 ```
 
 So which group has the _better_ model?  The objective function value for group 1's model is higher but it is in different units (people served) versus group 2's model of children served.    \vspace{12pt}
@@ -193,7 +197,8 @@ colnames(sum_Home3) <- c("Obj. Func. Val.", "H", "R",
                          "d1", "d1%", "d2", "d2%")
 rownames(sum_Home3) <- "Min sum of deviations"
 
-pander(sum_Home3)
+kbl (sum_Home3, booktabs=T,
+     caption="Solution by Minimizing Sum of Deviations")
 
 ```
 
@@ -213,7 +218,6 @@ $$
   \end{aligned}
   \end{split}
 $$
-
 
 ```{r MinDevPercModel, echo=FALSE}
 Home4Model <- MIPModel() %>%
@@ -244,7 +248,8 @@ colnames(sum_Home4) <- c("Obj. Func. Val.", "H", "R",
                          "d1", "d1%", "d2", "d2%")
 rownames(sum_Home4) <- "Min sum of deviation %s"
 
-pander(sum_Home4)
+kbl (sum_Home4, booktabs=T,
+     caption="Solution by Minimizing Sum of Percentage Deviations")
 
 ```
 
@@ -303,7 +308,8 @@ colnames(sum_Home5) <-
      "R", "d1", "d1%", "d2", "d2%")
 rownames(sum_Home5) <- "Minimax"
 
-pander(rbind(sum_Home3, sum_Home4, sum_Home5))
+kbl (rbind(sum_Home3, sum_Home4, sum_Home5), 
+     caption="Minimax Solution.")
 
 ```
 
@@ -340,8 +346,8 @@ To provide some space before we discuss the formulation, let's show the data.  R
 ```{r loading_mailing_data}
 data(state)
 Customers <- state.x77[,1]
-pander(head (Customers), 
-       caption="Number of customers for first six states.")
+kbl (head (Customers), booktabs=T,
+     caption="Number of customers for first six states.")
 ```
 \vspace{12pt}
 
@@ -443,8 +449,8 @@ assigned1a <- res_Mail1 %>%
  select (s,w)
 rownames(assigned1a)<-c(names(Customers[assigned1a[,1]]))
 
-pander (head(assigned1a), 
-        caption="Example of some states assigned to week 1")
+kbl (head(assigned1a), booktabs=T,
+     caption="Example of some states assigned to week 1")
 ```
 
 That is just for six states in the first week though.  
@@ -463,8 +469,9 @@ table_results1 <- append(table_results1,weeksmail1a)
 ```
 
 ```{r Display_weekly_Mailings}
-pander (table_results1[-1],   # Removes first item
-        caption="Mailing Results by Week")
+kbl (table_results1[-1],   # Removes first item
+     booktabs=T,
+     caption="Mailing Results by Week")
 ```
 
 Since this is state level data, let's look at a map of the schedule.  
@@ -532,8 +539,9 @@ for (week_counter in 1:Weeks) {
 colnames(weeksmail2a)<-paste0("Week ",week_counter)
 table_results2 <- append(table_results2,weeksmail2a)
 }
-pander (table_results2[-1],   # Removes first item
-       caption="Results with symmetry breaking")
+kbl (table_results2[-1],   # Removes first item
+     booktabs=T,
+     caption="Results with symmetry breaking")
 ```
   \vspace{12pt}
 Notice that then the workload in week 1 would essentially be the same as _Q_. In other words, the _Q_ minimax variable and constraints could be removed and still give the equivalent model.  This highlights that in mixed integer optimization, there are often many different ways to implement models for the same application.  \vspace{12pt}
