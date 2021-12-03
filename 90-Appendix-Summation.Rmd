@@ -12,7 +12,7 @@ knitr::opts_chunk$set(tidy = F)
 
 ## Purpose
 
-This Appendix provides a brief introduction to relevant notation constructs that arise often in optimization.  A major benefit of using 
+This Appendix provides a brief introduction to relevant notation constructs that arise often in optimization.   In this appendix we will both briefly review some of these mathematical relationships that commonly arise in mathematical models as well as how these can be expressed using LaTeX in Rmarkdown. A major benefit of using the Rmarkdown workflow is that it enables precise mathematical descriptions alongside the actual analysis.
 
 ## Basic Summation Notation
 
