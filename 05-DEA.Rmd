@@ -352,7 +352,7 @@ colnames(results.lambda) <-
 #   c("L_A", "L_B", "L_C", "L_D")   
 kbl(cbind(results.efficiency, results.lambda),
     booktabs=T, escape=F, caption=
-      "Input-Oriented Envelopment Analysis for DMU B (CCR IO)")
+      "Input-Oriented Envelopment Analysis for DMU B (CCRIO)")
 ```
 
 The above table follows a few convenient conventions. First, rather than using $\theta$, we label the efficiency score by the model used for the model, in this case the constant returns to scale is labeled as CCR after Charnes, Cooper, and Rhodes [@RhodesDataEnvelopmentAnalysis1978]. Later we will cover other models including the variable returns to scale model, labeled BCC after Banker, Charnes, and Cooper [@banker1984].
@@ -1070,48 +1070,33 @@ This section covers the second chapter of the book and introduces DEA and R work
 
 ## Exercises
 
-\vspace{12pt}
-
-**Exercise 5.1** (Adding DMU E-Graphically)
+::: {.exercise name="Graphically Adding DMU E"}
 
 Add a fifth unit, E, to the first example that produces 400 units output using 30 units of input. Graphically evaluate all five units for their efficiency scores and lambda values. Interpret the solution in terms of who is doing well, who is doing poorly, and who should be learning from whom.
+:::
 
-\vspace{12pt}
-
-**Exercise 5.2** (Adding DMU E-Using R)
+::: {.exercise name="Adding DMU E Using R"}
 
 Examine the new unit, E, using R. Interpret the solution in terms of who is doing well, who is doing poorly, and who should be learning from whom. \vspace{12pt}
+:::
 
-**Exercise 5.3** (Looping)
-
+::: {.exercise name="Looping"}
 Wrap a for loop around the model to examine every unit. Discuss results. \vspace{12pt}
+:::
 
-**Exercise 5.4** (Bigger Data)
-
+::: {.exercise name="Bigger Data"}
 Use a bigger data set and conduct an analysis & interpretation (more inputs, outputs, and units.)
+:::
 
-\vspace{12pt}
-
-**Exercise 5.5** (Compare Results)
-
+::: {.exercise name="Compare Results"}
 Check results against a DEA package (ex. DEAMultiplier, TFDEA, Benchmarking, nonparaeff). \vspace{12pt}
+:::
 
-**Exercise 5.6** (Slacking)
-
+::: {.exercise name="Slacking"}
 Construct an example where Phase 2 increases positive slacks from Phase 1.\
-\vspace{12pt}
+:::
 
-**Exercise 5.7** (Graphics)
-
-Create "cool" graphs or plots of results.\
-\vspace{12pt}
-
-To pass the challenges, work on extending my RMarkdown file or using a similar script. You can use my \*.rmd file as a starting point. Others might prefer to create a well documented R script instead of using RMarkdown. Others might even prefer using LaTeX. If you use RMarkdown or LaTeX, please use section headings to indicate each challenge solved. You can use other packages for graphics or data manipulation but don't use a DEA package.
-
-\vspace{12pt}
-
-**Exercise 5.8** (A DEA Application)
-
+::: {.exercise name="DEA Application"}
 Conduct a DEA study for an application that you are personally familiar with. (Pick one for which data is readily available but something that you are passionate about. It can have scrubbed or anonymized data. Examples might include your favorite sports league, team salaries, coaching salaries, wins, etc. or it can be USAF related.)
 
 a)  Describe the application.
@@ -1119,6 +1104,8 @@ b)  Describe and justify the data including the inputs and outputs used as well 
 c)  Select an appropriate DEA model and conduct the analysis.
 d)  Discuss the results.
 
-**Exercise 5.8** (DEA Technique Choices)
+:::
 
+::: {.exercise name="DEA Technique Choices"}
 Choosing Inputs and Outputs:  The DEA store example in chapter 5 uses an input-output model of sales and employees.  Describe a richer input-output model that you feel would make for a better case.  Be sure to discuss tradeoffs and other DEA model choices, including how results could be used.
+:::

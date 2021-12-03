@@ -343,7 +343,7 @@ Try to give some thoughts as to how to set this up before moving on to seeing ou
 To provide some space before we discuss the formulation, let's show the data.  Rather than providing a data table that must be retyped, let's use a dataset already available in R so you can simply load the state data.  Note that you can grab the population in 1977 in terms of thousands.    \vspace{12pt}
 
 
-```{r loading_mailing_data}
+```{r loading-mailing-data}
 data(state)
 Customers <- state.x77[,1]
 kbl (head (Customers), booktabs=T,
@@ -421,10 +421,6 @@ Mail1
 res_Mail1 <- solve_model(Mail1, 
                         with_ROI(solver = "symphony",
                    verbosity=-1, gap_limit=1.5))
-#                   verbosity=-1, first_feasible=TRUE))
-#                   verbosity=-1))
-
-#                        with_ROI(solver = "glpk"))
 
 ```
 
@@ -442,7 +438,7 @@ We solved this with a mixed integer programming problem gap limit of $1.5\%$ mea
 
 Now let's move on to discussing the results. We will start with filtering out all the variables that have zero values so we can focus on the ones of interest - the states that are assigned to each week. Also, notice that a `dplyr` function was used to add state names to the data frame.    \vspace{12pt}
 
-```{r Sample_of_States_Week1}
+```{r Sample-of-States-Week1}
 assigned1a <- res_Mail1 %>% 
  get_solution(Vx[s,w]) %>%
  filter(value >.9) %>%
@@ -468,15 +464,23 @@ table_results1 <- append(table_results1,weeksmail1a)
 }
 ```
 
-```{r Display_weekly_Mailings}
-kbl (table_results1[-1],   # Removes first item
-     booktabs=T,
-     caption="Mailing Results by Week")
+```{r Display-weekly-Mailings, results='markup', eval=TRUE}
+
+#kbl (table_results1[-1],   # Removes first item
+#     booktabs=T, format="latex", escape=F,
+#     caption="Mailing Results by Week") %>%
+#   kable_styling(latex_options="scale_down")
+
+#library(pander)
+#pander(table_results1[-1],)
+#kbl(table_results1[-1],booktabs=T)
+kbl(table_results1[-1])
 ```
 
 Since this is state level data, let's look at a map of the schedule.  
   \vspace{12pt}
-```{r Map_of_Mailing_Results}
+  
+```{r Map_of_Mailing_Resultsm, fig.width=4, eval=TRUE}
 library (ggplot2)
 library (maps)
 mapx = data.frame(region=tolower(rownames(assigned1a)), 
@@ -515,10 +519,12 @@ Mail2 <- add_constraint(Mail1,
                               s=1:States), 
                w = 2:Weeks)
 ```
+
   \vspace{12pt}
 To speed up the solution time, I'll set the gap_limit to $15\%$.
   \vspace{12pt}
-```{r break_symmetry, echo=FALSE}
+  
+```{r break-symmetry, echo=FALSE, results='markup'}
 res_Mail2 <- solve_model(Mail2, 
                         with_ROI(solver = "symphony",
                    verbosity=-1, gap_limit=15))
@@ -539,9 +545,11 @@ for (week_counter in 1:Weeks) {
 colnames(weeksmail2a)<-paste0("Week ",week_counter)
 table_results2 <- append(table_results2,weeksmail2a)
 }
-kbl (table_results2[-1],   # Removes first item
-     booktabs=T,
-     caption="Results with symmetry breaking")
+#kbl (table_results2[-1],   # Removes first item
+#     booktabs=T,
+#     caption="Results with symmetry breaking")%>%
+#   kable_styling(latex_options="scale_down")
+kbl(table_results1[-1])
 ```
   \vspace{12pt}
 Notice that then the workload in week 1 would essentially be the same as _Q_. In other words, the _Q_ minimax variable and constraints could be removed and still give the equivalent model.  This highlights that in mixed integer optimization, there are often many different ways to implement models for the same application.  \vspace{12pt}
@@ -557,13 +565,14 @@ This application and model can be adjusted to fit a wide variety of other situat
 
 ## Exercises
 
-**Exercise 8.1** (Extending State Mailing) 
+::: {.exercise name="Extending State Mailing"}
 The mailing by state example in chapter 8 is just another example of mixed integer programming.
 
-Write the optimization model using LaTeX to ensure that no week has more than 8 states assigned to the week.
+a) Write the optimization model using LaTeX to ensure that no week has more than 8 states assigned to the week.
 
-Write a constraint or set of constraints using LaTeX that would ensure state 3 is done before state 7.
+b) Write a constraint or set of constraints using LaTeX that would ensure state 3 is done before state 7.
 
-Write a constraint or set of constraints to ensure that state 9 and 24 are done in the same week.
+c) Write a constraint or set of constraints to ensure that state 9 and 24 are done in the same week.
 
-Given the minimax objective function, how do you think the above requirements will affect the solution in terms of an objective function and characteristics of managerial interest?
+d) Given the minimax objective function, how do you think the above requirements will affect the solution in terms of an objective function and characteristics of managerial interest?
+

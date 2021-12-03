@@ -34,7 +34,7 @@ Unfortunately, there is no such thing as a free lunch-adding integrality can mak
 
 Let's revisit the earlier example of producing drones with one additional hour in assembly as we did in Chapter 4. As a reminder, the LP is the same three variable case we have been using with a change of 901 instead of 900 for the second constraint's right hand side.
 
-```{$$}
+$$
  \begin{split}
  \begin{aligned}
     \text{Max  }   & 7\cdot Ants +12 \cdot Bats +5\cdot Cats \\
@@ -48,7 +48,6 @@ Let's revisit the earlier example of producing drones with one additional hour i
   \end{aligned}
   \end{split}
 $$
-```
 
 ```{marginfigure}
 **Formula 6.1**: Three product optimization model with an extra hour of assembly time.
@@ -88,7 +87,6 @@ For the sake of illustration, let's show how we would modify the model to be int
 
 In the formulation, we can replace the non-negativity requirement with a restriction that the variables are drawn from the set of non-negative integers.
 
-```{marginfigure}
 $$
  \begin{split}
  \begin{aligned}
@@ -103,7 +101,6 @@ $$
   \end{aligned}
   \end{split}
 $$
-```
 
 ```{marginfigure}
 **Formula 6.2**: Model restricting variables to be non-negative integers.
@@ -517,23 +514,18 @@ kbl (cbind(I,N), booktabs=T,
 
 These projects all carry their own expenses and engineering support. There are limits to both the capital investment and engineering resources available. To start, consider all of these project to be independent. \vspace{12pt}
 
-**Exercise 6.1** (Create and solve the model)
-
+::: {.exercise name="Create and Solve Model"}
 Formulate and solve a basic, naive model that allows projects to repeated and partially completed. Implement and solve your model. (Hint: You don't need binary variables yet.) What is the optimal decision? Is this result surprising? Does this make sense in terms of the application?
+:::
 
-\vspace{12pt}
-
-**Exercise 6.2** (No Project is Repeated)
-
+::: {.exercise name="No Project is Repeated"}
 Now, let's explore one aspect of moving towards binary variables. What constraint or constraints are needed to ensure no project is done more than once while allowing partial projects to still be funded and incur both proportionate costs and benefits. How does this solution compare to that of above?
+:::
 
-\vspace{12pt}
-
-**Exercise 6.3** (No Partial Projects)
+::: {.exercise name="No Partial Projects"}
 
 What change is needed to prevent partial funding of projects. How does this solution compare to that of above? Can you envision a situation where it might make sense to have partially funded projects? Could this be similar to corporate joint ventures where investments and benefits are shared across multiple entities?
-
-\vspace{12pt}
+:::
 
 Now that you have binary constraints, let's explore the impact of logical restrictions with a series of separate scenarios. In each of these cases, make sure that you implement the relationship as a linear relationship. This means that you cannot use a function such as an "If-then", "OR", "Exclusive OR", or other relationship. Furthermore, you can't multiply variables together or divide variables into variables.
 
@@ -569,36 +561,29 @@ Note that we cannot use $y_{A}\cdot y_{B}=0$ because it is a nonlinear constrain
 
 In each of the following sections create a linear relationship that models this situation.\vspace{12pt}
 
-**Exercise 6.4** (Interconnects Need Something to Connect)
-
+::: {.exercise name="Interconnects Need Something to Connect"}
 Instead of the constraint on chip architects, let's consider the situation of the interconnect technology. Assume that project E on interconnect technology would only provide strong benefit if a new architecture is also developed. In other words, E can only be done if A or B is done. Note that if both A and B are done, E will certainly have a use!
+:::
 
-\vspace{12pt}
-
-**Exercise 6.5** (Manufacturing)
-
+::: {.exercise name="Manufacturing"}
 Outtel knows that staying aggressive in manufacturing is important in this competitive industry but that it is too risky to do too much at once from manufacturing perspective. The result is that Outtel want to ensure that exactly one major manufacturing initiative (C or D) must be done. In other words, project C or project D must be done but not both.
 
-\vspace{12pt}
-
-**Exercise 6.6** (Solving Each Case)
-
+::: {.exercise name="Solving Each Case"}
 Solve for the base case and then show the results of just each constraint at once. Combine the results into a single, well-formatted table. Discuss the results.
+:::
 
-\vspace{12pt}
-
-**Exercise 6.7** (Full Enumeration)
-
+::: {.exercise name="Full Enumeration"}
 When projects can be neither partially funded nor repeated, how many candidate solutions would there be by full enumeration? List them.
+:::
 
 ## Fixed Charge Models
 
 Fixed charge models are a special case of integer programming models where situations where product cost has a fixed cost component and a marginal (per unit) cost component. A common example of this is when a machine must be setup before any production can occur. \vspace{12pt}
 
-*Fixed Charge Example-Introduction*
+### Fixed Charge Example-Introduction
 
 ```{marginfigure}
-This example is based on a writeup from Thanh Thuy Nguyen in the Fall 2018 ETM 540 class.
+This example is based example from from Thanh Thuy Nguyen.
 ```
 
 \vspace{12pt}
@@ -958,13 +943,11 @@ As can be seen, we used all of our Pre-processing hours, Assembly hours, and Qua
 Further analysis could examine alternatives such as redesigning widget 2 and 3 to be less resource intensive in production to see at what point we would choose to produce them.
 
 \vspace{12pt}
-
-**Exercise 6.8** (Redesign Widget 3)
-
+::: {.exercise name="Redesign Widget 3"}
 The design team has an idea of how to use a previous manufacturing fixture which could eliminate the setup cost for Widget 3. How much would you produce of Widget 3 if there were no setup (fixed) cost for production of Widget 3? Of course this still keeps a cost for Widgets 1 and 2. Experiment with the above model to find the lowest setup cost for Widget 3 where you still choose to not produce any of Widget 3.
+:::
 
-\vspace{12pt}
-
-**Exercise 6.9** (Reducing Fixed Costs)
-
+::: {.exercise name="Reducing Fixed Costs"}
 How would production change if the setup costs were cut in half due to implementing lean production approaches?
+:::
+

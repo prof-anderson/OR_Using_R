@@ -23,11 +23,10 @@ We will use a recurring example throughout the next couple of chapters of being 
 
 The goal is to make the most profitable mix of robots. \vspace{12pt}
 
-[@hillier2020a\]\[@winston2003\]\[@baker2015\]\[@tovey\]\[@IsmayIntroductionStatisticalData\]\[@AdlerNutshell2012]
+\[@hillier2020a\]\[@winston2003\]\[@baker2015\]\[@tovey\]\[@IsmayIntroductionStatisticalData\]\[@AdlerNutshell2012\]
 
 Each drone requires time in machining, assembly, and testing and sensors. For example, an Ant requires one hour of machining time, three hours of assembly, and two hours of testing. It uses three sensors and the net profit is \$10. The characteristics of Bats are similar but different as shown in the Table 1 on the right as well as the available amount of each limited resource. \vspace{12pt}
 
-```{marginfigure}
 | Characteristic | Ants  | Bats   |  Available | 
 |---------------:|:-----:|:------:|:----------:|
 |  Profit        |  $7   | $12    |            |
@@ -35,11 +34,8 @@ Each drone requires time in machining, assembly, and testing and sensors. For ex
 |  Assembly      |  3    |   6    |   900      |
 |  Testing       |  2    |   2    |   480      |
 |  Sensors       |  2    |  10    |   1200     |
-```
 
-```{marginfigure}
-**Table 2.1**: Two variable base case
-```
+Table:  Two variable base case
 
 A simple LP now is to find the production plan of products that results in the most profit. In order to do so, we need to define certain key items:
 
@@ -81,7 +77,7 @@ Let's put things together in the context of this application. In the base case, 
 
 Our objective function and constraints can now be written as the optimization model shown on the right.
 
-```{marginfigure}
+
 $$
  \begin{split}
  \begin{aligned}
@@ -95,7 +91,6 @@ $$
   \end{aligned}
   \end{split}
 $$
-```
 
 ```{marginfigure}
 **Formula 2.1**: Optimization base model with 2 variables.
@@ -455,7 +450,7 @@ A simple LP now is to find the production plan or amount of each of the products
 
 Our objective function and constraints can now be written as the optimization model displayed on the right.
 
-```{marginfigure}
+
 $$
  \begin{split}
  \begin{aligned}
@@ -469,7 +464,6 @@ $$
   \end{aligned}
   \end{split}
 $$
-```
 
 ```{marginfigure}
 **Formula 2.2**: Optimization model adding a third product (variable).
@@ -540,7 +534,6 @@ Let's assume that the sales manager comes in and says that we have a contractual
 
 This results in the LP on the right.
 
-```{marginfigure}
 $$
  \begin{split}
  \begin{aligned}
@@ -555,7 +548,6 @@ $$
 \end{aligned}
 \end{split}
 $$
-```
 
 ```{marginfigure}
 **Formula 2.3**: Optimization model for a Non Feasible solution 
@@ -594,7 +586,7 @@ When a linear program is solved to optimality, it is an assurance that there is 
 
 There are a couple of ways of creating situations for multiple optima. One situation is to have a decision variable be identical or a linear multiple of another variable. In this case, each Cat now consumes exactly double the resources as an Ant and generates double the profit of an Ant. Also, we will assume the profit per Bat drops to just 2. \vspace{12pt} The new LP is shown in the formulation on the right.
 
-```{marginfigure}
+
 $$
  \begin{split}
  \begin{aligned}
@@ -608,7 +600,6 @@ $$
 \end{aligned}
 \end{split}
 $$
-```
 
 ```{marginfigure}
 **Formula 2.4**: Optimization model for Multiple Optima solution. Note that objective function double those of the sensor constraint. 
@@ -895,7 +886,7 @@ In particular, you might want to look over this document with respect to:
 **ompr**, Model mixed integer linear programs in an algebraic way directly in R. The model is solver-independent and thus offers the possibility to solve a model with different solvers. It currently only supports linear constraints and objective functions. See the 'ompr' website <https://dirkschumacher.github.io/ompr> for more information, documentation and examples
 ```
 
-**Exercise 2.1** (Adding a Dog Drone)
+::: {.exercise name="Adding a Dog Drone"}
 
 Your company has extended production to allow for producing the dog drone and is now including a finishing department that primes and paints the drones. See Table to the right for all the data.
 
@@ -918,9 +909,11 @@ e)  Discuss how one parameter would need to change in order to result in a diffe
 | Sens. |  3   |  5   |  2   |  4   |  1200  |
 | Pain. |  2   |  7   |  2   |  6   |  500   |
 
-Table Exercise 2.1
+Table: Data for Dog Drone Exercise
 
 **Hint:** Knit your RMarkdown as a PDF. Also, don't be bothered by fractional values for a possible production plan at this time. It is only a high level production plan so if a drone(s) are only partially finished, assume that work on them will continue in the next planning period. We will deal with fractional variable values much more formally in Chapter 6 but for now, consider the expression "close enough for government work" to apply.
+
+:::
 
 \vspace{12pt}
 

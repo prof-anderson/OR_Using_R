@@ -12,7 +12,7 @@ lof: yes
 site: bookdown::bookdown_site
 description: "This book introduces optimization using R."
 github-repo: prof-anderson/OR_Using_R
-suppress-bibliography: true
+suppress-bibliography: no
 graphics: yes
 highlight: monochrome
 #cover-image: images/Book_Cover-Optimization_Modeling_Using_R.png
@@ -68,6 +68,7 @@ I would like to thank many people for their contributions, collaborations, and a
 -   **Jose Banos,** contributor of more formatting in the spirit of Tufte
 -   **Jon Syverson,** frequent and thoughtful feedback on early drafts
 -   **Dawei Zhang,** further editorial work on the book
+-   **Navdeep Singh,** assistance with bookdown
 
 In addition, several groups have been of tremendous help:
 

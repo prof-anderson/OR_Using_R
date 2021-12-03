@@ -27,7 +27,7 @@ rmarkdown::render("04-Sensitivity-Analysis.Rmd", "pdf_book")
 ```
 
 
-We can get a lot more than just the objective function value and the decision variable values from a solved linear program. In particular, we can potentially lexplore the impact of changes in constrained resources, changes in the objective function, forced changes in decision variables, and the introduction of additional decision variables.
+We can get a lot more than just the objective function value and the decision variable values from a solved linear program. In particular, we can potentially explore the impact of changes in constrained resources, changes in the objective function, forced changes in decision variables, and the introduction of additional decision variables.
 
 ## Base Case
 
@@ -36,7 +36,6 @@ To demonstrate this, let's revisit our explicit model of production planning. We
 
 Recall the explicit production planning problem from earlier on Formulation 4.1.
 
-```{marginfigure}
 $$
  \begin{split}
  \begin{aligned}
@@ -48,14 +47,11 @@ $$
 & 2\cdot Ants + 10\cdot Bats +2\cdot Cats \leq 1200 \\
 & Ants, Bats, Cats \geq 0  
   \end{aligned}
+  (\#eq:base3varmodela)
   \end{split}
 $$
 
-```
 
-```{marginfigure}
-**Formulation 4.1**: Explicit model of production planning
-```
 
 The implementation that we did earlier for production planning was straightforward.
 
@@ -119,7 +115,7 @@ This potential for increased profit can't be achieved by simply increasing the r
 
 Let's test the numerical results from the Shadow Price table by adding an hour of labor to the assembly department. The model is represented in the formulation 4.2.
 
-```{marginfigure}
+
 $$
  \begin{split}
  \begin{aligned}
@@ -134,7 +130,6 @@ $$
   \end{aligned}
   \end{split}
 $$
-```
 
 ```{marginfigure}
 **Formulation 4.2**: Explicit model of production planning adding an hour of labor to Testing right hand side.
@@ -184,7 +179,7 @@ While it is easy to look at an individual resource when we are looking at proble
 
 The shadow price on sensors is zero (as was also the case for testing hours). This means that even a large increase in the number of sensors would not affect the maximum profit or the optimal production plan. Essentially there is plenty of sensors available, having more would not allow a better profit plan to be possible. Let's confirm this as well with a numerical example by adding *10,000* more sensors. See formulation 4.3.
 
-```{marginfigure}
+
 $$
  \begin{split}
  \begin{aligned}
@@ -199,7 +194,7 @@ $$
   \end{aligned}
   \end{split}
 $$
-```
+
 
 ```{marginfigure}
 **Formulation 4.3**: Explicit model for Underutilzed Resources
@@ -371,7 +366,7 @@ We could interpret this as a simple hard stop on the decision to produce Dogs bu
 
 ## Exercises
 
-**Exercise 4.1** (Adding Eels)
+::: {.exercise name="Adding Eels"}
 
 Your company has extended production to allow for producing aquatic Eels and is now including a finishing department that primes and paints the drones.
 
@@ -396,9 +391,12 @@ g)  Using the results from e), (i.e. reduced cost and shadow prices) make one ch
 h)  Using the results from e), (i.e. reduced cost and shadow prices) make one change to the base model's **available resource values** that will change the production plan. Rerun and discuss the new results.
 i)  Combine the results of the base case e), as well as the variations f) through h) into a single table and discuss the results. \vspace{12pt}
 
-**Exercise 3.1** (Revisiting Transportation)
+:::
+
+::: {.exercise name="Revisiting Transportation"}
 
 Using sensitivity analysis, revisit the transportation exercise from chapter 3.
 
 a) If one more unit of supply was available, where would it be prioritized and why?
 b) If demand could be increased by one unit, would it affect the result and at which destination node it be preferred and why?
+:::

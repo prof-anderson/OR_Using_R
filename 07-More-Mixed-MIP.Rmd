@@ -885,23 +885,17 @@ We could minimize $x_{1,1,1}$, the sum of all decision variables (which would be
 
 We need a constraint to ensure that each cell $(i,j)$ contains a value.
 
-```{marginfigure marginsudoku_const1, echo=TRUE}
 $$\sum\limits_{k=1}^{9}   x_{i,j,k} = 1, \; \forall i,j$$
-```
 
 \vspace{12pt}
 
 We then need to ensure that in each row, $i$, each digit $k$ only appears once.
 
-```{marginfigure marginsudoku_const2}
 $$\sum\limits_{i=1}^{n}   x_{i,j,k} = 1, \; \forall j,k$$
-```
 
 We then need to ensure that in each column, $j$, each digit only appears once.
 
-```{marginfigure marginsudoku_const3}
 $$\sum\limits_{j=1}^{n}   x_{i,j,k} = 1, \; \forall i,k$$
-```
 
 \vspace{12pt}
 
@@ -1106,10 +1100,7 @@ While these problems will not represent a heavy load for a desktop or laptop com
 If you are using a cloud-based service such as RStudio.cloud, a server, or third party service such as Amazon Web Services, be sure to understand the implications of heavy computational loads.
 Possible results of excessive use of third party computer time include throttling of access similar to cell phone users exceeding monthly data caps, high "overage" charges, a warning from a systems administrator, or even account termination.
 
-\vspace{12pt}
-
-**Exercise 7.1** (Warehouse-Max Customers-Small)
-
+::: {.exercise name="Warehouse-Max Customers-Small"}
 Run the analysis for the smaller warehouse optimization but with just 10 customers and 3 warehouses.
 Extend the warehouse customer assignment problem to have each warehouse that is built be assigned a maximum of 4 customers.
 Compare the solution to that obtained earlier.
@@ -1117,11 +1108,9 @@ Ensure that your data for customers and warehouses is the same for the two cases
 \vspace{12pt}
 
 This problem size should be cloud-friendly but ensure that you are solving the appropropriate sized problem before running.
+:::
 
-\vspace{12pt}
-
-**Exercise 7.2** (Warehouse-Max and Min Customers-Small)
-
+::: {.exercise name="Warehouse-Max and Min Customers-Small"}
 Run the analysis for the smaller warehouse optimization but with just 10 customers and 3 warehouses.
 Extend and solve the warehouse customer assignment problem to have each warehouse that is built be assigned a maximum of 4 customers and a minimum of 2 customers.
 Show plots of both solutions.
@@ -1130,112 +1119,91 @@ Ensure that your data for customers and warehouses is the same for the two cases
 \vspace{12pt}
 
 This problem size should be cloud-friendly but ensure that you are solving the appropropriate sized problem before running.\
-\vspace{12pt}
+:::
 
-**Exercise 7.3** (Warehouse-Simulating Customers-Moderate)
-
+::: {.exercise name="Warehouse-Simulating Customers-Moderate"}
 Run the analysis for the smaller warehouse optimization with a max of 10 customers and 3 warehouses.
 Simulate it 20 times and plot the results in terms of number of warehouses used and the total cost.
 Discuss the results.\
-\vspace{12pt}
 
 This problem size should not be be run on a cloud or remote server without full understanding of load implications.
 Note that this will be somewhat computationally intensive and is best done on a local computer rather than the cloud.
 Doing it on a personal computer may require on the order of five minutes of processing time.\
-\vspace{12pt}
+:::
 
-**Exercise 7.4** (Warehouse-Max Customers-Big)
-
+::: {.exercise name="Warehouse-Max Customers-Big"}
 Extend the warehouse customer assignment problem to have each warehouse that is built be assigned a maximum of 40 customers.
 Compare the solution to that obtained earlier.
 Ensure that your data for customers and warehouses is the same for the two cases.
 This problem size should not be be run on a cloud or remote server without full understanding of load implications.
-\vspace{12pt}
+:::
 
-**Exercise 7.5** (Warehouse-Max and Min Customers-Big)
-
+::: {.exercise name="Warehouse-Max and Min Customers-Big"}
 Extend the warehouse customer assignment problem to have each warehouse that is built be assigned a maximum of 40 customers and a minimum of 15 customers.
 Compare the solution to that obtained earlier.
 Ensure that your data for customers and warehouses is the same for the two cases.
 This problem size should not be be run on a cloud or remote server without full understanding of load implications.
-\vspace{12pt}
+:::
 
-**Exercise 7.6** (Warehouse-Simulating Customers - Big)
-
+::: {.exercise name="Warehouse-Simulating Customers-Big"}
 Run the analysis for the warehouse optimization model 20 times and plot the results in terms of number of warehouses used and the total cost.
 Discuss and interpret the results.
 Note that this will be **computationally intensive** and should not be done on the cloud.
 Doing it on a personal computer may require on the order of five minutes of processing time.
+:::
 
-\vspace{12pt}
-
-**Exercise 7.7** (Sudoku-Bottom Row)
-
+::: {.exercise name="Sudoku-First Puzzle"}
 Solve the Sudoku puzzle from the beginning of this section using R.
+:::
 
-\vspace{12pt}
-
-**Exercise 7.8** (Sudoku-Bottom Row)
-
+::: {.exercise name="Sudoku-Bottom Row"}
 Solve a Sudoku model using optimization where the bottom row is 9 numbered down to 1.
+:::
 
-\vspace{12pt}
+::: {.exercise name="Sudoku-Right Column"}
+Solve a Sudoku model using optimization where the rightmost column is 9 numbered down to 1.
+:::
 
-**Exercise 7.9** (Sudoku-Right Column)
-
-Solve a Sudoku model using optimization where the right most column is 9 numbered down to 1.
-
-\vspace{12pt}
-
-**Exercise 7.10** (Sudoku-Center Cluster)
-
+::: {.exercise name="Sudoku-Center Cluster"}
 Solve a Sudoku model using optimization where the center 3x3 cluster is made up of the numbers from 9 to 1.
 (First row is 9, 8, 7; second row is 6, 5, 4; bottom row is 3, 2, 1)
+:::
 
-\vspace{12pt}
-
-**Exercise 7.11** (Find a Sudoku to Solve)
-
+::: {.exercise name="Find a Sudoku to Solve"}
 Find a Sudoku puzzle from a newspaper or elsewhere and solve it using optimization.\
-\vspace{12pt}
+:::
 
-**Exercise 7.12** (Solve a Specific Sudoku)
-
+::: {.exercise name="Sudoku-First Puzzle"}
 Solve the Sudoku problem from the beginning of this section.
 
 ```{r First_Sudoku-exercise, echo=FALSE, fig.height=4}
 plot(game1)
 ```
+:::
 
-\vspace{12pt}
-
-**Exercise 7.13** (Sudoku-Multiple Optima)
-
+::: {.exercise name="Sudoku-Multiple Optima"}
 **Challenge:** Sudoku puzzles are often created with the intention of having a single solution since the approaches people use to solve them are based on incrementally reasoning out what values each cell must contain.
 The result is that the ambiguity of multiple optima may cause problems for people to solve.
 While the optimization model can solve these without difficulty, it is only going to find one, arbitrary solution.
 Simply resolving is likely to give you the same solution even when there are multiple optima.
 Consider variations and apply them to find multiple solutions to a problem.
 For an example of one with multiple optimal solutions, the most extreme case would be starting with a blank board.
+:::
 
-\vspace{12pt}
-
-**Exercise 7.14** (Sudoku-Infeasible)
-
+::: {.exercise name="Sudoku-Infeasible"}
 **Challenge:** A Sudoku puzzle with only a small numbers shown can be infeasible even though it does not contain any obvious violation of repeated digits.
 People building Sudoku puzzles need to ensure that every puzzle is solvable or risk having frustrated customers.
 Add a digit one at a time to an existing Sudoku puzzle board that does not immediately violate the repeated digits requirement, test for a valid solution, and repeat, until the Sudoku game board becomes infeasible.
+:::
 
-\vspace{12pt}
-
-**Exercise 7.15** (Sudoku-4x4)
-
-**Ultra-Challenge:** Solver the 16 letter Sudoku puzzle using R.
+::: {.exercise name="Sudoku-4x4"}
+**Ultra-Challenge:** Solve a 16 letter Sudoku puzzle using R.
 It consists of 4x4 grids and uses the letters starting with A in place of numbers.
 
 ```{r Sudoku_exercise_4x4, echo=FALSE, fig.height=4}
 set.seed(1234); plot(makeGame(n=4))
 ```
+:::
 
 ## Production Planning over Time
 
@@ -1368,7 +1336,8 @@ prores$solution
 
 ## Additional Exercises
 
-**Exercise 7.15** (Production Planning) Antenna Engineering has received an order for a key component of 5G base stations from a major telecommunications company.
+::: {.exercise name="Production Planning"}
+Antenna Engineering has received an order for a key component of 5G base stations from a major telecommunications company.
 They must provide 250 products and they have 6 machines that can be used to produce these products.
 The machines have differing characteristics described in the following table.
 
@@ -1380,6 +1349,8 @@ The machines have differing characteristics described in the following table.
 |       4 |     85     |      2.4      |    40    |     |     |
 |       5 |     80     |      2.0      |    60    |     |     |
 |       6 |     70     |      2.6      |    80    |     |     |
+
+Table: Production Planning
 
 The goal is to develop a production plan at the lowest possible cost.
 
@@ -1397,23 +1368,18 @@ Compare and discuss your solution with respect to the original solution.
 
 Create a generalized algebraic model in LaTeX, implement in ompr, and solve.
 Compare results to the explicit model.
+:::
 
-\*\*Exercise 7.16\*\* (Warehouse Optimization)
+::: {.exercise name="Warehouse Optimization"}
+The warehouse optimization example in chapter 7 had a solution resulting in three warehouses. Assume that you had been responsible for creating the plan and presented the recommendation to the Vice President of Supply Chain Management who stated that they don't want to pay for the construction of three warehouses and that at most two warehouses should be built.
 
-> The warehouse optimization example in chapter 7 had a solution resulting in three warehouses.
-> Assume that you had been responsible for creating the plan and presented the recommendation to the Vice President of Supply Chain Management who stated that they don't want to pay for the construction of three warehouses.
-> It should be at most two warehouses.
-> Without changing the model and only relying on the information from the book, give your quick response as to how this would affect the solution.
-> Assume that the VP is unfamiliar with optimization.
+a) Without changing the model and only relying on the information from the book, give your quick response as to how this would affect the solution. (Assume that the VP is unfamiliar with optimization.)
 
-Explain your answer in operations research terms
 
-> Another employee familiar with optimization overhears your conversation with the VP.
-> Explain your answer succinctly in optimization terms.
+b) Another employee familiar with optimization overhears your conversation with the VP. Explain your answer succinctly in optimization terms.
 
-Write the constraint(s) to reflect the VP's suggestion.
+c) Write the constraint(s) to reflect the VP's suggestion.  Write the LaTeX constraint(s) in terms of variables and/or data from the warehouse example in Chapter 7. Explain in your own words how the constraint(s) implement the suggestion modification.
 
-> Write the LaTeX constraint(s) in terms of variables and/or data from the warehouse example in Chapter 7.
-> Explain in your own words how the constraint(s) implement the suggestion modification.
+d) *Challenge:* Solve the revised problem.
+:::
 
-Challenge: Solve the revised problem.
