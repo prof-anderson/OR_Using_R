@@ -168,10 +168,7 @@ kbl(temp1, booktabs=T,
     caption="Production Plan with One Additional Assembly Hour")
 ```
 
-\vspace{12pt}
-
 These results confirmed that adding one hour of Testing time results in a *new* production plan that generates an increased profit of $\$2.25$, exactly as expected.\
-\vspace{12pt}
 
 While it is easy to look at an individual resource when we are looking at problems with only a couple of constraints, the shadow prices can be very helpful in larger problems with dozens, hundreds, or thousands of resources where questions might come up of trying to evaluate or prioritize limited resources.
 
@@ -199,8 +196,6 @@ $$
 ```{marginfigure}
 **Formulation 4.3**: Explicit model for Underutilzed Resources
 ```
-
-\vspace{12pt}
 
 In the same way that it was done for adjusting assembly hours earlier, the next chunk shows how to build in examine the case of a huge increase in the number of sensors. Table 4.3 contains the result for this model.
 

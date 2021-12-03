@@ -575,4 +575,5 @@ b) Write a constraint or set of constraints using LaTeX that would ensure state 
 c) Write a constraint or set of constraints to ensure that state 9 and 24 are done in the same week.
 
 d) Given the minimax objective function, how do you think the above requirements will affect the solution in terms of an objective function and characteristics of managerial interest?
+:::
 

@@ -1,5 +1,9 @@
 # Introduction to Linear Programming
 
+```{r, eval=FALSE, include=FALSE}
+library(bookdown); library(rmarkdown); rmarkdown::render("02-A_First_LP.Rmd", "pdf_book")
+```
+
 ```{r ch2setup, include=FALSE}
 library(knitr)
 library(kableExtra)
@@ -7,10 +11,6 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = FALSE)
 knitr::opts_chunk$set(cache = FALSE)
 knitr::opts_chunk$set(width = 30)
-```
-
-```{r, eval=FALSE, include=FALSE}
-library(bookdown); library(rmarkdown); rmarkdown::render("02-A_First_LP.Rmd", "pdf_book")
 ```
 
 ## What is Linear Programming
@@ -883,11 +883,10 @@ In particular, you might want to look over this document with respect to:
 -   Summations are a little tricky in both creating equations and the *ompr* model. For the former, you can just emulate my material to learn enough LaTeX to make it work. For the latter, look at Dirk's online documentation for *ompr* or chapter 2 of my book, *DEA Using R.*
 
 ```{marginfigure}
-**ompr**, Model mixed integer linear programs in an algebraic way directly in R. The model is solver-independent and thus offers the possibility to solve a model with different solvers. It currently only supports linear constraints and objective functions. See the 'ompr' website <https://dirkschumacher.github.io/ompr> for more information, documentation and examples
+**ompr**, Model mixed integer linear programs in an algebraic way directly in R. The model is solver-independent and thus offers the possibility to solve a model with different solvers. It currently only supports linear constraints and objective functions. See the 'ompr' website <https://dirkschumacher.github.io/ompr> for more information, documentation, and examples
 ```
 
 ::: {.exercise name="Adding a Dog Drone"}
-
 Your company has extended production to allow for producing the dog drone and is now including a finishing department that primes and paints the drones. See Table to the right for all the data.
 
 a)  Use R Markdown to create your own description of the model.
@@ -900,22 +899,35 @@ d)  Interpret and discuss the model in R Markdown.
 
 e)  Discuss how one parameter would need to change in order to result in a different production plan. Demonstrate how this affects the results.
 
-| Char. | Ants | Bats | Cats | Dogs | Avail. |
-|------:|:----:|:----:|:----:|:----:|:------:|
-| Prof. | \$7  | \$10 | \$5  | \$24 |        |
-| Fabr. |  1   |  3   |  2   |  2   |  800   |
-| Asse. |  3   |  4   |  2   |  2   |  900   |
-| Mach. |  2   |  3   |  1   |  2   |  480   |
-| Sens. |  3   |  5   |  2   |  4   |  1200  |
-| Pain. |  2   |  7   |  2   |  6   |  500   |
+| Characteristic | Ants | Bats | Cats | Dogs | Available |
+|---------------:|:----:|:----:|:----:|:----:|:---------:|
+| Profit         | \$7  | \$10 | \$5  | \$24 |           |
+| Fabrication    |  1   |  3   |  2   |  2   |  800      |
+| Assembly       |  3   |  4   |  2   |  2   |  900      |
+| Maching        |  2   |  3   |  1   |  2   |  480      |
+| Sensors        |  3   |  5   |  2   |  4   |  1200     |
+| Painting       |  2   |  7   |  2   |  6   |  500      |
 
 Table: Data for Dog Drone Exercise
 
 **Hint:** Knit your RMarkdown as a PDF. Also, don't be bothered by fractional values for a possible production plan at this time. It is only a high level production plan so if a drone(s) are only partially finished, assume that work on them will continue in the next planning period. We will deal with fractional variable values much more formally in Chapter 6 but for now, consider the expression "close enough for government work" to apply.
-
 :::
 
-\vspace{12pt}
+::: {.exercise name="Rose City Roasters"}
+Rose City Roasters provides premium roasted coffee beans for regional coffee shops. There are four important steps:  Arranging the beans, roasting the beans, allowing them to cool, and then giving them 
+
+|               | Light | Medium | Medium-Dark | Dark  | Available |
+|--------------:|:-----:|:------:|:-----------:|:-----:|:------:|
+| Price         | \$80  | \$103  | \$100       | \$112 |        |
+| Variable Cost | \$50  | \$52   | \$55        | \$60  |        |
+| Arrange       |  10   | 10     | 10          | 10    |  4000  |
+| Roast         |  6    |  4     |  2          |  8    |  2000  |
+| Cool          |  3    |  2     |  2          |  2    |  1480  |
+| Degas         |  3    |  4     |  2          |  4    |  1200  |
+| Packaging     |  4    |  4     |  2          |  3    |  1200  |
+
+Table: Data for Rose City Roasters
+
 
 ## Miscellaneous Tips and Tricks
 

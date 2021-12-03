@@ -6,6 +6,11 @@ editor_options:
 
 # More Integer Programming Models
 
+
+```{r, eval=FALSE, include=FALSE}
+library(bookdown); library(rmarkdown); rmarkdown::render("07-More-Mixed-MIP.Rmd", "pdf_book")
+```
+
 ```{r Ch7setup, echo=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = FALSE)
@@ -28,9 +33,6 @@ library (sudokuAlt)
 suppressPackageStartupMessages(library(dplyr))
 ```
 
-```{r, eval=FALSE, include=FALSE}
-library(bookdown); library(rmarkdown); rmarkdown::render("07-More-Mixed-MIP.Rmd", "pdf_book")
-```
 
 ## Overview
 

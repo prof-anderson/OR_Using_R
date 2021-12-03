@@ -1,10 +1,18 @@
 # (APPENDIX) Appendix {-}
 # Introduction to Math Notation
 
+```{r, eval=FALSE, include=FALSE}
+library(bookdown); library(rmarkdown); rmarkdown::render("90-Appendix-Summation.Rmd", "pdf_book")
+```
+
 ```{r Ch90setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = F)
 ```
+
+## Purpose
+
+This Appendix provides a brief introduction to relevant notation constructs that arise often in optimization.  A major benefit of using 
 
 ## Basic Summation Notation
 
@@ -21,27 +29,20 @@ $$\sum_{x}$$
 
 The starting value of the variable may be given below $\sum$ as well. In this case, the summation notation below tells us that the initial value of $x$ will be equal to 1.  
 
-```{marginfigure}
 $$\sum_{x=1}$$
-```
-  
+
 In some cases, we may also wish to designate an ending value of the variable, which we can include above the $\sum$.  The summation notation below also tells us that the final value of $x$ will be equal to 5.  
 
-```{marginfigure}
 $$\sum_{x=1}^5$$
-```
 
 In all dealings with summation notation, variables will only take integer values, beginning and ending at any values provided within the summation notation.  Note that some summations may use an "ending" value of $\infty$, which would involve the summation of an infinite number of values.  
  
 Let's look at a basic summation problem.  
 
-```{marginfigure}
 $$\sum_{x=1}^5 2x$$
-```
 
 The summation above means that we will take the $x$ values, starting at $x=1$, and multiply the value of $x$ by 2.  We will continue to do this for each integer value of $x$ until we have reached our ending value of 5.  Then we will sum all of our results (five of them, in this case) to produce one final value for the summation.  
 
-```{marginfigure}
 $$
 \begin{split}
 \begin{aligned}
@@ -52,7 +53,6 @@ $$
 \end{aligned}
 \end{split}
 $$
-```
 
 Summation can be calculated over a variety of algebraic expressions.  Another, perhaps more challenging, example is shown below.  
 
@@ -67,34 +67,34 @@ $$
 \end{split}
 $$
 
-## Notation in LaTeX
+## Using LaTeX in RMarkdown
 
-LaTex is a common typesetting used to express mathematical notation.  The summation notation symbols thus far in this text have been written using LaTex.  Inline LaTeX commands can be added by including a \$ symbol on either side of the LaTeX command.  To create entire LaTeX code chunks, include two \$$ symbols before and after the chunk of LaTeX.
+LaTex is a common typesetting used to express mathematical notation.  The summation notation symbols thus far in this text have been written using LaTeX.  Inline LaTeX commands can be added by including a \$ symbol on either side of the LaTeX command.  To create entire LaTeX code chunks, include two \$$ symbols before and after the chunk of LaTeX.
+
+## In-line Notation
+
+Rmarkdown makes it easy to switch between regular and "in-line LaTeX" by selecting whether you use a single or a double \$ to wrap the math. Most of the above examples were written using the double \$. 
+
+Inline tries to help fit the math in the normal height of a line of text. For example, notice how this equation doesn't really disrupt the line spacing in a paragraph $\sum_{x=0}^3 x^2-4x+1$. The most obvious difference is in the summation. If it is selected as in-line, the summation limits will be to the right of the summation symbol. If it is regular, the limits will be above and below the summation symbol.  As an example, here is the same equation $$\sum_{x=0}^3 x^2-4x+1\\$$ entered in-line with the regular text of the paragraph. The simple rule of thumb in Rmarkdown is to use a double-dollar sign for equations that are entered on their own line and a single dollar sign for symbols that are entered as text.
 
 ## Sums
 
 To display the $\sum$ symbol in LaTex, use the command `\sum_{lower}^{upper}`.  
 
 The sum expression can be added using the command:  
-```{marginfigure}
 $$\sum_{lower}^{upper}$$ 
-```
 
 Sum limits can be written to appear above and below the operator.  
 
-```{marginfigure}
 $$
 \sum\limits_{t=0}^{n}\dfrac{CF_t}{(1+r)^t}
 $$
-```
 
 ## Products
 
 The multiplication or product over a sequence is denoted as the uppercase Greek letter pi, $\prod$.  The product command can be added using the expression `\prod_{x = a}^{b} f(x)`
 
-```{marginfigure}
 $$\prod_{x = a}^{b} f(x)$$
-```
 
 The lower and upper limits of summation after the `\sum` are both optional.  Products and integrals work similarly, only with `\prod` and `\int`:
 
@@ -106,63 +106,39 @@ $$\left( \sum_{i=1}^{n}{i} \right)^2 = \left( \frac{n(n-1)}{2}\right)^2 = \frac{
 
 Below are some common mathematical functions that are often used. 
 
-1. x = y
-```{marginfigure}
-$$1. x = y$$
-```
+| Math             | LaTeX         | Purpose    |
+|-----------------:|:--------------|:------------------|
+| $$x = y$$        | `x = y`       | Equality    |   
+| $$x < y$$        | `x < y`       | Strict less than      |
+| $$x > y$$        | `x > y`       | Strict greater than     |
+| $$x \le y$$      | `x \le y`     | Strict less than      |  
+| $$x \ge y$$      | `x \ge y`     | Strict greater than     |       
+| $$x \ne y$$      | `x \ne y`     | Not equal     |       
+| $$x^n$$          | `x^{n}`       | Superscript or exponentiation  | 
+| $$x^{\text{Max Customers}}$$  |  `x^{\text{Max Customers}}`    | Superscript     | 
+| $$x_i$$          | `x_i`         | Subscript     | Single item       |
+| $$x_{i,j,k}$$    | `x_\{i,j,k\}` | Subscript     |
+| $$\overline{x}$$ | `\overline{x}`| Bar   |
+| $$\hat{x}$$      | `\hat{x}`     | Hat   | 
+| $$\tilde{x}$$    | `\tilde{x}`   | Tilde    |  
+| $$\frac{a}{b}$$  | `\frac{a}{b}` | Fraction or Ratio    |
+| $$x_{1} + x_{2} + \cdots + x_{n}$$  |  `x_{1} + x_{2} + \cdots + x_{n}`    | Ellipsis    | 
+| $$|A|$$          | `|A|`         | Absolute Value    |            
+| $$x \in A$$      | `x \in A`     | x is in set A    |     
+| $$x \subset B$$  | `x \subset B` | x is a proper subset of B    |
+| $$x \subseteq B$$|   `x \subseteq B`   | x is a subset of B    |       
+| $$A \cup B$$     |    `A \cup B` | Union of sets A and B    |          
+| $${1, 2, 3}$$    |   `\{1, 2, 3\}`    | Set with members 1, 2, and 3    |       
+| $$\sin(x)$$      |  `\sin(x)`    | Common functions such as sine or logarithm |            
+| $$\int_{a}^{b} f(x) \; dx$$      |  `\int_{a}^{b} f(x) \; dx`    | Integral   |        
+| $$\sum_{x = a}^{b} f(x)$$    |  `\sum_{x = a}^{b} f(x)`   | Summation  |         
+| $$\prod_{x = a}^{b} f(x)$$   |  `\prod_{x = a}^{b} f(x)`    | Product  | 
+| $$\lambda$$      | `\lambda`     | Greek letter or symbol such as lambda |   
+| $$3 \cdot x$$      | `3 \cdot x`     | Better to use dot than asterisk for multiplication |   
 
-2. x < y
+Table: Commonly Used Optimization Modeling Notations.
 
-$$2. x < y$$
-3. x > y
-
-$$3.x > y$$
-4. x `\le` y
-$$4.x \le y$$
-5. x `\ge` y 
-$$5.x \ge y$$
-6. x`^{n}`
-$$6.x^{n}$$
-7. `x_{n}`
-$$7.x_{n}$$
-8. `overline{x}`
-$$8.\overline{x}$$
-9. `hat{x}`
-$$9.\hat{x}$$
-10. `tilde{x}`
-$$10.\tilde{x}$$
-11. `frac{a}{b}`
-$$11.\frac{a}{b}$$
-12. `binom{n}{k}`
-$$12.\binom{n}{k}$$
-13. `x_{1} + x_{2} + \cdots + x_{n}`
-$$13.x_{1} + x_{2} + \cdots + x_{n}$$
-14. `|A|`
-$$14.|A|$$
-15. `x \in A`
-$$15.x \in A$$
-16. `x \subset B`
-$$16.x \subset B$$
-17. `x \subseteq B`
-$$17.x \subseteq B$$
-18. `A \cup B`
-$$18.A \cup B$$
-19. `{1, 2, 3\}`
-$$19.\{1, 2, 3\}$$
-20. `\sin(x)`
-$$20.\sin(x)$$
-21. `\log(x)`
-$$21.\log(x)$$
-22. `\int_{a}^{b}`
-$$22.\int_{a}^{b}$$
-23. `\left(\int_{a}^{b} f(x) \; dx\right)`
-$$23.\left(\int_{a}^{b} f(x) \; dx\right)$$
-24. `\left. F(x) \right|_{a}^{b}`
-$$24.\left. F(x) \right|_{a}^{b}$$
-25. `\sum_{x = a}^{b} f(x)`
-$$25.\sum_{x = a}^{b} f(x)$$
-26. `\prod_{x = a}^{b} f(x)`
-$$26.\prod_{x = a}^{b} f(x)$$
+Of course there are many more mathematical terms, Greek letters, and more but this table can serve as a common quick reference for things that may come up in frequently in optimization modeling.
 
 ## Sequences and Summation Notation
 
@@ -170,9 +146,8 @@ Often, especially in the context of optimization, summation notation is used to 
 $$\sum_{i=1}^5 x_i=x_1+x_2+x_3+x_4+x_5$$
 
 Coefficient values may also be included in a summation, as shown below.
-```{marginfigure}
+
 $$\sum_{i=1}^5 (10-i)x_i=9x_1+8x_2+7x_3+6x_4+5x_5$$
-```
 
 ## Applications of Summation
 
@@ -183,15 +158,15 @@ For example, let's imagine that the itemized cost for the production of a produc
 ```{r}
 
 ##Load Library
-library(pander,quietly = TRUE)
+library(kableExtra,quietly = TRUE)
 
 #Load Data Table
-M1<-matrix(c(11,12,13,14,15), ncol=1)
+M1 <- matrix(c(11,12,13,14,15), ncol=1)
 rownames(M1)<-list("Design", "Materials", 
                    "Production", "Packaging", 
                    "Distribution")
-colnames(M1)<-list("Product 1")
-pander(M1, 
+colnames (M1) <- list("Product 1")
+kbl (M1, booktabs=T,
        caption="Production Costs for Product 1")
 
 ```
@@ -219,7 +194,7 @@ M2<-matrix(c(11,12,13,14,15,21,22,23,24,25,31,32,33,34,35),
 rownames(M2)<-list("Design", "Materials", "Production", 
                    "Packaging", "Distribution")
 colnames(M2)<-list("Product 1", "Product 2", "Product 3")
-pander(M2, caption=
+kbl(M2, booktabs=T, caption=
          "Itemized Production Costs for Three Products")
 
 ```
@@ -260,13 +235,11 @@ We can see that the summation expression resulted in three summation values sinc
 
 For some projects or models, we may need to add one summation into another. This procedure is called "double summation."  Consider the following double summation expression:  `\sum_{i=1}^3\sum_{j=1}^4 (i+j)`
 
-```{marginfigure}
 $$\sum_{i=1}^3\sum_{j=1}^4 (i+j)$$
-```
 
 Note that the expression contains two $\sum$ symbols, indicating a double summation.  The double summation would expand as shown below.
 
-```{marginfigure}
+
 $$
 \begin{split}
 \begin{aligned}
@@ -278,15 +251,12 @@ $$
 \end{aligned}
 \end{split}
 $$
-```
 
 ## Applications of Double Summation
 
 Consider a transportation application using double summation in which we want to ship a given amount of product $X$ from location $i$ to location $j$, denoted $X_{i,j}$.  The summation notation for this application is shown below.
 
-```{marginfigure}
 $$\sum_{i=1}^n\sum_{j=1}^m X_{i,j}$$
-```
 
 Expanding on the previous summation, we may also want to include shipping costs $C$ from location $i$ to location $j$, denoted $C_{i,j}$.  Combining the amount of product with the related shipping costs would result in the double summation expression shown below.
 
@@ -294,7 +264,8 @@ $$\sum_{i=1}^n\sum_{j=1}^m C_{i,j}X_{i,j}$$
 
 ## Exercises
 
-1.  Write all terms and calculate the summation for each exercise.
+::: {.exercise name="Expand-Summation1"}
+Write all terms and calculate the summation for the following:
 
 $$
 \begin{split}
@@ -305,8 +276,10 @@ B.  && \sum_{x=0}^5 8x-1\\
 \end{aligned}
 \end{split}
 $$
+:::
 
-2.  Write as a sum of all terms in the sequence.
+::: {.exercise name="Expand-Summation2"}
+Write as a sum of all terms in the sequence.
 
 $$
 \begin{split}
@@ -315,37 +288,52 @@ $$
 \end{aligned}
 \end{split}
 $$
+:::
 
-3.  Write a summation to represent the total cost associated with producing three items of Product 1.  Use the values from Table 1 to evaluate your summation expression.
+::: {.exercise name="Evaluate-Summation1"}
+Write a summation to represent the total cost associated with producing three items of Product 1.  Use the values from the first table in the Appendix to evaluate your summation expression.
+:::
 
-4.  Write all terms and calculate the summation for each exercise.
+::: {.exercise name="Evaluate-Summation2"}
+Write all terms and calculate the summation for each exercise.
 
 $$
 \begin{split}
 \begin{aligned}
-A. && \sum_{i=1}^3\sum_{j=1}^4 (i*j)\\
+A. && \sum_{i=1}^3\sum_{j=1}^4 (i \cdot j)\\
 \\
-B.  && \sum_{i=1}^5\sum_{j=1}^2 (3i-j)\\
+B.  && \sum_{i=1}^5\sum_{j=1}^2 (3\cdot i-j)\\
 \end{aligned}
 \end{split}
 $$
+:::
 
-5.  A company compensates its employees with an annual salary and an annual bonus.  
+::: {.exercise name="Employee-Summation"}
+A company compensates its employees with an annual salary and an annual bonus.  
 
 A.  Write an expression using summation notation to represent the total annual compensation $i$ (including salary and bonus) for each job title $j$.  
 
 B.  Write a double summation expression to represent the total amount the company pays annually to compensate all its employees if each job title has $n_j$ employees.  
 (Need possible sample expression for A. and B.)
+:::
 
 ## Internet Resources for Mathematical Notation
 
 http://www.columbia.edu/itc/sipa/math/summation.html
+
 https://www.overleaf.com/learn/latex/Integrals,_sums_and_limits#Sums_and_products 
+
 http://www.u.arizona.edu/~kuchi/Courses/MAT167/Files/LH_LEC.0130.Intro.SummationNotation.pdf
+
 https://www.bates.edu/mathematics/resources/what-is-latex/
+
 http://math.hws.edu/gassert/LaTeX_Guide_Title.pdf 
+
 http://www.statpower.net/Content/310/R%20Stuff/SampleMarkdown.html
+
 http://www.calvin.edu/~rpruim/courses/m343/F12/RStudio/LatexExamples.html
+
 http://pages.stat.wisc.edu/~jgillett/371/RStudio/RMarkdown.pdf
+
 https://www.academia.edu/21823064/Creating_Dynamic_Mathematical_Documents_in_RStudio_by_Unifying_Computing_with_R_and_Typesetting_with_LaTeX
 

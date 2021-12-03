@@ -12,9 +12,10 @@ lof: yes
 site: bookdown::bookdown_site
 description: "This book introduces optimization using R."
 github-repo: prof-anderson/OR_Using_R
-suppress-bibliography: no
+suppress-bibliography: yes
 graphics: yes
-highlight: monochrome
+highlight: tango
+#highlight: monochrome
 #cover-image: images/Book_Cover-Optimization_Modeling_Using_R.png
 ---
 

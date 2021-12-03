@@ -1,5 +1,9 @@
 # More Linear Programming Models
 
+```{r, eval=FALSE, include=FALSE}
+library(bookdown); library(rmarkdown); rmarkdown::render("03-More-LP-Models.Rmd", "pdf_book")
+```
+
 ```{r Ch3setup, include=FALSE}
 library (tufte)
 library (knitr)
@@ -11,11 +15,6 @@ knitr::opts_chunk$set(cache = FALSE)
 knitr::opts_chunk$set(width = 30)
 
 ```
-
-```{r, eval=FALSE, include=FALSE}
-library(bookdown); library(rmarkdown); rmarkdown::render("03-More-LP-Models.Rmd", "pdf_book")
-```
-
 
 ## Types of LP Models
 
@@ -48,15 +47,12 @@ $$
 **Formula 3.1**: A production planning LP with 3 products and 4 contraints.
 ```
 
-\vspace{12pt}
-
 Similarly, *j=1* represents machining, *j=2*, represents assembly, etc.
 Now, let's move on to defining the data.
 Let's define the amount to produce of each product, *i*, as $x_i$ and resource *j* consumed by product *i* as $R_{i,j}$.
 The available resource *j* is then $A_j$.
 The profit per product *i* is then $P_i$.
 The LP can now be rewritten as shown in the right margin, formula 3.1, if there are three products and four constraints.
-\vspace{12pt}
 
 We could further generalize this by instead of hard coding the number of products and resource constraints, we instead define the number of products and resources as *NProd* and *NResources* respectively.
 We can then rewrite the previous formulation as the Formulation 3.2.
@@ -83,29 +79,24 @@ More information is provided in *Appendix A*.
 
 The symbol, $\forall$, is read as "for all" and can be interpreted to mean "repeat this line substituting in a value for this subscript **for all** possible values of this subscript." In other words, given that *i* is used consistently for the three products, then $x_i \geq 0 \; \forall \; i$ is equivalent to $x_i \geq 0 \;,i=1,2,3$ or even $x_1 \geq 0, \; x_2 \geq 0, \; x_3 \geq 0$.
 The result is that the $\forall$ symbol can simplify the description of complex models when index ranges are clear.
-\vspace{12pt}
 
 Another good practice is to use a mnemonic to help suggest the meaning of data.
 That is why I chose "R" for Resource, "P" for Profit, and "A" for Available resources.
-\vspace{12pt}
 
 Another helpful convention is to use capital letters for data and lower case letters for variables.
 (Some people will swap this around and use capital letters for variables and lower case letters for data - it doesn't matter as long as a model is consistent.)
-\vspace{12pt}
 
 More complex models often run out of letters that make sense.
 A common approach in these models is to use a superscript.
 For example, perhaps labor cost for each worker, *w*, could have different values for both normal and overtime rates.
 Rather than separate data terms for such closely related concepts, we might denote regular hourly labor cost for worker *w* as $C^R_w$ and for overtime as $C^O_w$.
 Again, it is very important to clearly define all the data and variables used in the model.\
-\vspace{12pt}
 
 ## Building the Generalized Model in R
 
 The concise, algebraic representation can be easily scaled to any number of products and resources.
 Let's write this as the following.
 I'll expand the names of data slightly for making the R code more readable but this is meant to be consistent with the above formulation.\
-\vspace{12pt}
 
 ```{r, fig.margin=TRUE, echo=FALSE}
 NProd <- 4
@@ -158,16 +149,12 @@ Table 3.2 displays the resources used by each product and Table 3.3 the amount o
 kbl(Available, booktabs=T, caption="Amount of Each Resource Available")
 ```
 
-\vspace{12pt}
-
 Now we need to define variables.
 
 ```{r Display-Resources-Available-Combined}
 Combined <- cbind(Resources, Available) 
 kbl(Combined, booktabs=T, caption="Resources Used by Each Product and Available")
 ```
-
-\vspace{12pt}
 
 On the right table, we can see the resources used and available in a single table.
 We have used the *cbind* function to do a column binding of the data.
@@ -178,10 +165,8 @@ In the text of your RMarkdown, anything enclosed by a pair of single tick marks 
 If it starts with the letter r, it will be passed instead to R for evaluation.
 This allows for discussing results in a reproducible manner.
 Rather than discussing the result giving a value of 47.1 in the text and a later rerun of the analysis has an updated table of results showing the result to be 47.2, by using inline code evaluation, it will always show the up to date result, in this case, 47.2.]\
-\vspace{12pt}
 
 Now, let's begin building our optimization model.\
-\vspace{12pt}
 
 First, we'll start by loading the packages that we are using.
 
@@ -231,7 +216,6 @@ Let's walk through what is done line by line.
 
 Displaying the object of `prodmodel` only shows a simple summary of the results of the analysis.
 It indicates whether the model was solved to optimality (and it was!) and the objective function value (profit).\
-\vspace{12pt}
 
 This is useful to know but we are really interested in how to generate this profit.
 To do this, we need to extract the values of the variables.
@@ -253,7 +237,6 @@ kbl(format(head(results.products),digits=4), booktabs=T,
 ```
 
 The table displays the optimal production plan.
-\vspace{12pt}
 
 Let's examine how the resources are consumed.
 To do this, we can multiply the amount of each product by the amount of each resource used for that product.
@@ -261,20 +244,16 @@ For the first product, this would be a term by term sum of each product resultin
 We can do this manually for each product.
 Another approach is to use the command, `Resources[1,]%*%t(results.products)`.
 This command will take the first row of the Resources matrix and multiplies it by the vector of results.\
-\vspace{12pt}
 
 ```{marginfigure}
 Note how we used both an inline r expression and an inline executable r code chunk.  Inline code chunks can be inserted into text by using a single tick at the beginning and end of the chunk instead of the triple tick mark for regular code chunks.  Also, the inline r code chunk starts with the letter r to indicate that it is an r code code.  A common use for this might be to show the results of an earlier analysis.
 ```
-
-\vspace{12pt}
 
 One thing to note is that the first row of `Resources` is by definition a row vector and `result.products` is also a row vector.
 What we want to do is do a row vector multiplied by a column vector.
 In order to do this, we need to convert the row vector of results into a column vector.
 This is done by doing a *transpose* which changes the row to a column.
 This is done often enough that the function is just a single letter, `t`.\
-\vspace{12pt}
 
 We can go one further step now and multiply the matrix of resources by the column vector of production.
 
@@ -298,7 +277,6 @@ It may take some experimenting to get familiar and comfortable with this.
 
 Let's modify the above model.
 We can do this by simply changing the data that we pass into the model.
-\vspace{12pt}
 
 Let's number of sensors required for an ant to 5. Recall that this is the first product and the fourth resource. This is how we can change the value.
 
@@ -371,8 +349,6 @@ $$
   \end{split}
 $$
 
-\vspace{12pt}
-
 Let's rebuild our three variable production plan from Chapter 2.
 
 ```{r Base3VarModel, echo=TRUE}
@@ -407,28 +383,21 @@ kbl(base_case_res, booktabs=T,
 ```
 
 The table on the right displays the optimal production plan for the original formulation without the limit on production of ants.
-\vspace{12pt}
 
 Let's add the constraint that ants can't make up more than 40% of the total production.
-\vspace{12pt}
 
-Effectively, we are saying that $\frac{Ants}{Ants+Bats+Cats} \leq 0.40$ \vspace{12pt}
+Effectively, we are saying that $\frac{Ants}{Ants+Bats+Cats} \leq 0.40$ 
 
 Alas, this is not a linear function so we need to clear the denominator.
-\vspace{12pt}
 
-$Ants \leq 0.40 \cdot (Ants+Bats+Cats)$ \vspace{12pt}
+$$Ants \leq 0.40 \cdot (Ants+Bats+Cats)$$ 
 
 We like to get all the variables on the left side so let's move them over.
-\vspace{12pt}
 
-$Ants - 0.4 \cdot Ants-0.4 \cdot Bats-0.4 \cdot Cats \leq 0$ \vspace{12pt}
+$$Ants - 0.4 \cdot Ants-0.4 \cdot Bats-0.4 \cdot Cats \leq 0$$ 
+Let's simplify this a little, which gives us the following: 
 
-Let's simplify this a little, which gives us the following: \vspace{12pt}
-
-$0.6 \cdot Ants-0.4 \cdot Bats-0.4 \cdot Cats \leq 0$
-
-\vspace{12pt}
+$$0.6 \cdot Ants-0.4 \cdot Bats-0.4 \cdot Cats \leq 0$$
 
 The result is displayed as a formula on the right.
 
@@ -453,10 +422,7 @@ $$
 **Formula 3.4**: Three variable base case model with a blending constraint.  
 ```
 
-\vspace{12pt}
-
 We can simply add a constraint to an existing `ompr` model of our 3 variable base case.\
-\vspace{12pt}
 
 ```{r Blending}
 ModelBlending<- add_constraint(model1,
@@ -471,10 +437,7 @@ blendres<-cbind(get_solution (resBlending, Ants),
                 get_solution (resBlending, Cats))
 ```
 
-\vspace{12pt}
-
 Okay, now let's put both side by side in a table to show the results.\
-\vspace{12pt}
 
 ```{r Compare-Blending-to-Base-Results, fig.margin=TRUE,fig.width=3}
 rownames(base_case_res)<-"Base Model"
@@ -486,11 +449,8 @@ kbl(comparative, booktabs=T,
 ```
 
 As a summary, we can see on the table on the right a comparative between the baseline case and the new production plan with the blending constraint.
-\vspace{12pt}
 
 ## Allocation Models
-
-\vspace{12pt}
 
 An allocation model divides resources and assigns them to competing activities.
 Typically it has a maximization objective with less than or equal to constraints.
@@ -512,17 +472,12 @@ $$
 ```
 
 See the Formula 3.5 on the right to understand the mathematical expression.
-\vspace{12pt}
 
 ## Covering Models
-
-\vspace{12pt}
 
 A covering model combines resources and coordinates activities.
 A classic covering application would be what mix of ingredients "covers" the requirements at the lowest possible cost.
 Typically it has a minimization objective function and greater than or equal to constraints.
-\vspace{12pt}
-
 
 $$
  \begin{split}
@@ -540,13 +495,10 @@ $$
 ```
 
 See the Formula 3.6 on the right to understand the mathematical expression.
-\vspace{12pt}
 
 Consider the case of Trevor's Trail Mix Company.
 Trevor creates a variety of custom trail mixes for health food fans.
 He can use a variety of ingredients displayed in the table on the right.
-
-\vspace{12pt}
 
 |Characteristic |Mix1 |Mix2 |Mix3|Mix4 |Min Req.| 
 |--------------:|:---:|:---:|:--:|:---:|:------:|
@@ -607,21 +559,16 @@ xvalue <- t(get_solution(results.trailmix, Vx[i])[,3])
 ```
 
 We'll leave it to the reader to clean up the output of results.
-\vspace{12pt}
 
 Another classic example of a covering problem is a staff scheduling problem.
 In this case, a manager is trying to assign workers to cover the required demands throughout the day, week, or month.
-\vspace{12pt}
 
 ## Transportation Models
-
-\vspace{12pt}
 
 A transportation model is typically for getting material from one place to another at the lowest possible costs.
 It has sets of source points or nodes as well as ending or destination nodes.
 The decision variables are the amount to send on each route.
 Constraints are typically based on supply from the source nodes and capacity at the destination nodes.
-\vspace{12pt}
 
 This naturally lends itself to potential network diagrams such as the one to the right.  In this case we have three warehouses (or supply points) in Minnesota (MN), Pennsylvania (PA), and Wyoming (WY), each with a supply shown to the left.  On the right side, we have four customer or demand nodes:  Atlanta (ATL), Boston (Bos), Chicago (Chi), and Denver (Den) with their maximum demand shown to the right of the node.  We also have arcs connecting every supply node to every demand node, each labeled with a corresponding cost per unit to transport an item along that arc.  The goal is to get as much shipped as possible at the lowest possible cost.
 
@@ -634,17 +581,13 @@ knitr::include_graphics("images/Fig03-01-Transportation.PNG")
 ```
 
 Let's start to model this now.  We want to define the decision variables, in this case, $x_{i,j}$ is the amount of product to ship from node i to node j.
-\vspace{12pt}
 
 Let's also define the data available. The cost per unit to ship from node i to node j is $C_{i,j}$.
 The supply available from each supply node is $S_i$ and the maximum demand that can be accommodate from each destination node is $D_j$.\
-\vspace{12pt}
 
 In this formulation we need to make sure that we don't ship out more than the capacity of each supply node.
-\vspace{12pt}
 
 Similarly, we need to ensure that we don't take in more than demand capacity at any destination.
-
 
 $$
  \begin{split}
@@ -668,7 +611,6 @@ In reality, even though we are focused on costs in this application, there is an
 We are likely to instead be wanting to ship all of the product that we can at the lowest possible cost.
 More precisely, what we want to do is instead determine if the problem is supply limited or demand limited.
 This is a simple matter of comparing the net demand vs. the net supply and making sure that the lesser is satisfied completely.
-\vspace{12pt}
 
 +-------------------------------+--------------------+-----------------------------+-----------------------------+
 | If...                         | Then Situation is: | Source Constraints          | Demand Constraints          |
@@ -683,7 +625,6 @@ This is a simple matter of comparing the net demand vs. the net supply and makin
 Table: Demand and Supply Constrained Transportation Problems.
 
 In the balanced situation, either source or demand constraints can be equalities.
-\vspace{12pt}
 
 Similarly, if we try to use equality constraints for both the supply and demand nodes but the supply and demand are not balanced, the LP will not be feasible.
 \vspace{12pt}
@@ -692,7 +633,6 @@ Similarly, if we try to use equality constraints for both the supply and demand 
 `add_variable(x[i, j], type = "continuous", i = 1:10, j = 1:10, lb=0)`
 
 Let's show how to set up a basic implementation of the transportation problem in `ompr`. This demonstrates the use of double subscripted variables. Also, it should be customized for a particular application of being demand or supply constrained but it will give a good running head start.
-\vspace{12pt}
 
 ```{r transp_data}
 NSupply <- 3   # 3 Supply nodes
@@ -1212,8 +1152,6 @@ Be sure to discuss the solution as to why it makes sense.
 :::
 
 ::: {.exercise name="Convert LP to Standard Form"}
-**Exercise 3.3** (Convert LP to Standard Form)
-
 Convert the three variable LP represented in Table 3.13 into standard form.
 
 $$
