@@ -309,6 +309,7 @@ colnames(sum_Home5) <-
 rownames(sum_Home5) <- "Minimax"
 
 kbl (rbind(sum_Home3, sum_Home4, sum_Home5), 
+     booktabs=T, 
      caption="Minimax Solution.")
 
 ```
