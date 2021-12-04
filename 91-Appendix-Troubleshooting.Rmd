@@ -3,16 +3,7 @@
 ```{r Ch91setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = F)
-library (tufte)
-library (pander)
 library (tidyr)
-library (ggplot2)
-library (ggrepel)
-library(ompr)
-library(magrittr)
-library(ompr.roi)
-library(ROI.plugin.glpk)
-library(sudokuAlt)
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library (tint, quietly = TRUE))
     # Loading this last masks margin_note, newthought,
@@ -260,29 +251,6 @@ Other problems can occur:
 
 -   Another possible problem is having the PDF file open from having previously created it. This will typically generate a message about being unable to write the PDF file. The solution is to simply ensure that the PDF is not open in any other program.\
 -   A related issue is that there could be a temporary file for debugging purposes that needs to be deleted before it can be done. I often see this with a Markdown file (.md), not to be confused with the RMarkdown file (.Rmd).
-
-## Marginfigure not recognized
-
-Another problem can arise when code chunks are copied from another source. In this book I use a feature to put items into the right hand margin. This can be done by setting an option in the code chunk or by wrapping material in a chunk and calling `{marginfigure}`. The following screen capture reflects both situations along with the message returned from running the code chunks. \vspace{12pt}
-
-```{r Fig-marginfigure, echo=FALSE, fig.fullwidth = TRUE, out.width='100%' }
-# fig.cap='Warning for marginfigure.', 
-knitr::include_graphics("images/ERRORS_marginfigure.png")
-```
-
-Notice that it returns a warning that `marginfigure is not recognized...` but this does not prevent running all the other code chunks in the RMarkdown document. The `marginfigure` function is used for building the book and is not supported for simple knitting to HTML or PDF. While it does not prevent the code chunks from running, it might prevent a document from knitting or showing a desired formulation or table. \vspace{12pt}
-
-The solution to this is simply to remove the `marginfigure` wrapping of the material (including the beginning and ending triple tick) whether it is simply text, as is the case in this example or whether it is a LaTeX formulation. symbols.)
-
-\vspace{12pt}
-
-A related issue is `fig.margin` code chunk option. This is featured in the Tufte styles and may not render or be well recognized in other rendering options. These code chunk options can be removed if they are causing problems or the document can be rendered using a Tufte style. symbols.)
-
-\vspace{12pt}
-
-Another issue is that if you render using the Tufte style, you cannot use any Heading 3 styles (triple pound symbols.)
-
-\vspace{12pt}
 
 ## General Debugging Tips
 
