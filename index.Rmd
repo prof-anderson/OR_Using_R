@@ -55,14 +55,14 @@ I would like to thank many people for their contributions, collaborations, and a
 -   **Dr. Chester Ismay,** contributions to the Portland and broader R community
 -   **Dr. Jili Hu,** rich interactions during his sabbatical in Portland
 -   **Tom Shott,** primary author of the `TFDEA` package
--   **Nina Chaichi, PhD student,** many suggestions over time
+-   **Dr. Nina Chaichij,** many suggestions over the years
 -   **Aurobindh Kalathil Kumar,** PhD student, many suggestions over time
 -   **Kevin van Blommestein,** earlier DEA & R work
 -   **William (Ike) Eisenhauer,** LaTeX formulation improvements
 -   **Andey Nunes,** coding improvements
 -   **Christopher Davis,** graphical example of LP
 -   **Thanh Thuy Nguyen,** fixed charge example
--   **Roland Richards,** converted format to Tufte-style
+-   **Roland Richards,** formatting assistance
 -   **Caroline Blackledge,** co-author of summation introduction appendix
 -   **Alexander Keller,** co-author of summation introduction appendix
 -   **Shahram Khorasanizadeh,** co-author of summation introduction appendix
