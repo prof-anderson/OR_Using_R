@@ -105,7 +105,8 @@ ProdNames <- lapply(list(rep("Prod",NProd)),paste0,1:NProd)
                  # Product names: Prod1, Prod2, ... 
 Profit <- matrix(c(7, 10, 5, 24), 
               ncol=NProd,dimnames=c("Profit",ProdNames))
-kbl(Profit, booktabs=T, caption="Profit per product")
+kbl(Profit, booktabs=T, caption="Profit per product") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 Let's implement a four product model requiring varying levels of five limited resources.  The profit per product is described in Table 3.1 and and the resource consumption per product is given in table 3.2.  We will start our implementation by creating the appropriate data structures in `R`.
@@ -129,7 +130,8 @@ Available <- matrix(c(800, 900, 480, 1200, 500),
 ```
 
 ```{r Display-Resources, tidy=FALSE, echo = FALSE, results='asis'}
-kbl(Resources, booktabs=T, caption="Resources Used by Each Product")
+kbl(Resources, booktabs=T, caption="Resources Used by Each Product") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 On the right side we can see the data.
@@ -146,14 +148,16 @@ See both tables on the right.
 Table 3.2 displays the resources used by each product and Table 3.3 the amount of resources available from each product.
 
 ```{r Display-Available, tidy=FALSE, echo = FALSE, results='asis'}
-kbl(Available, booktabs=T, caption="Amount of Each Resource Available")
+kbl(Available, booktabs=T, caption="Amount of Each Resource Available") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 Now we need to define variables.
 
 ```{r Display-Resources-Available-Combined}
 Combined <- cbind(Resources, Available) 
-kbl(Combined, booktabs=T, caption="Resources Used by Each Product and Available")
+kbl(Combined, booktabs=T, caption="Resources Used by Each Product and Available") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 On the right table, we can see the resources used and available in a single table.
@@ -233,7 +237,8 @@ results.products <- matrix (results.products,
                             dimnames=c(c("x"),ProdNames))  
                             # Resizes and renames 
 kbl(format(head(results.products),digits=4), booktabs=T,
-    caption="Optimal Production Plan")
+    caption="Optimal Production Plan") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 The table displays the optimal production plan.
@@ -266,10 +271,11 @@ ResourceSlacks <- cbind (results.Resources,
                          Available-results.Resources)
 colnames(ResourceSlacks)<-c("Used", "Available", "Slack")      
 kbl(format(head(ResourceSlacks),digits=4), booktabs=T,
-    caption="Resources Used")
+    caption="Resources Used") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
-This section covered a lot of concepts including defining the data, setting names, using indices in *ompr*, building a generalized *ompr* model, extracting decision variable values, and calculating constraint right hand sides.
+This section covered a lot of concepts including defining the data, setting names, using indices in `ompr`, building a generalized `ompr` model, extracting decision variable values, and calculating constraint right hand sides.
 If you find this a little uncomfortable, try doing some experimenting with the model.
 It may take some experimenting to get familiar and comfortable with this.
 
@@ -325,7 +331,8 @@ results.products <- matrix (results.products,
                             dimnames=c(c("x"),ProdNames))  
    # Resizes and renames
 kbl(results.products, booktabs=T,
-    caption="Revised Optimal Production Plan") 
+    caption="Revised Optimal Production Plan")  |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 The table on the right displays the new Production plan and the optimal distribution of the resources.
@@ -354,7 +361,7 @@ Let's rebuild our three variable production plan from Chapter 2.
 ```{r Base3VarModel, echo=TRUE}
 model1 <- MIPModel() %>%
   add_variable(Ants, type = "continuous", lb = 0) %>%
-  add_variable(Bats, type = "continuous",lb = 0) %>%
+  add_variable(Bats, type = "continuous", lb = 0) %>%
   add_variable(Cats, type = "continuous", lb = 0) %>%
   
   set_objective(7*Ants + 12*Bats + 5*Cats,"max")%>%
@@ -379,7 +386,8 @@ rownames(base_case_res) <- "Amount"
 
 ```{r}
 kbl(base_case_res, booktabs=T, 
-    caption="Production Plan for Base Case")
+    caption="Production Plan for Base Case") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 The table on the right displays the optimal production plan for the original formulation without the limit on production of ants.
@@ -489,7 +497,6 @@ $$
   \end{split}
 $$
 
-
 ```{marginfigure}
 **Formula 3.6**: Covering  
 ```
@@ -534,7 +541,8 @@ CharMin <- matrix(c(1440, 1440, 2000, 1000),
 ```{r Display-Trail-Mix-Data, fig.margin=TRUE}
 TTMix <-cbind(MixChar,CharMin)
 kbl(TTMix, booktabs=T, 
-    caption="Data for Trevor Trail Mix Company")
+    caption="Data for Trevor Trail Mix Company") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 **Hint**: You might need to add a total amount to make! Modify the numbers until it runs...
@@ -655,8 +663,8 @@ At this point, it may be a good idea to look at the arcs and see if you can expe
 
 ```{r Show-Transp-Cost}
 kbl (Cost, booktabs=T,
-     caption="Costs for transportation application")
-
+     caption="Costs for transportation application") |>
+  kableExtra::kable_styling(latex_options = "hold_position")
 ```
 
 \vspace{12pt}
@@ -713,7 +721,8 @@ Now we can display the table of optimal transportation decisions from supply poi
 
 ```{r}
 kbl (Transp, booktabs=T,
-     caption="Optimal Transportation Plan")
+     caption="Optimal Transportation Plan") |>
+  kableExtra::kable_styling(latex_options = "hold_position")
 ```
 
 \vspace{12pt}
@@ -1218,7 +1227,8 @@ hph_needs <- matrix (c(50, 140, 260, 140, 100, 80), ncol=1,
                         "4 PM - 8 PM",
                         "8 PM - midnight")),
                  list(c("Required Nurses"))))
-kbl (hph_needs, booktabs=T, caption="Staff Scheduling")
+kbl (hph_needs, booktabs=T, caption="Staff Scheduling") |>
+  kableExtra::kable_styling(latex_options = "hold_position")
 ```
 
 Create an appropriate optimization model to minimize the number of nurses needed to cover the requirements.

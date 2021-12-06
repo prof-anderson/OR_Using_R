@@ -35,18 +35,18 @@ Bartland's official Chief Economist has estimated that this subsidy program woul
 Let's summarize the data for two programs.  Let's focus on expected numbers of people served for each policy intervention.  \vspace{12pt}
 
 | Per unit                      | Tiny Homes (H) | Rent Subsidy (R) |   
-|------------------------------:|:--------:|:------:|
-|  1 adult                      |  90%     |   15%  |  
-|  1 adult, 1 child             |  10%     |  30%   | 
-|  1 adult, 2 children          |   0%     |  20%   |  
-|  2 adults                     |   0%     |  20%   |  
-|  2 adults, 1 child            |   0%     |  10%   |  
-|  2 adults, 2 children         |   0%     |   5%   |  
-|  Expected children served     |  0.1     |  0.9   |  
-|  Expected adults served       |  1.0     |  1.35  | 
-|  Expected total people served |  1.1     |  2.25  |
-|  Cost per unit ($\$K$)        |  $\$10$  | $\$25$ |
-|  Staff support per unit       |  0.1     | 0.1    |
+|------------------------------:|:--------------:|:----------------:|
+|  1 adult                      |  90%           |   15%            |  
+|  1 adult, 1 child             |  10%           |  30%             | 
+|  1 adult, 2 children          |   0%           |  20%             |  
+|  2 adults                     |   0%           |  20%             |  
+|  2 adults, 1 child            |   0%           |  10%             |  
+|  2 adults, 2 children         |   0%           |   5%             |  
+|  Expected children served     |  0.1           |  0.9             |  
+|  Expected adults served       |  1.0           |  1.35            | 
+|  Expected total people served |  1.1           |  2.25            |
+|  Cost per unit ($\$K$)        |  $\$10$        | $\$25$           |
+|  Staff support per unit       |  0.1           | 0.1              |
 
 Table:  Policy Options for Addressing Houselessness
 
@@ -141,7 +141,8 @@ colnames(sum_Home2) <- c("Obj. Func. Val.", "H", "R")
 rownames(sum_Home2) <- "Group 2: Max Children"
 
 kbl (rbind(sum_Home1, sum_Home2), booktabs=T,
-     caption="Comparing Homelessness Solutions.")
+     caption="Comparing Homelessness Solutions.") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 So which group has the _better_ model?  The objective function value for group 1's model is higher but it is in different units (people served) versus group 2's model of children served.    \vspace{12pt}
@@ -198,7 +199,8 @@ colnames(sum_Home3) <- c("Obj. Func. Val.", "H", "R",
 rownames(sum_Home3) <- "Min sum of deviations"
 
 kbl (sum_Home3, booktabs=T,
-     caption="Solution by Minimizing Sum of Deviations")
+     caption="Solution by Minimizing Sum of Deviations") |>
+  kable_styling(latex_options = "hold_position")
 
 ```
 
@@ -249,7 +251,8 @@ colnames(sum_Home4) <- c("Obj. Func. Val.", "H", "R",
 rownames(sum_Home4) <- "Min sum of deviation %s"
 
 kbl (sum_Home4, booktabs=T,
-     caption="Solution by Minimizing Sum of Percentage Deviations")
+     caption="Solution by Minimizing Sum of Percentage Deviations") |>
+  kable_styling(latex_options = "hold_position")
 
 ```
 
@@ -310,7 +313,8 @@ rownames(sum_Home5) <- "Minimax"
 
 kbl (rbind(sum_Home3, sum_Home4, sum_Home5), 
      booktabs=T, 
-     caption="Minimax Solution.")
+     caption="Minimax Solution.") |>
+  kable_styling(latex_options = "hold_position")
 
 ```
 
@@ -348,7 +352,8 @@ To provide some space before we discuss the formulation, let's show the data.  R
 data(state)
 Customers <- state.x77[,1]
 kbl (head (Customers), booktabs=T,
-     caption="Number of customers for first six states.")
+     caption="Number of customers for first six states.") |>
+  kable_styling(latex_options = "hold_position")
 ```
 \vspace{12pt}
 
@@ -447,7 +452,8 @@ assigned1a <- res_Mail1 %>%
 rownames(assigned1a)<-c(names(Customers[assigned1a[,1]]))
 
 kbl (head(assigned1a), booktabs=T,
-     caption="Example of some states assigned to week 1")
+     caption="Example of some states assigned to week 1") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 That is just for six states in the first week though.  
@@ -550,12 +556,13 @@ table_results2 <- append(table_results2,weeksmail2a)
 #     booktabs=T,
 #     caption="Results with symmetry breaking")%>%
 #   kable_styling(latex_options="scale_down")
-kbl(table_results1[-1])
+kbl(table_results1[-1]) |>
+  kable_styling(latex_options = "hold_position")
 ```
   \vspace{12pt}
 Notice that then the workload in week 1 would essentially be the same as _Q_. In other words, the _Q_ minimax variable and constraints could be removed and still give the equivalent model.  This highlights that in mixed integer optimization, there are often many different ways to implement models for the same application.  \vspace{12pt}
 
-Solving times are also hard to predict in advance.  The symmetry breaking constraint appears to have caused slowed down the solving signficantly as it spends a lot of time early on with a gap of 10.34%.  This suggests that perhaps symphony's algorithms do a better job on this problem than the simple symmetry breaking constraints that we added.  This warrants future attention or experimentation.  \vspace{12pt}
+Solving times are also hard to predict in advance.  The symmetry breaking constraint appears to have caused slowed down the solving significantly as it spends a lot of time early on with a gap of 10.34%.  This suggests that perhaps symphony's algorithms do a better job on this problem than the simple symmetry breaking constraints that we added.  This warrants future attention or experimentation.  \vspace{12pt}
 
 This application and model can be adjusted to fit a wide variety of other situations such as:
 

@@ -77,7 +77,8 @@ colnames(base_case_res)<-list("Profit", "Ants",
                               "Bats", "Cats")
 rownames(base_case_res)<-list("Base Case")
 kbl(base_case_res, booktabs=T,
-    caption="Base Case Production Plan")
+    caption="Base Case Production Plan") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 In the base case, we are producing Ants and Cats but not Bats to generate a total profit of $\$2225$.
@@ -98,7 +99,8 @@ dimnames(rduals1)<-list(c("Machining", "Assembly",
                           "Testing", "Sensors"), 
                           c("Row Duals"))
 kbl(format(rduals1,digits=4), booktabs=T,
-    caption="Shadow Prices of Constrained Resources")
+    caption="Shadow Prices of Constrained Resources") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 The row duals or shadow prices for testing is zero. This means that the marginal value of one additional hour of testing labor time is $\$0$. This makes sense if you examine the amount of testing time used and realize that the company is not using all of the 480 hours available. Therefore adding more testing hours certainly can't help improve the production plan.\
@@ -165,7 +167,8 @@ colnames(inc_assem_res)<-list("Profit",
 rownames(inc_assem_res)<-list("+1 Assembly Hr")
 temp1 <- rbind(base_case_res, inc_assem_res)
 kbl(temp1, booktabs=T,
-    caption="Production Plan with One Additional Assembly Hour")
+    caption="Production Plan with One Additional Assembly Hour") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 These results confirmed that adding one hour of Testing time results in a *new* production plan that generates an increased profit of $\$2.25$, exactly as expected.\
@@ -225,7 +228,8 @@ rownames(inc_sensor_res)<-list("Increased Sensors")
 temp2 <- rbind(base_case_res, inc_assem_res, inc_sensor_res)
 
 kbl(temp2, booktabs=T,
-    caption="Production Plan with 10,000 More Sensors.")
+    caption="Production Plan with 10,000 More Sensors.") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 
@@ -249,7 +253,8 @@ cduals1 <-as.matrix(get_column_duals(Base3VarModel) )
 dimnames(cduals1)<-list(c("Ants", "Bats", "Cats"), 
                         c("Column Duals"))
 kbl(format(cduals1,digits=4), booktabs=T,
-    caption="Reduced Costs of Variables")
+    caption="Reduced Costs of Variables") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 These results are interesting. The reduced costs of variables that are between simple upper and lower bounds will be zero. Again, the reduced cost of a variable is the difference between the value of the resources consumed by the product and the value of the product in the objective function. All of our product's variables have simple lower bounds of zero and no upper bounds. Ants and Cats have zero reduced cost while Bats have a negative reduced cost. Let's see if this is consistent with the interpretation of reduced costs.
@@ -276,10 +281,11 @@ colnames(cat_res_used)<-c("Row Duals", "Resources Used")
 cat_res_used <- rbind(cat_res_used,
                       c("TOTAL",t(rduals1)%*%c(2,2,1,2)))
 kbl(format(cat_res_used, digits=4), booktabs=T,
-    caption="Resources Used by a Cat and their Shadow Prices")
+    caption="Resources Used by a Cat and their Shadow Prices") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
-In this case, using the columns from Table 4.6 we can calulate the marginal value as $2\cdot 0.25+2\cdot2.25+1\cdot0+2\cdot0=5$. Since the profit per Cat (from the objective function coefficient on Cats) is also $\$ 5$, they are in balance and the difference between them is zero which is why the reduced cost for the *Cats* variable is also zero. \vspace{12pt}
+In this case, using the columns from Table 4.6 we can calculate the marginal value as $2\cdot 0.25+2\cdot2.25+1\cdot0+2\cdot0=5$. Since the profit per Cat (from the objective function coefficient on Cats) is also $\$ 5$, they are in balance and the difference between them is zero which is why the reduced cost for the *Cats* variable is also zero. \vspace{12pt}
 
 *Reduced Price of Bats*
 
@@ -331,7 +337,8 @@ rownames(base_case_res) <- "Base Case"
 rownames(Bat1_case_res) <- "Force one Bat"
 temp3 <-rbind(base_case_res,Bat1_case_res)
 kbl(temp3, booktabs=T, 
-    caption="Impact of a Forced Change in Bats")
+    caption="Impact of a Forced Change in Bats") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 
@@ -352,7 +359,8 @@ colnames(dog_res_used)<-c("Row Duals",
 dog_res_used <- rbind(dog_res_used,
                       c("TOTAL",t(rduals1)%*%c(8,12,4,4)))
 kbl(format(dog_res_used,digits=4), booktabs=T,
-    caption="Resources Used by a Dog and their Shadow Prices")
+    caption="Resources Used by a Dog and their Shadow Prices") |>
+  kableExtra::kable_styling(latex_options = "hold_position")
 ```
 
 Even without adding it to the model, we can check to see if it is worthwhile to consider seriously. The opportunity cost of producing one Dog drone would result in the $\$20-(8\cdot 0.25+12\cdot2.25+4\cdot0+4\cdot0)=-9.0$. In other words, even though a Dog drone has a much higher profit than the other products, producing one would cost the company nine dollars of overall profit in terms of the opportunity cost in lost profit of other production. \vspace{12pt}

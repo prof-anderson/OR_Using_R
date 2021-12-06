@@ -235,7 +235,8 @@ We could look at a sample of the customer location data.
 
 ```{r Customer-Location}
 kbl (head(customer_locations), booktabs=T, 
-       caption="Locations of First Six Customers")
+       caption="Locations of First Six Customers") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 A table of the randomly generated locations is not terribly helpful for understanding the locations of customers or warehouses though.
@@ -375,7 +376,8 @@ Let's review what the two versions of the results look like.
 
 ```{r raw-results-table}
 kbl (head( get_solution(result, Vx[i,j])), booktabs=T,
-       caption = "Raw results for Vx Variable.")
+       caption = "Raw results for Vx Variable.") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 ```{marginfigure}
@@ -388,7 +390,8 @@ This isn't surprising given that only one in twenty values are non-zero.
 ```{r processed-results-table}
 kbl (head( matching), booktabs=T, 
        caption=
-   "Subset of Customers (i) Assigned to Warehouses (j)")
+   "Subset of Customers (i) Assigned to Warehouses (j)") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 ```{marginfigure}
@@ -412,7 +415,8 @@ plot_assignment <- matching %>%
   inner_join(customer_locations, by = c("i" = "id")) %>% 
   inner_join(warehouse_locations, by = c("j" = "id"))
 kbl (head(plot_assignment), booktabs=T, caption=
-      "XY coordinates to draw Customer-Warehouse Routes")
+      "XY coordinates to draw Customer-Warehouse Routes") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 Notice that this gives the beginning and ending coordinates of what will soon be lines to show the connections between customers and warehouses.
@@ -427,7 +431,8 @@ customer_count <- matching %>%
   summarise(n = n()) %>%  # Summarize count
   rename(id = j)          # Rename column from j to id
 kbl (customer_count, booktabs=T, caption=
-  "Count of customers assigned to each operating warehouse")
+  "Count of customers assigned to each operating warehouse") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 We can see that warehouses selected to be built serve different numbers of customers.
@@ -440,7 +445,8 @@ plot_warehouses <- warehouse_locations %>%
   inner_join(customer_count, by = "id") %>% 
   filter(id %in% unique(matching$j))
 kbl (plot_warehouses, booktabs=T, caption = 
-          "Table of information about warehouses used")
+          "Table of information about warehouses used") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 The `plot_warehouses` data frame[^more-mixed-mip-2] is built using `dplyr` functions to create a summary of the important information about the warehouses used: where they are located, costs, and number of customers served.
@@ -716,7 +722,8 @@ rownames (timeresults) <- NULL
 
 kbl (timeresults, booktabs = T, digits=2,
     caption="Comparison of Results from Warehouse 
-       Customer Assignment Across Solvers")
+       Customer Assignment Across Solvers") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 The most important thing to note is that each solver states that it found the same value for an objective function.

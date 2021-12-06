@@ -78,7 +78,8 @@ inc_as_res <- cbind (result1$objective_value,
                      t(result1$solution))
 colnames(inc_as_res)<-c("Profit", "Ants", "Bats", "Cats")
 kbl (inc_as_res, digits=6, booktabs=T,
-       caption="Production Plan with Continuous Variables")
+       caption="Production Plan with Continuous Variables") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 In this case, the fractional value of *Cats* would be only somewhat concerning. We wouldn't actually ship an 80% complete Cat drone to a customer-at least I hope not. The difference between 374 and 375 is relatively small over a month of production. This is a difference of much less than 1% and none of the numbers specified in the model appear to be reported to more than two significant digits or this level of precision. The result is that we could specify the answer as 374.8 and be satisfied that while it is our actual best guess or might reflect a chair half finished for the next month, it isn't a major concern. \vspace{12pt}
@@ -139,7 +140,9 @@ rownames(temp1)<-c("Continuous", "Integer")
 ```
 
 ```{r, fig.margin=TRUE}
-kbl (temp1, booktabs=T, caption="Production plans with an additional assembly hour based on variable type.")
+kbl (temp1, booktabs=T, 
+     caption="Production plans with an additional assembly hour based on variable type.") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 Notice that in this case, there was a small adjustment to the production plan and a small decrease to the optimal objective function value. This is not always the case, sometimes the result can be unchanged. In other cases, it may be changed in a very large way. In still others, the problem may in fact even become infeasible. \vspace{12pt}
@@ -211,7 +214,8 @@ colnames(acme_res_ip) <- list("x1", "x2", "Profit")
 rownames(acme_res_ip) <- "IP Solution"
 kbl (rbind(acme_res_lp,acme_res_ip),
      booktabs=T, caption=
-       "Production Plan-Continuous vs. Integer")
+       "Production Plan-Continuous vs. Integer") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 ```{r Fig-LP_Feasible_Region, echo=FALSE, fig.margin=TRUE, out.width="2in"}
@@ -223,7 +227,6 @@ Simply rounding down did not yield an optimal solution. Notice that production o
 
 ```{r Fig-IP_Feasible_Region, echo=FALSE, fig.margin=TRUE, out.width="2in"}
 knitr::include_graphics("images/Fig06-2-IP_Feasible.PNG")
-
 ```
 
 ## The Branch and Bound Algorithm
@@ -306,7 +309,8 @@ x2  <- get_solution (LPSubI, 'Vx2')
 LPSubI_res  <- cbind(x1,x2,obj_val)
 rownames(LPSubI_res) <- ""
 kbl (LPSubI_res, booktabs=T, 
-     caption="Production Plan based on Subproblem I")
+     caption="Production Plan based on Subproblem I") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 ```{r Fig-Subproblem_I, echo=FALSE, fig.margin=TRUE, out.width="2in"}
@@ -346,7 +350,8 @@ x2  <- get_solution (LPSubIII , 'Vx2')
 LPSubIII_res  <- cbind(x1,x2,obj_val)
 rownames(LPSubIII_res) <- ""
 kbl (LPSubIII_res, booktabs=T,
-       caption="Production Plan based on Subproblem III")
+       caption="Production Plan based on Subproblem III") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 ```{r Fig-Subproblem_III_and_II, echo=FALSE, fig.margin=TRUE, out.width="2in"}
@@ -375,7 +380,8 @@ LPSubIV$status
 rownames(LPSubIV_res) <- ""
 kbl (LPSubIV_res, booktabs=T,
      caption=
-"Infeasible Production Plan based on Subproblem IV")
+"Infeasible Production Plan based on Subproblem IV") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 At first glance, this looks okay but if you look more closely at the value of $x_2$, and the surfactant constraint, $x_1+3x_2=9\not\leq8.25$, there isn't enough enough surfactant to make three units of the second product. This means that by inspection we can see that this production plan is infeasible! What is going on here?\
@@ -412,7 +418,8 @@ LPSubII_res  <- cbind(x1,x2,obj_val)
 cat("Status of Subproblem II:",LPSubII$status)
 rownames(LPSubII_res) <- ""
 kbl (LPSubII_res, booktabs=T,
-     caption="Production Plan based on LP Subproblem II")
+     caption="Production Plan based on LP Subproblem II") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 At this point, our first reaction may be to breathe deeply and do the same branch and bound off of $x_2$. On the other hand, if we step back and take note that the objective function value is 9.75, while optimal for this subproblem, it is less than what we found from a feasible, fully integer-valued solution to subproblem III. Given that adding constraints can't improve an objective function value, we can cleverly trim all branches below subproblem II.\
@@ -442,7 +449,8 @@ rownames(BandB) <- list("LP Relaxation", "Subproblem I",
                         "Subproblem III", "Subproblem IV", 
                         "Subproblem II")
 kbl (BandB, booktabs=T, 
-     caption="Branch and Bound's Sequence of LPs")
+     caption="Branch and Bound's Sequence of LPs") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 ```{r Fig-B_and_B_Summary, echo=FALSE, fig.margin=TRUE, out.width="2in"}
@@ -706,7 +714,8 @@ colnames(fc_base_summary)<-
     "$y_1$","$y_2$","$y_3$")
 kbl (fc_base_summary, booktabs=T, escape=F, 
      caption = 
-       "Base Case Solution for Fixed Charge Problem")
+       "Base Case Solution for Fixed Charge Problem") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 We are producing all three products since $w_1$, $w_2$, and $w_3$ are all positive but $y_1=y_2=y_3=0$. This is a nice, very high profit situation because we are not paying for the production setups. It may not be surprising that the optimization model chooses to avoid "paying" the fixed charge for production. This is a "penalty" in the objective function. What we need is a way of connecting the amount to produce of a widget and the decision to produce any of that widget. In reality, it would be necessary to pay the 4500 setup cost bring the total profit down to 3660. Perhaps a higher profit could be found if we could streamline our product offerings!
@@ -880,7 +889,8 @@ rownames(fc_combined_res)<-c("Base Case w/o Setup",
                              "Base Case with Setup", 
                              "Optimal Fixed Charge")
 kbl (fc_combined_res, booktabs=T,
-     caption = "Fixed Charge Problem")
+     caption = "Fixed Charge Problem") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 Notice that the the high setup costs have caused us to focus our production planning decisions. Rather than spreading ourselves across three different product lines, we are producing as many of widget 1 as we can.\
@@ -935,7 +945,8 @@ kbl (cbind(rbind(fc_bigM_res.r1,fc_bigM_res.r2,
                  fc_bigM_res.tot,
                  fc_bigM_res.avail),
      booktabs=T, caption = 
-       "Manufacturing Resource Usage")
+       "Manufacturing Resource Usage") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 As can be seen, we used all of our Pre-processing hours, Assembly hours, and Quality Assurance hours. There is a significant amount of time available in Machining though. \vspace{12pt}

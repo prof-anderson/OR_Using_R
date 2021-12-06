@@ -118,7 +118,8 @@ colnames(temp)<-c("Store Name", "Employees (x)",
 
 ```{r first-dataset-table}
 kbl (temp, booktabs=T, escape=F,
-     caption="First Dataset for DEA")
+     caption="First Dataset for DEA") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 The above commands create matrices that hold the data and have named rows and columns to match. The `<-` symbol is a key function in R and means to assign what is in the right to the object on the left. \vspace{12pt}
@@ -352,7 +353,8 @@ colnames(results.lambda) <-
 #   c("L_A", "L_B", "L_C", "L_D")   
 kbl(cbind(results.efficiency, results.lambda),
     booktabs=T, escape=F, caption=
-      "Input-Oriented Envelopment Analysis for DMU B (CCRIO)")
+      "Input-Oriented Envelopment Analysis for DMU B (CCRIO)") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 The above table follows a few convenient conventions. First, rather than using $\theta$, we label the efficiency score by the model used for the model, in this case the constant returns to scale is labeled as CCR after Charnes, Cooper, and Rhodes [@RhodesDataEnvelopmentAnalysis1978]. Later we will cover other models including the variable returns to scale model, labeled BCC after Banker, Charnes, and Cooper [@banker1984].
@@ -388,7 +390,8 @@ colnames(results.lambda) <- c("$\\lambda_A$", "$\\lambda_B$",
                               "$\\lambda_C$", "$\\lambda_D$")
 kbl(cbind(results.efficiency, results.lambda),  
     booktabs=T, escape=F, caption=
-      "Input-Oriented Envelopment Analysis for DMU A")
+      "Input-Oriented Envelopment Analysis for DMU A") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 Again, the results match what would be expected from Figure 5.1. \vspace{12pt}
@@ -438,13 +441,15 @@ eff.crs <- results.efficiency
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
 kbl (cbind(results.efficiency, results.lambda),
      booktabs=T, escape=F, caption=
-       "Input-Oriented Efficiency Results")
+       "Input-Oriented Efficiency Results") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 ```{r, echo=FALSE}
 kbl(cbind(results.efficiency, poscol(results.lambda)), 
        booktabs=T, caption=
-"Results with Inefficient DMU Columns Removed.")
+      "Results with Inefficient DMU Columns Removed.") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 The results match those observed graphically but let's discuss them. These results indicate that only DMU *C* is efficient. Rescaled versions of *C* could produce the same level of output of *A*, *B*, or *D*, while using just 25%, 50%, and 20% less input respectively. The targets of performance for *A* and *B* are constructed by scaling down unit *C* to a much smaller size, as shown by the the values of $\lambda$. In contrast, *D*'s performance is surpassed by a 33% larger version of *C*. \vspace{12pt}
@@ -506,7 +511,8 @@ eff.vrs <- results.efficiency
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
 kbl (cbind(results.efficiency, results.lambda),
      booktabs=T, caption=
-       "Input-Oriented VRS Envelopment Results")
+       "Input-Oriented VRS Envelopment Results") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 Notice that the efficiencies have generally increased or stayed the same. Whereas earlier three out of four DMUs were inefficient, now three out of four are efficient. One way of thinking of returns to scale is whether doubling the inputs should be expected to result in doubling the outputs that should be achieved. Another way to think of it is whether it is fair to think of scaling up or down an efficient significantly to set a performance target for a much bigger or smaller unit. For example, would it be *fair* to compare a small convenience store such as Al's Pantry or to use a common realworld example, 7-11, to a CostCo store scaled down by a factor of a 100? Much more could be said about returns to scale.
@@ -569,7 +575,8 @@ eff.drs <- results.efficiency
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
 kbl (cbind(results.efficiency, results.lambda),
      booktabs=T, caption="Input-Oriented Model with  
-        Decreasing Returns to Scale")
+        Decreasing Returns to Scale") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 ```{r stores-IRS, echo=FALSE}
@@ -610,7 +617,8 @@ eff.irs <- results.efficiency
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
 kbl (cbind(results.efficiency, results.lambda), 
      booktabs=T, escape=F, caption="Input-Oriented Increasing Returns 
-        to Scale Model Results")
+        to Scale Model Results") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 ```{r DEA_IRS_Frontier_Plot, echo=FALSE, fig.margin=TRUE, fig.height=4, fig.cap="Increasing (Non-Decreasing) Returns to Scale Efficiency Frontier"}
@@ -632,7 +640,8 @@ dea.plot(x, y, RTS="drs", ORIENTATION="in-out",
 ```{r Compare-RTS-Results}
 kbl (cbind(eff.crs, eff.vrs, eff.drs, eff.irs), 
      booktabs=T, caption="Comparison of Efficiency under 
-       Alternate Returns to Scale Assumptions")
+       Alternate Returns to Scale Assumptions") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 ## Multiple Inputs and Multiple Outputs
@@ -664,7 +673,8 @@ utt2007 <- utt2007 [,-5]
            # Drop the fifth column (Patents Filed)
 
 kbl (head(utt2007), booktabs=T, 
-     caption="Simplified data for University Technology Transfer")
+     caption="Simplified data for University Technology Transfer") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 Rather than using the full dataset. We are going to simplify the data a little. First we limit it to just the first 25 universities instead of the full set of 54. Second, we will drop the measure of patents filed.
@@ -758,7 +768,8 @@ for (k in 1:ND) {
 ```{r full-table, fig.fullwidth=TRUE}
 kbl (cbind(res.efficiency, poscol(res.lambda)),
      booktabs=T, digits=6,
-     caption="Results from University Technology Transfer Example (CRS)")
+     caption="Results from University Technology Transfer Example (CRS)") |>
+  kable_styling(latex_options = "hold_position")
 UTT_CCR.Res<-cbind(res.efficiency, res.lambda)
 ```
 
@@ -807,7 +818,8 @@ colnames(UTT_BCC.Res)[1] <- "BCC-IO"
 kbl (cbind(UTT_CCR.Res[,1, drop=FALSE],
            UTT_BCC.Res), digits=6, booktabs=T,
      caption=
-         "Comparison of CRS vs. VRS Efficiency Scores")
+         "Comparison of CRS vs. VRS Efficiency Scores") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 A few takeaways from these results: \vspace{12pt}
@@ -843,7 +855,8 @@ res.uweight[k,] <- rduals[(NX+1):(NX+NY)]
    # Extract next NY row duals, assuming output 
    #    constraints follow inputs 
 kbl (c(res.vweight[k,],res.uweight[k,]), booktabs=T,
-       caption="Input and output weights for last DMU")
+       caption="Input and output weights for last DMU") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 These results are for just the last unit examined.\
@@ -891,7 +904,8 @@ for (k in 1:ND) {
     }
 kbl (cbind(res.efficiency, res.vweight, 
               res.uweight), booktabs=T, digits=6, 
-        caption="Multiplier Weights from UTT Example")
+        caption="Multiplier Weights from UTT Example") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 A few things should be noticed with respect to the multiplier weights:
@@ -1016,7 +1030,8 @@ for (k in 1:ND) {
 #       round=4, caption="Selected Input-oriented Efficiency Results with Slack Maximization")
 kbl(head(cbind(res.efficiency,poscol(res.lambda[1:25,]))),
     booktabs=T, escape=F,
-    caption="Selected Input-oriented Efficiency Results with Slack Maximization")
+    caption="Selected Input-oriented Efficiency Results with Slack Maximization") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 ## DEA Packages

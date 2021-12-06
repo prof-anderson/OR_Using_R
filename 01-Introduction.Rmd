@@ -2,6 +2,10 @@
 
 # Introduction
 
+```{r, eval=FALSE, include=FALSE}
+library(bookdown); library(rmarkdown); rmarkdown::render("01-Introduction.Rmd", "pdf_book")
+```
+
 ```{r Ch1setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = F)
@@ -102,7 +106,7 @@ a <- 7
 
 This command assigns the value of 7 to the variable *a*. It is standard in R to use `<-` as an assignment operator rather than an equals sign. We can then use R to process this information. \vspace{12pt}
 
-```{r Math_operation}
+```{r Math-operation}
 6*a
 ```
 
@@ -110,7 +114,7 @@ Yes, not surprisingly, *6\*7* is *42*. Notice that if we don't assign that resul
 
 We will often be using or defining data that has more than one element. In fact, R is designed around more complex data structures. Let's go ahead and define a matrix of data. \vspace{12pt}
 
-```{r Create_Matrix}
+```{r Create-Matrix}
 b<-matrix(c(1,2,3,4,5,6,7,8))
 ```
 
@@ -118,13 +122,13 @@ By default, it is assuming that the matrix has one column which means that every
 
 Let's look at *b* now to see what it contains. \vspace{12pt}
 
-```{r Looking_at_an_Object}
+```{r Looking-at-an-Object}
 b
 ```
 
 Let's instead define this matrix to have four columns and two rows. \vspace{12pt}
 
-```{r Resizing_Matrix}
+```{r Resizing-Matrix}
 b<-matrix(c(1,2,3,4,5,6,7,8), ncol=4)
 b
 ```
@@ -133,15 +137,15 @@ Notice that since there are eight elements, we only needed to tell R that the ma
 
 This is still a little ambiguous. Let's give the rows and columns names. For now we will simply name them Row and Col. \vspace{12pt}
 
-```{r Naming_Rows_and_Columns}
+```{r Naming-Rows-and-Columns}
 b<-matrix(c(1,2,3,4,5,6,7,8), ncol=4, 
           dimnames=c(list(c("Row1", "Row2")),
                      list(c("Col1", "Col2","Col3","Col4"))))
 ```
 
-```{marginfigure}
-**HINT**: The RStudio console can save typing by pressing the up arrow key to view previous command(s) which can then be further edited.
-```
+::: {.remark name="RStudio Console"}
+The RStudio console can save typing by pressing the up arrow key to view previous command(s) which can then be further edited.
+:::
 
 \vspace{12pt}
 
@@ -151,55 +155,56 @@ The `dimnames` parameter will get get two concatenated (combined) lists. The fir
 
 Let's confirm that it works. \vspace{12pt}
 
-```{r Displaying_New_Matrix}
+```{r Displaying-New-Matrix}
 b
 ```
 
-This table is still not that "nice" looking. Let's use a package that does a nicer job of formatting tables. To do this, we will use an extra package. Up to this point, everything that we have done just simply uses standard built in functions of R. The package that we will use is `pander` but there are plenty of others available such as `pander`, `kable`, `xtable`, and `huxtable`.  Let's start by loading the package. \vspace{12pt}
+This table is still not that "nice" looking. Let's use a package that does a nicer job of formatting tables. To do this, we will use an extra package. Up to this point, everything that we have done just simply uses standard built in functions of R. The package that we will use is `kable` but there are plenty of others available such as `pander`, `kable`, `xtable`, and `huxtable`. While `kable` is a function of `knitr`, it is significantly enhanced by the `kableExtra` package. Let's start by loading the `kableExtra` package. \vspace{12pt}
 
-```{r Loading_a_Package}
+```{r Loading-a-Package}
 library (kableExtra)
 ```
 
-If R indicates that you don't have the `pander` package installed on your computer, you can press the "Install" command under the Packages tab and then type in pander or use the `install.packages` command.
+If R indicates that you don't have the `kableExtra` package installed on your computer, you can press the "Install" command under the Packages tab and then type in `kableExtra` or use the `install.packages` command from RStudio.  The `kbl` is a shorthand way of entering the `kable` function that is provided by `kableExtra`.
 
 \vspace{12pt}
 
 Notice the hash symbol is used to mark comment in the above code chunk. It is also used to "comment out" a command that I don't need to use at the current time. Using comments to explain what a command is doing can be helpful to anyone that needs to revisit your code in the future, including yourself! \vspace{12pt}
 
-```{r Using_pander, fig.margin=TRUE}
-pander(b)
+```{r Using-kable}
+knitr::kable (b, booktabs=T, 
+     caption="Example using Kable with booktabs") |>
+  kableExtra::kable_styling(latex_options = "hold_position")
 ```
 
-```{marginfigure}
-**Table 1.1**: Nicely formatted table using pander
-```
+The table looks very nice in the book.  Let's explain in detail how the table is generated.  This code chunk has a lot going and is worth a careful look.
+
+* The first line `knitr::kable` means that we should run the `kable` function from within `knitr`.  In general, as a long as the library is loaded and the same function is not defined by two different loaded libraries, you don't need to specify where the function is being run from.  
+* The `booktabs=T` sets a format for clean published table style by setting the option to `T` for `TRUE`.
+* The second line provides a caption. 
+* The last part of the second line warrants a little attention.  It is the new pipe operator and requires `R` version 4.1.0 or higher.  The pipe operator basically says pass this commands output into the beginning of the next command.  We'll use it a lot for table generation.  Prior to R version 4.1.0, people that used pipes in R often used the `%>%` operator from a separate package such as `magrittr`.  For most users, including us, the built-in `|>` will suffice.
+* The last command, `kable_styling`, holds the position and keeps LaTeX from second guessing where the ideal location would be for the table. Note that is also specifying its source package, in this case, `kableExtra`. There are a lot of other options in `kable_styling` that we will use in later chapters as needed.
+* For your own use, you could shorten all of this to just `kable (b)`. On the other hand, `kableExtra` has one more small trick up its sleeve. It provides a shorter name for the `kable` function of just `kbl`.  When space is at premium, this shortcut is handy. It also serves as a helpful check to ensure that `kableExtra` is loaded.
 
 Let's continue experimenting with operators. \vspace{12pt}
 
-```{r Scalar_Multiplication, fig.margin=TRUE}
+```{r Scalar-Multiplication}
 c<-a*b
-pander(c)
-```
-
-```{marginfigure}
-**Table 1.2**: Scalar Multiplication of Matrix b
+kbl(c, booktabs=T,
+    caption= "Scalar Multiplication of Matrix b") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 Now let's do a transpose operation on the original matrix. What this means that it converts rows into columns and columns into rows. \vspace{12pt}
 
-```{r Transposing, fig.margin=TRUE}
+```{r Transposing}
 d<-t(b)
-pander(d)
+kbl (d, booktabs=T,
+     caption = "Transposition of Matrix b") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
-```{marginfigure}
-**Table 1.3**: Transposition of Matrix b
-```
-
-\vspace{12pt}
-
-Oops, notice that row and column names are also transposed. The result is that we now have rows labeled as columns and columns labeled as rows! \vspace{12pt}
+Oops, notice that row and column names are also transposed. The result is that we now have rows labeled as columns and columns labeled as rows! 
 
 Now we have done some basic operations within R. Try your hand at the following exercises.
 
@@ -211,7 +216,7 @@ Here is my solution to that.
 Oops.  Still not right.  Need to do some more.
 ```
 
-```{r Displaying_My_Solution}
+```{r Displaying-My-Solution}
 c
 d
 ```
@@ -220,159 +225,97 @@ Assume that your company's product has a demand of 10 widgets on Monday, increas
 
 Recall that we have created a variety of objects now: a, b, c, and d. R provides a lot of tools for slicing, dicing, and combining data.
 
-```{r Original_Matrix,fig.margin=TRUE}
-pander(b)
-```
-
-```{marginfigure}
-**Table 1.4**: Original Matrix b
+```{r Original-Matrix}
+kbl (b, booktabs=T,
+     caption="Original Matrix b") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 Let's look at the original matrix, b and what we can do with it. Let's grab the second row, third column and last element.
 
-```{r Extracting_Second_Row,fig.margin=TRUE}
+```{r Extracting-Second-Row}
 temp1 <- as.matrix(b[2,])
-pander(temp1)
+kbl (temp1, booktabs=T,
+     caption = "Second Row of b") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
-```{marginfigure}
-**Table 1.5**: Second Row of b
-```
+The `as.matrix` function is used to convert the object into a matrix so that `kable` can display it well.
 
-\vspace{12pt}
-
-The `as.matrix` function is used to convert the object into a matrix so that pander can display it well.
-
-```{r Extracting_Third_Column,fig.margin=TRUE, fig.width=3}
+```{r Extracting-Third-Column}
 temp2 <- as.matrix(b[,3])
-pander(temp2)
+kbl (temp2, booktabs=T,
+       caption="Third Column of b") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
-```{marginfigure}
-**Table 1.6**: Third Column of b
-```
-
-\vspace{12pt}
 
 Grabbing the third column is not terribly interesting but operations such as this will often be quite useful.
 
-```{r Bottom_Right_Element,fig.margin=TRUE}
+```{r Bottom-Right-Element}
 temp3 <- as.matrix(b[2,4]) 
-pander(temp3)
+kbl (temp3, booktabs=T,
+     caption="Last Element of b") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
-```{marginfigure}
-**Table 1.7**: Last Element of b
-```
 
 A table made up of just one element is even less profound but is again useful. Now, let's show how we can combine two objects.\
 Recall tables *b* and *c* from earlier.
 
-```{r Show_both_Matrices, echo=FALSE}
-pander(b, caption="Matrix b")
-pander(c, caption="Matrix c")
+```{r Show-both-Matrices, echo=FALSE}
+kbl (b, caption="Matrix b") |>
+  kable_styling(latex_options = "hold_position")
+kbl (c, caption="Matrix c") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 Let's take the first row of `b` and combine it with the second row of `c` to form a new matrix, `e`. Since these are rows that are going to be combined, we will use a command, `rbind`, to bind these rows together.
 
-```{r Combined_Matrix,fig.margin=TRUE}
+```{r Combined-Matrix}
 temp4 <- rbind(b[1,],c[2,])
-pander(temp4)
-```
-
-```{marginfigure}
-**Table 1.8**: Combined Matrix
+kbl (temp4, booktabs=T,
+     caption="Combined Matrix") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 Notice that *temp4* has inherited the column names but lost the row names. Let's set the row names for this matrix.
 
-```{r Changing_Row_Names,fig.margin=TRUE}
-rownames(temp4)<-list("From_b", "From_c")
-pander(temp4)
-```
-
-```{marginfigure}
-**Table 1.9**: Combined Matrix with Explanation of Source
+```{r Changing-Row-Names }
+rownames(temp4)<-list("From b", "From c")
+kbl (temp4, booktabs=T,
+     caption="Combined Matrix with Explanation of Source") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 \vspace{12pt}
 
 We could combine all of matrix `b` and matrix `c` together using row binding or column binding. Table 1.10 will bind using columns. \vspace{12pt}
 
-```{r Row_and_Column_Binding,fig.margin=TRUE}
+```{r Row-and-Column-Binding }
 temp5<- cbind(b,c)
-pander(temp5)
-```
-
-```{marginfigure}
-**Table 1.10**: Column Binding of Matrices b and c
+kbl (temp5, booktabs=T, 
+     caption="Column Binding of Matrices b and c") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 \vspace{12pt}
 
 And Table 1.11 will use rows as binding condition.
 
-```{r Row_and_Column_Binding2, fig.margin=TRUE}
+```{r Row-and-Column-Binding2, fig.margin=TRUE}
 temp6 <- rbind(b,c)
-pander(temp6)
+kbl (temp6, booktabs=T,
+       caption="Row Binding of Matrices b and c") |>
+  kable_styling(latex_options = "hold_position")
 ```
-
-```{marginfigure}
-**Table 1.11**: Row Binding of Matrices b and c
-```
-
-\vspace{12pt}
-
-```{r Row_and_Column_Binding2a, fig.margin=TRUE}
-library(knitr)
-knitr::kable(temp6)
-```
-
-Note that I might explore alternatives to `pander` such as `huxtable` in the future. Here is a discussion of `huxtable` and comparison of many different packages for displaying tables <https://hughjonesd.github.io/huxtable/design-principles.html>. \vspace{12pt}
-
-Let's look at a simple example of using `huxtable` for the previous table. The first step is to convert the dataframe into a `huxtable` object. We'll denote the that it is a special `huxtable` object by appending `_ht` at the end of the name.
-
-```{r hux_ex1_1, fig.margin=FALSE, eval=FALSE}
-library(huxtable)
-t6_ht<-as_hux(temp6, add_colnames=TRUE, add_rownames=TRUE)
-```
-
-```{r, eval=FALSE}
-t6_ht
-```
-
-```{marginfigure}
-**Table 1.12**: A first `huxtable` table.
-```
-
-Now let's show what we can do to customize the appearance of the table.
-
-```{r hux_ex1_2, fig.margin=FALSE, eval=FALSE}
-t6_ht <- set_bottom_border(t6_ht, 1, everywhere)
-   # This command sets a bottom border for row 1
-   #   for all columns (everywhere).
-t6_ht <- set_bold(t6_ht, 1, everywhere, TRUE)
-   # This command sets the first row to be bold
-   #    default is TRUE in this command so it
-   #    is optional and TRUE could be omitted.
-t6_ht <- set_number_format(t6_ht, 2:5, 2:5, 2)
-   # Sets 2 decimal digits for rows 2:5 and columns 2:5
-t6_ht <- set_caption (t6_ht, "Formatted Huxtable")
-
-```
-
-```{r hux_ex1_3, fig.margin=FALSE, eval=FALSE}
-t6_ht
-```
-
-The `huxtable`package has the benefit of a great variety of customizing features for tables.
 
 Data organizing is a less glamorous part of the job for practicing analytics professionals but can consume a majority of the workday. There is a lot more that can be said about data wrestling but scripting the data cleansing in terms R commands will make the work more repeatable, consistent, and in the end save time.
 
-\vspace{12pt}
+::: {.exercise name="Creating a Matrix of Daily Demand for Four Weeks"}
+Assume that your company's product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday. Build a matrix of four weeks of demand where each row is a separate week. Each Monday starts over with the same demand. The rows should be named Week1, Week2, etc. The columns should have names corresponding to the day of the week.
+:::
 
-**Exercise 1.2** (Creating a Matrix of Daily Demand for Four Weeks) Assume that your company's product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday. Build a matrix of four weeks of demand where each row is a separate week. Each Monday starts over with the same demand. The rows should be named Week1, Week2, etc. The columns should have names corresponding to the day of the week.
-
-\vspace{12pt}
-
-**Exercise 1.3** (Creating a Matrix of Demand for Two Products) Assume that your company's product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday. Gadgets have a demand of 20 on Monday, increasing by 3 units a day through Sunday. Build a matrix showing each product as a separate row. Rows should have names for the products and columns for the days of the week.
+::: {.exercise name="Creating a Matrix of Demand for Two Products"}
+Assume that your company's product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday. Gadgets have a demand of 20 on Monday, increasing by 3 units a day through Sunday. Build a matrix showing each product as a separate row. Rows should have names for the products and columns for the days of the week.
+:::

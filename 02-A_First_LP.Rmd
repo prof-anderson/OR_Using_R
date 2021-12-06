@@ -314,7 +314,8 @@ rownames(res0)<-list("Solution")
 
 ```{r Base-2Var-Solution, fig.margin = T}
 kbl(res0, booktabs=T,
-    caption="Base Case Two Variable Solution")
+    caption="Base Case Two Variable Solution") |>
+  kableExtra::kable_styling(latex_options = "hold_position")
 ```
 
 In this case, we take the previous command's output, `model0`, add an element to it, and then store it back in the same object, `model0`. We keep doing it for each element until we are done. \vspace{12pt}
@@ -357,7 +358,8 @@ dimnames(constr00)<-c(list(c("Machining",
                       list(c("Ants", 
                           "Bats","Relationship","RHS")))
 kbl(constr00, booktabs=T,
-    caption="Elements of the Constraints")
+    caption="Elements of the Constraints") |>
+  kableExtra::kable_styling(latex_options = "hold_position")
 ```
 
 In the first version of the LP model implementation, we created many different versions of the model along the way while we really just keep adding stuff to the same model. This uses extra memory and will be slower. The second implementation keeps reusing the same model object until the very end when solving is done and it places the results into an object. This may be more memory efficient but is still likely slower and carries along a lot of extra notation. \vspace{12pt}
@@ -649,9 +651,10 @@ colnames(res2a)<-list("Profit","Ants","Bats","Cats")
 rownames(res2a)<-list("Solution 2a")
 ```
 
-```{r First-Solution-Multiple-Optima, fig.margin = T}
+```{r First-Solution-Multiple-Optima}
 kbl(res2a, booktabs=T, 
-    caption="First Solution of Multiple Optima Case")
+    caption="First Solution of Multiple Optima Case") |>
+  kableExtra::kable_styling(latex_options = "hold_position")
 ```
 
 Okay. When I ran it, all the production was focused on a mix of Ants and Bats but as discussed earlier, I think that there is an alternate solution producing Cats with the same total profit. The LP engine won't necessarily tell you that there is an alternate optimal solution. Let's see if we can "trick" the LP to show an alternate solution by preventing the use of any bat by adding a constraint, $Ants=0$ to `model2a` and naming this `model2b` and the solved object or solution as `result2b`.
@@ -668,7 +671,8 @@ res2b <- cbind(objective_value(result2b),
 colnames(res2b)<-list("Profit","Ants","Bats","Cats")
 rownames(res2b)<-list("Solution 2b")
 kbl (res2b, booktabs=T,
-     caption="An Alternate Optimal Solution")
+     caption="An Alternate Optimal Solution") |>
+  kableExtra::kable_styling(latex_options = "hold_position")
 ```
 
 Again, a product mix is made but now instead and Ants and Bats, the mix is made up of Bats and Cats with exactly the same level of profit. This is an instance of multiple optima. Let's try one more situation by adding a constraint forcing the number of Ants to be 60 and solving.
@@ -694,7 +698,8 @@ res2z <- rbind(res2a, res2b, res2c)
 
 ```{r Summarize-Results-of-Multiple-Optima}
 kbl(res2z, booktabs=T,
-    caption="Examples of Alternate Optimal Solutions")
+    caption="Examples of Alternate Optimal Solutions") |>
+  kableExtra::kable_styling(latex_options = "hold_position")
 ```
 
 Notice that all three of these solutions have exactly the same profit but different production plans to generate this profit. Furthermore while we are listing three, there are actually many more solutions. You can force the system to find other solutions by setting the number of Ants to a number between 0 and 180 or Cats between 0 and 90. In fact, the number of solutions is infinite if we allow fractional solutions. More generally, when there are two alternate optimal in a linear program with continuous variables, there is actually an infinite number of other optimal solutions between them.\
