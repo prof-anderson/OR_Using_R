@@ -1128,13 +1128,13 @@ The cost to transport from Dallas to MSP is three times as high as the cost from
 The table on the right displays the transportation cost between all the cities.
 \vspace{12pt}
 
-| Node        | PDX  |  SEA |  MSP | ATL  | *Supply* | 
-|------------:|:----:|:----:|:----:|:----:|:--------:|
-|  Chicago    |  20  |  21  |   8  | 12   | **500**  |
-|  Beaverton  |   6  |   7  |  18  | 24   | **500**  |
-|  Eugene     |   8  |  10  |  22  | 28   | **500**  |
-|  Dallas     |  16  |  26  |  15  |  5   | **600**  |
-|**Capacity** | **700**| **500**| **500**| **600**|          |
+| Node        | PDX    |  SEA   |  MSP   | ATL    | *Supply*  | 
+|------------:|:------:|:------:|:------:|:------:|:---------:|
+|  Chicago    |  20    |  21    |   8    | 12     | **500**   |
+|  Beaverton  |   6    |   7    |  18    | 24     | **500**   |
+|  Eugene     |   8    |  10    |  22    | 28     | **500**   |
+|  Dallas     |  16    |  26    |  15    |  5     | **600**   |
+|**Capacity** | **700**| **500**| **500**| **600**|           |
 
 Table: Transportation cost between cities  
 
@@ -1167,12 +1167,12 @@ $$
  \begin{split}
  \begin{aligned}
     \text{Max:} & \\
-                & Profit=20Ants+10Bats+16Cats \\
+                & Profit=20\cdot Ants+10\cdot Bats+16\cdot Cats \\
     \text{S.t.} & \\
-                & 6Ants+3Bats+4Cats \leq 2000 \\
-                & 8Ants+4Bats+4Cats \leq 2000 \\
-                & 6Ants+3Bats+8Cats \leq 1440 \\
-                & 40Ants+20Bats+16Cats \leq 9600 \\
+                & 6\cdot Ants+3\cdot Bats+4\cdot Cats \leq 2000 \\
+                & 8\cdot Ants+4\cdot Bats+4\cdot Cats \leq 2000 \\
+                & 6\cdot Ants+3\cdot Bats+8\cdot Cats \leq 1440 \\
+                & 40\cdot Ants+20\cdot Bats+16\cdot Cats \leq 9600 \\
                 & Cats  \leq 200 \\
                 & Ants, Bats, Cats \geq 0  
   \end{aligned}

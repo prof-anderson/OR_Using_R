@@ -347,12 +347,9 @@ This should look familiar. Let's see if we can arrange to make it look more simi
 ```{r construct-constraints-for-display}
 constr0<-extract_constraints(model0)    
 # Pass the constraints out of  model
-constr00<- (cbind(as.matrix(constr0$matrix), 
-                  # Get the matrix of data
-                  as.matrix(constr0$sense),  
-                  # Get the inequality 
-                  as.matrix(constr0$rhs)))   
-                  # Get the Right Hand Side
+constr00<- (cbind(as.matrix(constr0$matrix),  # Get the matrix of data
+                  as.matrix(constr0$sense),   # Get the inequality 
+                  as.matrix(constr0$rhs)))    # Get the Right Hand Side
 dimnames(constr00)<-c(list(c("Machining", 
                           "Assembly","Testing","Sensors")),
                       list(c("Ants", 
@@ -369,7 +366,7 @@ In the first version of the LP model implementation, we created many different v
 In each step, we are simply taking the output of the previous step and feeding it in as the first term of the following step. It is almost like the output is a bucket that is then passed as a bucket into the next step. Rather than carrying a bucket from one step into the next one, a plumber might suggest a pipe connecting one step to the next. This is done so often that we refer to it as piping and a pipe operator.
 
 ```{marginfigure}
-**The pipe symbol**: Represented by `%>%` will let us do this more compactly and efficiently. It takes a little getting used to but is a better way to build the model.  
+**The pipe symbol**: Represented by `|>` will let us do this more compactly and efficiently. It takes a little getting used to but is a better way to build the model.  Also, note that the piping operator requires `R` version 4.1.0. or higher.
 ```
 
 Here is the equivalent process for building the base case implementation using a piping operator without all the intermediate partial models being built. Notice how it is a lot more concise. We will typically use this approach for model building but both approaches are functionally equivalent.
@@ -377,33 +374,29 @@ Here is the equivalent process for building the base case implementation using a
 ```{r base_case}
 library (magrittr, quietly = TRUE) # Used for pipes/dplyr
 # library (dplyr, quietly = TRUE)    # Data management
-result0 <- MIPModel() %>%
-  add_variable(Ants, type = "continuous", lb = 0) %>%
-  add_variable(Bats, type = "continuous",lb = 0) %>%
+result0 <- MIPModel() |>
+  add_variable(Ants, type = "continuous", lb = 0) |>
+  add_variable(Bats, type = "continuous",lb = 0) |>
  
-  set_objective(7*Ants + 12*Bats, "max") %>%
+  set_objective(7*Ants + 12*Bats, "max") |>
   
-  add_constraint(1*Ants + 4*Bats<= 800) %>% #machining
-  add_constraint(3*Ants + 6*Bats<= 900) %>% #assembly
-  add_constraint(2*Ants + 2*Bats<= 480)  %>% #testing
-  add_constraint(2*Ants + 10*Bats<= 1200) %>% #sensors
+  add_constraint(1*Ants + 4*Bats<= 800)   |> # machining
+  add_constraint(3*Ants + 6*Bats<= 900)   |> # assembly
+  add_constraint(2*Ants + 2*Bats<= 480)   |> # testing
+  add_constraint(2*Ants + 10*Bats<= 1200) |> # sensors
   solve_model(with_ROI(solver = "glpk"))
   
 ```
 
-Note that we loaded a new package, `magrittr`, which gives us the piping function that simplifies model building. \vspace{12pt}
-
-```{marginfigure}
-**The magrittr package**, offers a set of operators which make your code more readable by:
+Piping can make your code more readable by:
   
 + structuring sequences of data operations left-to-right (as opposed to from the inside and out),
 + avoiding nested function calls,
 + minimizing the need for local variables and function definitions, and
 + making it easy to add steps anywhere in the sequence of operations.
 
-```
-
-The first line creates the basic model. The `%>%` serves as a pipe symbol at the end of each line. It basically means take product of the previous command and feed it in as the first argument of the following command. While it may shorten each line of code and may be faster, there is drawback in that the the piped commands are treated as one very long line of code making it harder to find where an error occurs.
+Piping's major drawback is that it treats all of the piped code as one line of code and it can therefore make debugging much harder.  
+The first line creates the basic model. The `|>` serves as a pipe symbol at the end of each line. It basically means take product of the previous command and feed it in as the first argument of the following command. While it may shorten each line of code and may be faster, there is drawback in that the the piped commands are treated as one very long line of code making it harder to find where an error occurs.
 
 Let's check to see the status of the solver. Did it find the optimal solution? We do this by extracting the solver status from the result object.
 
@@ -480,18 +473,18 @@ We have already loaded the required packages so it is not necessary to reload th
 \vspace{12pt}
 
 ```{r base_case_3var}
-model1 <- MIPModel() %>%
-  add_variable(Ants, type = "continuous", lb = 0) %>%
-  add_variable(Bats, type = "continuous",lb = 0) %>%
-  add_variable(Cats, type = "continuous", lb = 0) %>%
+model1 <- MIPModel() |>
+  add_variable(Ants, type = "continuous", lb = 0) |>
+  add_variable(Bats, type = "continuous",lb = 0) |>
+  add_variable(Cats, type = "continuous", lb = 0) |>
   
-  set_objective(7*Ants + 12*Bats + 5*Cats,"max")%>%
+  set_objective(7*Ants + 12*Bats + 5*Cats,"max") |>
   
-  add_constraint(1*Ants + 4*Bats + 2*Cats<=800)%>% 
+  add_constraint(1*Ants + 4*Bats + 2*Cats<=800) |> 
   #machining
-  add_constraint(3*Ants + 6*Bats + 2*Cats<=900)%>% 
+  add_constraint(3*Ants + 6*Bats + 2*Cats<=900) |> 
   #assembly
-  add_constraint(2*Ants + 2*Bats + 1*Cats<=480)%>% 
+  add_constraint(2*Ants + 2*Bats + 1*Cats<=480) |> 
   #testing
   add_constraint(2*Ants + 10*Bats + 2*Cats<=1200) 
   #sensors
@@ -610,18 +603,18 @@ $$
 The implementation can be simplified again since we are only changing the objective function, let's change the objective function in `model1` and save it to `model2a`.
 
 ```{r Modify_Model_to_Have_Multiple_Optima}
-model2a <- MIPModel() %>%
-  add_variable(Ants, type = "continuous", lb = 0) %>%
-  add_variable(Bats, type = "continuous",lb = 0) %>%
-  add_variable(Cats, type = "continuous", lb = 0) %>%
+model2a <- MIPModel() |>
+  add_variable(Ants, type = "continuous", lb = 0) |>
+  add_variable(Bats, type = "continuous",lb = 0) |>
+  add_variable(Cats, type = "continuous", lb = 0) |>
   
-  set_objective(7*Ants + 12*Bats + 14*Cats,"max")%>%
+  set_objective(7*Ants + 12*Bats + 14*Cats,"max") |>
   
-  add_constraint(1*Ants + 4*Bats + 2*Cats<=800)%>% 
+  add_constraint(1*Ants + 4*Bats + 2*Cats<=800) |> 
   #machining
-  add_constraint(3*Ants + 6*Bats + 6*Cats<=900)%>% 
+  add_constraint(3*Ants + 6*Bats + 6*Cats<=900) |> 
   #assembly
-  add_constraint(2*Ants + 2*Bats + 4*Cats<=480)%>% 
+  add_constraint(2*Ants + 2*Bats + 4*Cats<=480) |> 
   #testing
   add_constraint(2*Ants + 10*Bats + 4*Cats<=1200)
   #sensors
@@ -636,8 +629,8 @@ result2a <-  solve_model(model2a, with_ROI(solver="glpk"))
 #    at different multiple optimal solutions each time it
 #    is run.
 # It is hidden since it may be confusing for the reader.
-result2a <- model2a %>% 
-  add_constraint( Ants==180) %>%
+result2a <- model2a |> 
+  add_constraint( Ants==180) |>
   solve_model(with_ROI(solver="glpk"))
 ```
 
@@ -790,20 +783,20 @@ $$
 Let's make this change to the model and the implementation by simply changing each $\leq$ to a $\geq$ for each constraint. \vspace{12pt}
 
 ```{r Unbounded_Model}
-result4 <- MIPModel() %>%
- add_variable(Ants, type = "continuous", lb = 0) %>%
- add_variable(Bats, type = "continuous", lb = 0) %>%
- add_variable(Cats, type = "continuous", lb = 0) %>%
+result4 <- MIPModel() |>
+ add_variable(Ants, type = "continuous", lb = 0) |>
+ add_variable(Bats, type = "continuous", lb = 0) |>
+ add_variable(Cats, type = "continuous", lb = 0) |>
   
- set_objective(7*Ants + 12*Bats + 5*Cats,"max")%>%
+ set_objective(7*Ants + 12*Bats + 5*Cats,"max")|>
   
- add_constraint(1*Ants + 4*Bats + 2*Cats>= 800) %>%
+ add_constraint(1*Ants + 4*Bats + 2*Cats>= 800) |>
     #machining
- add_constraint(3*Ants + 6*Bats + 2*Cats>= 900) %>% 
+ add_constraint(3*Ants + 6*Bats + 2*Cats>= 900) |> 
     #assembly
- add_constraint(2*Ants + 2*Bats + 1*Cats>= 480) %>%
+ add_constraint(2*Ants + 2*Bats + 1*Cats>= 480) |>
     #testing
- add_constraint(2*Ants + 10*Bats + 2*Cats>= 1200)%>% 
+ add_constraint(2*Ants + 10*Bats + 2*Cats>= 1200)|> 
     #sensors
  solve_model(with_ROI(solver = "glpk"))
 ```
