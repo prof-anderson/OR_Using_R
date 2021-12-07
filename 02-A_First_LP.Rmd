@@ -100,25 +100,19 @@ $$
 
 Note that since the objective function and each constraint is a simple linear function of the decision variables, this is what we call a *linear* programming model or LP for short. It would not be linear if any nonlinear function is made of the decision variables. For example, squaring a decision variable, using conditional logic based on the variable value, or multiplying two variables. These and other issues would then require using nonlinear programming or NLP. NLP is also widely used but has limitations.
 
-```{marginfigure}
 **Linear programming**: (LP, also called linear optimization) is a method to achieve the best outcome (such as maximum profit or lowest cost) in a mathematical model whose requirements are represented by linear relationships.
-```
 
 \vspace{12pt}
 
 It is impressive the number of situations that can be modeled well using linear programming. Keeping to the world of linear programming in general allows for finding the very best solution to very big problems in a short amount of time. For example, it is common for practitioners to be analyzing real-world problems with hundreds of thousands of decision variables and constraints.\
-\vspace{12pt}
 
 ## Graphically Solving a Linear Program
 
-\vspace{12pt}
-
-Given that the linear program has two variables, it can be represented in two dimensions making it straightforward to draw and visualize. Before we analyze it using the `R` we will walk through a graphical representation. \vspace{12pt}
+Given that the linear program has two variables, it can be represented in two dimensions making it straightforward to draw and visualize. Before we analyze it using the `R` we will walk through a graphical representation.
 
 We do this by iteratively adding each constraint and trimming the feasible region. The line can be drawn by looking at the constraint from two perspectives. First as if only Ants are produced and second as if only Bats are produced. This gives specific point on the horizontal and vertical axes respectively which are simply connected.\
-\vspace{12pt}
 
-```{r Fig-First_Constraint, echo=FALSE, fig.margin=TRUE, out.width="2in"}
+```{r Fig-First-Constraint, echo=FALSE, fig.margin=TRUE, out.width="3in",  fig.align='center', fig.cap="Drawing a First Constraint."}
 library(knitr)
 knitr::include_graphics("images/Fig02-01-First_Constraint.PNG")
 ```
@@ -126,45 +120,42 @@ knitr::include_graphics("images/Fig02-01-First_Constraint.PNG")
 The constraints are differentiated by color and the diagonal lines of the same color drawn off the constraint are a hatching line indicating the direction of the inequality constraint. In this case, each of the constraints are less than or equal to constraints and are indicating that this constraint includes the line and the region under the line. If it had been a greater than or equal to constraint, the hatching would have been rising above the constraint line. If it had been an exact equality constraint rather than inequality constraint, it would have been just the line with no hatching above or below. \vspace{12pt}
 
 In each figure, we illustrate the feasible region as a grayed oval but it is the whole region.\
-\vspace{24pt}
 
-```{r Fig-Second_Constraint, echo=FALSE, fig.margin=TRUE, out.width="2in"}
+```{r Fig-Second-Constraint, echo=FALSE, fig.margin=TRUE, out.width="3in",  fig.align='center',fig.cap="Adding the Assembly Constraint."}
 knitr::include_graphics("images/Fig02-02-Second_Constraint.PNG")
 ```
 
 The assembly constraint is drawn as a red line connecting a production plan of just 300 Ants on the horizontal axis to just 150 Bats on the vertical axis. \vspace{24pt}
 
-```{r Fig-Third_Constraint, echo=FALSE, fig.margin=TRUE, out.width="2in"}
+```{r Fig-Third-Constraint, echo=FALSE, fig.margin=TRUE, out.width="3in",  fig.align='center', fig.cap="Adding the Testing Constraint." }
 knitr::include_graphics("images/Fig02-03-Third_Constraint.PNG")
 ```
 
 Since both products require two hours of testing and there are 480 hours available, the Green Testing constraint connects producing just 240 Ants and just 240 Bats.\
 \vspace{24pt}
 
-```{r Fig-Fourth_Constraint, echo=FALSE, fig.margin=TRUE, out.width="2in"}
+```{r Fig-Fourth-Constraint, echo=FALSE, out.width="3in", fig.align='center', fig.cap="Adding the Sensors Constraint."}
 knitr::include_graphics("images/Fig02-04-Fourth_Constraint.PNG")
 ```
 
 We now draw our fourth and final constraint - Sensors. This constraint is done in yellow so it may be more difficult to see but it goes from an Ants only production plan of 600 units to a bats only production plan of 120.\
-\vspace{24pt}
 
 This now results in a feasible region that satisfies all of the constraints simultaneously. Every point in this region is feasible or possible in that it does not violate any of the constraints. There is an infinite number of possible points in this feasible region.\
-\vspace{24pt}
 
-```{r Fig-Feasible_Region, echo=FALSE, fig.margin=TRUE, out.width="2in"}
+```{r Fig-Feasible-Region, echo=FALSE, fig.align='center', out.width="3in"}
 knitr::include_graphics("images/Fig02-05-Feasible_Region.PNG")
 ```
 
 Given that we are doing linear programming and we are trying to maximize or minimize a certain objective function, the optimal solution will be at a corner point or more formally, a vertex. In our example, we can narrow our attention from the full feasible region to just the five vertices or candidate solutions.\
 \vspace{24pt}
 
-```{r Fig-Candidate_Solutions, echo=FALSE, fig.margin=TRUE, out.width="2in"}
+```{r Fig-Candidate-Solutions, echo=FALSE,  fig.align='center', out.width="3in", fig.cap="Candidate Solutions."}
 knitr::include_graphics("images/Fig02-06-Candidate_Solutions.PNG")
 ```
 
 Lastly, we can pick from among these possible solutions by drawing parallel, equal profit lines radiating out from the origin to find the last line that still touches the feasible region. The figure to the right shows one line with a profit of $\$ 1400$. A second line is drawn that last touches the feasible region is at $\$ 1980$. \vspace{24pt}
 
-```{r Fig-Iso_Profit, echo=FALSE, fig.margin=TRUE, out.width="2in"}
+```{r Fig-Iso-Profit, echo=FALSE,  fig.align='center', out.width="3in", fig.cap="Parallel Equal Profit Lines."}
 knitr::include_graphics("images/Fig02-07-Iso_Profit.PNG")
 ```
 
@@ -173,7 +164,7 @@ Graphically, we could read the number of Ants and number of Bats to produce. Acc
 
 Rather than relying on this graphical approach for determining the coordinates of each point drawn, each point in a two dimensional space is defined by the intersection of two lines. In this case, the optimal solution (and all of the other candidate solutions too) can be defined by the intersection of two constraint lines, rewritten as exact equalities. These can be solved as a system of equations with two equations and two unknowns. The optimal solution here is defined by the intersection of the Assembly (Red) and the Testing (Green) constraints. Just solve $3A+6B=900$ and $2A+2B=480$ for $A$ and $B$. \vspace{24pt}
 
-```{r Fig-Optimal_Solution, echo=FALSE, fig.margin=TRUE, out.width="2in"}
+```{r Fig-Optimal-Solution, echo=FALSE,  fig.align='center', out.width="3in", fig.cap="Optimal Solution."}
 knitr::include_graphics("images/Fig02-08-Optimal_Solution.PNG")
 ```
 
@@ -199,9 +190,7 @@ library (ompr.roi, quietly = TRUE)
    # Glue for ompr to solve with ROI
 ```
 
-```{marginfigure}
-**quietly=TRUE**: This option will not display standard messages returned when loading libraries.
-```
+The `quietly=TRUE` option will not display standard messages returned when loading libraries.
 
 This code chunk uses the `library` command to load a series of useful packages. THe first, `library (kableExtra)`, enhances `knitr's` built-in `kable` function to generate better formatted tables. The lines similarly load packages providing the optimization functions that we will be relying on frequently. The `ROI`package is the R Optimization Interface for for connecting various optimization solvers to R. The `ROI.plugin.glpk` provides a connection between the the `glpk`solver and R through ROI. While this would be sufficient, we are going to make use of the `ompr`package by Dirk Schumacher to provide algebraic representations for linear programs. The `ompr` package also requires a connector to ROI, aptly named `ompr.roi`. \vspace{12pt}
 
@@ -924,6 +913,7 @@ Rose City Roasters provides premium roasted coffee beans for regional coffee sho
 
 Table: Data for Rose City Roasters
 
+:::
 
 ## Miscellaneous Tips and Tricks
 
@@ -931,7 +921,7 @@ At this point, you are able to build your own optimization model. Here are a col
 
 ## `ompr` Related Tips and Tricks
 
--   `ompr`will complain if you use the same variable name for a data object in R and in `ompr`. For example, if you have variables *x* and y in a formulation, then build an `ompr` model with `x` and `y` variables. You might then assign the results to `x` and `y` objects in R, and run it again. You will then get a notification of a name space conflict from `ompr`. One work around is to prefix the `ompr` variables with a V to indicate variable thereby u===sing `Vx` and `Vy` in `ompr` for is assigned to x and y in r.
+-   `ompr` will complain if you use the same variable name for a data object in R and in `ompr`. For example, if you have variables *x* and y in a formulation, then build an `ompr` model with `x` and `y` variables. You might then assign the results to `x` and `y` objects in R, and run it again. You will then get a notification of a name space conflict from `ompr`. One work around is to prefix the `ompr` variables with a V to indicate variable thereby u===sing `Vx` and `Vy` in `ompr` for is assigned to x and y in r.
 -   Typos can happen easily in piped models being built but are not typically localized. Try commenting in and out lines until the problem goes away. This will help to identify where the problem is.
 -   Check for `ompr` updates. It is under active development. You may find versions on the author's github repository that are not yet available through CRAN.
 -   The author of `ompr` is testing a much faster form of model building with a different syntax using `MILPmodel` rather than "MIPmodel". If you are running into delays building an `ompr` model but not solving the problem, this may be worth investigating.

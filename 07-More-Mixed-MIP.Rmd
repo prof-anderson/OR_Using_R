@@ -6,7 +6,6 @@ editor_options:
 
 # More Integer Programming Models
 
-
 ```{r, eval=FALSE, include=FALSE}
 library(bookdown); library(rmarkdown); rmarkdown::render("07-More-Mixed-MIP.Rmd", "pdf_book")
 ```
@@ -1190,7 +1189,7 @@ plot(game1)
 :::
 
 ::: {.exercise name="Sudoku-Multiple Optima"}
-**Challenge:** Sudoku puzzles are often created with the intention of having a single solution since the approaches people use to solve them are based on incrementally reasoning out what values each cell must contain.
+**Challenge:** Sudoku puzzles are created with the intention of having a single solution since the approaches people use to solve them are based on incrementally reasoning out what values each cell must contain.
 The result is that the ambiguity of multiple optima may cause problems for people to solve.
 While the optimization model can solve these without difficulty, it is only going to find one, arbitrary solution.
 Simply resolving is likely to give you the same solution even when there are multiple optima.
@@ -1199,7 +1198,7 @@ For an example of one with multiple optimal solutions, the most extreme case wou
 :::
 
 ::: {.exercise name="Sudoku-Infeasible"}
-**Challenge:** A Sudoku puzzle with only a small numbers shown can be infeasible even though it does not contain any obvious violation of repeated digits.
+**Challenge:** A Sudoku puzzle with only a few numbers shown can be infeasible even though it does not contain any obvious violation of repeated digits.
 People building Sudoku puzzles need to ensure that every puzzle is solvable or risk having frustrated customers.
 Add a digit one at a time to an existing Sudoku puzzle board that does not immediately violate the repeated digits requirement, test for a valid solution, and repeat, until the Sudoku game board becomes infeasible.
 :::
@@ -1215,9 +1214,9 @@ set.seed(1234); plot(makeGame(n=4))
 
 ## Production Planning over Time
 
-In this section let's look at an example of producing two products with varying weekly demand, inventory carrying costs, fixed and marginal production costs, and a beginning inventory.
+Let's revisit our drone manufacturing example but accounting for time.  In this case, we'll look at producing ants and bats over time while accounting for with varying weekly demand, inventory carrying costs, setup costs, marginal production costs, and  beginning inventory.  The planning horizon is four weeks.  
 
-In this case we will have two products.
+Let's start by by showing the data.
 
 ```{r}
 nTime <- 4
@@ -1227,7 +1226,6 @@ mProdA   <- 300  # Maximum production per week of A
 mProdB   <- 500
 
 demA <- c(round(runif(nTime)*mDemandA))   
-
 demB <- c(round(runif(nTime)*mDemandB))
 
 beg_invA <- 77  # Inv at beginning of week 1
@@ -1245,6 +1243,58 @@ prodcostB <- 11
 maxinv <- 1400  # Maximum combined inventory
 ```
 
+Our goal is to create a production plan that will meet all demand at the lowest total cost.
+
+Let's start by defining our data. Instead of Ants and Bats, we'll abbreviate it to just A and B.
+
+**Data:**
+$C^I_A$ = The weekly inventory carrying cost for each Ant carried from one week to the next.
+$C^I_B$ = The weekly inventory carrying cost for each Bats carried from one week to the next.
+$C^P_A$ = The marginal production cost for each Ant.
+$C^P_B$ = The marginal production cost for each Bat.
+$C^S_A$ = The setup cost for producing Ants in any given week.
+$C^S_B$ = The setup cost for producing Bats in any given week.
+$B^I_A$ = Inventory of Ants at the beginning of week 1.
+$B^I_B$ = Inventory of Bats at the beginning of week 1.
+$D_{t,A}$ = Demand for Ants in week _t_.
+$D_{t,B}$ = Demand for Bats in week _t_.
+
+**Decision variables:**  
+$x_{t,A}$ is the number of Ants to make it week _t_.
+$x_{t,B}$ is the number of Bats to make it week _t_.
+$y_{t,A}=1$ if a setup for Ant production is done in week _t_; 0 otherwise.
+$y_{t,B}=1$ if a setup for Bat production is done in week _t_; 0 otherwise.
+$z_{t,A}$ is the inventory of Ants at the end of week _t_.
+$z_{t,B}$ is the inventory of Ants at the end of week _t_.
+
+A critical concept to understand is the inventory balance.  Let's demonstrated it with Ants and arbitarily pick week 3.  We know that the ending inventory for week 3, $z_{3,A}$ is equal to the inventory from the from the previous week, $z_{2,A}$, plus amount produced in week 3, $x_{3,A}$, minus the amount sold (in our case demand), $D_{3,A}$.  
+
+$$z_{3,A}=z_{2,A} + x_{3,A} - D_{3,A}$$
+
+The inventory balance constraints follow a similar form for each week other than week 1.  For week 1, the previous inventory is fixed rather than a variable and can be framed as the following.
+
+Our goal is to minimize the total cost.  Let's look at the total cost with respect Ants.  It is a combination production cost, setup costs, and carrying costs.
+
+$$
+\begin{split}
+\begin{aligned}
+\text{} \; & \sum\limits_{t=1}^{4}C^P_t\cdot x_{t,A} + C^S_t\cdot y_{t,A} + C^I_t\cdot z_{t,A}
+\end{aligned}
+\end{split}
+$$
+
+$$
+\begin{split}
+\begin{aligned}
+\text{min } \;  \sum\limits_{t=1}^{4} (& C^P_A\cdot x_{t,A} + C^S_A\cdot y_{t,A} + C^I_A\cdot z_{t,A}+\\
+& C^P_B\cdot x_{t,B} + C^S_B\cdot y_{t,B} + C^I_B\cdot z_{t,B})
+\end{aligned}
+\end{split}
+$$
+
+Now, let's create the full formulation.
+
+
 We'll start by initializing the model and creating the decision variables.
 
 ```{r}
@@ -1260,9 +1310,9 @@ promod <- add_variable (promod, VyA[tt], tt=1:nTime, type="binary")
 promod <- add_variable (promod, VyB[tt], tt=1:nTime, type="binary")
    # Setups incurred for each product in each time period.
 
-promod <- add_variable (promod, ViA[tt], tt=1:nTime, 
+promod <- add_variable (promod, VzA[tt], tt=1:nTime, 
                         lb=0, type="continuous")
-promod <- add_variable (promod, ViB[tt], tt=1:nTime, 
+promod <- add_variable (promod, VzB[tt], tt=1:nTime, 
                         lb=0, type="continuous")
    # Inventory at end of period for each product.
 
@@ -1276,21 +1326,22 @@ promod <- set_objective(promod, sum_expr(prodcostA * VxA[tt] +
                                          prodcostB * VxB[tt] + 
                                          fcostA * VyA [tt] +
                                          fcostB * VyB [tt] +
-                                         invcostA * ViA [tt] +
-                                         invcostB * ViB [tt],
+                                         invcostA * VzA [tt] +
+                                         invcostB * VzB [tt],
                                          tt=1:nTime),
                                          "min")
 ```
 
 Let's start with our constraints for linking production, inventory, and demand for the first week.
 The inventory at the end of week 1 is simply the beginning inventory at the start of week 1 (`beg_invA`) plus the amount produced minus the demand.
+
 Note that this assumes all demand must be satisfied in the same week.
 This model could be extended to allow for backlogged demand or other variations.
 
 ```{r, eval=FALSE}
-promod <- add_constraint (promod, beg_invA + VxA[1] - demA [1] == ViA[1] )
+promod <- add_constraint (promod, beg_invA + VxA[1] - demA [1] == VzA[1] )
 
-promod <- add_constraint (promod, beg_invB + VxB[1] - demB [1] == ViB[1] )
+promod <- add_constraint (promod, beg_invB + VxB[1] - demB [1] == VzB[1] )
 
 ```
 
@@ -1299,11 +1350,11 @@ Now we need to do the same for all of the following weeks.
 We take the ending inventory from the previous week, add the new production, and then subtract the demand to give us the ending inventory for both products.
 
 ```{r, eval=TRUE}
-promod <- add_constraint (promod, ViB[tt-1] + VxA[tt] - 
-                            demA [tt] == ViA[tt], tt = 2:nTime )
+promod <- add_constraint (promod, VzB[tt-1] + VxA[tt] - 
+                            demA [tt] == VzA[tt], tt = 2:nTime )
 
-promod <- add_constraint (promod, ViB[tt-1] + VxB[tt] - 
-                            demB [tt] == ViB[tt], tt = 2:nTime )
+promod <- add_constraint (promod, VzB[tt-1] + VxB[tt] - 
+                            demB [tt] == VzB[tt], tt = 2:nTime )
 
 ```
 
@@ -1322,7 +1373,7 @@ promod <- add_constraint (promod, VxB [tt] <= mProdB * VyB[tt],
 Now let's put a limit our joint inventory of products.
 
 ```{r, eval=TRUE}
-promod <- add_constraint (promod, ViA[tt] + ViB[tt] <= maxinv, 
+promod <- add_constraint (promod, VzA[tt] + VzB[tt] <= maxinv, 
                           tt = 1:nTime)
 
 ```

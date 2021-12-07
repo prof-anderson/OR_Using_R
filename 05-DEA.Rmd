@@ -72,11 +72,10 @@ As the manager responsible for the stores in the region, there are many question
 We'll start by drawing a visual representation of the input-output model. The function `DrawIOdiagram` is from the `TRA` package and allows for creating a nicely formatted input-output diagram.
 \vspace{12pt}
 
-```{r DEA_IO_Plot1, fig.margin=TRUE, out.width="2in"}
+```{r DEA-IO-Plot1, out.width="3in", fig.align='center', fig.cap="A Simple DEA Model for Store Management"}
 library (TRA) # Note, may need to install directly from github
               # remotes::install_github("prof-anderson/TRA")
 
-# fig.cap='A Simple DEA Model for Store Management'
 Figure <- DrawIOdiagram (c("Employees\n(FTE)" ), 
                          c("Sales\n($/week)"), 
                          '"\nStore\n "')
@@ -91,15 +90,12 @@ The figure for drawing input-output diagrams is worth a little discussion and ex
 This follows three steps to work for both HTML & PDF
 
 1.  Generate diagram object and save to Figure object
-
 2.  Export Figure as image to images directory
-
 3.  Display image
 
 Note that it assumes that there is a subdirectory for images - if there isn't a subdirectory for images, you can create one or edit the path.
 
 Furthermore, note that the text passed to the function such as `"Sales\n($/week)"` allows for a line return character such as `"\n"`
-
 
 Let's get started now with R.
 
@@ -124,9 +120,9 @@ kbl (temp, booktabs=T, escape=F,
   kable_styling(latex_options = "hold_position")
 ```
 
-The above commands create matrices that hold the data and have named rows and columns to match. The `<-` symbol is a key function in R and means to assign what is in the right to the object on the left. \vspace{12pt}
+The above commands create matrices that hold the data and have named rows and columns to match. The `<-` symbol is a key function in R and means to assign what is in the right to the object on the left. 
 
-For benchmarking, we want to know which ones are doing the best job. \vspace{12pt}
+For benchmarking, we want to know which ones are doing the best job. 
 
 Can you tell which stores represent the best tradeoff between inputs and outputs? None of the stores are strictly dominated by any of the other stores. Dominance would be producing more outputs using less input so let's move on to looking at it graphically. \vspace{12pt}
 
@@ -442,14 +438,16 @@ dimnames(results.efficiency)<-list(DMUnames,"CCR-IO")
 eff.crs <- results.efficiency
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
 kbl (cbind(results.efficiency, results.lambda),
-     booktabs=T, escape=F, caption=
+     booktabs=T, escape=F, digits=4, caption=
        "Input-Oriented Efficiency Results") |>
-  kable_styling(latex_options = c("hold_position", "scale_down"))
+  kable_styling(latex_options = c("hold_position"))
 ```
 
 ```{r, echo=FALSE}
 kbl(cbind(results.efficiency, poscol(results.lambda)), 
-       booktabs=T, escape=F, caption=
+       booktabs=T, escape=F, digits=4, 
+    col.names=c("CCR-IO", "$\\lambda_C$"),
+    caption=
       "Results with Inefficient DMU Columns Removed.") |>
   kable_styling(latex_options = "hold_position")
 ```
@@ -512,22 +510,20 @@ dimnames(results.efficiency)<-list(DMUnames,"BCC-IO")
 eff.vrs <- results.efficiency
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
 kbl (cbind(results.efficiency, results.lambda),
-     booktabs=T, escape=F, caption=
+     booktabs=T, escape=F, digits=4, caption=
        "Input-Oriented VRS Envelopment Results") |>
   kable_styling(latex_options = "hold_position")
 ```
 
 Notice that the efficiencies have generally increased or stayed the same. Whereas earlier three out of four DMUs were inefficient, now three out of four are efficient. One way of thinking of returns to scale is whether doubling the inputs should be expected to result in doubling the outputs that should be achieved. Another way to think of it is whether it is fair to think of scaling up or down an efficient significantly to set a performance target for a much bigger or smaller unit. For example, would it be *fair* to compare a small convenience store such as Al's Pantry or to use a common realworld example, 7-11, to a CostCo store scaled down by a factor of a 100? Much more could be said about returns to scale.
 
-```{r DEA_VRS_Frontier_Plot, echo=FALSE, fig.margin=TRUE, fig.cap="BCC (VRS) Efficiency Frontier"}
+```{r DEA-VRS-Frontier-Plot, echo=FALSE, fig.margin=TRUE, fig.cap="BCC (VRS) Efficiency Frontier"}
 library(Benchmarking, quietly=TRUE)
 dea.plot(x, y, RTS="vrs", ORIENTATION="in-out", 
          txt=LETTERS[1:length(x)], 
          add=FALSE, wx=NULL, wy=NULL, TRANSPOSE=FALSE, 
          fex=1, GRID=TRUE, RANGE=FALSE, param=NULL)
 ```
-
-\vspace{12pt}
 
 The Constant Returns to Scale, CRS, model is often referred to in the DEA literature by CCR after Charnes, Cooper, and Rhodes [@CharnesDataEnvelopmentAnalysis1978]. The Variable Returns to Scale, VRS, model is also referred to as the BCC model after Banker, Charnes, and Cooper. In addition to the CRS and VRS models, two other common approaches are Increasing Returns to Scale (IRS) and Decreasing Returns to Scale (DRS). Technically, IRS is sometimes more precisely referred to as non-decreasing returns to scale. Similarly, DRS corresponds to non-increasing returns to scale. \vspace{12pt}
 
@@ -576,7 +572,7 @@ dimnames(results.efficiency)<-list(DMUnames,"DRS-IO")
 eff.drs <- results.efficiency
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
 kbl (cbind(results.efficiency, results.lambda),
-     booktabs=T, caption="Input-Oriented Model with  
+     booktabs=T, digits=4, caption="Input-Oriented Model with  
         Decreasing Returns to Scale") |>
   kable_styling(latex_options = "hold_position")
 ```
@@ -618,12 +614,13 @@ dimnames(results.efficiency)<-list(DMUnames,"IRS-IO")
 eff.irs <- results.efficiency
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
 kbl (cbind(results.efficiency, results.lambda), 
-     booktabs=T, escape=F, caption="Input-Oriented Increasing Returns 
+     booktabs=T, escape=F, digits=4,
+     caption="Input-Oriented Increasing Returns 
         to Scale Model Results") |>
   kable_styling(latex_options = "hold_position")
 ```
 
-```{r DEA_IRS_Frontier_Plot, echo=FALSE, fig.margin=TRUE, fig.height=4, fig.cap="Increasing (Non-Decreasing) Returns to Scale Efficiency Frontier"}
+```{r DEA-IRS-Frontier-Plot, echo=FALSE, fig.margin=TRUE, fig.height=4, fig.cap="Increasing (Non-Decreasing) Returns to Scale Efficiency Frontier"}
 library(Benchmarking, quietly=TRUE)
 dea.plot(x, y, RTS="irs", ORIENTATION="in-out", 
          txt=LETTERS[1:length(x)], 
@@ -631,7 +628,7 @@ dea.plot(x, y, RTS="irs", ORIENTATION="in-out",
          fex=1, GRID=TRUE, RANGE=FALSE, param=NULL)
 ```
 
-```{r DEA_DRS_Frontier_Plot, echo=FALSE, fig.margin=TRUE, fig.height=4, fig.cap="Decreasing  (Non-Increasing) Returns to Scale Efficiency Frontier"}
+```{r DEA-DRS-Frontier-Plot, echo=FALSE, fig.margin=TRUE, fig.height=4, fig.cap="Decreasing  (Non-Increasing) Returns to Scale Efficiency Frontier"}
 library(Benchmarking, quietly=TRUE)
 dea.plot(x, y, RTS="drs", ORIENTATION="in-out", 
          txt=LETTERS[1:length(x)], 
@@ -641,7 +638,8 @@ dea.plot(x, y, RTS="drs", ORIENTATION="in-out",
 
 ```{r Compare-RTS-Results}
 kbl (cbind(eff.crs, eff.vrs, eff.drs, eff.irs), 
-     booktabs=T, caption="Comparison of Efficiency under 
+     booktabs=T, digits=4,
+     caption="Comparison of Efficiency under 
        Alternate Returns to Scale Assumptions") |>
   kable_styling(latex_options = "hold_position")
 ```
@@ -767,11 +765,13 @@ for (k in 1:ND) {
 }
 ```
 
-```{r full-table, fig.fullwidth=TRUE}
+```{r full-table}
 kbl (cbind(res.efficiency, poscol(res.lambda)),
-     booktabs=T, digits=6,
-     caption="Results from University Technology Transfer Example (CRS)") |>
-  kable_styling(latex_options = "hold_position")
+     booktabs=T, digits=5,
+     caption="Results from University Technology 
+     Transfer Example (CRS)") |>
+  kable_styling(latex_options = 
+                  c("hold_position", "scale_down"))
 UTT_CCR.Res<-cbind(res.efficiency, res.lambda)
 ```
 

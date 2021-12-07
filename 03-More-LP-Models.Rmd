@@ -726,13 +726,11 @@ kbl (Transp, booktabs=T,
 
 A generalization of the transportation model is that of transshipment where some nodes are intermediate nodes that are neither pure sources or destinations but can have both inflow and outflow.  We could extend our previous example with factories in Vietnam and Thailand.  Note that the facilities in the middle (Minnesota, Pennsylvania, and Wyoming) are better described as distribution centers rather than warehouses.
 
-```{r Fig-Transshipment, echo=FALSE, out.width="2in", fig.show='hold', fig.align='center', fig.cap="Transshipment Application."}
+```{r Fig-Transshipment, echo=FALSE, out.width="3in", fig.show='hold', fig.align='center', fig.cap="Transshipment Application."}
 knitr::include_graphics("images/Fig03-02-Transshipment.PNG")
 ```
 
-
 In this case, the standard convention might be to work from left to right and index the set of factories by _i_, the set of distribution centers by _j_ and the set of customers by _k_.  We might also use $x_{i,j}$ to be the amount to ship from factory _i_ to distribution center _j_ and $y_{j,k}$ to be the amount to ship from distribution center _j_ to customer _k_.
-\vspace{12pt}
 
 A common characteristic of this kind of problem is then that the inflow at each distribution center must equal the outflow.  This means that for Minnesota, $(j=1)$, we would would have a relationship of the following.
 \vspace{12pt}
@@ -949,7 +947,7 @@ This is consistent with our solution, where $s_1$ is zero and the other three va
 One of the benefits of using an algebraic modeling approach for linear programming such as `ompr` is that it provides a direct mapping from the mathematical model of the application to the implementation.
 The actual solver used such as `glpk,` `symphony,` or `gurobi` take the linear program in a different form though and `ompr` processes it into a form they can handle.
 
-```{r Fig-ompr-structure, echo=FALSE, fig.show='hold', fig.align='center', out.height="1in", fig.cap="Relationship between ompr and solvers."}
+```{r Fig-ompr-structure, echo=FALSE, fig.show='hold', fig.align='center', out.width="100%", fig.cap="Relationship between ompr and solvers."}
 knitr::include_graphics("images/Fig03-03-ROI-1.PNG")
 ```
 
@@ -1032,7 +1030,7 @@ $$
 The `Rglpk` package can then be accessed directly.
 \vspace{12pt}
 
-```{r Fig-ompr-to-glpk, echo=FALSE, out.width="1.5in", fig.cap="Relationship between ompr and Rglpk."}
+```{r Fig-ompr-to-glpk, echo=FALSE, out.width="100%", fig.cap="Relationship between ompr and Rglpk."}
 knitr::include_graphics("images/Fig03-04-ROI-glpk1.PNG")
 ```
 
