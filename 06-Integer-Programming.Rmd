@@ -5,8 +5,6 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = FALSE)
 knitr::opts_chunk$set(cache = FALSE)
 knitr::opts_chunk$set(asis_output = FALSE)
-
-suppressPackageStartupMessages(library(magrittr))  # Used for pipes
 suppressPackageStartupMessages(library(dplyr))     # Used for data management
 suppressPackageStartupMessages(library(ROI))
 suppressPackageStartupMessages(library(ROI.plugin.glpk))
@@ -19,7 +17,6 @@ library (TRA)
 ```
 
 ```{r, eval=FALSE, include=FALSE}
-#library(bookdown); library(rmarkdown); library(tufte); rmarkdown::render("06-Integer-Programming.Rmd", "tufte_book2")
 library(bookdown); library(rmarkdown); rmarkdown::render("06-Integer-Programming.Rmd", "pdf_book")
 ```
 
@@ -56,18 +53,18 @@ $$
 We use the following implementation.
 
 ```{r base-case-3varB}
-model1 <- MIPModel() %>%
-  add_variable(Ants, type = "continuous", lb = 0) %>%
-  add_variable(Bats, type = "continuous",lb = 0) %>%
-  add_variable(Cats, type = "continuous", lb = 0) %>%
+model1 <- MIPModel() |>
+  add_variable(Ants, type = "continuous", lb = 0) |>
+  add_variable(Bats, type = "continuous",lb = 0) |>
+  add_variable(Cats, type = "continuous", lb = 0) |>
   
-  set_objective(7*Ants + 12*Bats + 5*Cats,"max")%>%
+  set_objective(7*Ants + 12*Bats + 5*Cats,"max")|>
   
-  add_constraint(1*Ants + 4*Bats + 2*Cats<=800)%>% 
+  add_constraint(1*Ants + 4*Bats + 2*Cats<=800) |> 
   #machining
-  add_constraint(3*Ants + 6*Bats + 2*Cats<=901)%>% 
+  add_constraint(3*Ants + 6*Bats + 2*Cats<=901) |> 
   #assembly
-  add_constraint(2*Ants + 2*Bats + 1*Cats<=480)%>% 
+  add_constraint(2*Ants + 2*Bats + 1*Cats<=480) |> 
   #testing
   add_constraint(2*Ants + 10*Bats + 2*Cats<=1200) 
   #sensors
@@ -110,7 +107,7 @@ $$
 The `ompr` implementation has a similar, straightforward change. In the declaration of variables (`add_variable` function), we simply set the type to be `integer` rather than `continuous`. Since nothing else is changing in the model, we can simply re-add the variables to redefine them from being continuous to be integer.\
 \vspace{12pt}
 
-```{r IncAssemHrs_ch6, fig.margin=FALSE}
+```{r IncAssemHrs_ch6}
 model1 <- add_variable(model1, Ants, 
                        type = "integer", lb = 0)
 model1 <- add_variable(model1, Bats, 
@@ -121,7 +118,7 @@ model1 <- add_variable(model1, Cats,
 
 Let's confirm that the implemented model is of the form desired.
 
-```{r, fig.margin=TRUE}
+```{r}
 model1
 ```
 
@@ -177,11 +174,11 @@ The last constraint cannot be solved directly strictly using linear programming.
 Again, we could try solving it with and without the imposition of the integrality constraint.
 
 ```{r SolveLPRelaxation0}
-LPRmod <- MIPModel() %>%
-  add_variable(Vx1, type = "continuous", lb = 0) %>%
-  add_variable(Vx2, type = "continuous",lb = 0) %>%
-  set_objective(2*Vx1 + 3*Vx2, "max") %>%
-  add_constraint(1.0*Vx1 + 3.0*Vx2 <= 8.25) %>% #Surfactant
+LPRmod <- MIPModel() |>
+  add_variable(Vx1, type = "continuous", lb = 0) |>
+  add_variable(Vx2, type = "continuous",lb = 0) |>
+  set_objective(2*Vx1 + 3*Vx2, "max") |>
+  add_constraint(1.0*Vx1 + 3.0*Vx2 <= 8.25) |> #Surfactant
   add_constraint(2.5*Vx1 + 1.0*Vx2  <= 8.75)  #Steel
 
 LPRelax <- solve_model(LPRmod, with_ROI(solver = "glpk"))
@@ -197,12 +194,12 @@ rownames(acme_res_lp) <- "LP Solution"
 All we need to do is repeat the same process with changing the variable type to `integer` instead of `continuous`.
 
 ```{r SolveIP0}
-IPSoln <- MIPModel() %>%
-  add_variable(Vx1, type = "integer", lb = 0) %>%
-  add_variable(Vx2, type = "integer",lb = 0) %>%
-  set_objective(2*Vx1 + 3*Vx2, "max") %>%
-  add_constraint(1.0*Vx1 + 3.0*Vx2 <= 8.25) %>% #Surfactant
-  add_constraint(2.5*Vx1 + 1.0*Vx2  <= 8.75) %>% #Steel
+IPSoln <- MIPModel() |>
+  add_variable(Vx1, type = "integer", lb = 0) |>
+  add_variable(Vx2, type = "integer",lb = 0)  |>
+  set_objective(2*Vx1 + 3*Vx2, "max") |>
+  add_constraint(1.0*Vx1 + 3.0*Vx2 <= 8.25)   |> #Surfactant
+  add_constraint(2.5*Vx1 + 1.0*Vx2  <= 8.75)  |> #Steel
   solve_model(with_ROI(solver = "glpk"))
 
 obj_val <- objective_value(IPSoln)
@@ -218,16 +215,12 @@ kbl (rbind(acme_res_lp,acme_res_ip),
   kable_styling(latex_options = "hold_position")
 ```
 
-```{r Fig-LP_Feasible_Region, echo=FALSE, fig.margin=TRUE, out.width="2in"}
-knitr::include_graphics("images/Fig06-1-LP_Feasible_Region.PNG")
-
+```{r Fig-LP-Feasible-Region, echo=FALSE, out.width="49%", fig.show='hold', fig.align='center', fig.cap="LP Region and IP Feasible Solutions" }
+knitr::include_graphics( c ("images/Fig06-1-LP-Feasible-Region.PNG", 
+                            "images/Fig06-2-IP-Feasible.PNG"))
 ```
 
 Simply rounding down did not yield an optimal solution. Notice that production of product 1 went down while product 2 went up. The net impact was a profit reduction of almost *10%*.
-
-```{r Fig-IP_Feasible_Region, echo=FALSE, fig.margin=TRUE, out.width="2in"}
-knitr::include_graphics("images/Fig06-2-IP_Feasible.PNG")
-```
 
 ## The Branch and Bound Algorithm
 
@@ -261,11 +254,12 @@ This is a problem that we **can** solve using linear programming so let's go ahe
 
 ```{r SolveLPRelaxation}
 kbl (acme_res_lp, booktabs=T, 
-     caption="Acme's Production Plan based on the LP Relaxation")
+     caption="Acme's Production Plan based on the LP Relaxation") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
-```{r Fig-LPRelaxation, echo=FALSE, fig.margin=TRUE, out.width="2in"}
-knitr::include_graphics("images/Fig06-3-LP_Relaxation.PNG")
+```{r Fig-LPRelaxation, echo=FALSE, out.width="3in", fig.align='center', fig.cap="LP Relaxation", fig.show='hold'}
+knitr::include_graphics("images/Fig06-3-LP-Relaxation.PNG")
 
 ```
 
@@ -313,16 +307,16 @@ kbl (LPSubI_res, booktabs=T,
   kable_styling(latex_options = "hold_position")
 ```
 
-```{r Fig-Subproblem_I, echo=FALSE, fig.margin=TRUE, out.width="2in"}
-knitr::include_graphics("images/Fig06-4-Subproblem_I.PNG")
+```{r Fig-Subproblem-I, echo=FALSE, out.width="3in", fig.align='center', fig.cap="Subproblem I"}
+knitr::include_graphics("images/Fig06-4-Subproblem-I.PNG")
 
 ```
 
 Looking over the results, we now get an integer value for $x_1$ but not for $x_2$. We repeat the same process by creating subproblems from subproblem I by branching off of $x_2$.\
 \vspace{12pt}
 
-```{r Fig-Subproblem_Ia, echo=FALSE, fig.margin=TRUE, out.width="2in"}
-knitr::include_graphics("images/Fig06-5-Subproblem_Ia.PNG")
+```{r Fig-Subproblem-Ia, echo=FALSE, out.width="3in",  fig.align='center', fig.show='hold', fig.cap="Excluding a region to branch off of Subproblem I."}
+knitr::include_graphics("images/Fig06-5-Subproblem-Ia.PNG")
 
 ```
 
@@ -339,9 +333,9 @@ Since $x_2$ is now a non-integer solution, we will create branches with bounds (
 To simplify the implementation, I can simply change the upper and lower bounds on variables rather than adding separate variables.
 
 ```{r SolveLPSubIII}
-LPSubIII <- LPRmod %>%
-  add_variable(Vx1, type = "continuous", lb = 0, ub = 2) %>%
-  add_variable(Vx2, type = "continuous",lb = 0, ub = 2) %>%
+LPSubIII <- LPRmod |>
+  add_variable(Vx1, type = "continuous", lb = 0, ub = 2) |>
+  add_variable(Vx2, type = "continuous",lb = 0, ub = 2) |>
   solve_model(with_ROI(solver = "glpk"))
 
 obj_val <- objective_value(LPSubIII )
@@ -354,9 +348,8 @@ kbl (LPSubIII_res, booktabs=T,
   kable_styling(latex_options = "hold_position")
 ```
 
-```{r Fig-Subproblem_III_and_II, echo=FALSE, fig.margin=TRUE, out.width="2in"}
-knitr::include_graphics("images/Fig06-5-Subproblem_III_and_II.PNG")
-
+```{r Fig-Subproblem-III-and-II, echo=FALSE, out.width="3in", fig.align='center',  fig.show='hold', fig.cap="Subproblems II and III"}
+knitr::include_graphics("images/Fig06-5-Subproblem-III-and-II.PNG")
 ```
 
 This results in integer values for both $x_1$ and $x_2$ so it is feasible with respect to integrality in addition to the production constraints. It does generate less profit than the LP relaxation. While it is feasible, it doesn't prove that it is optimal though. We need to explore the other potential branches.\
@@ -367,9 +360,9 @@ This results in integer values for both $x_1$ and $x_2$ so it is feasible with r
 Next, let's look at Subproblem IV. This problem adds the bound of $x_2\ge3.0$ to subproblem I. Notice that in the `MIPModel` implementation the variable for $x_1$ (Vx1) has an upperbound of 2, (`ub=2`) in order to implement the bounding constraint for subproblem I and the lower bound on $x_2$ of 3 in the variable declarations.
 
 ```{r SolveLPSubIV}
-LPSubIV <- MIPModel() %>%
-  add_variable(Vx1, type = "continuous", lb = 0, ub = 2) %>%
-  add_variable(Vx2, type = "continuous",lb = 3) %>%
+LPSubIV <- MIPModel() |>
+  add_variable(Vx1, type = "continuous", lb = 0, ub = 2) |>
+  add_variable(Vx2, type = "continuous",lb = 3) |>
   solve_model(with_ROI(solver = "glpk"))
 
 obj_val <- objective_value(LPSubIV )
@@ -389,13 +382,13 @@ At first glance, this looks okay but if you look more closely at the value of $x
 
 We should check the status of the solver before examining the result.
 
-```{r subproblem_IV_status}
+```{r subproblem-IV-status}
 LPSubIV
 ```
 
 The returned status value of this solved LP indicates that this tell us that subproblem IV is *infeasible.* It still returned values that were used when it determined that the problem was infeasible which is why it gave the results in the previous table. From here on out, it is good to check the status. Note that it can be used as an in-line evaluated expression to simply say was it feasible or not? Yes, it was `r LPSubIV$status`. The screen capture to the right shows what this in-line code chunk looks like in RMarkdown.
 
-```{r Fig-Ex_Inline_code_chunk, echo=FALSE, fig.margin=TRUE, out.width="2in"}
+```{r Fig-Ex-In-line-code-chunk, echo=FALSE, out.width="3in", fig.align='center', fig.show='hold', fig.cap="Example of in-line code in RMarkdown."}
 knitr::include_graphics("images/Fig06-5a-In-line-Code-Chunk.PNG")
 ```
 
@@ -406,9 +399,9 @@ knitr::include_graphics("images/Fig06-5a-In-line-Code-Chunk.PNG")
 Now, we have searched down all branches or subproblems except for subproblem II. Let's go back and do that problem. We do that by simply adding one new bound to the LP Relaxation. That is $x_1\ge 3.0$.
 
 ```{r SolveLPSubII}
-LPSubII <- LPRmod %>%
-  add_variable(Vx1, type = "continuous", lb = 3) %>%
-  add_variable(Vx2, type = "continuous",lb = 0) %>%
+LPSubII <- LPRmod |>
+  add_variable(Vx1, type = "continuous", lb = 3) |>
+  add_variable(Vx2, type = "continuous",lb = 0) |>
   solve_model(with_ROI(solver = "glpk"))
 
 obj_val <- objective_value(LPSubII )
@@ -429,8 +422,8 @@ Given that we now no longer have any branches to explore, we can declare that we
 
 ```{r create-table-subproblem-III}
 kbl (LPSubIII_res,
-       booktabs=T, caption="Acme's Optimal Production Plan 
-       based on Subproblem III")
+       booktabs=T, caption=
+       "Acme's Optimal Production Plan based on Subproblem III")
 ```
 
 Before this, we could only say that it was feasible solution and candidate to be optimal since no better integer feasible solution had been found. \vspace{12pt}
@@ -453,8 +446,8 @@ kbl (BandB, booktabs=T,
   kable_styling(latex_options = "hold_position")
 ```
 
-```{r Fig-B_and_B_Summary, echo=FALSE, fig.margin=TRUE, out.width="2in"}
-knitr::include_graphics("images/Fig06-6-B_and_B_Summary.PNG")
+```{r Fig-B-and-B-Summary, echo=FALSE, fig.align='center', fig.show='hold', out.width="3in"}
+knitr::include_graphics("images/Fig06-6-B-and-B-Summary.PNG")
 
 ```
 
@@ -481,9 +474,7 @@ One option to deal with long solving times is to set early termination condition
 
 In practice, even small suboptimality tolerance factors like 1% can allow big problems to be solved quickly and are often well within the margin of error for model data. In other cases, organizations may be interested in finding *any* feasible solution to large, vexing problems.
 
-```{marginfigure}
 Note that our Acme example only specified two digits of accuracy for resource usage and may have only one digit of accuracy for profitability per product.
-```
 
 \vspace{12pt}
 
@@ -501,11 +492,11 @@ Examples include assigning people to projects, go-no go decisions on projects, a
 
 Let's explore the impact of binary restrictions with another example. The world famous semiconductor company, Outtel has a choice of five major R&D projects:
 
-A)  Develop processor architecture for autonomous vehicles\
-B)  Next generation microprocessor architecture\
-C)  Next generation process technology\
-D)  New fabrication facility\
-E)  New interconnect technology\
+A)  Develop processor architecture for autonomous vehicles
+B)  Next generation microprocessor architecture
+C)  Next generation process technology
+D)  New fabrication facility
+E)  New interconnect technology
 
 \vspace{12pt}
 
@@ -675,25 +666,25 @@ Let's examine the results if we run this model.\
 For Fixed Charge problems, we need to link our Widgets to our decision on whether or not we produce the Widget (and its associated setup costs). We do this what is called the "Big M" method.
 
 ```{r base_fixed_charge}
-fc_base_model <- MIPModel() %>%
- add_variable(Vw1, type="integer", lb=0, ub=500) %>% 
- add_variable(Vw2, type="integer", lb=0, ub=1000) %>%
- add_variable(Vw3, type="integer", lb=0, ub=750) %>%
- add_variable(Vy1, type="binary") %>% 
+fc_base_model <- MIPModel() |>
+ add_variable(Vw1, type="integer", lb=0, ub=500) |> 
+ add_variable(Vw2, type="integer", lb=0, ub=1000) |>
+ add_variable(Vw3, type="integer", lb=0, ub=750) |>
+ add_variable(Vy1, type="binary") |> 
     #Binary Decision for Widget 1
- add_variable(Vy2, type = "binary") %>% 
+ add_variable(Vy2, type = "binary") |> 
     #Binary Decision for Widget 2
- add_variable(Vy3, type = "binary") %>% 
+ add_variable(Vy3, type = "binary") |> 
     #Binary Decision for Widget 3
  
  set_objective(15*Vw1 + 10*Vw2 + 25*Vw3 
                - 1000*Vy1 - 1500*Vy2 - 2000*Vy3, 
-               "max") %>%
- add_constraint(2*Vw1 + 1*Vw2 + 3*Vw3 <= 1000) %>% 
+               "max") |>
+ add_constraint(2*Vw1 + 1*Vw2 + 3*Vw3 <= 1000) |> 
              # Pre-process availability 
- add_constraint(1*Vw1 + 5*Vw2 + 2*Vw3 <= 2000) %>% 
+ add_constraint(1*Vw1 + 5*Vw2 + 2*Vw3 <= 2000) |> 
              # Machining  
- add_constraint(2*Vw1 + 1*Vw2 + 1*Vw3 <= 1000) %>% 
+ add_constraint(2*Vw1 + 1*Vw2 + 1*Vw3 <= 1000) |> 
              # Assembly  
  add_constraint(3*Vw1 + 2*Vw2 + 1*Vw3 <= 1500)  
              # Quality Assurance  
@@ -858,9 +849,9 @@ Given that we have already created a model without the Big M constraints, we can
 
 ```{r fixedcharge}
 fc_bigM_model <- add_constraint(fc_base_model, 
-                                Vw1 - 500*Vy1 <= 0) %>%  
+                                Vw1 - 500*Vy1 <= 0) |>  
               # W1's Big M linking constraint 
- add_constraint(Vw2 - 400*Vy2 <= 0) %>%  
+ add_constraint(Vw2 - 400*Vy2 <= 0) |>  
               # W2's Big M linking constraint 
  add_constraint(Vw3 - 334*Vy3 <= 0)  
               # W3's Big M linking constraint

@@ -20,7 +20,6 @@ library (tidyr)
 library (ggplot2)
 library (ggrepel)
 library (ompr)
-suppressPackageStartupMessages(library (magrittr, quietly = TRUE))
 library (ompr.roi)
 library (ROI.plugin.glpk)
 library (tictoc, quietly = TRUE) 
@@ -267,21 +266,21 @@ It also helps prevent name space conflicts with other `R` objects in my environm
 \vspace{12pt}
 
 ```{r Build_Warehouse_Model, message=FALSE}
-model <- MIPModel() %>%
+model <- MIPModel() |>
   # 1 iff i gets assigned to warehouse j
-  add_variable(Vx[i, j], i=1:n, j=1:m, type="binary") %>%
+  add_variable(Vx[i, j], i=1:n, j=1:m, type="binary") |>
   
   # 1 iff warehouse j is built
-  add_variable(Vy[j], j = 1:m, type = "binary") %>%
+  add_variable(Vy[j], j = 1:m, type = "binary") |>
   
   # minimize cost
   set_objective(sum_expr(transportcost(i, j) * Vx[i, j], 
                          i = 1:n, j = 1:m) + 
                   sum_expr(fixedcost[j] * Vy[j], j = 1:m), 
-                "min") %>%
+                "min") |>
   
   # every customer needs to be assigned to a warehouse
-  add_constraint(sum_expr(Vx[i, j], j=1:m)==1, i=1:n) %>%  
+  add_constraint(sum_expr(Vx[i, j], j=1:m)==1, i=1:n) |>  
   
   # if a customer is assigned to a warehouse, 
   #    then this warehouse must be built
@@ -348,28 +347,28 @@ This package provides a tremendous number of functions for data management.
 To illustrate how this is done, let's review line by line how this code chunk works.
 
 ```{r warehouse_parsing_results}
-matching <- result %>% 
-  get_solution(Vx[i,j]) %>%
-  filter(value > .9) %>%  
+matching <- result |> 
+  get_solution(Vx[i,j]) |>
+  filter(value > .9) |>  
   select(i, j)
 ```
 
-The next command `matching <- result %>%` does a few things.
-It uses the piping operator `%>%` to pass the `result` object into being used by the following command and then everything that gets done later in this piped sequence will be assigned to `matching`.
+The next command `matching <- result |>` does a few things.
+It uses the piping operator `|>` to pass the `result` object into being used by the following command and then everything that gets done later in this piped sequence will be assigned to `matching`.
 \vspace{12pt}
 
-The command `get_solution(Vx[i,j]) %>%` extracts solution values for the x variables (`Vx`) from the solved model object `result` piped in from the previous stage.
+The command `get_solution(Vx[i,j]) |>` extracts solution values for the x variables (`Vx`) from the solved model object `result` piped in from the previous stage.
 This will give us a data object consisting of 2000 variables values, 95% of them being zero.\
 \vspace{12pt}
 
-The command `filter(value > .9) %>%` takes the previous command's 2000 variable values and only keeps the ones for which the value is larger than 0.9.
+The command `filter(value > .9) |>` takes the previous command's 2000 variable values and only keeps the ones for which the value is larger than 0.9.
 Since these are binary variables, they should all be exactly 1.0 but just in case there is any numerical anomaly where a value is passed as a value close to one, such as 0.9999999, it is best to test with some tolerance.
 This command then only passes to the next command the 100 non-zero values.
 \vspace{12pt}
 
 The last command in this code chunk `select(i, j)` says to only select (or retain) the columns named `i` and `j`.
 Notice that this does not pass the actual value of zero or one - we know it is one!
-Also, note that it does not include the piping operator `%>%` which means that it is the end of this piped sequence.
+Also, note that it does not include the piping operator `|>` which means that it is the end of this piped sequence.
 \vspace{12pt}
 
 Let's review what the two versions of the results look like.
@@ -411,8 +410,8 @@ I'll break up the steps into separate code chunks just for the sake of illustrat
 This is a useful chance to see how to manage results.
 
 ```{r plot-assignment}
-plot_assignment <- matching %>% 
-  inner_join(customer_locations, by = c("i" = "id")) %>% 
+plot_assignment <- matching |> 
+  inner_join(customer_locations, by = c("i" = "id")) |> 
   inner_join(warehouse_locations, by = c("j" = "id"))
 kbl (head(plot_assignment), booktabs=T, caption=
       "XY coordinates to draw Customer-Warehouse Routes") |>
@@ -425,10 +424,10 @@ Notice that this gives the beginning and ending coordinates of what will soon be
 Now, let's calculate how many customers each warehouse serves.
 
 ```{r customer-count}
-customer_count <- matching %>% 
+customer_count <- matching |> 
   # Process matching and save result to customer_count
-  group_by(j) %>%         # Group by warehouse
-  summarise(n = n()) %>%  # Summarize count
+  group_by(j) |>         # Group by warehouse
+  summarise(n = n()) |>  # Summarize count
   rename(id = j)          # Rename column from j to id
 kbl (customer_count, booktabs=T, caption=
   "Count of customers assigned to each operating warehouse") |>
@@ -440,9 +439,9 @@ Let's gather more information to examine the fixed cost of the selected.
 How does this compare with the histogram of fixed costs?
 
 ```{r prepare-to-plot-warehouses}
-plot_warehouses <- warehouse_locations %>% 
-  mutate(costs = fixedcost) %>% 
-  inner_join(customer_count, by = "id") %>% 
+plot_warehouses <- warehouse_locations |> 
+  mutate(costs = fixedcost) |> 
+  inner_join(customer_count, by = "id") |> 
   filter(id %in% unique(matching$j))
 kbl (plot_warehouses, booktabs=T, caption = 
           "Table of information about warehouses used") |>
@@ -771,10 +770,10 @@ Significant computer time can be used for large models but a variety of question
 # Code fragment is only used for testing gurobi
 #    and parameter passing for gurobi.
 
-gmodel <- MIPModel() %>%
-  add_variable(Vx, type = "integer", lb=0, ub=8) %>%
-  add_variable(Vy, type = "continuous", lb = 0, ub=4) %>%
-  set_objective(Vx + Vy, "max") %>%
+gmodel <- MIPModel() |>
+  add_variable(Vx, type = "integer", lb=0, ub=8) |>
+  add_variable(Vy, type = "continuous", lb = 0, ub=4) |>
+  set_objective(Vx + Vy, "max") |>
   add_constraint(Vx + Vy == 11.25)
   
 gres <- solve_model(gmodel, with_ROI(solver = "gurobi", TimeLimit=20))
@@ -985,26 +984,26 @@ Also, that last constraint may take careful examination.
 
 ```{r implementing_sudoku}
 n <- 9
-Sudoku_model <- MIPModel() %>%
+Sudoku_model <- MIPModel() |>
   
   # The number k stored in position i,j
   add_variable(Vx[i, j, k], i = 1:n, j = 1:n, k = 1:9, 
-               type = "binary") %>%
+               type = "binary") |>
   
   # no objective
-  set_objective(0) %>%
+  set_objective(0) |>
   
   # only one number can be assigned per cell
   add_constraint(sum_expr(Vx[i, j, k], k = 1:9) == 1, 
-                 i = 1:n, j = 1:n) %>%
+                 i = 1:n, j = 1:n) |>
   
   # each number is exactly once in a row
   add_constraint(sum_expr(Vx[i, j, k], j = 1:n) == 1, 
-                 i = 1:n, k = 1:9) %>%
+                 i = 1:n, k = 1:9) |>
   
   # each number is exactly once in a column
   add_constraint(sum_expr(Vx[i, j, k], i = 1:n) == 1, 
-                 j = 1:n, k = 1:9) %>% 
+                 j = 1:n, k = 1:9) |> 
   
   # each 3x3 square must have all numbers
   add_constraint(sum_expr(Vx[i, j, k], i = 1:3 + r, 
@@ -1029,11 +1028,11 @@ Sudoku_result <- solve_model(
   Sudoku_model, with_ROI(
     solver = "glpk", verbose = TRUE))
 # the following dplyr statement plots a 9x9 matrix
-Solution <- Sudoku_result %>% 
-  get_solution(Vx[i,j,k]) %>%
-  filter(value > 0) %>%  
-  select(i, j, k) %>% 
-  tidyr::spread(j, k) %>% 
+Solution <- Sudoku_result |> 
+  get_solution(Vx[i,j,k]) |>
+  filter(value > 0) |>  
+  select(i, j, k) |> 
+  tidyr::spread(j, k) |> 
   select(-i)
 ```
 
@@ -1041,28 +1040,28 @@ If you want to solve a specific Sudoku you can fix certain cells to specific val
 For example here we solve a Sudoku that has the sequence from 1 to 9 in the first 3x3 matrix fixed.
 
 ```{r Enter_specific_puzzle}
-Sudoku_model_specific <- Sudoku_model %>% 
-  add_constraint(Vx[1, 1, 1] == 1) %>%  
+Sudoku_model_specific <- Sudoku_model |> 
+  add_constraint(Vx[1, 1, 1] == 1) |>  
      # Set digit in top left to the number 1
-  add_constraint(Vx[1, 2, 2] == 1) %>%  
+  add_constraint(Vx[1, 2, 2] == 1) |>  
      # Set digit in row 1, column 2 to the number 2
-  add_constraint(Vx[1, 3, 3] == 1) %>%  
+  add_constraint(Vx[1, 3, 3] == 1) |>  
      # Set digit in row 1, column 3 to the number 3
-  add_constraint(Vx[2, 1, 4] == 1) %>%  
+  add_constraint(Vx[2, 1, 4] == 1) |>  
      # Set digit in row 2, column 1 to the number 4
-  add_constraint(Vx[2, 2, 5] == 1) %>%  # etc....
-  add_constraint(Vx[2, 3, 6] == 1) %>% 
-  add_constraint(Vx[3, 1, 7] == 1) %>% 
-  add_constraint(Vx[3, 2, 8] == 1) %>% 
+  add_constraint(Vx[2, 2, 5] == 1) |>  # etc....
+  add_constraint(Vx[2, 3, 6] == 1) |> 
+  add_constraint(Vx[3, 1, 7] == 1) |> 
+  add_constraint(Vx[3, 2, 8] == 1) |> 
   add_constraint(Vx[3, 3, 9] == 1)
 Sudoku_result_specific <- solve_model(
   Sudoku_model_specific, with_ROI(
     solver = "glpk", verbose = TRUE))
-Solution_specific <- Sudoku_result_specific %>% 
-  get_solution(Vx[i,j,k]) %>%
-  filter(value > 0) %>%  
-  select(i, j, k) %>% 
-  tidyr::spread(j, k) %>% 
+Solution_specific <- Sudoku_result_specific |> 
+  get_solution(Vx[i,j,k]) |>
+  filter(value > 0) |>  
+  select(i, j, k) |> 
+  tidyr::spread(j, k) |> 
   select(-i) 
 ```
 

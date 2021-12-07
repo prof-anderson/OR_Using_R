@@ -11,7 +11,6 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = FALSE)
 knitr::opts_chunk$set(cache = FALSE)
 knitr::opts_chunk$set(width = 30)
-library (magrittr, quietly = TRUE) #Used for pipes/dplyr
 library (dplyr, quietly = TRUE)
 library (ROI, quietly = TRUE)
 library (ROI.plugin.glpk, quietly = TRUE)
@@ -56,17 +55,17 @@ $$
 The implementation that we did earlier for production planning was straightforward.
 
 ```{r Base3VarModelA, fig.margin=TRUE,fig.width=7}
-Base3VarModel <- MIPModel() %>%
-  add_variable(Ants, type = "continuous", lb = 0) %>%
-  add_variable(Bats, type = "continuous",lb = 0) %>%
-  add_variable(Cats, type = "continuous", lb = 0) %>%
+Base3VarModel <- MIPModel() |>
+  add_variable(Ants, type = "continuous", lb = 0) |>
+  add_variable(Bats, type = "continuous",lb = 0) |>
+  add_variable(Cats, type = "continuous", lb = 0) |>
   
-  set_objective(7*Ants + 12*Bats + 5*Cats,"max") %>%
+  set_objective(7*Ants + 12*Bats + 5*Cats,"max") |>
   
-  add_constraint(1*Ants + 4*Bats + 2*Cats<=800) %>% 
-  add_constraint(3*Ants + 6*Bats + 2*Cats<=900) %>% 
-  add_constraint(2*Ants + 2*Bats + 1*Cats<=480) %>% 
-  add_constraint(2*Ants + 10*Bats + 2*Cats<=1200) %>% 
+  add_constraint(1*Ants + 4*Bats + 2*Cats<=800) |> 
+  add_constraint(3*Ants + 6*Bats + 2*Cats<=900) |> 
+  add_constraint(2*Ants + 2*Bats + 1*Cats<=480) |> 
+  add_constraint(2*Ants + 10*Bats + 2*Cats<=1200) |> 
   solve_model(with_ROI(solver="glpk"))
 
 base_case_res <- cbind(objective_value(Base3VarModel),
@@ -87,8 +86,6 @@ In the base case, we are producing Ants and Cats but not Bats to generate a tota
 
 There are many resources, some are fully used while some are not fully utilized. How do we prioritize the importance of each resource? For example, if the factory manager could add a worker to one department, which should it be? Conversely, if an outside task came up where should she draw the time from? We could modify the model and rerun. For complex situations, this may be necessary. On the other hand, we could also use sensitivity analysis to explore the relative value of the resources.
 
-\
-\vspace{12pt}
 
 Let's begin by examining the row duals, also known as shadow prices.
 
@@ -142,17 +139,17 @@ $$
 And the code is showed in the following chunk, with Table 4.3 showing the optimal model result.
 
 ```{r IncAssemHrs}
-IncAssemHrs <- MIPModel() %>%
-  add_variable(Ants, type = "continuous", lb = 0) %>%
-  add_variable(Bats, type = "continuous",lb = 0) %>%
-  add_variable(Cats, type = "continuous", lb = 0) %>%
+IncAssemHrs <- MIPModel() |>
+  add_variable(Ants, type = "continuous", lb = 0) |>
+  add_variable(Bats, type = "continuous",lb = 0) |>
+  add_variable(Cats, type = "continuous", lb = 0) |>
   
-  set_objective(7*Ants + 12*Bats + 5*Cats,"max") %>%
+  set_objective(7*Ants + 12*Bats + 5*Cats,"max") |>
   
-  add_constraint(1*Ants + 4*Bats + 2*Cats<= 800) %>% 
-  add_constraint(3*Ants + 6*Bats + 2*Cats<= 901) %>% 
-  add_constraint(2*Ants + 2*Bats + 1*Cats<= 480) %>% 
-  add_constraint(2*Ants + 10*Bats + 2*Cats<= 1200) %>% 
+  add_constraint(1*Ants + 4*Bats + 2*Cats<= 800) |> 
+  add_constraint(3*Ants + 6*Bats + 2*Cats<= 901) |> 
+  add_constraint(2*Ants + 2*Bats + 1*Cats<= 480) |> 
+  add_constraint(2*Ants + 10*Bats + 2*Cats<= 1200) |> 
 
   solve_model(with_ROI(solver = "glpk"))
 
@@ -203,17 +200,17 @@ $$
 In the same way that it was done for adjusting assembly hours earlier, the next chunk shows how to build in examine the case of a huge increase in the number of sensors. Table 4.3 contains the result for this model.
 
 ```{r IncSensor, fig.margin=TRUE}
-IncSensor<- MIPModel() %>%
-  add_variable(Ants, type = "continuous", lb = 0) %>%
-  add_variable(Bats, type = "continuous",lb = 0) %>%
-  add_variable(Cats, type = "continuous", lb = 0) %>%
+IncSensor<- MIPModel() |>
+  add_variable(Ants, type = "continuous", lb = 0) |>
+  add_variable(Bats, type = "continuous",lb = 0) |>
+  add_variable(Cats, type = "continuous", lb = 0) |>
   
-  set_objective(7*Ants + 12*Bats + 5*Cats,"max") %>%
+  set_objective(7*Ants + 12*Bats + 5*Cats,"max") |>
 
-  add_constraint(1*Ants+4*Bats + 2*Cats<= 800) %>% 
-  add_constraint(3*Ants+6*Bats + 2*Cats<=900) %>% 
-  add_constraint(2*Ants+2*Bats+1*Cats<=480) %>% 
-  add_constraint(2*Ants+10*Bats+2*Cats<=11200) %>% 
+  add_constraint(1*Ants+4*Bats + 2*Cats<= 800) |> 
+  add_constraint(3*Ants+6*Bats + 2*Cats<=900) |> 
+  add_constraint(2*Ants+2*Bats+1*Cats<=480) |> 
+  add_constraint(2*Ants+10*Bats+2*Cats<=11200) |> 
   solve_model(with_ROI(solver = "glpk"))
 
 inc_sensor_res  <- cbind(objective_value(IncSensor),
@@ -308,17 +305,17 @@ Notice that the values based on shadow prices of the resources used by a Bat are
 Now let's test it. We will modify the formulation to set a lower bound on the number of Bats to be 1. Note that we do this in case by setting the `lb` option in the `add_variable` to be 1. Also, if we had a demand constraint for Bats, we could also be accommodated this by setting the upper bound (`ub`).
 
 ```{r Bat1Model, fig.margin=TRUE,fig.width=5}
-Bat1Model <- MIPModel() %>%
-  add_variable(Ants, type = "continuous", lb = 0) %>%
-  add_variable(Bats, type = "continuous",lb = 1) %>%
-  add_variable(Cats, type = "continuous", lb = 0) %>%
+Bat1Model <- MIPModel() |>
+  add_variable(Ants, type = "continuous", lb = 0) |>
+  add_variable(Bats, type = "continuous",lb = 1) |>
+  add_variable(Cats, type = "continuous", lb = 0) |>
   
-  set_objective(7*Ants + 12*Bats + 5*Cats,"max") %>%
+  set_objective(7*Ants + 12*Bats + 5*Cats,"max") |>
 
-  add_constraint(1*Ants+4*Bats+2*Cats<=800) %>% 
-  add_constraint(3*Ants+6*Bats+2*Cats<=900) %>% 
-  add_constraint(2*Ants+2*Bats+1*Cats<=480) %>% 
-  add_constraint(2*Ants+10*Bats+2*Cats<=1200) %>% 
+  add_constraint(1*Ants+4*Bats+2*Cats<=800) |> 
+  add_constraint(3*Ants+6*Bats+2*Cats<=900) |> 
+  add_constraint(2*Ants+2*Bats+1*Cats<=480) |> 
+  add_constraint(2*Ants+10*Bats+2*Cats<=1200) |> 
 
   solve_model(with_ROI(solver = "glpk"))
 

@@ -8,7 +8,6 @@ library(bookdown); library(rmarkdown); rmarkdown::render("08-Goal-Programmingv2.
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = FALSE)
 knitr::opts_chunk$set(cache = TRUE)
-library (magrittr, quietly = TRUE) #Used for pipes/dplyr
 library (dplyr, quietly = TRUE)
 library (ROI, quietly = TRUE)
 library (ROI.plugin.glpk, quietly = TRUE)
@@ -92,13 +91,13 @@ $$
 $$
 
 ```{r HomeModel, echo=TRUE}
-Home1Model <- MIPModel() %>%
+Home1Model <- MIPModel() |>
  # To avoid name space conflicts, using a prefix of V
  #    for ompr variables.
-  add_variable(VH, type = "integer", lb = 0) %>%
-  add_variable(VR, type = "integer",lb = 0) %>%
-  set_objective(1.1*VH + 2.25*VR,"max") %>%
-  add_constraint(10*VH + 25*VR <= 1000) %>% 
+  add_variable(VH, type = "integer", lb = 0) |>
+  add_variable(VR, type = "integer",lb = 0) |>
+  set_objective(1.1*VH + 2.25*VR,"max") |>
+  add_constraint(10*VH + 25*VR <= 1000) |> 
   add_constraint(0.1*VH + 0.1*VR <= 7) 
 
 res_Home1 <- solve_model(Home1Model, 
@@ -171,17 +170,17 @@ $$
 T1 <- res_Home1$objective_value
 T2 <- res_Home2$objective_value
 
-Home3Model <- MIPModel() %>%
+Home3Model <- MIPModel() |>
  # To avoid name space conflicts, using a prefix of V
  #    for ompr variables.
-  add_variable(VH, type = "integer", lb = 0) %>%
-  add_variable(VR, type = "integer",lb = 0) %>%
-  add_variable(Vd1, type = "continuous",lb = 0) %>%
-  add_variable(Vd2, type = "continuous",lb = 0) %>%
-  set_objective(Vd1 + Vd2,"min") %>%
-  add_constraint(1.1*VH + 2.25*VR + Vd1 == 100) %>%
-  add_constraint(0.1*VH + 0.9*VR + Vd2 == 36) %>%
-  add_constraint(10*VH + 25*VR <= 1000) %>% 
+  add_variable(VH, type = "integer", lb = 0) |>
+  add_variable(VR, type = "integer",lb = 0) |>
+  add_variable(Vd1, type = "continuous",lb = 0) |>
+  add_variable(Vd2, type = "continuous",lb = 0) |>
+  set_objective(Vd1 + Vd2,"min") |>
+  add_constraint(1.1*VH + 2.25*VR + Vd1 == 100) |>
+  add_constraint(0.1*VH + 0.9*VR + Vd2 == 36) |>
+  add_constraint(10*VH + 25*VR <= 1000) |> 
   add_constraint(0.1*VH + 0.1*VR <= 7) 
 
 res_Home3 <- solve_model(Home3Model, 
@@ -222,17 +221,17 @@ $$
 $$
 
 ```{r MinDevPercModel, echo=FALSE}
-Home4Model <- MIPModel() %>%
+Home4Model <- MIPModel() |>
  # To avoid name space conflicts, using a prefix of V
  #    for ompr variables.
-  add_variable(VH, type = "integer", lb = 0) %>%
-  add_variable(VR, type = "integer",lb = 0) %>%
-  add_variable(Vd1, type = "continuous",lb = 0) %>%
-  add_variable(Vd2, type = "continuous",lb = 0) %>%
-  set_objective(Vd1/T1 + Vd2/T2 ,"min") %>%
-  add_constraint(1.1*VH + 2.25*VR + Vd1 == T1) %>%
-  add_constraint(0.1*VH + 0.9*VR + Vd2 == T2) %>%
-  add_constraint(10*VH + 25*VR <= 1000) %>% 
+  add_variable(VH, type = "integer", lb = 0) |>
+  add_variable(VR, type = "integer",lb = 0) |>
+  add_variable(Vd1, type = "continuous",lb = 0) |>
+  add_variable(Vd2, type = "continuous",lb = 0) |>
+  set_objective(Vd1/T1 + Vd2/T2 ,"min") |>
+  add_constraint(1.1*VH + 2.25*VR + Vd1 == T1) |>
+  add_constraint(0.1*VH + 0.9*VR + Vd2 == T2) |>
+  add_constraint(10*VH + 25*VR <= 1000) |> 
   add_constraint(0.1*VH + 0.1*VR <= 7) 
 
 res_Home4 <- solve_model(Home4Model, 
@@ -278,20 +277,20 @@ $$
 Let's show the full R implementation of our minimax model.
 
 ```{r MiniMaxModel, echo=TRUE}
-Home5Model <- MIPModel() %>%
+Home5Model <- MIPModel() |>
  # To avoid name space conflicts, using a prefix of V
  #    for ompr variables.
-  add_variable(VQ,  type = "continuous") %>%
-  add_variable(VH, type = "integer", lb = 0) %>%
-  add_variable(VR, type = "integer",lb = 0) %>%
-  add_variable(Vd1, type = "continuous",lb = 0) %>%
-  add_variable(Vd2, type = "continuous",lb = 0) %>%
-  set_objective(VQ ,"min") %>%
-  add_constraint(VQ>=Vd1/T1) %>%
-  add_constraint(VQ>=Vd2/T2) %>%
-  add_constraint(1.1*VH + 2.25*VR + Vd1 == T1) %>%
-  add_constraint(0.1*VH + 0.9*VR + Vd2 == T2) %>%
-  add_constraint(10*VH + 25*VR <= 1000) %>% 
+  add_variable(VQ,  type = "continuous") |>
+  add_variable(VH, type = "integer", lb = 0) |>
+  add_variable(VR, type = "integer",lb = 0) |>
+  add_variable(Vd1, type = "continuous",lb = 0) |>
+  add_variable(Vd2, type = "continuous",lb = 0) |>
+  set_objective(VQ ,"min") |>
+  add_constraint(VQ>=Vd1/T1) |>
+  add_constraint(VQ>=Vd2/T2) |>
+  add_constraint(1.1*VH + 2.25*VR + Vd1 == T1) |>
+  add_constraint(0.1*VH + 0.9*VR + Vd2 == T2) |>
+  add_constraint(10*VH + 25*VR <= 1000) |> 
   add_constraint(0.1*VH + 0.1*VR <= 7) 
 
 res_Home5 <- solve_model(Home5Model, 
@@ -445,9 +444,9 @@ We solved this with a mixed integer programming problem gap limit of $1.5\%$ mea
 Now let's move on to discussing the results. We will start with filtering out all the variables that have zero values so we can focus on the ones of interest - the states that are assigned to each week. Also, notice that a `dplyr` function was used to add state names to the data frame.    \vspace{12pt}
 
 ```{r Sample-of-States-Week1}
-assigned1a <- res_Mail1 %>% 
- get_solution(Vx[s,w]) %>%
- filter(value >.9) %>%
+assigned1a <- res_Mail1 |> 
+ get_solution(Vx[s,w]) |>
+ filter(value >.9) |>
  select (s,w)
 rownames(assigned1a)<-c(names(Customers[assigned1a[,1]]))
 
@@ -463,8 +462,8 @@ assigned1b <- tibble::rownames_to_column(assigned1a)
 table_results1<-""
 weeksmail<-""
 for (week_counter in 1:Weeks) {
-  weeksmail1a<- assigned1b %>%
-  filter(w==week_counter) %>%
+  weeksmail1a<- assigned1b |>
+  filter(w==week_counter) |>
   select(rowname)
 colnames(weeksmail1a)<-paste0("Week ",week_counter)
 table_results1 <- append(table_results1,weeksmail1a)
@@ -475,7 +474,7 @@ table_results1 <- append(table_results1,weeksmail1a)
 
 #kbl (table_results1[-1],   # Removes first item
 #     booktabs=T, format="latex", escape=F,
-#     caption="Mailing Results by Week") %>%
+#     caption="Mailing Results by Week") |>
 #   kable_styling(latex_options="scale_down")
 
 #library(pander)
@@ -536,9 +535,9 @@ res_Mail2 <- solve_model(Mail2,
                         with_ROI(solver = "symphony",
                    verbosity=-1, gap_limit=15))
 
-assigned2 <- res_Mail2 %>% 
- get_solution(Vx[s,w]) %>%
- filter(value >.9) %>%
+assigned2 <- res_Mail2 |> 
+ get_solution(Vx[s,w]) |>
+ filter(value >.9) |>
  select (s,w)
 rownames(assigned2)<-c(names(Customers[assigned2[,1]]))
 
@@ -546,15 +545,15 @@ assigned2a <- tibble::rownames_to_column(assigned2)
 table_results2<-""
 weeksmail2a<-""
 for (week_counter in 1:Weeks) {
-  weeksmail2a<- assigned2a %>%
-  filter(w==week_counter) %>%
+  weeksmail2a<- assigned2a |>
+  filter(w==week_counter) |>
   select(rowname)
 colnames(weeksmail2a)<-paste0("Week ",week_counter)
 table_results2 <- append(table_results2,weeksmail2a)
 }
 #kbl (table_results2[-1],   # Removes first item
 #     booktabs=T,
-#     caption="Results with symmetry breaking")%>%
+#     caption="Results with symmetry breaking")|>
 #   kable_styling(latex_options="scale_down")
 kbl(table_results1[-1]) |>
   kable_styling(latex_options = "hold_position")

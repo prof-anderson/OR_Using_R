@@ -372,8 +372,6 @@ In each step, we are simply taking the output of the previous step and feeding i
 Here is the equivalent process for building the base case implementation using a piping operator without all the intermediate partial models being built. Notice how it is a lot more concise. We will typically use this approach for model building but both approaches are functionally equivalent.
 
 ```{r base_case}
-library (magrittr, quietly = TRUE) # Used for pipes/dplyr
-# library (dplyr, quietly = TRUE)    # Data management
 result0 <- MIPModel() |>
   add_variable(Ants, type = "continuous", lb = 0) |>
   add_variable(Bats, type = "continuous",lb = 0) |>
@@ -949,7 +947,7 @@ RMarkdown is very helpful for integrating analysis and results but the code can 
 -   Putting two blank spaces at the end of a paragraph will give a little more spacing between paragraphs.
 -   Sometimes running all chunks will make more visible where a problem is than when an RMD is knitted.
 -   Look over the generated PDF for issues like misrendered section headings or bullet lists.
--   In a bookdown project with multiple RMDs such as this book, it is much quicker to render just a chapter. This can be done by doing a command like this: `library(rmarkdown); rmarkdown::render("02-A_First_LP.Rmd", "tufte_book2")`
+-   In a bookdown project with multiple RMDs such as this book, it is much quicker to render just a chapter. This can be done by doing a command like this: `library(rmarkdown); rmarkdown::render("02-A_First_LP.Rmd", "pdf_book")`
 
 ## RStudio Tips and Tricks
 

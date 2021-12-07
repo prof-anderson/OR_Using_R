@@ -5,15 +5,12 @@ library(bookdown); library(rmarkdown); rmarkdown::render("03-More-LP-Models.Rmd"
 ```
 
 ```{r Ch3setup, include=FALSE}
-library (tufte)
 library (knitr)
 library (kableExtra)
-library (magrittr)
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = F)
 knitr::opts_chunk$set(cache = FALSE)
 knitr::opts_chunk$set(width = 30)
-
 ```
 
 ## Types of LP Models
@@ -179,7 +176,6 @@ First, we'll start by loading the packages that we are using.
 ```
 
 ```{r warning=FALSE}
-library (magrittr, quietly = TRUE) 
 suppressPackageStartupMessages(
   library (dplyr, quietly = TRUE))
 suppressPackageStartupMessages(
@@ -453,7 +449,8 @@ rownames(blendres)<-"with Constraint"
 comparative <- rbind(base_case_res,round(blendres, 2))
 colnames (comparative) <- c("Ants","Bats","Cats")
 kbl(comparative, booktabs=T, 
-    caption ="Compare Baseline and Production Plan with Blending Constraint")
+    caption ="Compare Baseline and Production Plan with Blending Constraint")|>
+  kable_styling(latex_options = "hold_position")
 ```
 
 As a summary, we can see on the table on the right a comparative between the baseline case and the new production plan with the blending constraint.
@@ -580,12 +577,8 @@ Constraints are typically based on supply from the source nodes and capacity at 
 
 This naturally lends itself to potential network diagrams such as the one to the right.  In this case we have three warehouses (or supply points) in Minnesota (MN), Pennsylvania (PA), and Wyoming (WY), each with a supply shown to the left.  On the right side, we have four customer or demand nodes:  Atlanta (ATL), Boston (Bos), Chicago (Chi), and Denver (Den) with their maximum demand shown to the right of the node.  We also have arcs connecting every supply node to every demand node, each labeled with a corresponding cost per unit to transport an item along that arc.  The goal is to get as much shipped as possible at the lowest possible cost.
 
-```{r Fig-Transportation, echo=FALSE, fig.margin=TRUE, out.width="2in"}
+```{r Fig-Transportation, echo=FALSE, out.width="2in", fig.show='hold',fig.align='center', fig.cap="Transporation Example"}
 knitr::include_graphics("images/Fig03-01-Transportation.PNG")
-```
-
-```{marginfigure}
-**Figure 3.1**: Transportation application.
 ```
 
 Let's start to model this now.  We want to define the decision variables, in this case, $x_{i,j}$ is the amount of product to ship from node i to node j.
@@ -733,14 +726,10 @@ kbl (Transp, booktabs=T,
 
 A generalization of the transportation model is that of transshipment where some nodes are intermediate nodes that are neither pure sources or destinations but can have both inflow and outflow.  We could extend our previous example with factories in Vietnam and Thailand.  Note that the facilities in the middle (Minnesota, Pennsylvania, and Wyoming) are better described as distribution centers rather than warehouses.
 
-```{r Fig-Transshipment, echo=FALSE, fig.margin=TRUE, out.width="2in"}
+```{r Fig-Transshipment, echo=FALSE, out.width="2in", fig.show='hold', fig.align='center', fig.cap="Transshipment Application."}
 knitr::include_graphics("images/Fig03-02-Transshipment.PNG")
 ```
 
-```{marginfigure}
-**Figure 3.2**: Transshipment application.
-```
-\vspace{12pt}
 
 In this case, the standard convention might be to work from left to right and index the set of factories by _i_, the set of distribution centers by _j_ and the set of customers by _k_.  We might also use $x_{i,j}$ to be the amount to ship from factory _i_ to distribution center _j_ and $y_{j,k}$ to be the amount to ship from distribution center _j_ to customer _k_.
 \vspace{12pt}
@@ -946,7 +935,8 @@ s2 <- get_solution (resStd , Vs2)
 base_case_res           <- cbind(x, y, s1, s2)
 rownames(base_case_res) <- "Optimal Values"
 kbl(base_case_res, booktabs=T, 
-    caption="Solution to Standard Form")
+    caption="Solution to Standard Form")|>
+  kable_styling(latex_options = "hold_position")
 ```
 
 Notice that we had three equations and four variables (both regular and slack variables.) This meant that at every iteration of the simplex algorithm, it would set one variable equal to zero and solve for the other three variables because solving three equations with three unknowns is very easy.
@@ -959,14 +949,10 @@ This is consistent with our solution, where $s_1$ is zero and the other three va
 One of the benefits of using an algebraic modeling approach for linear programming such as `ompr` is that it provides a direct mapping from the mathematical model of the application to the implementation.
 The actual solver used such as `glpk,` `symphony,` or `gurobi` take the linear program in a different form though and `ompr` processes it into a form they can handle.
 
-```{r Fig-ompr_structure, echo=FALSE, fig.margin=TRUE, out.width="1.5in"}
-knitr::include_graphics("images/Fig03-03-ROI_1a.PNG")
+```{r Fig-ompr-structure, echo=FALSE, fig.show='hold', fig.align='center', out.height="1in", fig.cap="Relationship between ompr and solvers."}
+knitr::include_graphics("images/Fig03-03-ROI-1.PNG")
 ```
 
-```{marginfigure}
-**Figure 3.3**: Relationship between `ompr` and solvers.
-```
-\vspace{12pt}
 
 In general, the solver thinks of the problem in terms of a vector of coefficients for the objective function, *C*, a vector of right hand side constraint values, *B*, a matrix of data, *A*, and a vector of variables, *x*.
 The result is that any linear program can be thought of in a form to the right.
@@ -1046,12 +1032,8 @@ $$
 The `Rglpk` package can then be accessed directly.
 \vspace{12pt}
 
-```{r Fig-ompr_to_glpk, echo=FALSE, fig.margin=TRUE, out.width="1.5in"}
-knitr::include_graphics("images/Fig03-04-ROI_glpk1a.PNG")
-```
-
-```{marginfigure}
-**Figure 3.4**: Relationship between `ompr` and `Rglpk`.
+```{r Fig-ompr-to-glpk, echo=FALSE, out.width="1.5in", fig.cap="Relationship between ompr and Rglpk."}
+knitr::include_graphics("images/Fig03-04-ROI-glpk1.PNG")
 ```
 
 ```{r}
