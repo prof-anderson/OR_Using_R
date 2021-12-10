@@ -1170,6 +1170,11 @@ Implement and solve the standard form of the LP using R.
 Be sure to interpret the solution and discuss how it compares to the solution from the original model.
 :::
 
+::: {.exercise name="Adding a Constraint"}
+Add a new constraint to model in Exercise 3.4 such that number of Bats are double than the number of
+Ants. Be sure to interpret the solution and discuss how it compares to the solution from the original model.
+:::
+
 ::: {.exercise name="Convert Generalized LP to Standard Form"}
 
 Convert the generalized production planning LP, displayed on the right in formula 3.7, into standard form.\
@@ -1215,4 +1220,23 @@ Create an appropriate optimization model to minimize the number of nurses needed
 
 Implement and solve the model in R.
 Discuss and explain your solution.
+
+:::{.exercise name="Reallocating personnel at Nikola"}
+
+Due to the semiconductor shortage affecting the automotive industry, the production of vehicles has slowed down. The lack of a key control chip has brought the Engine shop of the manufacturing plant of automotive company Nikola to a complete halt. The company has decided to use the personnel from the Engine shop in other shops in the Press shop and the Paint shop, split equally. Also, it has decided to store the assembled vehicles in the plant until Engine Shop is functional
+again. The maximum capacity of the storage of cars is 10000.
+Current manpower and production information is as given in the table.
+
+|Process Area|Alpha|Beta|Gamma|Theta|Available labor hours|
+|---------------:|:--:|:--:|:--:|:---:|:-----:|
+| Profit | \$4000 |\$3000 | \$3600 | \$5000 | |
+| Press Shop | 1 | 3 | 2 | 2 | 600 |
+| Weld Shop | 3 | 4 | 2 | 2 | 1200 |
+| Paint Shop | 2 | 3 | 1 | 2 | 760 |
+| Engine Shop | 3 | 5 | 2 | 4 | 700 |
+| Assembly Shop | 2 | 0 | 2 | 0 | 1000 |
+
+Make required change to the given table and Create an optimization model to find a production plan with
+max profit for all four car models - Alpha, Beta, Gamma, and Theta. Make sure to consider the max storage
+limit of 10000 cars.
 :::
