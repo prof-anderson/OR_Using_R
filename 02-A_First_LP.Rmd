@@ -897,7 +897,37 @@ Table: Data for Dog Drone Exercise
 **Hint:** Knit your RMarkdown as a PDF. Also, don't be bothered by fractional values for a possible production plan at this time. It is only a high level production plan so if a drone(s) are only partially finished, assume that work on them will continue in the next planning period. We will deal with fractional variable values much more formally in Chapter 6 but for now, consider the expression "close enough for government work" to apply.
 :::
 
+::: {.exercise name="Eliminating Painting of Bat and Dog Drones"}
+Exercise 2.1b (Eliminating Painting Cost)
+Your company has changed production plans for producing the cat and dog drone models so that they no longer require painting.  However a market analysis predicts a decrease in profitability to \$18 for each dog drone,
 
+|Characteristic |Ants|Bats|Cats|Dogs  |Available|
+|--------------:|:--:|:--:|:--:|:----:|:-------:|
+| Profit        | $7 |$10 | $5 | $18  |         |
+| Fabrication   | 1  | 3  | 2  | 2    | 800     |
+| Assembly      | 3  | 4  | 2  | 2    | 900     |
+| Machining     | 2  | 3  | 1  | 2    | 480     |
+| Sensors       | 3  | 5  | 2  | 4    |1200     |
+| Painting      | 2  | 0  | 2  | 0    | 500     |
+
+Table: Characteristics with Painting Changes.
+
+a) Use R Markdown to create your own description of the model.
+b) Extend the R Markdown to show your LP Model.
+c) Solve the model in R.
+d) Interpret and discuss the model in R Markdown.
+e) Discuss about objective value, how it has changed from the previous results. How this will help you in
+future to calculate things and decisions.
+
+:::
+
+::: {.exercise name="Printing Solutions"}
+From the above exercises solution, fetch results of each drone for
+comparing each drone's production plan before and after the change so that the reflection of changes in production
+plan can be discussed. This will be handy in using library functions explained in the chapter and will help in
+obtaining required results in later exercises in this book.
+
+:::
 
 ::: {.exercise name="Rose City Roasters"}
 Rose City Roasters provides premium roasted coffee beans for regional coffee shops. There are four important steps:  Arranging the beans, roasting the beans, allowing them to cool, and then giving them 
