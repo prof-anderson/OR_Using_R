@@ -319,3 +319,16 @@ Assume that your company's product has a demand of 10 widgets on Monday, increas
 ::: {.exercise name="Creating a Matrix of Demand for Two Products"}
 Assume that your company's product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday. Gadgets have a demand of 20 on Monday, increasing by 3 units a day through Sunday. Build a matrix showing each product as a separate row. Rows should have names for the products and columns for the days of the week.
 :::
+
+::: {.exercise name="Creating a Matrix of Monthly Demand"}
+Considering top selling online products for year 2021: Toys, Shoes, Pens and pencils, Decorative bottles, Drills, Cutters, GPS navigation systems. Create your own assumed starting counts per item for throughout year by increasing each item sales by 50 units per month, starting from January till December.
+:::
+
+::: {.exercise name="Displaying Selective Data from the Matrix"}
+In the above matrix, grab the columns and rows to show the data only for Pens and Pencils during the months of June, August and October.
+:::
+
+::: {.exercise name="Creating Separate Demands for Products"}
+In the above matrix, demand for toys and shoes has been increased by 20 and 10 units respectively. Create a matrix for only these products for first 6 months. Display the matrix twice once without formatting and a second time using package better table formatting (`pander`, `kable` via `knitr`, or other formatting table method.)
+:::
+
