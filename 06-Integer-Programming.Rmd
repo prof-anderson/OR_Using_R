@@ -898,3 +898,11 @@ The design team has an idea of how to use a previous manufacturing fixture which
 How would production change if the setup costs were cut in half due to implementing lean production approaches?
 :::
 
+::: {.exercise name="Adding a Fourth Widget"}
+Consider adding a new widget 4 which needs 4, 3, 2, and 5 hours for Pre-processing, 
+Machining, Assembly, and Quality Assurance respectively. Widget 4 uses the same setup as Widget 3 which means no repeated setup cost for Widget 4 if widget 3 is already being produced.
+
+Solve the model to obtain the production plan where both Widget 3 and Widget 4 are produced.
+:::
+
+

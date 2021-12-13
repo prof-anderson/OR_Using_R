@@ -378,3 +378,36 @@ Using sensitivity analysis, revisit the transportation exercise from chapter 3.
 a. If one more unit of supply was available, where would it be prioritized and why?
 b. If demand could be increased by one unit, would it affect the result and at which destination node it be preferred and why?
 :::
+
+::: {.exercise name="Identifying Hidden Costs"}
+
+In a TcDonald's restaurant, given below is the data for staff time in minutes 
+to perform different steps in order to make Burgers, Coffee, Ice cream and Fries.
+These steps include: Order receiving, Processing, Preparing, Packaging, and 
+Delivery.
+
+
+| Time (Mins.)   | Burger | Coffee | Ice cream | Fries | Available Minutes |
+|---------------:|:----:|:----:|:----:|:----:|:---------:|
+|         Profit | \$2   | \$2  | \$3  | \$1  |          |
+|Order receiving |  2    |  2   |  5   |  1   |    1200  |
+|     Processing |  2    |  1   |  1   |  1   |    1500  |
+|      Preparing |  12   |  6   |  2   |  10  |    3000  |
+|      Packaging |  3    |  2   |  4   |  2   |    1800  |
+|       Delivery |  1    |  3   |  1   |  1   |    1200  |
+
+
+a)  Use R Markdown to create your own description of the model.
+b)  Extend the R Markdown to show your LP Model. Be sure to define models.
+c)  Solve the model in R (To find maximum profit).
+d)  Interpret and discuss the model in R Markdown.
+e)  Examine and reflect upon the reduced costs and shadow prices. Discuss 
+    which step's available hours need to increases/decrease to make the most
+    profit.
+
+:::
+
+
+
+
+

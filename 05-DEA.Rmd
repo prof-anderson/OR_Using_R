@@ -1095,9 +1095,32 @@ b.  Describe and justify the data including the inputs and outputs used as well 
 c.  Select an appropriate DEA model and conduct the analysis.
 d.  Discuss the results.
 
-\vspace{12pt}
 :::
 
 ::: {.exercise name="DEA Technique Choices"}
-Choosing Inputs and Outputs:  The DEA store example in chapter 5 uses an input-output model of sales and employees.  Describe a richer input-output model that you feel would make for a better case.  Be sure to discuss tradeoffs and other DEA model choices, including how results could be used. \vspace{12pt}
+Choosing Inputs and Outputs:  The DEA store example in chapter 5 uses an input-output model of sales and employees.  Describe a richer input-output model that you feel would make for a better case.  Be sure to discuss tradeoffs and other DEA model choices, including how results could be used.
+
 :::
+
+::: {.exercise name="Using DEA to Compare Products"}
+Conduct a DEA study on the given sample data about cameras specifications in 
+different smartphone models from different companies i.e. Apple, Samsung, 
+Google, LG etc. 
+The inputs can be camera characters and output can be cost of phone. See an 
+example below:
+
+|           | Cost($) | Storage Space(GB) | Resolution(MP) | Lens Thickness(mm)|
+|----------:|:-------:|:-----------------:|:--------------:|:-----------------:|
+| Phone A   |    250  |         16        |       12       |       4           |
+| Phone B   |    225  |         16        |       8        |       5           |
+| Phone C   |    300  |         32        |       16       |       4.5         |
+| Phone D   |    275  |         32        |       8        |       4           |
+
+a)  Add more DMUs to above data so that there are minimum 10 in total. 
+b)  Add more inputs and outputs as needed. Describe and justify the data 
+    including the inputs and outputs used as well as items explicitly not used.
+c)  Select an appropriate DEA model and conduct the analysis.
+d)  Discuss the results.
+
+:::
+

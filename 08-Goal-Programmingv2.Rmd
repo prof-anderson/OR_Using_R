@@ -563,6 +563,31 @@ This application and model can be adjusted to fit a wide variety of other situat
 
 ## Exercises
 
+::: {.exercise name="Adjustments to Houselessness Policies"}
+
+From the houselessness problem given in chapter, make changes as given below:
+First option is to build new, government subsidized tiny homes for
+annual cost of $15K which would serve one adult 85% of the time and
+a parent with a child 15% of the time. Another option is to create
+a rental subsidy program which costs $35K per year per unit which
+typically serves a single adult (15%), two adults (15%), an adult with
+one child (35%), an adult with two children (20%), two adults with
+one child (10%), and two adults with two children (5%).
+
+Solve the problem and Discuss how the solution has changed.
+
+:::
+
+::: {.exercise name="Adjustments to Houselessness Policies"}
+
+Create and justify your own third policy option to enhance the original exercise in the book.  Describe the policy in the context of the application. Formulate, implement, and solve the revised version.
+
+Does the revised solution match your expected result?  
+
+:::
+
+
+
 ::: {.exercise name="Extending State Mailing"}
 The mailing by state example in chapter 8 is just another example of mixed integer programming.
 
@@ -573,5 +598,18 @@ b) Write a constraint or set of constraints using LaTeX that would ensure state 
 c) Write a constraint or set of constraints to ensure that state 9 and 24 are done in the same week.
 
 d) Given the minimax objective function, how do you think the above requirements will affect the solution in terms of an objective function and characteristics of managerial interest?
+:::
+
+::: {.exercise name="Experimenting with State Mailing"}
+In the mailing by state example in chapter, there is a change discovered that Week 4 is going to be during a Holidays week and Mailing Center will be closed for whole week.
+
+Make appropriate changes to model in example discussed in chapter to solve below queries.
+
+a) Write the optimization model using LaTeX to ensure that no week has more than 8 states assigned to the week.
+b) Write a constraint or set of constraints using LaTeX that would ensure state 3 is done before state 7.
+c) Write a constraint or set of constraints to ensure that state 9 and 24 are done in the same week.
+d) Write a constraint or set of constraints to ensure that states Oregon and California are done before holiday week.
+d) After solving above, compare the results with exercise 8.1 and discuss.
+
 :::
 

@@ -1487,3 +1487,14 @@ c) Write the constraint(s) to reflect the VP's suggestion.  Write the LaTeX cons
 d) *Challenge:* Solve the revised problem.
 :::
 
+
+::: {.exercise name="Chemical Factories"}
+Similar to Warehouse problem above, here we have Chemical Factories for which 
+we need to decide the locations. We need to set up 2 factories with 100 residents 
+in the town. The town government is trying to keep the factories at maximum 
+possible distance from the residents to avoid any decrease the impacts and risk of mishaps.
+
+Taking the randomly generated setup costs for factories similar to warehouses,
+run the analysis to decide the location for these 2 chemical factories which are 
+at maximum possible distance from all residents.
+:::

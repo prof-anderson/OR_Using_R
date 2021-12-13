@@ -142,6 +142,7 @@ Of course there are many more mathematical terms, Greek letters, and more but th
 ## Sequences and Summation Notation
 
 Often, especially in the context of optimization, summation notation is used to find the sum of a sequence of terms.  The summation below represents a summing of the first five values of of a sequence of the variable $x$.  The location of the values within the sequence are given by an index value, $i$ in this case.
+
 $$\sum_{i=1}^5 x_i=x_1+x_2+x_3+x_4+x_5$$
 
 Coefficient values may also be included in a summation, as shown below.

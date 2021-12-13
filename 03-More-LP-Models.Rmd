@@ -161,15 +161,15 @@ library (ompr.roi, quietly = TRUE)
 And we will continue with the code to build the mode in a generic format.  Note that in the `ompr` model, every variable is given a `V` prefix to differentiate it from a regular `R` data object that might exist elsewhere in my `R` environment.  Conflicts between `R` objects and `ompr` variables are a common problem for modelers and this helps to avoid the problem, assuming that you don't have a lot of other `R` objects that start with `V`.  For more discussion about this issue and other common problems, see Appendix B.  
 
 ```{r Build_Prod_Model}
-prodmodel <- MIPModel() %>%
+prodmodel <- MIPModel()                          |>
   add_variable (Vx[i], i=1:NProd, 
-                type="continuous", lb=0) %>%
+                type="continuous", lb=0)         |>
   set_objective (sum_expr(Profit[i] * Vx[i], 
-                          i=1:NProd ), "max") %>%
+                          i=1:NProd ), "max")    |>
   add_constraint (sum_expr(Resources[j,i]*Vx[i], 
                            i=1:NProd)
                   <= Available[j],
-                  j=1:NResources) %>% 
+                  j=1:NResources)                |> 
   
   solve_model(with_ROI(solver = "glpk"))
   
@@ -249,17 +249,17 @@ Resources[4,1] <- 5
 Now we will rebuild the the optimization model. Note that simply changing the data does not change the model.\
 
 ```{r Rebuild_and_Solve_Model}
-prodmodel <- MIPModel() %>%
+prodmodel <- MIPModel() |>
   add_variable (Vx[i], i=1:NProd, 
-                type="continuous", lb=0) %>%
+                type="continuous", lb=0)       |>
   set_objective (sum_expr(Profit[i] * Vx[i] , 
-                          i=1:NProd ), "max") %>%
+                          i=1:NProd ), "max")  |>
   add_constraint (sum_expr(Resources[j,i]*Vx[i], 
                            i=1:NProd) 
                   # Left hand side of constraint
                   <= Available[j],    
                   # Inequality and Right side of constraint
-                  j=1:NResources) %>% 
+                  j=1:NResources)              |> 
                   # Repeat for each resource, j.  
   solve_model(with_ROI(solver = "glpk"))
   
@@ -308,7 +308,7 @@ $$
 Let's rebuild our three variable implementation and review the results to see if it is violates our blending requirement.
 
 ```{r Base3VarModel, echo=TRUE}
-model1 <- MIPModel() %>%
+model1 <- MIPModel()                              |>
   add_variable(Ants, type = "continuous", lb = 0) |>
   add_variable(Bats, type = "continuous", lb = 0) |>
   add_variable(Cats, type = "continuous", lb = 0) |>
@@ -392,7 +392,8 @@ rownames(blendres)<-"with Constraint"
 comparative <- rbind(base_case_res,round(blendres, 2))
 colnames (comparative) <- c("Ants","Bats","Cats")
 kbl(comparative, booktabs=T, 
-    caption ="Compare Baseline and Production Plan with Blending Constraint")|>
+    caption =
+      "Compare Baseline and Production Plan with Blending Constraint")|>
   kable_styling(latex_options = "hold_position")
 ```
 
@@ -608,7 +609,7 @@ transportationmodel <- MIPModel()             |>
                           j=1:NDest ), "min") |>
  add_constraint (sum_expr(Vx[i,j], i=1:NSupply) 
                 >= D[j],   
-                j=1:NDest)%>% 
+                j=1:NDest)|> 
  add_constraint (sum_expr(Vx[i,j], j=1:NDest)
                 <= S[i],    
                 i=1:NSupply)  
@@ -798,18 +799,18 @@ It then systematically swaps a variable from the set of basic variables and non-
 Let's examine the solution to our example though.\
 
 ```{r StdModel, echo=TRUE}
-StdModel <- MIPModel() %>%
+StdModel <- MIPModel() |>
  # To avoid name space conflicts, using a prefix of V for ompr variables.
   
- add_variable(Vx, type = "continuous", lb = 0) %>%
- add_variable(Vy, type = "continuous",lb = 0) %>%
- add_variable(Vs1, type = "continuous", lb = 0) %>%
- add_variable(Vs2, type = "continuous", lb = 0) %>%
+ add_variable(Vx, type = "continuous", lb = 0)  |>
+ add_variable(Vy, type = "continuous", lb = 0)  |>
+ add_variable(Vs1, type = "continuous", lb = 0) |>
+ add_variable(Vs2, type = "continuous", lb = 0) |>
   
- set_objective(2*Vx + 3*Vy,"max") %>%
+ set_objective(2*Vx + 3*Vy,"max")               |>
   
- add_constraint(10*Vx + 2*Vy + Vs1==110) %>%
- add_constraint(2*Vx + 10*Vy - Vs2==50) %>% 
+ add_constraint(10*Vx + 2*Vy + Vs1==110)        |>
+ add_constraint(2*Vx + 10*Vy - Vs2==50)         |> 
  add_constraint(2*Vx - 4*Vy == 0) 
 
   resStd <- solve_model(StdModel, 
