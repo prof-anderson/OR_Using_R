@@ -33,19 +33,20 @@ Bartland's official Chief Economist has estimated that this subsidy program woul
 
 Let's summarize the data for two programs.  Let's focus on expected numbers of people served for each policy intervention.  \vspace{12pt}
 
-| Per unit                      | Tiny Homes (H) | Rent Subsidy (R) |   
-|------------------------------:|:--------------:|:----------------:|
-|  1 adult                      |  90%           |   15%            |  
-|  1 adult, 1 child             |  10%           |  30%             | 
-|  1 adult, 2 children          |   0%           |  20%             |  
-|  2 adults                     |   0%           |  20%             |  
-|  2 adults, 1 child            |   0%           |  10%             |  
-|  2 adults, 2 children         |   0%           |   5%             |  
-|  Expected children served     |  0.1           |  0.9             |  
-|  Expected adults served       |  1.0           |  1.35            | 
-|  Expected total people served |  1.1           |  2.25            |
-|  Cost per unit ($\$K$)        |  $\$10$        | $\$25$           |
-|  Staff support per unit       |  0.1           | 0.1              |
+
+|  Per unit                     | Tiny Homes (H)   | Rent Subsidy (R)   |   
+|------------------------------:|:----------------:|:------------------:|
+|  1 adult                      |  90%             |   15%              |  
+|  1 adult, 1 child             |  10%             |  30%               | 
+|  1 adult, 2 children          |   0%             |  20%               |  
+|  2 adults                     |   0%             |  20%               |  
+|  2 adults, 1 child            |   0%             |  10%               |  
+|  2 adults, 2 children         |   0%             |   5%               |  
+|  Expected children served     |  0.1             |  0.9               |  
+|  Expected adults served       |  1.0             |  1.35              | 
+|  Expected total people served |  1.1             |  2.25              |
+|  Cost per unit ($\$K$)        |  $\$10$          | $\$25$             |
+|  Staff support per unit       |  0.1             | 0.1                |
 
 Table:  Policy Options for Addressing Houselessness
 
@@ -95,9 +96,9 @@ Home1Model <- MIPModel() |>
  # To avoid name space conflicts, using a prefix of V
  #    for ompr variables.
   add_variable(VH, type = "integer", lb = 0) |>
-  add_variable(VR, type = "integer",lb = 0) |>
-  set_objective(1.1*VH + 2.25*VR,"max") |>
-  add_constraint(10*VH + 25*VR <= 1000) |> 
+  add_variable(VR, type = "integer",lb = 0)  |>
+  set_objective(1.1*VH + 2.25*VR,"max")      |>
+  add_constraint(10*VH + 25*VR <= 1000)      |> 
   add_constraint(0.1*VH + 0.1*VR <= 7) 
 
 res_Home1 <- solve_model(Home1Model, 
@@ -173,14 +174,14 @@ T2 <- res_Home2$objective_value
 Home3Model <- MIPModel() |>
  # To avoid name space conflicts, using a prefix of V
  #    for ompr variables.
-  add_variable(VH, type = "integer", lb = 0) |>
-  add_variable(VR, type = "integer",lb = 0) |>
+  add_variable(VH, type = "integer", lb = 0)    |>
+  add_variable(VR, type = "integer",lb = 0)     |>
   add_variable(Vd1, type = "continuous",lb = 0) |>
   add_variable(Vd2, type = "continuous",lb = 0) |>
-  set_objective(Vd1 + Vd2,"min") |>
+  set_objective(Vd1 + Vd2,"min")                |>
   add_constraint(1.1*VH + 2.25*VR + Vd1 == 100) |>
-  add_constraint(0.1*VH + 0.9*VR + Vd2 == 36) |>
-  add_constraint(10*VH + 25*VR <= 1000) |> 
+  add_constraint(0.1*VH + 0.9*VR + Vd2 == 36)   |>
+  add_constraint(10*VH + 25*VR <= 1000)         |> 
   add_constraint(0.1*VH + 0.1*VR <= 7) 
 
 res_Home3 <- solve_model(Home3Model, 
@@ -224,24 +225,24 @@ $$
 Home4Model <- MIPModel() |>
  # To avoid name space conflicts, using a prefix of V
  #    for ompr variables.
-  add_variable(VH, type = "integer", lb = 0) |>
-  add_variable(VR, type = "integer",lb = 0) |>
+  add_variable(VH, type = "integer", lb = 0)    |>
+  add_variable(VR, type = "integer",lb = 0)     |>
   add_variable(Vd1, type = "continuous",lb = 0) |>
   add_variable(Vd2, type = "continuous",lb = 0) |>
-  set_objective(Vd1/T1 + Vd2/T2 ,"min") |>
-  add_constraint(1.1*VH + 2.25*VR + Vd1 == T1) |>
-  add_constraint(0.1*VH + 0.9*VR + Vd2 == T2) |>
-  add_constraint(10*VH + 25*VR <= 1000) |> 
+  set_objective(Vd1/T1 + Vd2/T2 ,"min")         |>
+  add_constraint(1.1*VH + 2.25*VR + Vd1 == T1)  |>
+  add_constraint(0.1*VH + 0.9*VR + Vd2 == T2)   |>
+  add_constraint(10*VH + 25*VR <= 1000)         |> 
   add_constraint(0.1*VH + 0.1*VR <= 7) 
 
 res_Home4 <- solve_model(Home4Model, 
                         with_ROI(solver = "glpk"))
 res_Home4
   
-H  <- get_solution (res_Home4 , VH)
-R  <- get_solution (res_Home4 , VR)
-d1  <- get_solution (res_Home4 , Vd1)
-d2  <- get_solution (res_Home4 , Vd2)
+H  <- get_solution (res_Home4, VH)
+R  <- get_solution (res_Home4, VR)
+d1  <- get_solution (res_Home4, Vd1)
+d2  <- get_solution (res_Home4, Vd2)
 
 sum_Home4           <- cbind(res_Home4$objective_value,
                              H, R, d1, d1/T1, d2, d2/T2)
@@ -255,9 +256,7 @@ kbl (sum_Home4, booktabs=T,
 
 ```
 
-Another approach is to minimize the maximum deviation.  This is often abbreviated as a minimax. This is essentially the same as the expression, "a chain is only as strong as its weakest link".  In Japan, there is an expression that the "the nail that sticks up, gets pounded down" and in China, "the tallest blade of grass gets cut down."  We can implement the same idea here by introducing a new variable, _Q_ that must be at least as large as the largest miss.  
-  \vspace{12pt}
-
+Another approach is to minimize the maximum deviation.  This is often abbreviated as a minimax. This is essentially the same as the expression, "a chain is only as strong as its weakest link".  In Japan, there is an expression that the "the nail that sticks up, gets pounded down" and in China, "the tallest blade of grass gets cut down."  We can implement the same idea here by introducing a new variable, _Q_ that must be at least as large as the largest miss.\
 $$
  \begin{split}
  \begin{aligned}
@@ -280,27 +279,27 @@ Let's show the full R implementation of our minimax model.
 Home5Model <- MIPModel() |>
  # To avoid name space conflicts, using a prefix of V
  #    for ompr variables.
-  add_variable(VQ,  type = "continuous") |>
-  add_variable(VH, type = "integer", lb = 0) |>
-  add_variable(VR, type = "integer",lb = 0) |>
+  add_variable(VQ, type = "continuous")         |>
+  add_variable(VH, type = "integer", lb = 0)    |>
+  add_variable(VR, type = "integer",lb = 0)     |>
   add_variable(Vd1, type = "continuous",lb = 0) |>
   add_variable(Vd2, type = "continuous",lb = 0) |>
-  set_objective(VQ ,"min") |>
-  add_constraint(VQ>=Vd1/T1) |>
-  add_constraint(VQ>=Vd2/T2) |>
-  add_constraint(1.1*VH + 2.25*VR + Vd1 == T1) |>
-  add_constraint(0.1*VH + 0.9*VR + Vd2 == T2) |>
-  add_constraint(10*VH + 25*VR <= 1000) |> 
+  set_objective(VQ ,"min")                      |>
+  add_constraint(VQ>=Vd1/T1)                    |>
+  add_constraint(VQ>=Vd2/T2)                    |>
+  add_constraint(1.1*VH + 2.25*VR + Vd1 == T1)  |>
+  add_constraint(0.1*VH + 0.9*VR + Vd2 == T2)   |>
+  add_constraint(10*VH + 25*VR <= 1000)         |> 
   add_constraint(0.1*VH + 0.1*VR <= 7) 
 
 res_Home5 <- solve_model(Home5Model, 
                         with_ROI(solver = "glpk"))
 res_Home5
   
-H  <- get_solution (res_Home5 , VH)
-R  <- get_solution (res_Home5 , VR)
-d1  <- get_solution (res_Home5 , Vd1)
-d2  <- get_solution (res_Home5 , Vd2)
+H  <- get_solution (res_Home5, VH)
+R  <- get_solution (res_Home5, VR)
+d1  <- get_solution (res_Home5, Vd1)
+d2  <- get_solution (res_Home5, Vd2)
 
 sum_Home5  <- cbind(
   res_Home5$objective_value, H, R, 
@@ -472,14 +471,6 @@ table_results1 <- append(table_results1,weeksmail1a)
 
 ```{r Display-weekly-Mailings, results='markup', eval=TRUE}
 
-#kbl (table_results1[-1],   # Removes first item
-#     booktabs=T, format="latex", escape=F,
-#     caption="Mailing Results by Week") |>
-#   kable_styling(latex_options="scale_down")
-
-#library(pander)
-#pander(table_results1[-1],)
-#kbl(table_results1[-1],booktabs=T)
 kbl(table_results1[-1])
 ```
 

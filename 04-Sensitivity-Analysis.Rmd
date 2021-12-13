@@ -38,33 +38,30 @@ Recall the explicit production planning problem from earlier on Formulation 4.1.
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max  }   & 7\cdot Ants +12 \cdot Bats +5\cdot Cats \\
-    \text{s.t.:} & \\
-& 1\cdot Ants + 4\cdot Bats +2\cdot Cats \leq 800 \\
-& 3\cdot Ants + 6\cdot Bats +2\cdot Cats \leq 900 \\
-& 2\cdot Ants + 2\cdot Bats +1\cdot Cats \leq 480 \\
-& 2\cdot Ants + 10\cdot Bats +2\cdot Cats \leq 1200 \\
-& Ants, Bats, Cats \geq 0  
+    \text{Max    } & 7\cdot Ants +12 \cdot Bats +5\cdot Cats \\
+    \text{s.t.:  } & 1\cdot Ants + 4\cdot Bats +2\cdot Cats \leq 800 \\
+                   & 3\cdot Ants + 6\cdot Bats +2\cdot Cats \leq 900 \\
+                   & 2\cdot Ants + 2\cdot Bats +1\cdot Cats \leq 480 \\
+                   & 2\cdot Ants + 10\cdot Bats +2\cdot Cats \leq 1200 \\
+                   & Ants, Bats, Cats \geq 0  
   \end{aligned}
   (\#eq:base3varmodela)
   \end{split}
 $$
-
-
 
 The implementation that we did earlier for production planning was straightforward.
 
 ```{r Base3VarModelA, fig.margin=TRUE,fig.width=7}
 Base3VarModel <- MIPModel() |>
   add_variable(Ants, type = "continuous", lb = 0) |>
-  add_variable(Bats, type = "continuous",lb = 0) |>
+  add_variable(Bats, type = "continuous", lb = 0) |>
   add_variable(Cats, type = "continuous", lb = 0) |>
   
-  set_objective(7*Ants + 12*Bats + 5*Cats,"max") |>
+  set_objective(7*Ants + 12*Bats + 5*Cats,"max")  |>
   
-  add_constraint(1*Ants + 4*Bats + 2*Cats<=800) |> 
-  add_constraint(3*Ants + 6*Bats + 2*Cats<=900) |> 
-  add_constraint(2*Ants + 2*Bats + 1*Cats<=480) |> 
+  add_constraint(1*Ants + 4*Bats + 2*Cats<=800)   |> 
+  add_constraint(3*Ants + 6*Bats + 2*Cats<=900)   |> 
+  add_constraint(2*Ants + 2*Bats + 1*Cats<=480)   |> 
   add_constraint(2*Ants + 10*Bats + 2*Cats<=1200) |> 
   solve_model(with_ROI(solver="glpk"))
 
@@ -119,36 +116,29 @@ $$
  \begin{split}
  \begin{aligned}
     \text{Max:  } & 7\cdot Ants+12\cdot  Bats+5\cdot Cats \\
-    \text{s.t.} \\
-          & 1\cdot Ants+4\cdot Bats+2\cdot Cats \leq 800 \\
-          & 3\cdot Ants+6\cdot Bats+2\cdot Cats \leq 
+    \text{s.t.  } & 1\cdot Ants+4\cdot Bats+2\cdot Cats \leq 800 \\
+                  & 3\cdot Ants+6\cdot Bats+2\cdot Cats \leq 
                         \textcolor{red}{901}  \\
-          & 2\cdot Ants+2\cdot Bats+1\cdot Cats \leq 480\\
-          & 2\cdot Ants+10\cdot Bats+2\cdot Cats \leq 1200 \\
-          & Ants,  \; Bats, \; Cats \geq 0  
+                  & 2\cdot Ants+2\cdot Bats+1\cdot Cats \leq 480\\
+                  & 2\cdot Ants+10\cdot Bats+2\cdot Cats \leq 1200 \\
+                  & Ants,  \; Bats, \; Cats \geq 0  
   \end{aligned}
   \end{split}
 $$
 
-```{marginfigure}
-**Formulation 4.2**: Explicit model of production planning adding an hour of labor to Testing right hand side.
-```
-
-\vspace{12pt}
-
-And the code is showed in the following chunk, with Table 4.3 showing the optimal model result.
+The code implements the revised model.
 
 ```{r IncAssemHrs}
 IncAssemHrs <- MIPModel() |>
-  add_variable(Ants, type = "continuous", lb = 0) |>
-  add_variable(Bats, type = "continuous",lb = 0) |>
-  add_variable(Cats, type = "continuous", lb = 0) |>
+  add_variable(Ants, type = "continuous", lb = 0)  |>
+  add_variable(Bats, type = "continuous", lb = 0)  |>
+  add_variable(Cats, type = "continuous", lb = 0)  |>
   
-  set_objective(7*Ants + 12*Bats + 5*Cats,"max") |>
+  set_objective(7*Ants + 12*Bats + 5*Cats,"max")   |>
   
-  add_constraint(1*Ants + 4*Bats + 2*Cats<= 800) |> 
-  add_constraint(3*Ants + 6*Bats + 2*Cats<= 901) |> 
-  add_constraint(2*Ants + 2*Bats + 1*Cats<= 480) |> 
+  add_constraint(1*Ants + 4*Bats + 2*Cats<= 800)   |> 
+  add_constraint(3*Ants + 6*Bats + 2*Cats<= 901)   |> 
+  add_constraint(2*Ants + 2*Bats + 1*Cats<= 480)   |> 
   add_constraint(2*Ants + 10*Bats + 2*Cats<= 1200) |> 
 
   solve_model(with_ROI(solver = "glpk"))
@@ -192,25 +182,20 @@ $$
   \end{split}
 $$
 
-
-```{marginfigure}
-**Formulation 4.3**: Explicit model for Underutilzed Resources
-```
-
 In the same way that it was done for adjusting assembly hours earlier, the next chunk shows how to build in examine the case of a huge increase in the number of sensors. Table 4.3 contains the result for this model.
 
-```{r IncSensor, fig.margin=TRUE}
+```{r IncSensor}
 IncSensor<- MIPModel() |>
   add_variable(Ants, type = "continuous", lb = 0) |>
-  add_variable(Bats, type = "continuous",lb = 0) |>
+  add_variable(Bats, type = "continuous", lb = 0) |>
   add_variable(Cats, type = "continuous", lb = 0) |>
   
-  set_objective(7*Ants + 12*Bats + 5*Cats,"max") |>
+  set_objective(7*Ants + 12*Bats + 5*Cats,"max")  |>
 
-  add_constraint(1*Ants+4*Bats + 2*Cats<= 800) |> 
-  add_constraint(3*Ants+6*Bats + 2*Cats<=900) |> 
-  add_constraint(2*Ants+2*Bats+1*Cats<=480) |> 
-  add_constraint(2*Ants+10*Bats+2*Cats<=11200) |> 
+  add_constraint(1*Ants+4*Bats + 2*Cats<= 800)    |> 
+  add_constraint(3*Ants+6*Bats + 2*Cats<=900)     |> 
+  add_constraint(2*Ants+2*Bats+1*Cats<=480)       |> 
+  add_constraint(2*Ants+10*Bats+2*Cats<=11200)    |> 
   solve_model(with_ROI(solver = "glpk"))
 
 inc_sensor_res  <- cbind(objective_value(IncSensor),
@@ -229,18 +214,15 @@ kbl(temp2, booktabs=T,
   kable_styling(latex_options = "hold_position")
 ```
 
-
 Even this massive increase of sensors does not result in any increase in profit or change the production plan.
 
 ## Reduced Costs of Variables
 
 Next, we move on to the *reduced costs* of variables. The reduced cost for a variable is the per unit marginal profit (objective function coefficient) minus the per unit value (in terms of shadow prices) of the resources used by a unit in production. The reduced costs is also often referred to as the column duals. The concept and use of reduced costs frequently requires rereading several times. The mathematical details rely on the structure of linear programming and the simplex algorithm. We won't go into detail on the origin of this mathematically in detail here.\
-\vspace{12pt}
 
-*Reduced Cost of Ants*
+### Reduced Cost of Ants
 
 Let's start by examining the Ants. The reduced cost for *Ants* is the per unit marginal profit minus the per unit value (in terms of shadow prices) of the resources used by a unit in production.\
-\vspace{12pt}
 
 Let's extract the reduced costs from the results just as we did for the shadow prices. Note that the reduced costs are referred to as column duals in `ompr`.
 
@@ -268,7 +250,6 @@ kbl(format(ant_res_used, digits=4), booktabs=T,
 ```
 
 Taking the product in each row and adding them up will give the marginal value of the resources consumed by an incremental change in production of Ants. In this case, the marginal value is $1\cdot 0.25+3\cdot2.25+2\cdot0+2\cdot0=7$. Since the profit per Ant (from the objective function coefficient on Ants) is also $\$ 7$, they are in balance and the difference between them is zero which is why the reduced cost for Ants is zero. This can be thought of saying that the marginal benefit is equal to the marginal cost of a very small forced change in the value of the Ants variable. The value of the resources used in producing an Ant equals that of the profit of an Ant at the optimal solution.\
-\vspace{12pt}
 
 We can repeat the same process and calculations for Cats
 
@@ -284,7 +265,7 @@ kbl(format(cat_res_used, digits=4), booktabs=T,
 
 In this case, using the columns from Table 4.6 we can calculate the marginal value as $2\cdot 0.25+2\cdot2.25+1\cdot0+2\cdot0=5$. Since the profit per Cat (from the objective function coefficient on Cats) is also $\$ 5$, they are in balance and the difference between them is zero which is why the reduced cost for the *Cats* variable is also zero. \vspace{12pt}
 
-*Reduced Price of Bats*
+### Reduced Price of Bats
 
 The situation is more interesting for Bats. The production plan does not call for producing any Bats. This means that it is sitting right at the lower bound of zero Bats. This hints that perhaps we would like to make even less than zero Bats if we could and that being *forced* to make even one Bat would be costly. A reduced cost of $\$-2.5$ means that the opportunity cost of resources used in producing a Bat is $\$2.5$ more than the profit of producing a single Bat In other words, we would expect that if we force the production of a single Bat, the over all production plan's profit will go down by $\$2.5$. \vspace{12pt}
 
@@ -300,7 +281,6 @@ kbl(bat_res_used, booktabs=T,
 ```
 
 Notice that the values based on shadow prices of the resources used by a Bat are $4\cdot 0.25+6\cdot2.25+2\cdot0+10\cdot0=14.5$. Alas, the profit for each Bat is just $\$12$ which means that forcing the production of a single Bat will decrease the production plan's profit by $\$12-14.5=-2.5$. In other words, the impact on the objective function is $\$-2.5$ which is the same as the reduced price of Bats.\
-\vspace{12pt}
 
 Now let's test it. We will modify the formulation to set a lower bound on the number of Bats to be 1. Note that we do this in case by setting the `lb` option in the `add_variable` to be 1. Also, if we had a demand constraint for Bats, we could also be accommodated this by setting the upper bound (`ub`).
 
@@ -324,8 +304,6 @@ Bat1Model <- MIPModel() |>
                          get_solution (Bat1Model, Bats),
                          get_solution (Bat1Model, Cats))
 ```
-
-\vspace{12pt}
 
 Let's compare the results for the new production plan and the original base case looking at the Table 4.9.
 
@@ -381,15 +359,15 @@ Your company has extended production to allow for producing aquatic Eels and is 
 
 Table: Adding Eels
 
-a)  Use R Markdown to create your own description of the model.
-b)  Extend the R Markdown to show your LP Model. Be sure to define models.
-c)  Solve the model in R.
-d)  Interpret and discuss the model in R Markdown.
-e)  Examine and reflect upon the reduced costs and shadow prices from the context of which products to produce and not produce.
-f)  Using the results from e), (i.e. reduced cost and shadow prices) make one change to the base model's **objective function** that will change the production plan. Rerun and discuss the new results.
-g)  Using the results from e), (i.e. reduced cost and shadow prices) make one change to the base model's **resource usage values** that will change the production plan. Rerun and discuss the new results.
-h)  Using the results from e), (i.e. reduced cost and shadow prices) make one change to the base model's **available resource values** that will change the production plan. Rerun and discuss the new results.
-i)  Combine the results of the base case e), as well as the variations f) through h) into a single table and discuss the results. \vspace{12pt}
+a.  Use R Markdown to create your own description of the model.
+b.Extend the R Markdown to show your LP Model. Be sure to define models.
+c.  Solve the model in R.
+d.  Interpret and discuss the model in R Markdown.
+e.  Examine and reflect upon the reduced costs and shadow prices from the context of which products to produce and not produce.
+f.  Using the results from e), (i.e. reduced cost and shadow prices) make one change to the base model's **objective function** that will change the production plan. Rerun and discuss the new results.
+g.  Using the results from e), (i.e. reduced cost and shadow prices) make one change to the base model's **resource usage values** that will change the production plan. Rerun and discuss the new results.
+h.  Using the results from e), (i.e. reduced cost and shadow prices) make one change to the base model's **available resource values** that will change the production plan. Rerun and discuss the new results.
+i.  Combine the results of the base case e), as well as the variations f) through h) into a single table and discuss the results. \vspace{12pt}
 
 :::
 
@@ -397,6 +375,6 @@ i)  Combine the results of the base case e), as well as the variations f) throug
 
 Using sensitivity analysis, revisit the transportation exercise from chapter 3.
 
-a) If one more unit of supply was available, where would it be prioritized and why?
-b) If demand could be increased by one unit, would it affect the result and at which destination node it be preferred and why?
+a. If one more unit of supply was available, where would it be prioritized and why?
+b. If demand could be increased by one unit, would it affect the result and at which destination node it be preferred and why?
 :::

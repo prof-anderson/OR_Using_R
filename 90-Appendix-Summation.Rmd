@@ -115,26 +115,25 @@ Below are some common mathematical functions that are often used.
 | $$x \ge y$$      | `x \ge y`     | Strict greater than     |       
 | $$x \ne y$$      | `x \ne y`     | Not equal     |       
 | $$x^n$$          | `x^{n}`       | Superscript or exponentiation  | 
-| $$x^{\text{Max Customers}}$$  |  `x^{\text{Max Customers}}`    | Superscript     | 
+| $$x^{\text{Max Demand}}$$  |  `x^{\text{Max Demand}}`    | Superscript     | 
 | $$x_i$$          | `x_i`         | Subscript     | Single item       |
 | $$x_{i,j,k}$$    | `x_\{i,j,k\}` | Subscript     |
 | $$\overline{x}$$ | `\overline{x}`| Bar   |
 | $$\hat{x}$$      | `\hat{x}`     | Hat   | 
 | $$\tilde{x}$$    | `\tilde{x}`   | Tilde    |  
 | $$\frac{a}{b}$$  | `\frac{a}{b}` | Fraction or Ratio    |
-| $$x_{1} + x_{2} + \cdots + x_{n}$$  |  `x_{1} + x_{2} + \cdots + x_{n}`    | Ellipsis    | 
+| $$1 + 2+\cdots + 10$$  |  `1 + 2 + \cdots + 10`    | Ellipsis    | 
 | $$|A|$$          | `|A|`         | Absolute Value    |            
 | $$x \in A$$      | `x \in A`     | x is in set A    |     
 | $$x \subset B$$  | `x \subset B` | x is a proper subset of B    |
 | $$x \subseteq B$$|   `x \subseteq B`   | x is a subset of B    |       
 | $$A \cup B$$     |    `A \cup B` | Union of sets A and B    |          
 | $${1, 2, 3}$$    |   `\{1, 2, 3\}`    | Set with members 1, 2, and 3    |       
-| $$\sin(x)$$      |  `\sin(x)`    | Common functions such as sine or logarithm |            
 | $$\int_{a}^{b} f(x) \; dx$$      |  `\int_{a}^{b} f(x) \; dx`    | Integral   |        
 | $$\sum_{x = a}^{b} f(x)$$    |  `\sum_{x = a}^{b} f(x)`   | Summation  |         
 | $$\prod_{x = a}^{b} f(x)$$   |  `\prod_{x = a}^{b} f(x)`    | Product  | 
-| $$\lambda$$      | `\lambda`     | Greek letter or symbol such as lambda |   
-| $$3 \cdot x$$      | `3 \cdot x`     | Better to use dot than asterisk for multiplication |   
+| $$\lambda$$      | `\lambda`     | Greek letter or symbol  |   
+| $$3 \cdot x$$    | `3 \cdot x`   | Use dot for multiplication |   
 
 Table: Commonly Used Optimization Modeling Notations.
 

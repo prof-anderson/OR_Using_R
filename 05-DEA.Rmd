@@ -130,34 +130,30 @@ Can you tell which stores represent the best tradeoff between inputs and outputs
 
 Let's start by doing a simple plot of the data. For now, I'm going to make use of a function in Peter Bogetoft and Lars Otto's `Benchmarking` package [@BogetoftBenchmarkingDEASFA2013] which provides a very handy and nicely formatted two-dimensional plot in the format often used for showing production. Many of the functions in the package are also described in their book.
 
-```{r DEA-Isoquant-Plot, fig.margin=TRUE, fig.height=4}
+```{r DEA-Isoquant-Plot, fig.height=4, fig.cap="Store Benchmarking Example"}
 library(Benchmarking, quietly=TRUE)
 dea.plot(x, y, RTS="crs", ORIENTATION="in-out", 
          txt=LETTERS[1:length(x)], 
          add=FALSE, wx=NULL, wy=NULL, TRANSPOSE=FALSE, 
          xlab="Employees (x)", ylab="Sales (y)",
-         main="1-Input, 1-Output Store Benchmarking Example",
          fex=1, GRID=TRUE, RANGE=FALSE, param=NULL)
 ```
 
-Note that the function call `dea.plot` uses options from the standard `r` function `plot`. This includes items such as axis labeling `xlab` and `ylab` along with the figure title `main`. It also provides DEA specific options such as `RTS`, `ORIENTATION`, `add`, `wx`, `wy`, and more. The various options for `plot` and `dea.plot` can be found in their respective help pages.
+Note that the function call `dea.plot` uses options from the standard `r` function `plot`. This includes items such as axis labeling `xlab` and `ylab` along with the figure title `main`. It also provides DEA specific options such as `RTS`, `ORIENTATION`, `add`, `wx`, `wy`, and more. The various options for `plot` and `dea.plot` can be found in their respective help pages.\
 
-This chart clearly shows that store *C* (Trader Carrie's) has the best ratio of sales (output, *y*) to employees (input, *x*). The diagonal line represents an efficiency frontier of best practices that could be achieved by scaling up or down store *C*. As the input is scaled up or down, it is assumed that the output of store *C* would be scaled up or down by the same value. We will revisit this assumption in a later section but for now, think of this as saying that store *C* cannot enjoy economies of scale by getting larger or suffer from diseconomies of scale by getting smaller so it is referred to as constant returns to scale or CRS. \vspace{12pt}
+This chart clearly shows that store *C* (Trader Carrie's) has the best ratio of sales (output, *y*) to employees (input, *x*). The diagonal line represents an efficiency frontier of best practices that could be achieved by scaling up or down store *C*. As the input is scaled up or down, it is assumed that the output of store *C* would be scaled up or down by the same value. We will revisit this assumption in a later section but for now, think of this as saying that store *C* cannot enjoy economies of scale by getting larger or suffer from diseconomies of scale by getting smaller so it is referred to as constant returns to scale or CRS.\
 
 Furthermore, we can graphically examine the technical efficiency of each of the other stores. I'm going to start with store B since it is a little easier to visualize. For now, let's think of the question, how much more or less input would *C* require to produce as much output as *B*.\
-\vspace{12pt}
 
 To determine this efficiency score, simply draw a horizontal line from *B* to the efficiency frontier on the left. This point can be thought of as a target for *B* to be efficient. This point has the same output as *B* but uses only half as much input. The efficiency score can be calculated as the ratio of the distance from the vertical axis to the target divided by the distance from the vertical axis to *B*. This distance is simply 10/20 or 50%.\
-\vspace{12pt}
 
 Another question is how to construct the target for *B*'s evaluation. It is simply made by scaling down *C* to a third of its original size. This results in a target that is composed of about 0.333 of *C*. Also, it should be noted that it makes use of no part of *A*, *B*, or *D*. This value of 0.333 can be thought of as a recipe for how to make a target of performance for *B*. We will use a set of variables, $\lambda$ to describe this recipe or way of constructing a target. More specifically, we would note that $\lambda_C=0.333$ and $\lambda_A=\lambda_B=\lambda_D=0$.\
-\vspace{12pt}
 
 The same steps can be followed for analyzing stores *A*, *C*, and *D* resulting in efficiencies of 75%, 100%, and 80% respectively.
 
 ## The Linear Programs for DEA
 
-*An Explicit Linear Program for DEA*
+### An Explicit Linear Program for DEA
 
 The graphical approach is intuitive but accuracy is limited to that of drawing tools. More importantly, it does not scale to more complex models with multiple inputs and outputs. Let's frame this topic mathematically so that we can proceed systematically. Furthermore, benchmarking of stores is only one application area of literally thousands so rather than limiting ourselves to stores, we will refer to them as *decision making units* (DMUs) or units for short.\
 \vspace{12pt}
@@ -171,15 +167,14 @@ We could express the evaluation of store B as a linear program as follows.\
 $$
  \begin{split}
  \begin{aligned}
-    \text{Min: } & \theta \\
-    \text{S.t.:} & \\
-                  & 10 \lambda_A + 20 \lambda_B +
+    \text{Min    } & \theta \\
+    \text{S.t.:  } & 10 \lambda_A + 20 \lambda_B +
                     30 \lambda_C + 50 \lambda_D 
                     \leq 20 \theta \\
                   & 75 \lambda_A + 100 \lambda_B +
                     300 \lambda_C + 400 \lambda_D 
                     \geq 100 \\
-                  & \theta , \lambda_A , \lambda_B , \lambda_D , \lambda_D \geq 0  
+                  & \theta, \; \lambda_A , \; \lambda_B , \; \lambda_D , \; \lambda_D \geq 0  
   \end{aligned}
   \end{split}
 $$
@@ -187,11 +182,9 @@ $$
 
 Implementing this formulation in `ompr` or another system is straightforward and similar to the production planning linear programs examined in earlier chapters. \vspace{12pt}
 
-To solve for other stores, we would simply change the values on the right hand side of the constraints and solve again. This means that we solve as many linear programs as there are units to evaluate. We are in effect iterating for *k=1,...,Number of Units* or with the four store case, *k=1,...,4*
+To solve for other stores, we would simply change the values on the right hand side of the constraints and solve again. This means that we solve as many linear programs as there are units to evaluate. We are in effect iterating for *k=1,...,Number of Units* or with the four store case, *k=1,...,4*.\
 
-\vspace{12pt}
-
-*A Generalized Linear Program for DEA*
+### A Generalized Linear Program for DEA
 
 This can be easily expanded to the multiple input and multiple output case by defining $x_{i,j}$ to be the amount of the *i*'th input used by unit *j* and $y_{r,j}$ to be the amount of the *r*'th output produced by unit *j*. For simplicity, this example will focus on the one input and one output case rather than the *m* input and *s* output case but the R code explicitly allows for $m,s>1$. To make the code more readable, I will use a slightly different convention $N^X$ or `NX` instead of *m* to refer to the number of inputs (x's) and $N^Y$ or `NY` to be the number of outputs (y's) instead of *s*. Also, the normal mathematical convention is to use *n* to denote the number of Decision Making Units (DMUs) so I will use $N^D$ or `ND` to indicate that in the R code.\
 \vspace{12pt}
@@ -227,8 +220,8 @@ This gives us the following linear program.
 $$
  \begin{split}
  \begin{aligned}
-    \text{minimize  }   & \theta \\
-    \text{subject to } & \sum_{j=1}^{N^D} x_{i,j}\lambda_j \leq \theta x_{i,k} \; \forall \; i\\
+    \text{min    }   & \theta \\
+    \text{s.t.:  } & \sum_{j=1}^{N^D} x_{i,j}\lambda_j \leq \theta x_{i,k} \; \forall \; i\\
                        & \sum_{j=1}^{N^D} y_{r,j}\lambda_j \geq  y_{r,k} \; \forall \; r\\
                        & \lambda_j \geq 0  \; \forall \; j
   \end{aligned}
@@ -241,8 +234,8 @@ Expressing the target on the left and the actual unit's value and radial reducti
 $$
 \begin{split}
 \begin{aligned}
-    \text{minimize  }   & \theta \\
-    \text{subject to } & \sum_{j=1}^{N^D} x_{i,j}\lambda_j - \theta x_{i,k} \leq 0 \; \forall \; i\\
+    \text{min     }   & \theta \\
+    \text{s.t.:  } & \sum_{j=1}^{N^D} x_{i,j}\lambda_j - \theta x_{i,k} \leq 0 \; \forall \; i\\
                        & \sum_{j=1}^{N^D} y_{r,j}\lambda_j \geq  y_{r,k} \; \forall \; r\\
                        & \lambda_j \geq 0  \; \forall \; j
   \end{aligned}
@@ -302,20 +295,14 @@ Let's define some data structures for holding our data and results.
 We're going to use our data from earlier but first we will load a collection of libraries to be used later. The `ompr`package is for optimization and serves as a general human readable format of optimization models that can then interface with a variety of solver engines. The `ROI.plugin.glpk` package is for the specific solver engine, `glpk`, that we used. Other LP solving engines are available and can be used instead. We demonstrate other solvers in chapter 7.
 
 ```{r loading_packages, message=FALSE, warning=FALSE}
-library(dplyr, quietly=TRUE)           
-   # For data structure manipulation
-library(ROI, quietly=TRUE)             
-   # R Optimization Interface package
-library(ROI.plugin.glpk, quietly=TRUE) 
-   # Connection to glpk as solver
-library(ompr, quietly=TRUE)
-   # Optimization Modeling using R
-library(ompr.roi, quietly=TRUE)
-   # Connective tissue
+library(dplyr, quietly=TRUE)           # For data structure manipulation
+library(ROI, quietly=TRUE)             # R Optimization Interface package
+library(ROI.plugin.glpk, quietly=TRUE) # Connection to glpk as solver
+library(ompr, quietly=TRUE)            # Optimization Modeling using R
+library(ompr.roi, quietly=TRUE)        # Connective tissue
 ```
 
 Now that we have loaded all of the packages that we use as building blocks, we can start constructing the model.\
-\vspace{12pt}
 
 We are going to start by building a model for just one DMU, in this case, the second DMU (B). \vspace{12pt}
 
@@ -348,10 +335,10 @@ results.lambda <- t(omprlambda[3])
 colnames(results.lambda) <- 
   c("$\\lambda_A$", "$\\lambda_B$",
     "$\\lambda_C$", "$\\lambda_D$")
-#   c("L_A", "L_B", "L_C", "L_D")   
-kbl(cbind(results.efficiency, results.lambda),
+rownames(results.lambda) <- c("Optimal results for DMU B")
+kbl(cbind(results.efficiency, results.lambda, digits=4),
     booktabs=T, escape=F, caption=
-      "Input-Oriented Envelopment Analysis for DMU B (CCRIO)") |>
+      "Input-Oriented Envelopment Analysis for DMU B") |>
   kable_styling(latex_options = "hold_position")
 ```
 
@@ -392,39 +379,29 @@ kbl(cbind(results.efficiency, results.lambda),
   kable_styling(latex_options = "hold_position")
 ```
 
-Again, the results match what would be expected from Figure 5.1. \vspace{12pt}
+Again, the results match what would be expected from Figure 5.1. \
 
-Now we should extend this to handle all four of the decision making units.
+Now we should extend this to handle all four of the decision making units. A key new function that we use here is the `for` command to loop the previous code that we had used for analyzing A and B separately.  Notably, we assign the results to matrices at the end of each loop.\
 
 ```{r ompr-mult-DMUs, message=FALSE}
 results.efficiency <- matrix(rep(-1.0, 1), nrow=ND, ncol=1)
 results.lambda     <- matrix(rep(-1.0, ND), nrow=ND,ncol=ND)
 for (k in 1:ND) {
-  result <- MIPModel() |>
+  result <- MIPModel()                                       |>
     add_variable(vlambda[j], j=1:ND, type = "continuous", 
-                 lb = 0) |>
-    add_variable(vtheta, type = "continuous") |>
-    set_objective(vtheta, "min") |>
+                 lb = 0)                                     |>
+    add_variable(vtheta, type = "continuous")                |>
+    set_objective(vtheta, "min")                             |>
     add_constraint(sum_expr(vlambda[j]*xdata[j,i], j=1:ND) 
-                   <= vtheta * xdata[k,i], i = 1:NX) |>
+                   <= vtheta * xdata[k,i], i = 1:NX)         |>
     add_constraint(sum_expr(vlambda[j] * ydata[j,r], j=1:ND) 
-                   >= ydata[k,r], r = 1:NY) |>
+                   >= ydata[k,r], r = 1:NY)                  |>
     solve_model(with_ROI(solver = "glpk")) 
   
   print(c("DMU=",k,solver_status(result)))
-#  print(get_solution(result, vlambda[1:(ND)]) )
-    results.efficiency[k] <-  get_solution(result, vtheta)       
-    results.lambda[k,] <- t(as.matrix(as.numeric(
-              get_solution(result, vlambda[j])[,3] )))
-# Put resulting from solution in lambda matrix
-# Comes out of ompr as a dataframe, use as.matrix 
-#    to convert from data frame to matrix
-#    grabs 3rd column to put into results matrix.  
-# First two columns of dataframe are for other info
-#    as.numeric forces the numbers to treated as 
-#    numbers rather than text.
-# I'm sure there are better ways of handling this 
-#    but I'll leave that for future work.
+  results.efficiency[k] <-  get_solution(result, vtheta)       
+  results.lambda[k,] <- t(as.matrix(as.numeric(
+    get_solution(result, vlambda[j])[,3] )))
 }
 ```
 
@@ -572,10 +549,13 @@ dimnames(results.efficiency)<-list(DMUnames,"DRS-IO")
 eff.drs <- results.efficiency
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
 kbl (cbind(results.efficiency, results.lambda),
-     booktabs=T, digits=4, caption="Input-Oriented Model with  
+     booktabs=T,  escape=F, digits=4, 
+     caption="Input-Oriented Model with  
         Decreasing Returns to Scale") |>
   kable_styling(latex_options = "hold_position")
 ```
+
+Simply changing from `RTS<-"DRS"` to `RTS<-"IRS"` in the first line allows to now evaluate the Increasing Returns to Scale case.
 
 ```{r stores-IRS, echo=FALSE}
 RTS<-"IRS"
@@ -628,7 +608,7 @@ dea.plot(x, y, RTS="irs", ORIENTATION="in-out",
          fex=1, GRID=TRUE, RANGE=FALSE, param=NULL)
 ```
 
-```{r DEA-DRS-Frontier-Plot, echo=FALSE, fig.margin=TRUE, fig.height=4, fig.cap="Decreasing  (Non-Increasing) Returns to Scale Efficiency Frontier"}
+```{r DEA-DRS-Frontier-Plot, echo=FALSE, fig.height=4, fig.cap="Decreasing(Non-Increasing) Returns to Scale Efficiency Frontier"}
 library(Benchmarking, quietly=TRUE)
 dea.plot(x, y, RTS="drs", ORIENTATION="in-out", 
          txt=LETTERS[1:length(x)], 
@@ -646,16 +626,16 @@ kbl (cbind(eff.crs, eff.vrs, eff.drs, eff.irs),
 
 ## Multiple Inputs and Multiple Outputs
 
-Using DEA for two-dimensional examples such as the one-input, one-output model is easy to draw and visualize but overkill and not generally very useful. \vspace{12pt}
+Using DEA for two-dimensional examples such as the one-input, one-output model is easy to draw and visualize but overkill and not generally very useful.\
 
-Let's move on to a larger application of examining technology transfer success from university research by revisiting [@AndersonMeasuringefficiencyuniversity2007]. This paper used data from the Association of University Technology Managers, AUTM, and their 2004 survey. We will start by loading the data from the paper. The dataset can be accessed as a comma separated file (CSV) format from our github repository. Note that in RStudio, many datasets can be easily loaded using the `Import Dataset`command from under the File pulldown command. This provides a nice graphical user interface wrapper around various importing functions with a preview of the imported data along with R code that can be copied to an R script or RMarkdown document. \vspace{12pt}
+Let's move on to a larger application of examining technology transfer success from university research by revisiting [@AndersonMeasuringefficiencyuniversity2007]. This paper used data from the Association of University Technology Managers, AUTM, and their 2004 survey. We will start by loading the data from the paper. The dataset can be accessed as a comma separated file (CSV) format from our github repository. Note that in RStudio, many datasets can be easily loaded using the `Import Dataset`command from under the File pulldown command. This provides a nice graphical user interface wrapper around various importing functions with a preview of the imported data along with R code that can be copied to an R script or RMarkdown document.\
 
-```{r}
+```{r, message=FALSE}
 library(readr)
-univ_lic_2007 <- read_csv("univ_lic_2007.csv")
+univ_lic_2007 <- read_csv("univ_lic_2007.csv", show_col_types=FALSE)
 ```
 
-Next, it is always helpful to look over the dataset. The names of the columns will be long and awkward for displaying results. Let's abbreviate the names to make it more manageable.\vspace{12pt}
+Next, it is always helpful to look over the dataset. The names of the columns will be long and awkward for displaying results. Let's abbreviate the names to make it more manageable.\
 
 ```{r Simplify-data}
 colnames(univ_lic_2007) <- c("University", 
@@ -713,10 +693,9 @@ ynames_printable<-c("Licensing Income\n($M)",
                     "US Patents Issued")
 xnames_printable<-c("Total Research\n Spending ($M)")
 DMUnames_printable <- as.matrix(utt2007[,1])
-
 ```
 
-As usual, let's preview the data.\vspace{12pt}
+As usual, let's preview the data.\
 
 ```{r}
 kbl (head(cbind(xdata,ydata)), booktabs=T, 
@@ -726,7 +705,7 @@ kbl (head(cbind(xdata,ydata)), booktabs=T,
 
 Now, let's move on to the DEA input-output diagram. We use the total research spending as an input and then five separate outputs for the various dimensions of technology transfer success measured by AUTM. This can be visualized with our input-output diagram.\vspace{12pt}
 
-```{r DEA_IO_Plot_Univ, fig.margin=TRUE, out.width="2in"}
+```{r DEA_IO_Plot_Univ, out.width="4in"}
 Figure <- DrawIOdiagram (xnames_printable, 
                          ynames_printable,
                         '"\n\nUniversity\nTechnology\nTransfer\n\n"')
@@ -767,7 +746,7 @@ for (k in 1:ND) {
 
 ```{r full-table}
 kbl (cbind(res.efficiency, poscol(res.lambda)),
-     booktabs=T, digits=5,
+     booktabs=T, digits=4,
      caption="Results from University Technology 
      Transfer Example (CRS)") |>
   kable_styling(latex_options = 
@@ -777,10 +756,14 @@ UTT_CCR.Res<-cbind(res.efficiency, res.lambda)
 
 Note that the results are different from those in the UTT paper because the model is different and the data is trimmed. This model is an input-oriented model with constant returns to scale. In contrast, the UTT paper uses an output-oriented variable returns to scale model with a weight restriction relationship. Recall that the data is trimmed to the first 25 universities and patents filed is dropped as less important than patents issued. \vspace{12pt}
 
-In contrast, some values of $\lambda$ warrant a more careful look, in particular, there may be very small positive or negative numbers. These numbers are due to computational issues in the linear programming solvers and should be interpreted as zero. Rounding the results can make the tables easier for interpretation by the user. The pander packages makes it easy to round numbers to varying levels of precision.
+Every DMU is compared to one or more of the efficient DMUs. In this case there are three efficient DMUs.  These are New York University (NYU), University of Wisconsin at Madison (UW-Madison), and California Institute of Technology (Cal Tech).  The `poscol` function trimmed out all of the unused columns in the matrix of lambdas. This then left us with just the efficiency scores and the three columns with values of $\lambda$ for each of these efficient universities. 
 
-The small, nearly zero, values that may appear in DEA calculations can cause some computational difficulty. For example, testing for zero lambda values could miss cases where the value is approximately but not exactly zero.\
+The University of California System, UC-System, receives an efficiency score of 0.4663.  It is made up of approximately 0.107 of New York University (NYU), 1.066 of the University of Wisconsin at Madison, 1.186 of Cal Tech. This means that if the UC-System were operating efficiently as defined in this model, it would be able to produce the same or more outputs as it actually did using only 47% of the input (Research Funding) as it actually used.  This target of performance is made up more more than two other universities and 
+
+Note that these values are rounded using the `digits=4` from `kable`.  The result of this is it masks odd some values of $\lambda$ that could warrant a more careful look.  In particular, there may be very small positive or negative numbers in the table that are shown as 0.0000. These numbers are due to computational issues in the linear programming solvers and should be interpreted as zero. Rounding the results can make the tables easier for interpretation by the user. The pander packages makes it easy to round numbers to varying levels of precision. The small, nearly zero, values that may appear in DEA calculations can cause some computational difficulty. For example, testing for zero lambda values could miss cases where the value is approximately but not exactly zero.\
 \vspace{12pt}
+
+Perhaps the leader of the UC-System would contend that running a ten campus university system with over a quarter million students is very much unlike running the others added together (although NYU is also a large system.)  This could suggest a Variable Returns to Scale model which reflects that it operating at a very large and very small scale provide special challenges.  
 
 Let's compare the results from the constant and variable returns to scale cases.
 
@@ -824,7 +807,7 @@ kbl (cbind(UTT_CCR.Res[,1, drop=FALSE],
   kable_styling(latex_options = "hold_position")
 ```
 
-A few takeaways from these results: \vspace{12pt}
+A few takeaways from these results:
 
 -   Switching from CRS to VRS will never hurt the efficiency of a DMU. From an optimization perspective, think of this as adding a constraint which will increase or leave unchanged the objective function value from a minimization linear program.
 -   Another way to view the impact of adding a returns to scale assumption is that this makes it *easier* for a DMU to find some way of being *best* or efficient. They can do this by now having the largest of any output or the smallest of input as well as many other ways.
@@ -896,19 +879,12 @@ for (k in 1:ND) {
                                   vlambda[j])[,3] )))
     rduals  <- as.matrix(get_row_duals(resUTT_CRS))
     res.vweight[k,] <- -1*rduals[1:NX]
-      # Extract first NX row duals 
-      #   Assumes first set of constraints for inputs
-      # Multiply input weights by -1 to adjust for 
-      #   inequality direction
     res.uweight[k,] <- rduals[(NX+1):(NX+NY)]
-      # Extract next NY row duals 
-      #   Assumes output constraints follow inputs 
     }
 kbl (cbind(res.efficiency, res.vweight, 
-              res.uweight), booktabs=T, digits=6, 
+              res.uweight), booktabs=T, digits=5, 
         caption="Multiplier Weights from UTT Example") |>
   kable_styling(latex_options = c("hold_position", "scale_down"))
-    # Passes two options:  Hold position and scale to fit page.
 ```
 
 A few things should be noticed with respect to the multiplier weights:
@@ -1025,15 +1001,12 @@ for (k in 1:ND) {
 
 ```
 
-<!--The rightmost columns, denoted by "L_" are the resulting lambda values.  -->
-
 ```{r, eval=FALSE}
 
-#pander(head(cbind(res.efficiency,poscol(res.lambda[1:25,]))), 
-#       round=4, caption="Selected Input-oriented Efficiency Results with Slack Maximization")
 kbl(head(cbind(res.efficiency,poscol(res.lambda[1:25,]))),
     booktabs=T, escape=F,
-    caption="Selected Input-oriented Efficiency Results with Slack Maximization") |>
+    caption="Selected Input-oriented Efficiency Results 
+    with Slack Maximization") |>
   kable_styling(latex_options = "hold_position")
 ```
 
@@ -1041,11 +1014,11 @@ kbl(head(cbind(res.efficiency,poscol(res.lambda[1:25,]))),
 
 Over the years, there have been several R packages developed for doing DEA. Each package is often developed by a researcher or team for their specific needs. Some continue to be enhanced over time. At this point the reader will have an understanding of many of the basics of the implementation and have a greater appreciation of how the packages. The following packages are currently available through CRAN.
 
--   `Benchmarking` by Bogetoft and Otto stands out for the comprehensive toolset and documentation in their book.\
+-   `Benchmarking` by Bogetoft and Otto stands out for the comprehensive toolset and documentation in their book.
 -   `deaR` provides some interesting classic datasets along with both standard and less commonly used variations of DEA.
 -   `DJL` incorporates a variety of DEA techniques and is officially an abbreviation of distance measurement based judgement and learning. Perhaps not too coincidentally, it matches the author's, Dong-Joon Lim's, initials.
 -   `MultiplierDEA` was developed by Aurobindh Kalathil Kumar from Portland State University and emphasizes the multiplier model of DEA.
--   `nonparaeff` draws its name from the nonparametric nature of DEA.\
+-   `nonparaeff` draws its name from the nonparametric nature of DEA.
 -   `rDEA` stands for Robust DEA.
 
 In each case, the notation for calling DEA varies. This includes the way that data is structured, how returns to scale is specified, whether a second phase for slack maximization is conducted, and more. The result is that reading the help file for a package is necessary.
@@ -1090,7 +1063,7 @@ This section covers the second chapter of the book and introduces DEA and R work
 
 ::: {.exercise name="Graphically Adding DMU E"}
 
-Add a fifth unit, E, to the first example that produces 400 units output using 30 units of input. Graphically evaluate all five units for their efficiency scores and lambda values. Interpret the solution in terms of who is doing well, who is doing poorly, and who should be learning from whom.
+Add a fifth unit, E, to the first example that produces 400 units output using 30 units of input. Graphically evaluate all five units for their efficiency scores and lambda values. Interpret the solution in terms of who is doing well, who is doing poorly, and who should be learning from whom. \vspace{12pt}
 :::
 
 ::: {.exercise name="Adding DMU E Using R"}
@@ -1117,13 +1090,14 @@ Construct an example where Phase 2 increases positive slacks from Phase 1.\
 ::: {.exercise name="DEA Application"}
 Conduct a DEA study for an application that you are personally familiar with. (Pick one for which data is readily available but something that you are passionate about. It can have scrubbed or anonymized data. Examples might include your favorite sports league, team salaries, coaching salaries, wins, etc. or it can be USAF related.)
 
-a)  Describe the application.
-b)  Describe and justify the data including the inputs and outputs used as well as items explicitly not used.
-c)  Select an appropriate DEA model and conduct the analysis.
-d)  Discuss the results.
+a.  Describe the application.
+b.  Describe and justify the data including the inputs and outputs used as well as items explicitly not used.
+c.  Select an appropriate DEA model and conduct the analysis.
+d.  Discuss the results.
 
+\vspace{12pt}
 :::
 
 ::: {.exercise name="DEA Technique Choices"}
-Choosing Inputs and Outputs:  The DEA store example in chapter 5 uses an input-output model of sales and employees.  Describe a richer input-output model that you feel would make for a better case.  Be sure to discuss tradeoffs and other DEA model choices, including how results could be used.
+Choosing Inputs and Outputs:  The DEA store example in chapter 5 uses an input-output model of sales and employees.  Describe a richer input-output model that you feel would make for a better case.  Be sure to discuss tradeoffs and other DEA model choices, including how results could be used. \vspace{12pt}
 :::

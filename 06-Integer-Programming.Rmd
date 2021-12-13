@@ -25,7 +25,7 @@ Up until this point, we have always assumed that variables could take on fractio
 Allowing for integer values opens up many more important areas of applications as we will see.\
 \vspace{12pt} Let's look at two numerical examples. The first shows a case where integrality makes little difference, the second where it has a major impact. \vspace{12pt}
 
-Unfortunately, there is no such thing as a free lunch-adding integrality can make problems much more computationally demanding. We will go through an example of how many optimization routines do integer optimization to demonstrate why it can be more difficult algorithmically even if looks trivially easy from the perspective of the change in the `ompr`function.
+Unfortunately, there is no such thing as a free lunch-adding and integrality can make problems much more computationally demanding. We will go through an example of how many optimization routines do integer optimization to demonstrate why it can be more difficult algorithmically even if looks trivially easy from the perspective of the change in the `ompr`function.\
 
 ## Example of Minor Integrality Impact
 
@@ -34,21 +34,16 @@ Let's revisit the earlier example of producing drones with one additional hour i
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max  }   & 7\cdot Ants +12 \cdot Bats +5\cdot Cats \\
-    \text{s.t.:} & \\
-& 1\cdot Ants + 4\cdot Bats +2\cdot Cats \leq 800 \\
-& 3\cdot Ants + 6\cdot Bats +2\cdot Cats \leq 
+    \text{Max    } & 7\cdot Ants +12 \cdot Bats +5\cdot Cats \\
+    \text{s.t.:  } & 1\cdot Ants + 4\cdot Bats +2\cdot Cats \leq 800 \\
+                   & 3\cdot Ants + 6\cdot Bats +2\cdot Cats \leq 
                           \textcolor{red}{901} \\
-& 2\cdot Ants + 2\cdot Bats +1\cdot Cats \leq 480 \\
-& 2\cdot Ants + 10\cdot Bats +2\cdot Cats \leq 1200 \\
-& Ants, Bats, Cats \geq 0  
+                   & 2\cdot Ants + 2\cdot Bats +1\cdot Cats \leq 480 \\
+                   & 2\cdot Ants + 10\cdot Bats +2\cdot Cats \leq 1200 \\
+                   & Ants, Bats, Cats \geq 0  
   \end{aligned}
   \end{split}
 $$
-
-```{marginfigure}
-**Formula 6.1**: Three product optimization model with an extra hour of assembly time.
-```
 
 We use the following implementation.
 
@@ -88,21 +83,15 @@ In the formulation, we can replace the non-negativity requirement with a restric
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max  }   & 7\cdot Ants +12 \cdot Bats +5\cdot Cats \\
-    \text{s.t.:} & \\
-& 1\cdot Ants + 4\cdot Bats +2\cdot Cats \leq 800 \\
-& 3\cdot Ants + 6\cdot Bats +2\cdot Cats \leq 
-                        \textcolor{red}{901}\\
-& 2\cdot Ants + 2\cdot Bats +1\cdot Cats \leq 480 \\
-& 2\cdot Ants + 10\cdot Bats +2\cdot Cats \leq 1200 \\
-& Ants, Bats, Cats  \in \{0,1,2,3, \ldots \}   
+    \text{Max    } & 7\cdot Ants +12 \cdot Bats +5\cdot Cats \\
+    \text{s.t.:  } & 1\cdot Ants + 4\cdot Bats +2\cdot Cats \leq 800 \\
+                   & 3\cdot Ants + 6\cdot Bats +2\cdot Cats \leq 901\\
+                   & 2\cdot Ants + 2\cdot Bats +1\cdot Cats \leq 480 \\
+                   & 2\cdot Ants + 10\cdot Bats +2\cdot Cats \leq 1200 \\
+                   & Ants, \; Bats, \; Cats \; \textcolor{red} { \in \{0,1,2,3, \ldots \} }   
   \end{aligned}
   \end{split}
 $$
-
-```{marginfigure}
-**Formula 6.2**: Model restricting variables to be non-negative integers.
-```
 
 The `ompr` implementation has a similar, straightforward change. In the declaration of variables (`add_variable` function), we simply set the type to be `integer` rather than `continuous`. Since nothing else is changing in the model, we can simply re-add the variables to redefine them from being continuous to be integer.\
 \vspace{12pt}
@@ -138,7 +127,7 @@ rownames(temp1)<-c("Continuous", "Integer")
 
 ```{r, fig.margin=TRUE}
 kbl (temp1, booktabs=T, 
-     caption="Production plans with an additional assembly hour based on variable type.") |>
+     caption="Production plans based on variable type.") |>
   kable_styling(latex_options = "hold_position")
 ```
 
@@ -146,40 +135,38 @@ Notice that in this case, there was a small adjustment to the production plan an
 
 ## Example of Major Integality Impact
 
-Let's take a look at another example. Acme makes two products, let's refer to them as product 1 and 2. Product 1 generates a profit of \$2000 per product, requires one liter of surfactant for cleaning, and 2.5 kilograms of high grade steel. \vspace{12pt}
+Let's take a look at another example. Acme makes two products, let's refer to them as product 1 and 2. Product 1 generates a profit of \$2000 per product, requires one liter of surfactant for cleaning, and 2.5 kilograms of high grade steel.\
 
 In contrast, each unit of Product 2 produced generates a higher profit of \$3000 per product, requires 3.0 liters of surfactant, and 1.0 kilograms of high grade steel. Acme has 8.25 liters of surfactant and 8.75 kilograms of high grade steel.\
-\vspace{12pt}
 
-Only completed products are sellable, what should be Acme's production plan? \vspace{12pt}
+Only completed products are sellable, what should be Acme's production plan? \
 
-Formulating the optimization problem is similar to our earliest production planning problems. Let's define $x_1$ to be the amount of product 1 to produce and $x_2$ to be the amount of product 2 to produce.
+Formulating the optimization problem is similar to our earliest production planning problems. Let's define $x_1$ to be the amount of product 1 to produce and $x_2$ to be the amount of product 2 to produce.\
 
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max  }   & 2000 x_1 + 3000 x_2 \\
-    \text{subject to } & 1.0 x_1 + 3.0 x_2 \leq 8.25 \\
-                       & 2.5 x_1 + 1.0 x_2 \leq 8.75 \\
-                       & x_1,  \; x_2 \geq 0  \\
-                       & x_1,  \; x_2  \in \{0,1,2,3,...\}
+    \text{Max   } & 2000 x_1 + 3000 x_2 \\
+    \text{s.t.  } & 1.0 x_1 + 3.0 x_2 \leq 8.25 \\
+                  & 2.5 x_1 + 1.0 x_2 \leq 8.75 \\
+                  & x_1,  \; x_2 \geq 0  \\
+                  & x_1,  \; x_2  \in \{0,1,2,3,...\}
   \end{aligned}
   \end{split}
   (\#eq:ILP)
 $$
 
 The last constraint cannot be solved directly strictly using linear programming. It is instead referred to as an integer linear program or ILP.\
-\vspace{12pt}
 
 Again, we could try solving it with and without the imposition of the integrality constraint.
 
 ```{r SolveLPRelaxation0}
 LPRmod <- MIPModel() |>
   add_variable(Vx1, type = "continuous", lb = 0) |>
-  add_variable(Vx2, type = "continuous",lb = 0) |>
-  set_objective(2*Vx1 + 3*Vx2, "max") |>
-  add_constraint(1.0*Vx1 + 3.0*Vx2 <= 8.25) |> #Surfactant
-  add_constraint(2.5*Vx1 + 1.0*Vx2  <= 8.75)  #Steel
+  add_variable(Vx2, type = "continuous",lb = 0)  |>
+  set_objective(2*Vx1 + 3*Vx2, "max")            |>
+  add_constraint(1.0*Vx1 + 3.0*Vx2 <= 8.25)      |> # Surfactant
+  add_constraint(2.5*Vx1 + 1.0*Vx2  <= 8.75)        # Steel
 
 LPRelax <- solve_model(LPRmod, with_ROI(solver = "glpk"))
 
@@ -197,9 +184,9 @@ All we need to do is repeat the same process with changing the variable type to 
 IPSoln <- MIPModel() |>
   add_variable(Vx1, type = "integer", lb = 0) |>
   add_variable(Vx2, type = "integer",lb = 0)  |>
-  set_objective(2*Vx1 + 3*Vx2, "max") |>
-  add_constraint(1.0*Vx1 + 3.0*Vx2 <= 8.25)   |> #Surfactant
-  add_constraint(2.5*Vx1 + 1.0*Vx2  <= 8.75)  |> #Steel
+  set_objective(2*Vx1 + 3*Vx2, "max")         |>
+  add_constraint(1.0*Vx1 + 3.0*Vx2 <= 8.25)   |> # Surfactant
+  add_constraint(2.5*Vx1 + 1.0*Vx2  <= 8.75)  |> # Steel
   solve_model(with_ROI(solver = "glpk"))
 
 obj_val <- objective_value(IPSoln)
@@ -215,7 +202,7 @@ kbl (rbind(acme_res_lp,acme_res_ip),
   kable_styling(latex_options = "hold_position")
 ```
 
-```{r Fig-LP-Feasible-Region, echo=FALSE, out.width="49%", fig.show='hold', fig.align='center', fig.cap="LP Region and IP Feasible Solutions" }
+```{r Fig-LP-Feasible-Region, echo=FALSE, out.width="49%", fig.show='hold', fig.align='center', fig.cap="LP Region and 11 IP Feasible Solutions" }
 knitr::include_graphics( c ("images/Fig06-1-LP-Feasible-Region.PNG", 
                             "images/Fig06-2-IP-Feasible.PNG"))
 ```
@@ -227,14 +214,13 @@ Simply rounding down did not yield an optimal solution. Notice that production o
 The simplicity of making the change in the model from continuous to integer variables hides or understates the complexity of what needs to be done to computationally to solve the optimization problem. This small change can have major impacts on the computational effort needed to solve a problem. Solving linear programs with tens of thousands of continuous variables is very quick and easy computationally. Changing those same variables to general integers can make it *very* difficult. Why is this the case? \vspace{12pt}
 
 At its core, the basic problem is that the simplex method and linear programming solves a system of equations and unknowns (or variables). It is trivial to solve one equation with one unknown such as $5x=7$. It is only slightly harder to solve a system of two equations and two unknowns. Doing three equations and three unknowns requires some careful algebra but is not too hard. In general, solving *n* equations and *n* unknowns is readily solvable. On the other hand, none of this algebraic work of solving for unknown variables can require that the variables take on integer values. Even with only one equation and one unknown, *x* will only be integer for certain combinations of numbers in the above equation. Specifically when the number on the right is a multiple of the number in front of *x*. It gets even less likely to have an all integer solution as the number of equations and unknowns increase.\
-\vspace{12pt}
 
 Another way to visualize integer solutions for general systems of inequalities is to think of the two equation and two unknown (*x* and *y*) case. Finding a solution is the same as finding where two lines intersect in two dimensional space. The odds of getting lucky and having the two lines intersect at an integer solution is small. Even if we limit ourselves to x and y both being between 0 and 10, this means that there are $11^2=121$ possible integer valued points in this space such as (0,0), (0,3), and (10,10). In contrast, the set of all points, including non-integers, in this region includes all of the above points as well as (0,0.347) and (4.712, 7.891) among infinitely more. The result is that if you think of this as a target shooting, the probability of finding an integer solution by blind luck is $\frac{121}{\infty}\approx 0$. \vspace{12pt}
 
 What we need to do is an algorithm around the simplex method to accomplish this. A basic and common and approach often used for solving integer variable linear programming problems is called branch and bound. We start with a solution that has presumably continuous valued variables. We then branch (create subproblems) off of this result and add bounds (additional constraints) to rule out the fractional value of that variable.\
 \vspace{12pt}
 
-*The LP Relaxation*
+### The LP Relaxation
 
 To solve this using branch and bound, we *relax* the integrality requirements and solve what is called the LP Relaxation. To do this, we simply remove the integrality requirement. \vspace{12pt}
 
@@ -265,16 +251,13 @@ knitr::include_graphics("images/Fig06-3-LP-Relaxation.PNG")
 
 \vspace{12pt}
 
-*Subproblem I*
-
-\vspace{12pt}
+### Subproblem I
 
 Alas, this production plan from the LP Relaxation is not feasible from the perspective of the original integer problem because it produces *2.769* of product 1 and *1.827* of product 2. If both of these variables had been integer we could have declared victory and been satisfied that we had easily (*luckily?*) found the optimal solution to the original integer programming problem so quickly. \vspace{12pt}
 
 Instead, we will need to proceed with the branch and bound process. Since both of the variables in the LP relaxation have fractional values, we need to start by choosing which variable to use for branching first. Algorithmic researchers would focus on how to best pick a branch but for our purposes to improve solution speed but it doesn't really matter for illustration so let's arbitrarily choose to branch on $x_1$.\
-\vspace{12pt}
 
-For the branch and bound algorithm, we want to include two subproblems that exclude the *illegal* value of $x_1=2.769$ as well as everything else between 2 and 3. We say that we are *branching* on $x_1$ to create two subproblems. The first subproblem (I) has an added constraint of $x_1\le 2.0$ and the other subproblem (II) has an added constraint of $x_1\ge 3.0$.
+For the branch and bound algorithm, we want to include two subproblems that exclude the *illegal* value of $x_1=2.769$ as well as everything else between 2 and 3. We say that we are *branching* on $x_1$ to create two subproblems. The first subproblem (I) has an added constraint of $x_1\le 2.0$ and the other subproblem (II) has an added constraint of $x_1\ge 3.0$.\
 
 $$
  \begin{split}
@@ -282,14 +265,14 @@ $$
     \text{Max  }   & 2000 x_1 + 3000 x_2 \\
     \text{subject to } & 1.0 x_1 + 3.0 x_2 \leq 8.25 \\
                        & 2.5 x_1 + 1.0 x_2 \leq 8.75 \\
-                       & x_1 \leq 2.0 \\
+                       & \textcolor{red} {x_1 \leq 2.0} \\
                        & x_1,  \; x_2 \geq 0  \\
   \end{aligned}
   \end{split}
   (\#eq:Sub1)
 $$
 
-Since this is just a bound on the decision variable, we can implement it by just modifying the LP Relaxation's model `LPRmod` that we created earlier by redefining the \$x_1\$ variable (`Vx1`).
+Since this is just a bound on the decision variable, we can implement it by just modifying the LP Relaxation's model `LPRmod` that we created earlier by redefining the \$x_1\$ variable (`Vx1`).\
 
 ```{r SolveLPSub1}
 LPSubI <- add_variable(LPRmod, Vx1, type = "continuous", 
@@ -313,22 +296,17 @@ knitr::include_graphics("images/Fig06-4-Subproblem-I.PNG")
 ```
 
 Looking over the results, we now get an integer value for $x_1$ but not for $x_2$. We repeat the same process by creating subproblems from subproblem I by branching off of $x_2$.\
-\vspace{12pt}
 
 ```{r Fig-Subproblem-Ia, echo=FALSE, out.width="3in",  fig.align='center', fig.show='hold', fig.cap="Excluding a region to branch off of Subproblem I."}
 knitr::include_graphics("images/Fig06-5-Subproblem-Ia.PNG")
 
 ```
 
-\vspace{12pt}
-
-*Subproblem III* \vspace{12pt}
+### Subproblem III 
 
 Choosing which subproblem to examine next is one of the areas that large scale integer programming software and algorithms specialize and provide options. One way to think of it is to focus on searching down a branch and bound tree deeply or to search across the breadth of the tree. For this example, let's go deep (we'll return to subproblem II later.)\
-\vspace{12pt}
 
 Since $x_2$ is now a non-integer solution, we will create branches with bounds (or constraints) on $x_2$ in the same manner as before. Subproblem III has an added constraint of $x_2 \le2.0$ and Subproblem IV has $x_2 \ge3.0$.\
-\vspace{12pt}
 
 To simplify the implementation, I can simply change the upper and lower bounds on variables rather than adding separate variables.
 
@@ -355,7 +333,7 @@ knitr::include_graphics("images/Fig06-5-Subproblem-III-and-II.PNG")
 This results in integer values for both $x_1$ and $x_2$ so it is feasible with respect to integrality in addition to the production constraints. It does generate less profit than the LP relaxation. While it is feasible, it doesn't prove that it is optimal though. We need to explore the other potential branches.\
 \vspace{12pt}
 
-*Subproblem IV* \vspace{12pt}
+### Subproblem IV
 
 Next, let's look at Subproblem IV. This problem adds the bound of $x_2\ge3.0$ to subproblem I. Notice that in the `MIPModel` implementation the variable for $x_1$ (Vx1) has an upperbound of 2, (`ub=2`) in order to implement the bounding constraint for subproblem I and the lower bound on $x_2$ of 3 in the variable declarations.
 
@@ -426,11 +404,11 @@ kbl (LPSubIII_res,
        "Acme's Optimal Production Plan based on Subproblem III")
 ```
 
-Before this, we could only say that it was feasible solution and candidate to be optimal since no better integer feasible solution had been found. \vspace{12pt}
+Before this, we could only say that it was feasible solution and candidate to be optimal since no better integer feasible solution had been found.\
 
-Let's summarize the results of the series of LPs solved. \vspace{12pt}
+Let's summarize the results of the series of LPs solved.\
 
-```{r create-table-of-subproblem-results}
+```{r create-table-of-subproblem-results, echo=FALSE}
 LPSubIV_res <- c("-", "-", "Infeasible")
         # Make adjustment for misinterpretation of status
 BandB <- rbind(format(round(acme_res_lp,  3), nsmall = 3), 
@@ -446,49 +424,39 @@ kbl (BandB, booktabs=T,
   kable_styling(latex_options = "hold_position")
 ```
 
-```{r Fig-B-and-B-Summary, echo=FALSE, fig.align='center', fig.show='hold', out.width="3in"}
+The Branch and Bound process is often characterized as a tree.  
+```{r Fig-B-and-B-Summary, echo=FALSE, fig.align='center', fig.show='hold', out.width="4in", fig.cap="Branch and Bound Tree"}
 knitr::include_graphics("images/Fig06-6-B-and-B-Summary.PNG")
 
 ```
 
-\vspace{12pt}
-
 ## Computational Complexity
 
 As for computational complexity, this was a small problem with only two integer variables but it still required solving the LP Relaxation and four separate LP subproblems for a total of five linear programs in all. As the number of variables and constraints increases, so do the number of LPs needed to typically find a solution using branch and bound. Small and medium size problems can generally be solved quickly but worst case scenarios have a combinatorial explosion.\
-\vspace{12pt}
 
-*Full Enumeration*
+### Full Enumeration
 
 Another approach to integer programming is full enumeration which means listing out all possible solutions and then determining if that solution is feasible and if so, what the objective function value is. Alas, this can result in a combinatorial explosion. For example, if a problem has 1,000 non-negative integer variables each of which can range from zero to nine, full enumeration would require listing $10^{1000}$ possible solutions. This is far larger than the number of grains of sand on Earth (\~$10^{19}$) or the number of stars in the universe (\~$10^{19}$). In fact this is much larger than the number of atoms in the universe (\~$10^{80}$). Needless to say explicit enumeration for large problems is not an option.\
-\vspace{12pt}
 
 The Branch and Bound algorithm has the benefit that it will find the optimal solution. Sometimes it will find it quickly, other times it may take a very long time.\
-\vspace{12pt}
 
-Worst case scenarios for Branch and Bound may approach that of full enumeration but in practice performs much better. A variety of sophisticated algorithmic extensions have been added by researchers over the years but solving large scale integer programming problems can still be quite difficult. \vspace{12pt}
+Worst case scenarios for Branch and Bound may approach that of full enumeration but in practice performs much better. A variety of sophisticated algorithmic extensions have been added by researchers over the years but solving large scale integer programming problems can still be quite difficult.\
 
-One option to deal with long solving times is to set early termination conditions such as running for a certain number of seconds. If it is terminated early, it may report the best feasible solution found so far and a precise bound as to how much better an as yet unfound solution might be based on the best remaining open branch. This difference between the best feasible solution found so far and the theoretically possible best solution to be found gives a gap that an analyst can set. This acceptable gap is sometimes referred to as a suboptimality tolerance factor. In other words, what percentage of suboptimality is the analyst willing to accept for getting a solution more quickly. For example, a suboptimality tolerance factor of 10% would tell the software to terminate the branch and bound algorithm if a feasible solution is found and it is certain that regardless of how much more time is spent solving, it is impossible to improve upon this solution by more than 10%.
-
-\vspace{12pt}
+One option to deal with long solving times is to set early termination conditions such as running for a certain number of seconds. If it is terminated early, it may report the best feasible solution found so far and a precise bound as to how much better an as yet unfound solution might be based on the best remaining open branch. This difference between the best feasible solution found so far and the theoretically possible best solution to be found gives a gap that an analyst can set. This acceptable gap is sometimes referred to as a suboptimality tolerance factor. In other words, what percentage of suboptimality is the analyst willing to accept for getting a solution more quickly. For example, a suboptimality tolerance factor of 10% would tell the software to terminate the branch and bound algorithm if a feasible solution is found and it is certain that regardless of how much more time is spent solving, it is impossible to improve upon this solution by more than 10%.\
 
 In practice, even small suboptimality tolerance factors like 1% can allow big problems to be solved quickly and are often well within the margin of error for model data. In other cases, organizations may be interested in finding *any* feasible solution to large, vexing problems.
 
-Note that our Acme example only specified two digits of accuracy for resource usage and may have only one digit of accuracy for profitability per product.
-
-\vspace{12pt}
+Note that our Acme example only specified two digits of accuracy for resource usage and may have only one digit of accuracy for profitability per product.\ 
 
 Note that in our earlier example, if we had a wide enough suboptimality tolerance, say 30% and followed the branch for $x_1\ge3.0$ first rather than $x_1\le2.0$, we might have terminated with a suboptimal solution.\
 \vspace{12pt}
 
 ## Binary Variables and Logical Relations
 
-Binary variables are a special case of general integer variables. Rather than variables taking on values such as 46 and 973, acceptable values are limited to just 0 and 1. This greatly reduces the possible search space for branch and bound since you know that in any branch, you will never branch on a single variable more than once. On the other hand, with a large number of variables, the search space can still be very large. If the previous case with 1000 variables were binary, a full enumeration list would rely on a list of $2^{1000}$ or one followed by about 300 zeros) possible solutions. While better than the case of integers, it is still vastly more than the number of atoms in the universe. \vspace{12pt}
+Binary variables are a special case of general integer variables. Rather than variables taking on values such as 46 and 973, acceptable values are limited to just 0 and 1. This greatly reduces the possible search space for branch and bound since you know that in any branch, you will never branch on a single variable more than once. On the other hand, with a large number of variables, the search space can still be very large. If the previous case with 1000 variables were binary, a full enumeration list would rely on a list of $2^{1000}$ or one followed by about 300 zeros) possible solutions. While better than the case of integers, it is still vastly more than the number of atoms in the universe. \
 
-The important thing is is that binary variables give us a lot of rich opportunities to model complex, real world situations. \vspace{12pt}
-
+The important thing is is that binary variables give us a lot of rich opportunities to model complex, real world situations. \
 Examples include assigning people to projects, go-no go decisions on projects, and much more.\
-\vspace{12pt}
 
 Let's explore the impact of binary restrictions with another example. The world famous semiconductor company, Outtel has a choice of five major R&D projects:
 
@@ -498,9 +466,7 @@ C)  Next generation process technology
 D)  New fabrication facility
 E)  New interconnect technology
 
-\vspace{12pt}
-
-The key data is described as follows. *NPV* is Net Present Value of the project factoring in costs. *Inv* is the capital expenditures or investment required for each project. The company has \$40 Billion in capital available to fund a portfolio of projects. Let's set up the data as matrices in R.
+The key data is described as follows. *NPV* is Net Present Value of the project factoring in costs. *Inv* is the capital expenditures or investment required for each project. The company has \$40 Billion in capital available to fund a portfolio of projects. Let's set up the data as matrices in R.\
 
 ```{r capital-budgeting-data}
 I <- matrix(c(12,24,20,8, 16), ncol=1, 
@@ -511,7 +477,7 @@ kbl (cbind(I,N), booktabs=T,
      caption="Data for the Outtel Example")
 ```
 
-These projects all carry their own expenses and engineering support. There are limits to both the capital investment and engineering resources available. To start, consider all of these project to be independent. \vspace{12pt}
+These projects all carry their own expenses and engineering support. There are limits to both the capital investment and engineering resources available. To start, consider all of these project to be independent.\
 
 ::: {.exercise name="Create and Solve Model"}
 Formulate and solve a basic, naive model that allows projects to repeated and partially completed. Implement and solve your model. (Hint: You don't need binary variables yet.) What is the optimal decision? Is this result surprising? Does this make sense in terms of the application?
@@ -547,7 +513,7 @@ Let's start with a truth table summarizing the interaction between projects (var
 +-------------+-------------+---------------------------------------------+
 | 1           | 0           | No                                          |
 +-------------+-------------+---------------------------------------------+
-| 1           | 1           | Yes                                         |
+| **1**       | **1**       | **Yes**                                         |
 +-------------+-------------+---------------------------------------------+
 
 Table: Relationships between Projects A, B, and the need for Chip Architects.
@@ -566,6 +532,7 @@ Instead of the constraint on chip architects, let's consider the situation of th
 
 ::: {.exercise name="Manufacturing"}
 Outtel knows that staying aggressive in manufacturing is important in this competitive industry but that it is too risky to do too much at once from manufacturing perspective. The result is that Outtel want to ensure that exactly one major manufacturing initiative (C or D) must be done. In other words, project C or project D must be done but not both.
+:::
 
 ::: {.exercise name="Solving Each Case"}
 Solve for the base case and then show the results of just each constraint at once. Combine the results into a single, well-formatted table. Discuss the results.
@@ -581,19 +548,9 @@ Fixed charge models are a special case of integer programming models where situa
 
 ### Fixed Charge Example-Introduction
 
-```{marginfigure}
-This example is based example from from Thanh Thuy Nguyen.
-```
-
-\vspace{12pt}
-
-In our example, we need to connect or *link* the two decision variables of how much to produce and whether to produce for each of the products.
-
-Let's explore an example of a fixed charge problem.\
-\vspace{12pt}
-
-Widget Inc. is re-evaluating their product production mix. As the plant manager, you are responsible for determining what products the company should manufacture. Since the company is leasing equipment, there are setup costs for each product. You need to determine the mix that will maximize profit for the company.\
-\vspace{12pt}
+In our example, we need to connect or *link* the two decision variables of how much to produce and whether to produce for each of the products.^[This example is based on an example from Thanh Thuy Nguyen.]\  
+  
+Let's explore an example of a fixed charge problem. Widget Inc. is re-evaluating their product production mix. As the plant manager, you are responsible for determining what products the company should manufacture. Since the company is leasing equipment, there are setup costs for each product. You need to determine the mix that will maximize profit for the company.\
 
 The profit for each Widget is shown below, as well as the setup costs (if you decide to produce any of that that Widget). The materials you have sourced allow you to only produce each Widget up to its capacity.
 
@@ -618,26 +575,25 @@ Table: Widget Production Requirements.
 
 In order to develop our optimization model, we determine the objective function (goal), decision variables (decisions) and constraints (limitations). \vspace{12pt}
 
-Objective Function:\
-Maximize profit \vspace{12pt}
+Objective Function:  Maximize profit \vspace{12pt}
 
 Decision Variables:
 
 -   $W_1$ = Number of Widget 1 to produce\
 -   $W_2$ = Number of Widget 2 to produce
 -   $W_3$ = Number of Widget 3 to produce\
--   $Y_1$ = 1 if you choose to produce Widget 1; $Y_1$ = 0 otherwise
--   $Y_2$ = 1 if you choose to produce Widget 2; $Y_2$ = 0 otherwise
--   $Y_3$ = 1 if you choose to produce Widget 3; $Y_3$ = 0 otherwise
+-   $Y_1$ = 1 if you choose to produce Widget 1; 0 otherwise
+-   $Y_2$ = 1 if you choose to produce Widget 2; 0 otherwise
+-   $Y_3$ = 1 if you choose to produce Widget 3; 0 otherwise
 
 Constraints:
 
-1)  Using no more than 1000 hours of Pre-process\
-2)  Using no more than 2000 hours of Machining\
-3)  Using no more than 1000 hours of Assembly\
-4)  Using no more than 1500 hours of Quality Assurance\
-5)  Producing no more than 500 of Widget 1\
-6)  Producing no more than 1000 of Widget 2\
+1)  Using no more than 1000 hours of Pre-process
+2)  Using no more than 2000 hours of Machining
+3)  Using no more than 1000 hours of Assembly
+4)  Using no more than 1500 hours of Quality Assurance
+5)  Producing no more than 500 of Widget 1
+6)  Producing no more than 1000 of Widget 2
 7)  Producing no more than 750 of Widget 3
 
 Our base model:
@@ -645,56 +601,51 @@ Our base model:
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max  }   & 15W_1+10W_2+25W_3 - 1000Y_1 - 1500Y_2 - 2000Y_3 \\
-    \text{subject to } & 2W_1+1W_2+3W_3 \leq 1000 \\
-                       & 1W_1+5W_2+2W_3 \leq 2000 \\
-                       & 2W_1+1W_2+1W_3 \leq 1000 \\
-                       & 3W_1+2W_2+1W_3 \leq 1500 \\
-                       & W_1 \leq 500 \\
-                       & W_2 \leq 1000 \\
-                       & W_3 \leq 750 \\
-                       & W_1, W_2, W_3 \geq 0 \\
-                       & Y_1, Y_2, Y_3 \in \{0,1\}  \\
+    \text{Max    } & 15W_1+10W_2+25W_3 - 1000Y_1 - 1500Y_2 - 2000Y_3 \\
+    \text{s.t.:  } & 2W_1+1W_2+3W_3 \leq 1000 \\
+                   & 1W_1+5W_2+2W_3 \leq 2000 \\
+                   & 2W_1+1W_2+1W_3 \leq 1000 \\
+                   & 3W_1+2W_2+1W_3 \leq 1500 \\
+                   & W_1 \leq 500 \\
+                   & W_2 \leq 1000 \\
+                   & W_3 \leq 750 \\
+                   & W_1, \; W_2, \; W_3 \geq 0 \\
+                   & Y_1, \; Y_2, \; Y_3 \; \in \{0,1\}  \\
   \end{aligned}
   \end{split}
   (\#eq:FixedChargeBase)
 $$
 
 Let's examine the results if we run this model.\
-\vspace{12pt}
 
 For Fixed Charge problems, we need to link our Widgets to our decision on whether or not we produce the Widget (and its associated setup costs). We do this what is called the "Big M" method.
 
 ```{r base_fixed_charge}
 fc_base_model <- MIPModel() |>
- add_variable(Vw1, type="integer", lb=0, ub=500) |> 
+ add_variable(Vw1, type="integer", lb=0, ub=500)  |> 
  add_variable(Vw2, type="integer", lb=0, ub=1000) |>
- add_variable(Vw3, type="integer", lb=0, ub=750) |>
- add_variable(Vy1, type="binary") |> 
+ add_variable(Vw3, type="integer", lb=0, ub=750)  |>
+ add_variable(Vy1, type="binary")                 |> 
     #Binary Decision for Widget 1
- add_variable(Vy2, type = "binary") |> 
+ add_variable(Vy2, type = "binary")               |> 
     #Binary Decision for Widget 2
- add_variable(Vy3, type = "binary") |> 
+ add_variable(Vy3, type = "binary")               |> 
     #Binary Decision for Widget 3
  
  set_objective(15*Vw1 + 10*Vw2 + 25*Vw3 
                - 1000*Vy1 - 1500*Vy2 - 2000*Vy3, 
-               "max") |>
- add_constraint(2*Vw1 + 1*Vw2 + 3*Vw3 <= 1000) |> 
-             # Pre-process availability 
- add_constraint(1*Vw1 + 5*Vw2 + 2*Vw3 <= 2000) |> 
-             # Machining  
- add_constraint(2*Vw1 + 1*Vw2 + 1*Vw3 <= 1000) |> 
-             # Assembly  
- add_constraint(3*Vw1 + 2*Vw2 + 1*Vw3 <= 1500)  
-             # Quality Assurance  
+               "max")                          |>
+ add_constraint(2*Vw1 + 1*Vw2 + 3*Vw3 <= 1000) |> # Pre-process 
+ add_constraint(1*Vw1 + 5*Vw2 + 2*Vw3 <= 2000) |> # Machining  
+ add_constraint(2*Vw1 + 1*Vw2 + 1*Vw3 <= 1000) |> # Assembly  
+ add_constraint(3*Vw1 + 2*Vw2 + 1*Vw3 <= 1500)    # Quality  
  
 fc_base_res <- solve_model(fc_base_model, 
                            with_ROI(solver = "glpk"))
 fc_base_res
 ```
 
-Let's now examine the results in more detail.
+Let's now examine the results in more detail.\
 
 ```{r reviewing-base-case-results}
 fc_base_summary <- 
@@ -709,31 +660,29 @@ kbl (fc_base_summary, booktabs=T, escape=F,
   kable_styling(latex_options = "hold_position")
 ```
 
-We are producing all three products since $w_1$, $w_2$, and $w_3$ are all positive but $y_1=y_2=y_3=0$. This is a nice, very high profit situation because we are not paying for the production setups. It may not be surprising that the optimization model chooses to avoid "paying" the fixed charge for production. This is a "penalty" in the objective function. What we need is a way of connecting the amount to produce of a widget and the decision to produce any of that widget. In reality, it would be necessary to pay the 4500 setup cost bring the total profit down to 3660. Perhaps a higher profit could be found if we could streamline our product offerings!
+We are producing all three products since $w_1$, $w_2$, and $w_3$ are all positive but $y_1=y_2=y_3=0$. This is a nice, very high profit situation because we are not paying for the production setups. It may not be surprising that the optimization model chooses to avoid "paying" the fixed charge for production. This is a "penalty" in the objective function. What we need is a way of connecting the amount to produce of a widget and the decision to produce any of that widget. In reality, it would be necessary to pay the 4500 setup cost bring the total profit down to 3660. Perhaps a higher profit could be found if we could streamline our product offerings!\
 
-\vspace{12pt}
-
-What we need is a way to connect, associate, or dare I say "link" the $w_1$ and $y_1$. In fact, this connection is called a *linking constraint* and is quite common in mixed integer programming problems.
+What we need is a way to connect, associate, or dare I say "link" the $w_1$ and $y_1$. In fact, this connection is called a *linking constraint* and is quite common in mixed integer programming problems.\
 
 Let's return to the idea of the truth table - let's focus on widget 1.
 
-+-------------------+----------------------------------+-------------------------------------------------------------------------------------+
-| Amount to produce | Decision to produce (do a setup) | Interpretation of situation                                                         |
-|                   |                                  |                                                                                     |
-| $w_1$             | $y_1$                            |                                                                                     |
-+===================+==================================+=====================================================================================+
-| 0                 | 0                                | OK - choosing to do nothing                                                         |
-+-------------------+----------------------------------+-------------------------------------------------------------------------------------+
-| 0                 | 1                                | OK - perhaps not a "smart" option but not impossible or unheard of                  |
-+-------------------+----------------------------------+-------------------------------------------------------------------------------------+
-| 1                 | 0                                | **impossible** - can't produce even a single sellable product without doing a setup |
-+-------------------+----------------------------------+-------------------------------------------------------------------------------------+
-| 1                 | 1                                | OK                                                                                  |
-+-------------------+----------------------------------+-------------------------------------------------------------------------------------+
-| 42                | 0                                | **impossible**                                                                      |
-+-------------------+----------------------------------+-------------------------------------------------------------------------------------+
-| 42                | 1                                | OK                                                                                  |
-+-------------------+----------------------------------+-------------------------------------------------------------------------------------+
++-------------------+--------------------------+-------------------------------------------------------------------------------------+
+| Amount to produce | Decision to produce      | Interpretation of situation                                                         |
+|                   |                          |                                                                                     |
+| $w_1$             | $y_1$                    |                                                                                     |
++===================+==========================+=====================================================================================+
+| 0                 | 0                        | OK - choosing to do nothing                                                         |
++-------------------+--------------------------+-------------------------------------------------------------------------------------+
+| 0                 | 1                        | OK - perhaps not a "smart" option but not impossible or unheard of                  |
++-------------------+--------------------------+-------------------------------------------------------------------------------------+
+| 1                 | 0                        | **impossible** - can't produce even a single sellable product without doing a setup |
++-------------------+--------------------------+-------------------------------------------------------------------------------------+
+| 1                 | 1                        | OK                                                                                  |
++-------------------+--------------------------+-------------------------------------------------------------------------------------+
+| 42                | 0                        | **impossible**                                                                      |
++-------------------+--------------------------+-------------------------------------------------------------------------------------+
+| 42                | 1                        | OK                                                                                  |
++-------------------+--------------------------+-------------------------------------------------------------------------------------+
 
 : Truth Table for Widget 1 Variables
 
@@ -743,20 +692,17 @@ To demonstrate the relationship between the decisions for widget 1, it is also h
 
 Lastly, I like to include a larger production volume to ensure that the constraint is properly enforcing this relationship. The picked value, , is just an arbitrary one and could be any other moderately large value.
 
-## Linking Constraints with "Big M"
+### Linking Constraints with "Big M"
 
 The linking constraint as the following: $w_1 \leq M \cdot y_1$ The value $M$ is a big value that is so large that it does not prematurely limit the production for widget 1. Whatever value of $M$ is used, $w_1$ can never exceed that value.\
-\vspace{12pt}
 
-Our linking constraints force our new values to be 0 or 1. If $w_1 > 0$, then this constraint forces the associated $y_1$ to be equal to 1. If $w_1 = 0$, then this constraint allows $y_1$ to be either 0 or 1. However, our objective function will cause Solver to avoid paying a setup by setting $y_1=0$. \vspace{12pt}
+Our linking constraints force our new values to be 0 or 1. If $w_1 > 0$, then this constraint forces the associated $y_1$ to be equal to 1. If $w_1 = 0$, then this constraint allows $y_1$ to be either 0 or 1. However, our objective function will cause Solver to avoid paying a setup by setting $y_1=0$.\
 
-It might be tempting to select a very large number such as a billion 10\^10 but picking excessively large numbers, can result in poor computational performance. As we've discussed large, real-world optimization problems are hard enough, let's not make it any harder. Albert Einstein once said "A model should be as simple as possible, but no simpler." Essentially, a value for M should be as small as possible, but no smaller.\
-\vspace{12pt}
+It might be tempting to select a very large number such as a billion $10^{10}$ but picking excessively large numbers, can result in poor computational performance. As we've discussed large, real-world optimization problems are hard enough, let's not make it any harder. Albert Einstein once said "A model should be as simple as possible, but no simpler." Essentially, a value for M should be as small as possible, but no smaller.\
 
 Since $M$ serves to impose an upper bound on $w_1$, this might suggest how we can use this information to pick an appropriate value for M and that we can do so for each product separately, using a separate value $M_i$ for each widget. \vspace{12pt}
 
 Let's examine the constraints for the production plan in the situation gives all resources to the production of Widget 1 and nothing to Widget 2 and Widget 3.\
-\vspace{12pt}
 
 More formally, using the non-negative lower bounds on widget production, we can set $w_2=w_3 = 0$ and substitute into the constraints of the optimization model. The constraints now look like the following:
 
@@ -825,25 +771,25 @@ $$w_3 \leq min \{ \frac{1000}{3}, \frac{2000}{2}, \frac{1000}{1}, \frac{1500}{1}
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max  }   & 15w_1+10w_2+25w_3 - 1000y_1 - 1500y_2 - 2000y_3 \\
-    \text{subject to } & 2w_1+1w_2+3w_3 \leq 1000 \\
-                       & 1w_1+5w_2+2w_3 \leq 2000 \\
-                       & 2w_1+1w_2+1w_3 \leq 1000 \\
-                       & 3w_1+2w_2+1w_3 \leq 1500 \\
-                       & w_1 \leq 500 \\
-                       & w_2 \leq 1000 \\
-                       & w_3 \leq 750 \\
-                       & w_1 - 500y_1 \leq 0 \\
-                       & w_2 - 400y_2 \leq 0 \\
-                       & w_3 - 334y_3 \leq 0 \\
-                       & w_1, w_2, w_3 \geq 0 \\
-                       & y_1, y_2, y_3 \in \{0,1\}  \\
+    \text{Max    } & 15w_1+10w_2+25w_3 - 1000y_1 - 1500y_2 - 2000y_3 \\
+    \text{s.t.:  } & 2w_1+1w_2+3w_3 \leq 1000 \\
+                   & 1w_1+5w_2+2w_3 \leq 2000 \\
+                   & 2w_1+1w_2+1w_3 \leq 1000 \\
+                   & 3w_1+2w_2+1w_3 \leq 1500 \\
+                   & w_1 \leq 500 \\
+                   & w_2 \leq 1000 \\
+                   & w_3 \leq 750 \\
+                   & w_1 - 500y_1 \leq 0 \\
+                   & w_2 - 400y_2 \leq 0 \\
+                   & w_3 - 334y_3 \leq 0 \\
+                   & w_1, w_2, w_3 \geq 0 \\
+                   & y_1, y_2, y_3 \in \{0,1\}  \\
   \end{aligned}
   \end{split}
   (\#eq:FC-BigM)
 $$
 
-## Fixed Charge Implementation
+### Fixed Charge Implementation
 
 Given that we have already created a model without the Big M constraints, we can simply add the constraints to the model. We'll skip the piping operator and just add
 
@@ -879,13 +825,12 @@ fc_combined_res <- rbind (fc_base_summary,
 rownames(fc_combined_res)<-c("Base Case w/o Setup", 
                              "Base Case with Setup", 
                              "Optimal Fixed Charge")
-kbl (fc_combined_res, booktabs=T,
+kbl (fc_combined_res, booktabs=T, escape=F,
      caption = "Fixed Charge Problem") |>
   kable_styling(latex_options = "hold_position")
 ```
 
 Notice that the the high setup costs have caused us to focus our production planning decisions. Rather than spreading ourselves across three different product lines, we are producing as many of widget 1 as we can.\
-\vspace{12pt}
 
 ## Model Results and Interpretation
 
@@ -931,20 +876,20 @@ fc_bigM_res.avail <- data.frame(
   c("1000","2000","1000","1500"))
                #print available hours for each step
 colnames(fc_bigM_res.avail) <- "Available"
-kbl (cbind(rbind(fc_bigM_res.r1,fc_bigM_res.r2,
-                 fc_bigM_res.r3,fc_bigM_res.r4),
-                 fc_bigM_res.tot,
-                 fc_bigM_res.avail),
+
+Res_Usage <- cbind(fc_bigM_res.tot, fc_bigM_res.avail)
+rownames(Res_Usage)<-c("Pre-process", "Machining",
+                       "Assembly", "Quality Assurance")
+kbl (cbind(Res_Usage),
      booktabs=T, caption = 
        "Manufacturing Resource Usage") |>
   kable_styling(latex_options = "hold_position")
 ```
 
-As can be seen, we used all of our Pre-processing hours, Assembly hours, and Quality Assurance hours. There is a significant amount of time available in Machining though. \vspace{12pt}
+As can be seen, we used all of our Pre-processing hours, Assembly hours, and Quality Assurance hours. There is a significant amount of time available in Machining though.\
 
-Further analysis could examine alternatives such as redesigning widget 2 and 3 to be less resource intensive in production to see at what point we would choose to produce them.
+Further analysis could examine alternatives such as redesigning widget 2 and 3 to be less resource intensive in production to see at what point we would choose to produce them.\
 
-\vspace{12pt}
 ::: {.exercise name="Redesign Widget 3"}
 The design team has an idea of how to use a previous manufacturing fixture which could eliminate the setup cost for Widget 3. How much would you produce of Widget 3 if there were no setup (fixed) cost for production of Widget 3? Of course this still keeps a cost for Widgets 1 and 2. Experiment with the above model to find the lowest setup cost for Widget 3 where you still choose to not produce any of Widget 3.
 :::

@@ -191,7 +191,7 @@ Let's continue experimenting with operators. \vspace{12pt}
 ```{r Scalar-Multiplication}
 c<-a*b
 kbl(c, booktabs=T,
-    caption= "Scalar Multiplication of Matrix b") |>
+    caption= "Scalar Multiplication of Matrix b to Make Matrix c") |>
   kable_styling(latex_options = "hold_position")
 ```
 
@@ -259,17 +259,6 @@ kbl (temp3, booktabs=T,
   kable_styling(latex_options = "hold_position")
 ```
 
-
-A table made up of just one element is even less profound but is again useful. Now, let's show how we can combine two objects.\
-Recall tables *b* and *c* from earlier.
-
-```{r Show-both-Matrices, echo=FALSE}
-kbl (b, caption="Matrix b") |>
-  kable_styling(latex_options = "hold_position")
-kbl (c, caption="Matrix c") |>
-  kable_styling(latex_options = "hold_position")
-```
-
 Let's take the first row of `b` and combine it with the second row of `c` to form a new matrix, `e`. Since these are rows that are going to be combined, we will use a command, `rbind`, to bind these rows together.
 
 ```{r Combined-Matrix}
@@ -321,14 +310,14 @@ Assume that your company's product has a demand of 10 widgets on Monday, increas
 :::
 
 ::: {.exercise name="Creating a Matrix of Monthly Demand"}
-Considering top selling online products for year 2021: Toys, Shoes, Pens and pencils, Decorative bottles, Drills, Cutters, GPS navigation systems. Create your own assumed starting counts per item for throughout year by increasing each item sales by 50 units per month, starting from January till December.
+Consider some top selling online products for the year 2021: toys, shoes, pens and pencils, decorative bottles, drills, cutters, and GPS navigation systems. Create your own assumed starting counts per item for throughout year by increasing each item sales by 50 units per month, starting from January till December.
 :::
 
 ::: {.exercise name="Displaying Selective Data from the Matrix"}
-In the above matrix, grab the columns and rows to show the data only for Pens and Pencils during the months of June, August and October.
+In the above matrix, grab the columns and rows to show the data only for pens and pencils during the months of June, August and October.
 :::
 
 ::: {.exercise name="Creating Separate Demands for Products"}
-In the above matrix, demand for toys and shoes has been increased by 20 and 10 units respectively. Create a matrix for only these products for first 6 months. Display the matrix twice once without formatting and a second time using package better table formatting (`pander`, `kable` via `knitr`, or other formatting table method.)
+In the above matrix, demand for toys and shoes has been increased by 20 and 10 units respectively. Create a matrix for only these products for the first 6 months. Display the matrix twice--once without formatting and a second time using an R package that provides better table formatting (`pander`, `kable` via `knitr`, `huxtable` or similar tool. Be sure to provide a table caption.)
 :::
 
