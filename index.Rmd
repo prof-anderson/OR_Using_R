@@ -55,7 +55,7 @@ I would like to thank many people for their contributions, collaborations, and a
 -   **Dr. Chester Ismay,** contributions to the Portland and broader R community
 -   **Dr. Jili Hu,** rich interactions during his sabbatical in Portland
 -   **Tom Shott,** primary author of the `TFDEA` package
--   **Dr. Nina Chaichij,** many suggestions over the years
+-   **Dr. Nina Chaichi,** many suggestions over the years
 -   **Aurobindh Kalathil Kumar,** PhD student, many suggestions over time
 -   **Kevin van Blommestein,** earlier DEA & R work
 -   **William (Ike) Eisenhauer,** LaTeX formulation improvements
@@ -69,7 +69,7 @@ I would like to thank many people for their contributions, collaborations, and a
 -   **Jose Banos,** contributor of more formatting in the spirit of Tufte
 -   **Jon Syverson,** frequent and thoughtful feedback on early drafts
 -   **Dawei Zhang,** further editorial work on the book
--   **Navdeep Singh,** assistance with bookdown
+-   **Navdeep Singh,** assistance with formatting and additional exercises
 
 In addition, several groups have been of tremendous help:
 
@@ -81,6 +81,5 @@ Most of all, I would like to also express my appreciation for my family's patien
 
 This version of the book was built with files from <https://github.com/prof-anderson/OR_Using_R>. \vspace{12pt}
 
-> `r tufte::quote_footer('Tim Anderson')`
-
+> Tim Anderson
 > `r tufte::quote_footer(Sys.Date())`
