@@ -76,7 +76,7 @@ kbl (inc_as_res, digits=6, booktabs=T,
 
 In this case, the fractional value of *Cats* would be only somewhat concerning. We wouldn't actually ship an 80% complete Cat drone to a customer-at least I hope not. The difference between 374 and 375 is relatively small over a month of production. This is a difference of much less than 1% and none of the numbers specified in the model appear to be reported to more than two significant digits or this level of precision. The result is that we could specify the answer as 374.8 and be satisfied that while it is our actual best guess or might reflect a chair half finished for the next month, it isn't a major concern. \vspace{12pt}
 
-For the sake of illustration, let's show how we would modify the model to be integers. If we had wanted to modify the problem to force the amount of each item to be produced to be an integer value, we can modify our formulation and the implementation with only a few small changes. \vspace{12pt}
+For the sake of illustration, let's show how we would modify the model to be integers. If we had wanted to modify the problem to force the amount of each item to be produced to be an integer value, we can modify our formulation and the implementation with only a few small changes. \
 
 In the formulation, we can replace the non-negativity requirement with a restriction that the variables are drawn from the set of non-negative integers.
 
@@ -94,7 +94,6 @@ $$
 $$
 
 The `ompr` implementation has a similar, straightforward change. In the declaration of variables (`add_variable` function), we simply set the type to be `integer` rather than `continuous`. Since nothing else is changing in the model, we can simply re-add the variables to redefine them from being continuous to be integer.\
-\vspace{12pt}
 
 ```{r IncAssemHrs_ch6}
 model1 <- add_variable(model1, Ants, 
@@ -125,13 +124,13 @@ rownames(temp1)<-c("Continuous", "Integer")
 
 ```
 
-```{r, fig.margin=TRUE}
+```{r}
 kbl (temp1, booktabs=T, 
      caption="Production plans based on variable type.") |>
   kable_styling(latex_options = "hold_position")
 ```
 
-Notice that in this case, there was a small adjustment to the production plan and a small decrease to the optimal objective function value. This is not always the case, sometimes the result can be unchanged. In other cases, it may be changed in a very large way. In still others, the problem may in fact even become infeasible. \vspace{12pt}
+Notice that in this case, there was a small adjustment to the production plan and a small decrease to the optimal objective function value. This is not always the case, sometimes the result can be unchanged. In other cases, it may be changed in a very large way. In still others, the problem may in fact even become infeasible. \
 
 ## Example of Major Integality Impact
 
@@ -211,18 +210,17 @@ Simply rounding down did not yield an optimal solution. Notice that production o
 
 ## The Branch and Bound Algorithm
 
-The simplicity of making the change in the model from continuous to integer variables hides or understates the complexity of what needs to be done to computationally to solve the optimization problem. This small change can have major impacts on the computational effort needed to solve a problem. Solving linear programs with tens of thousands of continuous variables is very quick and easy computationally. Changing those same variables to general integers can make it *very* difficult. Why is this the case? \vspace{12pt}
+The simplicity of making the change in the model from continuous to integer variables hides or understates the complexity of what needs to be done to computationally to solve the optimization problem. This small change can have major impacts on the computational effort needed to solve a problem. Solving linear programs with tens of thousands of continuous variables is very quick and easy computationally. Changing those same variables to general integers can make it *very* difficult. Why is this the case? \
 
 At its core, the basic problem is that the simplex method and linear programming solves a system of equations and unknowns (or variables). It is trivial to solve one equation with one unknown such as $5x=7$. It is only slightly harder to solve a system of two equations and two unknowns. Doing three equations and three unknowns requires some careful algebra but is not too hard. In general, solving *n* equations and *n* unknowns is readily solvable. On the other hand, none of this algebraic work of solving for unknown variables can require that the variables take on integer values. Even with only one equation and one unknown, *x* will only be integer for certain combinations of numbers in the above equation. Specifically when the number on the right is a multiple of the number in front of *x*. It gets even less likely to have an all integer solution as the number of equations and unknowns increase.\
 
-Another way to visualize integer solutions for general systems of inequalities is to think of the two equation and two unknown (*x* and *y*) case. Finding a solution is the same as finding where two lines intersect in two dimensional space. The odds of getting lucky and having the two lines intersect at an integer solution is small. Even if we limit ourselves to x and y both being between 0 and 10, this means that there are $11^2=121$ possible integer valued points in this space such as (0,0), (0,3), and (10,10). In contrast, the set of all points, including non-integers, in this region includes all of the above points as well as (0,0.347) and (4.712, 7.891) among infinitely more. The result is that if you think of this as a target shooting, the probability of finding an integer solution by blind luck is $\frac{121}{\infty}\approx 0$. \vspace{12pt}
+Another way to visualize integer solutions for general systems of inequalities is to think of the two equation and two unknown (*x* and *y*) case. Finding a solution is the same as finding where two lines intersect in two dimensional space. The odds of getting lucky and having the two lines intersect at an integer solution is small. Even if we limit ourselves to x and y both being between 0 and 10, this means that there are $11^2=121$ possible integer valued points in this space such as (0,0), (0,3), and (10,10). In contrast, the set of all points, including non-integers, in this region includes all of the above points as well as (0,0.347) and (4.712, 7.891) among infinitely more. The result is that if you think of this as a target shooting, the probability of finding an integer solution by blind luck is $\frac{121}{\infty}\approx 0$. \
 
 What we need to do is an algorithm around the simplex method to accomplish this. A basic and common and approach often used for solving integer variable linear programming problems is called branch and bound. We start with a solution that has presumably continuous valued variables. We then branch (create subproblems) off of this result and add bounds (additional constraints) to rule out the fractional value of that variable.\
-\vspace{12pt}
 
 ### The LP Relaxation
 
-To solve this using branch and bound, we *relax* the integrality requirements and solve what is called the LP Relaxation. To do this, we simply remove the integrality requirement. \vspace{12pt}
+To solve this using branch and bound, we *relax* the integrality requirements and solve what is called the LP Relaxation. To do this, we simply remove the integrality requirement. \
 
 $$
  \begin{split}
@@ -236,7 +234,7 @@ $$
   (\#eq:LPRelaxation)
 $$
 
-This is a problem that we **can** solve using linear programming so let's go ahead do it! Well, we already did so let's just review the results for what is now called the LP Relaxation because we are *relaxing* the integrality requirements. \vspace{12pt}
+This is a problem that we **can** solve using linear programming so let's go ahead do it! Well, we already did so let's just review the results for what is now called the LP Relaxation because we are *relaxing* the integrality requirements. \
 
 ```{r SolveLPRelaxation}
 kbl (acme_res_lp, booktabs=T, 
@@ -249,11 +247,9 @@ knitr::include_graphics("images/Fig06-3-LP-Relaxation.PNG")
 
 ```
 
-\vspace{12pt}
-
 ### Subproblem I
 
-Alas, this production plan from the LP Relaxation is not feasible from the perspective of the original integer problem because it produces *2.769* of product 1 and *1.827* of product 2. If both of these variables had been integer we could have declared victory and been satisfied that we had easily (*luckily?*) found the optimal solution to the original integer programming problem so quickly. \vspace{12pt}
+Alas, this production plan from the LP Relaxation is not feasible from the perspective of the original integer problem because it produces *2.769* of product 1 and *1.827* of product 2. If both of these variables had been integer we could have declared victory and been satisfied that we had easily (*luckily?*) found the optimal solution to the original integer programming problem so quickly. \
 
 Instead, we will need to proceed with the branch and bound process. Since both of the variables in the LP relaxation have fractional values, we need to start by choosing which variable to use for branching first. Algorithmic researchers would focus on how to best pick a branch but for our purposes to improve solution speed but it doesn't really matter for illustration so let's arbitrarily choose to branch on $x_1$.\
 
@@ -331,7 +327,6 @@ knitr::include_graphics("images/Fig06-5-Subproblem-III-and-II.PNG")
 ```
 
 This results in integer values for both $x_1$ and $x_2$ so it is feasible with respect to integrality in addition to the production constraints. It does generate less profit than the LP relaxation. While it is feasible, it doesn't prove that it is optimal though. We need to explore the other potential branches.\
-\vspace{12pt}
 
 ### Subproblem IV
 
@@ -370,9 +365,7 @@ The returned status value of this solved LP indicates that this tell us that sub
 knitr::include_graphics("images/Fig06-5a-In-line-Code-Chunk.PNG")
 ```
 
-\vspace{12pt}
-
-*Subproblem II* \vspace{12pt}
+### Subproblem II
 
 Now, we have searched down all branches or subproblems except for subproblem II. Let's go back and do that problem. We do that by simply adding one new bound to the LP Relaxation. That is $x_1\ge 3.0$.
 
@@ -394,7 +387,6 @@ kbl (LPSubII_res, booktabs=T,
 ```
 
 At this point, our first reaction may be to breathe deeply and do the same branch and bound off of $x_2$. On the other hand, if we step back and take note that the objective function value is 9.75, while optimal for this subproblem, it is less than what we found from a feasible, fully integer-valued solution to subproblem III. Given that adding constraints can't improve an objective function value, we can cleverly trim all branches below subproblem II.\
-\vspace{12pt}
 
 Given that we now no longer have any branches to explore, we can declare that we have found the optimal solution. The optimal solution can now be definitively stated to be what we found from Subproblem III.
 
@@ -449,7 +441,6 @@ In practice, even small suboptimality tolerance factors like 1% can allow big pr
 Note that our Acme example only specified two digits of accuracy for resource usage and may have only one digit of accuracy for profitability per product.\ 
 
 Note that in our earlier example, if we had a wide enough suboptimality tolerance, say 30% and followed the branch for $x_1\ge3.0$ first rather than $x_1\le2.0$, we might have terminated with a suboptimal solution.\
-\vspace{12pt}
 
 ## Binary Variables and Logical Relations
 
@@ -492,15 +483,13 @@ Now, let's explore one aspect of moving towards binary variables. What constrain
 What change is needed to prevent partial funding of projects. How does this solution compare to that of above? Can you envision a situation where it might make sense to have partially funded projects? Could this be similar to corporate joint ventures where investments and benefits are shared across multiple entities?
 :::
 
-Now that you have binary constraints, let's explore the impact of logical restrictions with a series of separate scenarios. In each of these cases, make sure that you implement the relationship as a linear relationship. This means that you cannot use a function such as an "If-then", "OR", "Exclusive OR", or other relationship. Furthermore, you can't multiply variables together or divide variables into variables.
+Now that you have binary constraints, let's explore the impact of logical restrictions with a series of separate scenarios. In each of these cases, make sure that you implement the relationship as a linear relationship. This means that you cannot use a function such as an "If-then", "OR", "Exclusive OR", or other relationship. Furthermore, you can't multiply variables together or divide variables into variables.\
 
-\vspace{12pt}
+Let's assume that projects A and B require the focused effort of Outtel's top chip architects and Outtel has decided therefore that it is not possible to do both projects. \
 
-Let's assume that projects A and B require the focused effort of Outtel's top chip architects and Outtel has decided therefore that it is not possible to do both projects. \vspace{12pt}
+Therefore, they want to ensure that at most one of the two projects can be pursued. What needs to be added to enforce this situation? \
 
-Therefore, they want to ensure that at most one of the two projects can be pursued. What needs to be added to enforce this situation?\vspace{12pt}
-
-Let's start with a truth table summarizing the interaction between projects (variable values) and the "Top Chip Architects" relationship.\vspace{12pt}
+Let's start with a truth table summarizing the interaction between projects (variable values) and the "Top Chip Architects" relationship. \
 
 +-------------+-------------+---------------------------------------------+
 | Project A   | Project B   | Violates "Top Chip Architects" Relationship |
@@ -518,13 +507,11 @@ Let's start with a truth table summarizing the interaction between projects (var
 
 Table: Relationships between Projects A, B, and the need for Chip Architects.
 
-\vspace{12pt}
+Now we need to create a constraint that blocks the situations that violate the relationship ($y_A=y_B=1$ ) but allows the other situations to be unblocked. Recall that you want to have a linear constraint or constraints that would be added to the model. In this case, we can use $y_A+y_B\leq1$. It is a good exercise to check this relationship against the truth table. \
 
-Now we need to create a constraint that blocks the situations that violate the relationship ($y_A=y_B=1$ ) but allows the other situations to be unblocked. Recall that you want to have a linear constraint or constraints that would be added to the model. In this case, we can use $y_A+y_B\leq1$. It is a good exercise to check this relationship against the truth table. \vspace{12pt}
+Note that we cannot use $y_{A}\cdot y_{B}=0$ because it is a nonlinear constraint when we multiply two variables together. Sometimes trial and error is needed to verify that a constraint enforces the needed situation. In these case, it can be helpful to draw up a truth table with values for the associated variables and see whether the satisfies the requirement. \
 
-Note that we cannot use $y_{A}\cdot y_{B}=0$ because it is a nonlinear constraint when we multiply two variables together. Sometimes trial and error is needed to verify that a constraint enforces the needed situation. In these case, it can be helpful to draw up a truth table with values for the associated variables and see whether the satisfies the requirement. \vspace{12pt}
-
-In each of the following sections create a linear relationship that models this situation.\vspace{12pt}
+In each of the following sections create a linear relationship that models this situation.\
 
 ::: {.exercise name="Interconnects Need Something to Connect"}
 Instead of the constraint on chip architects, let's consider the situation of the interconnect technology. Assume that project E on interconnect technology would only provide strong benefit if a new architecture is also developed. In other words, E can only be done if A or B is done. Note that if both A and B are done, E will certainly have a use!
@@ -544,7 +531,7 @@ When projects can be neither partially funded nor repeated, how many candidate s
 
 ## Fixed Charge Models
 
-Fixed charge models are a special case of integer programming models where situations where product cost has a fixed cost component and a marginal (per unit) cost component. A common example of this is when a machine must be setup before any production can occur. \vspace{12pt}
+Fixed charge models are a special case of integer programming models where situations where product cost has a fixed cost component and a marginal (per unit) cost component. A common example of this is when a machine must be setup before any production can occur. \
 
 ### Fixed Charge Example-Introduction
 
@@ -573,11 +560,11 @@ To produce each Widget, the hours required at each step of the manufacturing pro
 
 Table: Widget Production Requirements.
 
-In order to develop our optimization model, we determine the objective function (goal), decision variables (decisions) and constraints (limitations). \vspace{12pt}
+In order to develop our optimization model, we determine the objective function (goal), decision variables (decisions) and constraints (limitations). \
 
-Objective Function:  Maximize profit \vspace{12pt}
+**Objective Function:**  Maximize profit \
 
-Decision Variables:
+**Decision Variables:**
 
 -   $W_1$ = Number of Widget 1 to produce\
 -   $W_2$ = Number of Widget 2 to produce
@@ -586,7 +573,7 @@ Decision Variables:
 -   $Y_2$ = 1 if you choose to produce Widget 2; 0 otherwise
 -   $Y_3$ = 1 if you choose to produce Widget 3; 0 otherwise
 
-Constraints:
+**Constraints:**
 
 1)  Using no more than 1000 hours of Pre-process
 2)  Using no more than 2000 hours of Machining
@@ -618,7 +605,7 @@ $$
 
 Let's examine the results if we run this model.\
 
-For Fixed Charge problems, we need to link our Widgets to our decision on whether or not we produce the Widget (and its associated setup costs). We do this what is called the "Big M" method.
+For Fixed Charge problems, we need to link our Widgets to our decision on whether or not we produce the Widget (and its associated setup costs). We do this what is called the "Big M" method.\
 
 ```{r base_fixed_charge}
 fc_base_model <- MIPModel() |>
@@ -700,7 +687,7 @@ Our linking constraints force our new values to be 0 or 1. If $w_1 > 0$, then th
 
 It might be tempting to select a very large number such as a billion $10^{10}$ but picking excessively large numbers, can result in poor computational performance. As we've discussed large, real-world optimization problems are hard enough, let's not make it any harder. Albert Einstein once said "A model should be as simple as possible, but no simpler." Essentially, a value for M should be as small as possible, but no smaller.\
 
-Since $M$ serves to impose an upper bound on $w_1$, this might suggest how we can use this information to pick an appropriate value for M and that we can do so for each product separately, using a separate value $M_i$ for each widget. \vspace{12pt}
+Since $M$ serves to impose an upper bound on $w_1$, this might suggest how we can use this information to pick an appropriate value for M and that we can do so for each product separately, using a separate value $M_i$ for each widget. \
 
 Let's examine the constraints for the production plan in the situation gives all resources to the production of Widget 1 and nothing to Widget 2 and Widget 3.\
 
@@ -721,7 +708,7 @@ $$
   (\#eq:FixedChargeW1Only1)
 $$
 
-This can be further simplified as the following.
+This can be further simplified as the following.\
 
 $$
  \begin{split}
@@ -751,14 +738,13 @@ $$
   (\#eq:FixedChargeW1Only3)
 $$
 
-Since all constraints need to be satisfied, we can represent this to mean that Widget 1 manufacturing could never be higher than the smallest (most restrictive) of these constraints.
+Since all constraints need to be satisfied, we can represent this to mean that Widget 1 manufacturing could never be higher than the smallest (most restrictive) of these constraints.\
 
 Therefore, $$w_1 \leq min \{ \frac{1000}{2}, \frac{2000}{1}, \frac{1000}{2}, \frac{1500}{3}, 500 \}$$
 
 or $$w_1 \leq min \{ 500, 2000, 500, 500, 500 \} = 500$$ Therefore, we know that Widget 1 production can never exceed 500 units regardless of the amount of other Widgets ($w_2$ and $w_3$) produced. We can then safely set the Big M value for Widget 1 to be 500. In other words, $M_1=500$.\
-\vspace{12pt}
 
-We can follow the same process for setting Big M values for widget 2. We start by setting $w_1=w_3 = 0$. We know that $w_2$ must be no larger than the most restrict constraint. I'll skip rewriting the constraints and jump a little ahead.
+We can follow the same process for setting Big M values for widget 2. We start by setting $w_1=w_3 = 0$. We know that $w_2$ must be no larger than the most restrict constraint. I'll skip rewriting the constraints and jump a little ahead.\
 
 $$W_2 \leq min \{ \frac{1000}{1}, \frac{2000}{5}, \frac{1000}{1}, \frac{1500}{2}, 1000 \}=400$$
 
@@ -791,7 +777,7 @@ $$
 
 ### Fixed Charge Implementation
 
-Given that we have already created a model without the Big M constraints, we can simply add the constraints to the model. We'll skip the piping operator and just add
+Given that we have already created a model without the Big M constraints, we can simply add the constraints to the model. We'll skip the piping operator and just add the constraint directly to the previous model, `fc_base_model`.\
 
 ```{r fixedcharge}
 fc_bigM_model <- add_constraint(fc_base_model, 
@@ -807,10 +793,10 @@ fc_bigM_res <- solve_model(fc_bigM_model,
 fc_bigM_res
 ```
 
-Our model was able to find an `r {fc_bigM_res$status}` solution with an objective value of `r {fc_bigM_res$objective_value}`. Our optimal production plan is shown below. As we can see, our model returned a production plan with only one model of widget being produced. \vspace{12pt}
+Our model was able to find an `r {fc_bigM_res$status}` solution with an objective value of `r {fc_bigM_res$objective_value}`. Our optimal production plan is shown below. As we can see, our model returned a production plan with only one model of widget being produced. \
 
 Interesting---the objective function value has gone down significantly.\
-Let's look this over in more detail and compare it to the results that we had when we avoided paying for setups. \vspace{12pt}
+Let's look this over in more detail and compare it to the results that we had when we avoided paying for setups. \
 
 ```{r reviewing-bigM-case-results}
 fc_base_summary_rev <- fc_base_summary
@@ -834,7 +820,7 @@ Notice that the the high setup costs have caused us to focus our production plan
 
 ## Model Results and Interpretation
 
-We can also calculate our resource usage. \vspace{12pt}
+We can also calculate our resource usage. \
 
 ```{r fixed-charge-usage}
 fc_bigM_res.W1 <- get_solution(fc_bigM_res, Vw1) 

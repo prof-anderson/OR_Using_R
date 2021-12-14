@@ -4,15 +4,15 @@ author: "Timothy R. Anderson"
 date: "`r Sys.Date()`"
 documentclass: krantz
 bibliography: [book.bib, bib-my-library.bib, Master4Bookdowns.bib]
+site: bookdown::bookdown_site
 biblio-style: apalike
 link-citations: yes
 colorlinks: yes
 lot: yes
 lof: yes
-site: bookdown::bookdown_site
 description: "This book introduces optimization using R."
 github-repo: prof-anderson/OR_Using_R
-suppress-bibliography: yes
+#suppress-bibliography: yes
 graphics: yes
 highlight: tango
 #highlight: monochrome
@@ -29,7 +29,7 @@ Pedagogically, since the late 1990s, I had been a proponent of teaching introduc
 -   Working technology and business professionals should have an awareness of the tools and language of data analysis to deal with consultants, data scientists, and others.
 -   New software and extensions reduced the barrier to entry for people to start using data analytics tools.
 
-This book has been used multiple times for a ten week graduate course on operations research emphasizing optimization. It can be used for graduate and undergraduate courses for people without a background in optimization and varying levels of mathematical backgrounds. The focus is on applications (formulating, implementing, and interpreting rather than algorithms. The book could be used as a supplement in a more theoretical or algorithm-oriented class. Key principles in the development of the book include the following:
+This book has been used multiple times for a ten week graduate course on operations research \index{Operations research} emphasizing optimization \index{Optimization}. It can be used for graduate and undergraduate courses for people without a background in optimization and varying levels of mathematical backgrounds. The focus is on applications (formulating, implementing, and interpreting rather than algorithms. The book could be used as a supplement in a more theoretical or algorithm-oriented class. Key principles in the development of the book include the following:
 
 -   An assumption the reader is willing to use R and getting their hands dirty with experimenting.
 -   Providing and explaining code, sometimes repeated in different places so that examples are relatively clear and self-contained.
@@ -37,7 +37,7 @@ This book has been used multiple times for a ten week graduate course on operati
 -   An emphasis on application rather than algorithmic details.
 -   Embodying the philosophy of reproducible research - the book is regularly rebuilt with all analyses automatically rerun and most tables and figures rebuilt.
 -   Contributing to the open source community - all materials are available on the author's github repository.
--   Demonstrating common debugging practices with a troubleshooting emphasis specific to optimization using R.\
+-   Demonstrating common debugging practices with a troubleshooting emphasis specific to optimization using R.
 -   Providing code chunks liberally that readers can adopt and adapt to their own applications.
 
 \vspace{12pt}
@@ -50,7 +50,7 @@ I would like to thank many people for their contributions, collaborations, and a
 -   **Dr. Janice Forrester,** application of DEA to the energy industry
 -   **Dr. Scott Leavengood,** application of DEA to wood products
 -   **Dr. Oliver (Lane) Inman,** early work on TFDEA
--   **Dr. Maoloud Dabab,** , many suggestions over time
+-   **Dr. Maoloud Dabab,** many suggestions over time
 -   **Dr. K. Louis Luangkesorn,** author of the first vignette on using `glpk` in R
 -   **Dr. Chester Ismay,** contributions to the Portland and broader R community
 -   **Dr. Jili Hu,** rich interactions during his sabbatical in Portland

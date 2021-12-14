@@ -1,0 +1,81 @@
+---
+title: "General Advice for R, ompr, and 540"
+author: "Tim Anderson"
+date: "12/12/2021"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Advice on Homeworks
+
+-   You can talk with classmates or colleagues but your markdown should be your own.
+-   The D2L Learning Management System has had issues with uploading HTML files. Instead use PDFs. Upload both the Rmd and PDF versions of your file.
+-   Include your name as the author.
+-   Explain your model or modifications and interpret the results. I explicitly had a subsection for each formulation, implementation, and results/interpretation. Frequently people try to mix all three together and this makes it very hard to help or debug. Also, formulations should be understood before moving into implementation.
+-   If the solution does not make sense, acknowledge and explain.
+-   Always show your LP. It is best to show it algebraically as the problems get bigger. This will also pay off for most projects where the models become larger.
+-   Discussion of results does not need to be long but this can be an interesting part of any paper.
+
+## Comments Specific to R
+
+-   Using the LaTeX equations and rendering it in rmarkdown is helpful. Getting the first one written is sometimes tricky but then it is just a matter of cut and paste.
+-   Installing LaTeX allows knitting to PDF which may be good for readability and turning in but please be sure to also turn in the .rmd file. R now has a package, `tinytex`, which makes it easier to install just what is needed for R, RStudio, and markdown to operate.
+-   The R markdown documents (\*.rmd files) may cause problems with the previews in the D2L learning management system.
+-   Using RMarkdown documents allows you to mix both analysis and interpretation cleanly.
+-   Look over this .rmd file for information and try knitting it to HTML and PDF on your computer. If you have everything installed correctly, it should work fine including the mathematical notation. If it doesn't work, you may need to do a little extra free software installation.
+
+In particular, you might want to look over this document with respect to:
+
+-   How to embed a linear programming formulation
+-   How to denote proper subscripts in text. Ex. a dollarsign-x-underscore-i-dollarsign becomes $x_i$
+-   Double subscripts such as $R_{i,j}$ would be done by replacing the i with i,j surrounded by curly brackets
+-   Summations are a little tricky in both creating equations and the *ompr* model. For the former, you can just emulate my material to learn enough LaTeX to make it work. For the latter, look at Dirk's online documentation for *ompr* or chapter 2 of my book, *DEA Using R.*
+
+## Miscellaneous Tips and Tricks
+
+At this point, you are able to build your own optimization model. Here are a collection of tips and tricks that have confounded past students.
+
+## `ompr` Related Tips and Tricks
+
+-   `ompr` will complain if you use the same variable name for a data object in R and in `ompr`. For example, if you have variables *x* and y in a formulation, then build an `ompr` model with `x` and `y` variables. You might then assign the results to `x` and `y` objects in R, and run it again. You will then get a notification of a name space conflict from `ompr`. One work around is to prefix the `ompr` variables with a V to indicate variable thereby u===sing `Vx` and `Vy` in `ompr` for is assigned to x and y in r.
+-   Typos can happen easily in piped models being built but are not typically localized. Try commenting in and out lines until the problem goes away. This will help to identify where the problem is.
+-   Check for `ompr` updates. It is under active development. You may find versions on the author's github repository that are not yet available through CRAN.
+-   The author of `ompr` is testing a much faster form of model building with a different syntax using `MILPmodel` rather than "MIPmodel". If you are running into delays building an `ompr` model but not solving the problem, this may be worth investigating.
+
+## RMD Tips and Tricks
+
+RMarkdown is very helpful for integrating analysis and results but the code can also be brittle. Knitting this full book can be stopped by one small error.
+
+-   Make sure to get your header information correct. Small typos can cause problems preventing knitting from occurring.
+-   Name your code chunks uniquely. Not naming code chunks can make it harder to find errors or to navigate complex documents. Once you start naming code chunks though and copying code chunks for building more complex models, you run into duplicate code chunk problems. Each name must be unique.
+-   Use code chunk options smartly. Look over the list of common options such as `eval` and `echo` which are particularly helpful and used a lot in this book.
+-   Remember to put a blank line before a bulleted or numbered list.
+-   Putting two blank spaces at the end of a paragraph will give a little more spacing between paragraphs.
+-   Sometimes running all chunks will make more visible where a problem is than when an RMD is knitted.
+-   Look over the generated PDF for issues like misrendered section headings or bullet lists.
+-   In a bookdown project with multiple RMDs such as this book, it is much quicker to render just a chapter. This can be done by doing a command like this: `library(rmarkdown); rmarkdown::render("02-A_First_LP.Rmd", "pdf_book")`
+
+## RStudio Tips and Tricks
+
+-   RStudio.cloud can be a very helpful service sometimes it can help be a test to see if a problem is with a personal software installation. Some things will `knit` on RStudio.cloud that do not knit on local computer.
+-   Installing LaTeX before RStudio resolves some problems with knitting. If you have problems with knitting documents to PDF, even the simple "New RMarkdown" document. Try uninstalling RStudio, install a LaTeX system (ex. MikTeX) if one is not already installed, and reinstalling RStudio.
+-   Use the RStudio cheat sheets!
+
+## General R Tips and Tricks
+
+-   If you are getting an error message read it carefully. You may also be able to google generic parts that do not reference your own R code to get clues.
+-   R is case sensitive. Be careful in watching for typos regarding case. A student spent many hours trying to find why a document was no longer knitting before discovering that `echo=FALSE` in one code chunk was typed in as `echo=False`.
+-   Many problems might be due to R data objects now having the data as you think it is. Displaying the data or a part using the `head()` or `tail()` functions can be helpful for debugging.
+
+## LaTeX Tips and Tricks
+
+-   Find good, working LaTeX formulations and then reuse and change it to fit the situation.
+-   Using inline LaTeX is helpful and easy.
+
+## General Tips and Tricks
+
+-   After spending *too much* time stuck on a problem, get up walk away, and look at it with a fresh set of eyes later.
+-   Join an R User's Group.
+-   When you learn something new or interesting for R or related items, write it down in a Tips and Tricks section.

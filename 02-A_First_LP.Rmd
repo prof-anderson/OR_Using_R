@@ -14,6 +14,7 @@ knitr::opts_chunk$set(width = 30)
 ```
 
 ## What is Linear Programming
+
 Linear programming is a tool for optimization. It is a widely used tool for planning, scheduling, resource allocation and many other applications.
 
 ## Two Variable Base Case
@@ -21,8 +22,6 @@ Linear programming is a tool for optimization. It is a widely used tool for plan
 We will use a recurring example throughout the next couple of chapters of being a small specialty drone manufacturer making animal inspired exploring robots. These robots can be used in search and rescue operations or other functions where a wheeled vehicle may not suffice. Each of the products is named after an animal that describes its general design and function. The first two types of robots are named the Ant and the Bat. The Ant is a small but precise drone while the Bat is a flying drone. 
 
 The goal is to make the most profitable mix of robots. 
-
-\[@hillier2020a\]\[@winston2003\]\[@baker2015\]\[@tovey\]\[@IsmayIntroductionStatisticalData\]\[@AdlerNutshell2012\]
 
 Each drone requires time in machining, assembly, and testing and sensors. For example, an Ant requires one hour of machining time, three hours of assembly, and two hours of testing. It uses two sensors and the net profit is \$10. The characteristics of Bats are similar but different as shown in the Table 1 on the right as well as the available amount of each limited resource. 
 
@@ -42,23 +41,13 @@ A simple LP now is to find the production plan of products that results in the m
 -   the decisions
 -   the limitations
 
-Let's start with the goal(s). In this case, the production manager is simply trying to make as much profit as possible. While cost cutting is also a goal for many organizations, in this case and many applications profit maximization is appropriate. Maximizing profit is the referred to as the *objective* of the model. \vspace{12pt}
+Let's start with the goal(s). In this case, the production manager is simply trying to make as much profit as possible. While cost cutting is also a goal for many organizations, in this case and many applications profit maximization is appropriate. Maximizing profit is the referred to as the *objective* of the model. \index{Objective function} \
 
-People new to linear programming will often think of the decisions as the amount of each resource to use. Instead, the decisions in this case would be how much to make of each particular product. This drives the resource usage and the resource usage is a byproduct of these decisions. These decisions can take on a range of values and are therefore called *decision variables*. \vspace{12pt}
+People new to linear programming will often think of the decisions as the amount of each resource to use. Instead, the decisions in this case would be how much to make of each particular product. This drives the resource usage and the resource usage is a byproduct of these decisions. These decisions can take on a range of values and are therefore called *decision variables*. \index{Decision variables} \
 
-```{marginfigure}
-**Single-Objective**: This type of linear programming result when only one objective or goal can be accommodated. 
-```
+The decision variables are then combined in some way to reflect the performance with respect to the organization's objective. The equation combining the decision variables to reflect this is then the *objective function*. For now we will assume that there is a single objective function but we will allow for multiple objectives in Chapter 8. \index{Objective function} \
 
-The decision variables are then combined in some way to reflect the performance with respect to the organization's objective. The equation combining the decision variables to reflect this is then the *objective function*. For now we will assume that there is a single objective function but we will allow for multiple objectives in Chapter 8. \vspace{12pt}
-
-```{marginfigure}
-**Multiple-Objective**: This type of linear programming result when multiple objectives or goals can be accommodated. This will be explored in Chapter 8.
-```
-
-Lastly, what is limiting the organization from even better performance? There are typically many limits such as the number of customers, personnel, supplier capacity, etc. In this case, we focus on a set of resource limits based on staffing in different centers and the supply of sensors. Since these limitations constrain the possible values of decision variables, they are called *constraints.*
-
-\vspace{12pt}
+Lastly, what is limiting the organization from even better performance? There are typically many limits such as the number of customers, personnel, supplier capacity, etc. In this case, we focus on a set of resource limits based on staffing in different centers and the supply of sensors. Since these limitations constrain the possible values of decision variables, they are called *constraints.*  \index{Constraints}/
 
 Every optimization model can be thought of a collection of:
 
@@ -70,7 +59,7 @@ Let's put things together in the context of this application. In the base case, 
 
 Let's define them:
 
--   Ants = \# of Ant robots to make\
+-   Ants = \# of Ant robots to make
 -   Bats = \# of Bat robots to make
 
 Our objective function and constraints can now be written as the optimization model shown on the right.
@@ -89,7 +78,8 @@ $$
   \end{split}
 $$
 
-Note that since the objective function and each constraint is a simple linear function of the decision variables, this is what we call a *linear* programming model or LP for short. It would not be linear if any nonlinear function is made of the decision variables. For example, squaring a decision variable, using conditional logic based on the variable value, or multiplying two variables. These and other issues would then require using nonlinear programming or NLP. NLP is also widely used but has limitations.
+Note that since the objective function and each constraint is a simple linear function of the decision variables, this is what we call a *linear* programming model \index{Linear programming} \index{LP|see{Linear programming}}
+or LP for short. It would not be linear if any nonlinear function is made of the decision variables. For example, squaring a decision variable, using conditional logic based on the variable value, multiplying two variables, or deviding a variable by a function of a variable. These and other issues would then require using nonlinear programming or NLP. NLP is also widely used but has limitations. \index{Linear programming} \index{NLP|see{Nonlinear programming}}
 
 **Linear programming**: (LP, also called linear optimization) is a method to achieve the best outcome (such as maximum profit or lowest cost) in a mathematical model whose requirements are represented by linear relationships.
 
@@ -101,7 +91,7 @@ Given that the linear program has two variables, it can be represented in two di
 
 We do this by iteratively adding each constraint and trimming the feasible region. The line can be drawn by looking at the constraint from two perspectives. First as if only Ants are produced and second as if only Bats are produced. This gives specific point on the horizontal and vertical axes respectively which are simply connected.\
 
-```{r Fig-First-Constraint, echo=FALSE, fig.margin=TRUE, out.width="3in",  fig.align='center', fig.cap="Drawing a First Constraint."}
+```{r Fig-First-Constraint, echo=FALSE, out.width="3in",  fig.align='center', fig.cap="Drawing a First Constraint."}
 library(knitr)
 knitr::include_graphics("images/Fig02-01-First_Constraint.PNG")
 ```
@@ -110,13 +100,13 @@ The constraints are differentiated by color and the diagonal lines of the same c
 
 In each figure, we illustrate the feasible region as a grayed oval but it is the whole region.\
 
-```{r Fig-Second-Constraint, echo=FALSE, fig.margin=TRUE, out.width="3in",  fig.align='center',fig.cap="Adding the Assembly Constraint."}
+```{r Fig-Second-Constraint, echo=FALSE,  out.width="3in",  fig.align='center',fig.cap="Adding the Assembly Constraint."}
 knitr::include_graphics("images/Fig02-02-Second_Constraint.PNG")
 ```
 
 The assembly constraint is drawn as a red line connecting a production plan of just 300 Ants on the horizontal axis to just 150 Bats on the vertical axis.\
 
-```{r Fig-Third-Constraint, echo=FALSE, fig.margin=TRUE, out.width="3in",  fig.align='center', fig.cap="Adding the Testing Constraint." }
+```{r Fig-Third-Constraint, echo=FALSE, , out.width="3in",  fig.align='center', fig.cap="Adding the Testing Constraint." }
 knitr::include_graphics("images/Fig02-03-Third_Constraint.PNG")
 ```
 
@@ -162,7 +152,7 @@ Alas, real optimization problems typically have far more three variables - perha
 
 For the sake of simplicity, we will implement our first R LP model using explicit variables and data consistent with the first formulation.\
 
-First, let us load the required libraries. Then we will move on to the actual implementation.\
+First, let us load the required packages using the `library` command and then we will move on to the actual implementation.\
 
 ```{r warning = FALSE, message = FALSE}
 library (kableExtra, quietly = TRUE)
@@ -178,10 +168,9 @@ library (ompr.roi, quietly = TRUE)
 
 The `quietly=TRUE` option will not display standard messages returned when loading libraries.
 
-This code chunk uses the `library` command to load a series of useful packages. The first, `library (kableExtra)`, enhances `knitr's` built-in `kable` function to generate better formatted tables. The lines similarly load packages providing the optimization functions that we will be relying on frequently. The `ROI`package is the R Optimization Interface for for connecting various optimization solvers to R. The `ROI.plugin.glpk` provides a connection between the the `glpk`solver and R through ROI. While this would be sufficient, we are going to make use of the `ompr`package by Dirk Schumacher to provide algebraic representations for linear programs. The `ompr` package also requires a connector to ROI, aptly named `ompr.roi`.\
-```{marginfigure}
-**HINT**: As noted earlier, if these packages are not preinstalled, you may need to install them using the install.packages function or from the Packages tab in RStudio.
-```
+This code chunk uses the `library` command to load a series of useful packages.[^installlibraries] The first line, `library (kableExtra)`, enhances `knitr's` built-in `kable` function to generate better formatted tables. The lines similarly load packages providing the optimization functions that we will be relying on frequently. The `ROI`package is the R Optimization Interface for for connecting various optimization solvers to R. The `ROI.plugin.glpk` provides a connection between the the `glpk`solver and R through ROI. While this would be sufficient, we are going to make use of the `ompr`package by Dirk Schumacher to provide algebraic representations for linear programs. The `ompr` package also requires a connector to ROI, aptly named `ompr.roi`.\
+
+[^installlibraries]: As noted earlier, if these packages are not preinstalled, you may need to install them using the install.packages function or from the Packages tab in RStudio.
 
 Now we move on to implement and solve the linear program. Let's go through it step by step.\
 
@@ -189,17 +178,13 @@ Now we move on to implement and solve the linear program. Let's go through it st
 model0  <- MIPModel()     # Initialize an empty model
 ```
 
-The first line initializes an empty model and stores it in `model0`. We can see that the model is empty by simfply displaying the summary of `model0`.\
-
-```{marginfigure}
-**MIP**: The term MIP used in the function call is an acronym for Mixed Integer Program. This is a more general case of LP and will be discussed in greater detail later.
-```
+The first line initializes an empty model using the `MIPModel` command and stores it in `model0`. We could pick any valid R object name in place of `model0` but we are using this to indicate that it is our initial model. The term MIP used in the function call is an acronym for Mixed Integer Program. This is a more general case of LP and will be discussed in greater detail later. We can see that the model is empty by simply displaying the summary of `model0`.\
 
 ```{r display_empty_model}
 model0
 ```
 
-The summary states that there are no constraints or variables. Next we will add variables. \vspace{12pt}
+The summary states that there are no constraints or variables. Next we will add variables. \
 
 ```{r base_case_no_pipes_step_2}
 model0a <- add_variable(model0, Ants, 
@@ -208,9 +193,11 @@ model0b <- add_variable(model0a, Bats,
           type = "continuous",lb = 0)
 ```
 
-The first line takes `model0` and adds the *Ants* variable to it, creating an enhanced `model0a`. Note that the continuation of the first line specifies the type of variable and whether it has a bounds. The `Ants` variable is continuous (as compared to integer or binary), and non-negative. The variable is made non-negative by setting a zero lowerbound (`lb=0`). The lowerbound can be set to other values such as a minimum production level of ten. Also upperbounds for variables can be set using `ub` as a parameter.
+The first line takes `model0` and adds the *Ants* variable to it, creating an enhanced `model0a`. Note that the continuation of the first line specifies the type of variable and whether it has a bound. The `Ants` variable is continuous (as compared to integer or binary which we will get to in chapter 6), and non-negative. The variable is made non-negative by setting a zero lowerbound (`lb=0`). The lowerbound can be set to other values such as a minimum production level of ten. Also upperbounds for variables can be set using `ub` as a parameter.\
 
-The *Bats* variable is added in the same way to `model0a` creating `model0b`. Let's check the new model. \vspace{12pt}
+The *Bats* variable is added in the same way to `model0a` creating `model0b`. Let's check the new model.[^manymodels]
+
+[^manymodels]: We are creating a series of models here as we keep adding one element at a time and appending a letter to `model0` to differentiate them. The result is that we will have many incrementally enhanced versions of `model0`.  Other than for demonstration purposes in our first model, there is no need to incrementally save each version of the file.  We could replace each of the assignments with just resaving it to `model0`.
 
 ```{r Model_Summary_with_Bats}
 model0b
@@ -222,7 +209,7 @@ Next, we can add the objective function. We set the objective function as well a
 model0c<-set_objective(model0b,7*Ants+12*Bats,"max")
 ```
 
-Now we move on to adding constraints. \vspace{12pt}
+Now we move on to adding constraints. \
 
 ```{r base_case_no_pipes_step_4}
 
@@ -243,17 +230,14 @@ Notice that we do not need to include non-negativity constraints since they were
 model0g
 ```
 
-Our model has the three core elements of an optimization model: variables, constraints, and an objective function. Let's go ahead and solve `model0g`. The LP can be solved using different LP engines - we'll use `glpk` for now. We'll assign the result of the solved model to `result0`.
+Our model has the three core elements of an optimization model: variables, constraints, and an objective function. Let's go ahead and solve `model0g`. The LP can be solved using different LP engines - we'll use `glpk` for now. We'll assign the result of the solved model to `result0`. `glpk` is R package name for the "GNU Linear Programming Kit" which is intended for solving large-scale linear programming (LP), mixed integer programming (MIP), and other related problems.\
 
-```{marginfigure}
-**glpk**: "GNU Linear Programming Kit" package is intended for solving large-scale linear programming (LP), mixed integer programming (MIP), and other related problems.
-```
 
 ```{r base_case_no_pipes_step_5}
 result0 <- solve_model(model0g, with_ROI(solver = "glpk"))
 ```
 
-We built up the model line by line incrementally taking the previous model, adding a new element, and storing it in a new model. Note that we could keep placing them into the original model if we had wished such as the following. \vspace{12pt}
+We built up the model line by line incrementally taking the previous model, adding a new element, and storing it in a new model. Note that we could keep placing them into the original model if we had wished such as the following.\
 
 ```{r base_case_no_pipes_single_model}
 model0 <- MIPModel()     # Initialize an empty model
@@ -286,15 +270,15 @@ rownames(res0)<-list("Solution")
 
 ```
 
-```{r Base-2Var-Solution, fig.margin = T}
+```{r Base-2Var-Solution}
 kbl(res0, booktabs=T,
     caption="Base Case Two Variable Solution") |>
   kableExtra::kable_styling(latex_options = "hold_position")
 ```
 
-In this case, we take the previous command's output, `model0`, add an element to it, and then store it back in the same object, `model0`. We keep doing it for each element until we are done. \vspace{12pt}
+In this case, we take the previous command's output, `model0`, add an element to it, and then store it back in the same object, `model0`. We keep doing it for each element until we are done. \
 
-This is equivalent to assigning the value of *2* to *a*. We then multiply *a* by *3* and assign the result again to *a*. \vspace{12pt}
+This is equivalent to assigning the value of *2* to *a*. We then multiply *a* by *3* and assign the result again to *a*. \
 
 ```{r basic_assignment}
 a <- 2
@@ -302,9 +286,9 @@ a <- 3*a
 a
 ```
 
-Note that this is part of why `<-` as an assignment operator is better than an equals sign, `=` which would make the reader think that if *a=3a* then *a* must be zero. \vspace{12pt}
+Note that this is part of why `<-` as an assignment operator is better than an equals sign, `=` which would make the reader think that if *a=3a* then *a* must be zero. \
 
-It might be helpful to see what the model looks like before examining the results. \vspace{12pt}
+It might be helpful to see what the model looks like before examining the results. \
 
 ```{r summarize_model}
 model0
@@ -316,7 +300,7 @@ Furthermore, we can use the `extract_constraints` command to see what the actual
 extract_constraints(model0)
 ```
 
-This should look familiar. Let's see if we can arrange to make it look more similar to what we had given the model. Note that the term `RHS` represents the right hand side of the constraint.
+This should look familiar. Let's see if we can arrange to make it look more similar to what we had given the model. Note that the term `RHS` represents the right hand side of the constraint. \index{Right hand side} \index{RHS|see{Right hand side}} \
 
 ```{r construct-constraints-for-display}
 constr0<-extract_constraints(model0)    
@@ -333,29 +317,25 @@ kbl(constr00, booktabs=T,
   kableExtra::kable_styling(latex_options = "hold_position")
 ```
 
-In the first version of the LP model implementation, we created many different versions of the model along the way while we really just keep adding stuff to the same model. This uses extra memory and will be slower. The second implementation keeps reusing the same model object until the very end when solving is done and it places the results into an object. This may be more memory efficient but is still likely slower and carries along a lot of extra notation. \vspace{12pt}
+In the first version of the LP model implementation, we created many different versions of the model along the way while we really just keep adding stuff to the same model. This uses extra memory and may be a little slower. The second implementation keeps reusing the same model object until the very end when solving is done and it places the results into an object. This may be more memory efficient and carries along some extra notation. \
 
 ## Implementing the Base Case with Piping
 
-In each step, we are simply taking the output of the previous step and feeding it in as the first term of the following step. It is almost like the output is a bucket that is then passed as a bucket into the next step. Rather than carrying a bucket from one step into the next one, a plumber might suggest a pipe connecting one step to the next. This is done so often that we refer to it as piping and a pipe operator.
-
-```{marginfigure}
-**The pipe symbol**: Represented by `|>` will let us do this more compactly and efficiently. It takes a little getting used to but is a better way to build the model.  Also, note that the piping operator requires `R` version 4.1.0. or higher.
-```
+In each step, we are simply taking the output of the previous step and feeding it in as the first term of the following step. It is almost like the output is a bucket that is then passed as a bucket into the next step. Rather than carrying a bucket from one step into the next one, a plumber might suggest a pipe connecting one step to the next. This is done so often that we refer to it as piping and a pipe operator.  **The pipe symbol**, represented by `|>` will let us do this more compactly and efficiently. It takes a little getting used to but is a better way to build the model. \index{Piping} Also, note that the piping operator requires `R` version 4.1.0. or higher. 
 
 Here is the equivalent process for building the base case implementation using a piping operator without all the intermediate partial models being built. Notice how it is a lot more concise. We will typically use this approach for model building but both approaches are functionally equivalent.
 
 ```{r base_case}
 result0 <- MIPModel() |>
   add_variable(Ants, type = "continuous", lb = 0) |>
-  add_variable(Bats, type = "continuous",lb = 0) |>
+  add_variable(Bats, type = "continuous",lb = 0)  |>
  
-  set_objective(7*Ants + 12*Bats, "max") |>
+  set_objective(7*Ants + 12*Bats, "max")          |>
   
-  add_constraint(1*Ants + 4*Bats<= 800)   |> # machining
-  add_constraint(3*Ants + 6*Bats<= 900)   |> # assembly
-  add_constraint(2*Ants + 2*Bats<= 480)   |> # testing
-  add_constraint(2*Ants + 10*Bats<= 1200) |> # sensors
+  add_constraint(1*Ants + 4*Bats<= 800)           |> # machining
+  add_constraint(3*Ants + 6*Bats<= 900)           |> # assembly
+  add_constraint(2*Ants + 2*Bats<= 480)           |> # testing
+  add_constraint(2*Ants + 10*Bats<= 1200)         |> # sensors
   solve_model(with_ROI(solver = "glpk"))
   
 ```
@@ -395,6 +375,10 @@ In summary, our optimal production plan is to make a mix of Ant and Bat robot mo
 
 ## Adding a Third Product (Variable)
 
+As always, it is important to start with formulating the model before moving into implementation.  While this problem is small and straightforward, it is an important habit to develop as we build towards more complex models in later chapters.
+
+### Three Variable Base Case Formulation
+
 We will now extend the previous model to account for a third product, the Cat robot. The goal is still to find the most profitable production plan. See the table to the right with a summary of the new situation.
 
 |           | Ant | Bat  | Cat | Available |
@@ -405,7 +389,7 @@ We will now extend the previous model to account for a third product, the Cat ro
 |   Testing |  2  |  2   |  1  |    480    |
 |   Sensors |  2  |  10  |  2  |   1200    |
 
-Table Three Variable Base Case
+Table: Three Variable Base Case
 
 A simple LP now is to find the production plan or amount of each of the products that results in the most profit. This will require a new decision variable, Cats, to be added to the model.\
 
@@ -430,9 +414,7 @@ $$
   \end{split}
 $$
 
-```{marginfigure}
-**Formula 2.2**: Optimization model adding a third product (variable).
-```
+### Three Variable Base Case Implementation
 
 Let's now implement the three variable case.\
 
@@ -454,7 +436,7 @@ model1 <- MIPModel() |>
 result1 <-  solve_model(model1, with_ROI(solver="glpk"))
 ```
 
-## Three Variable Case Results and Interpretation
+### Three Variable Case Results and Interpretation
 
 Let's check to see the status of the solver and the results.\
 
@@ -480,7 +462,8 @@ Now, let's look at how we would modify the earlier formulation to come up with e
 
 ### Case 1: No Feasible Solution
 
-Let's assume that the sales manager comes in and says that we have a contractual requirement to deliver 400 Ants to customers. This results in the following LP.
+Let's assume that the sales manager comes in and says that we have a contractual requirement to deliver 400 Ants to customers. This results in the following LP. \index{Infeasible}
+\index{No feasible solution|see{Infeasible}}.
 
 $$
  \begin{split}
@@ -519,11 +502,12 @@ get_solution(result1infeas, Bats)
 get_solution(result1infeas, Cats)
 ```
 
-Notice that since the solver status was infeasible, the values for the decision variables are not feasible and therefore cannot be considered a reliable (or possible) production plan. This highlights why the solver's status should always be confirmed to be "Optimal" before results are discussed.
+Notice that since the solver status was infeasible, the values for the decision variables are not feasible and therefore cannot be considered a reliable (or possible) production plan. This highlights why the solver's status should always be confirmed to be "Optimal" before results are discussed. \index{Infeasible}
+\index{No feasible solution|see{Infeasible}} \
 
-### Case 2: Multiple Optima. \
+### Case 2: Multiple Optima 
 
-When a linear program is solved to optimality, it is an assurance that there is no better solution that can be found in terms of an objective function value. It is not a guarantee of being the only way of finding that good of a solution though. The case of different decision variable values resulting in the same, optimal objective function value is referred to as multiple optimal solutions.
+When a linear program is solved to optimality, it is an assurance that there is no better solution that can be found in terms of an objective function value. It is not a guarantee of being the only way of finding that good of a solution though. The case of different decision variable values resulting in the same, optimal objective function value is referred to as multiple optimal solutions. \index{Multiple optima} \
 
 There are a couple of ways of creating situations for multiple optima. One situation is to have a decision variable be identical or a linear multiple of another variable. In this case, each Cat now consumes exactly double the resources as an Ant and generates double the profit of an Ant. Also, we will assume the profit per Bat drops to just 2. The new LP is shown in the following formulation.
 
@@ -607,7 +591,7 @@ kbl (res2b, booktabs=T,
 
 Again, a product mix is made but now instead and Ants and Bats, the mix is made up of Bats and Cats with exactly the same level of profit. This is an instance of multiple optima. Let's try one more situation by adding a constraint forcing the number of Ants to be 60 and solving.
 
-```{r Find_a_Third_Solution_from_Multiple_Optima,  fig.margin = TRUE}
+```{r Find_a_Third_Solution_from_Multiple_Optima}
 model2c <- add_constraint(model2a, Ants == 60) 
             # FORCING LP TO FIND A DIFFERENT SOLUTION
 result2c <- solve_model(model2c, with_ROI(solver = "glpk"))
@@ -640,7 +624,7 @@ Which solution is the best? Within the limits of this problem, we can't distingu
 
 ### Case 3: Redundant Constraint
 
-For the redundant constraint, a new constraint for painting is created. Let's assume each item is painted and requires one liter of paint. We have 500 liters. The corresponding constraint is then added to the model.
+For the redundant constraint, a new constraint for painting is created. Let's assume each item is painted and requires one liter of paint. We have 500 liters. The corresponding constraint is then added to the model. \index{Redundant constraint}
 
 $$
  \begin{split}
@@ -675,18 +659,14 @@ get_solution(result3, Cats)
 
 This constraint was *redundant* because the other constraints would keep us from ever having 500 robots or therefore ever needing 500 liters of paint. In other words, there is no way that this constraint could ever be binding at any solution regardless of what the objective function is. More precisely, elimination of a redundant constraint does not change the size of the feasible region at all.\
 
-Note that not all non-binding constraints at an optimal solution are redundant. Deleting a non-binding constraint and resolving won't change the optimal objective function value. On the other hand, for a different objective function, that non-binding constraint might become binding and therefore different solutions would be found if it were deleted.\
+Note that not all non-binding constraints at an optimal solution are redundant. Deleting a non-binding constraint and resolving won't change the optimal objective function value. On the other hand, for a different objective function, that non-binding constraint might become binding and therefore different solutions would be found if it were deleted. \index{Non-binding constraint}\
 
-```{marginfigure}
-**Challenge 1:**  Can you use a calculator to simply estimate the maximum number of Ants that could be made?  Bats?  Cats?  
-\vspace{12pt}
-
-**Challenge 2:**  How would you modify the formulation to find the most total robots that could be produced?
-```
+**Challenge 1:**  Can you use a calculator to simply estimate the maximum number of Ants that could be made?  Bats?  Cats?\
+**Challenge 2:**  How would you modify the formulation to find the most total drones that could be produced irrespective of profit?\
 
 ### Case 4: Unbounded Solution
 
-As with other cases, there are multiple ways of triggering this condition. For the unbounded solution, instead of at *most* a certain amount of resources can be used, the constraints are changed to at *least* that amount of each resource must be used. This doesn't make a lot of sense in the setting of this application. Perhaps a cynic would say that in a cost-plus business arrangement or a situation where the factory manager has a limited purview and doesn't see issues such as downstream demand limits and cost impacts, it results in this kind of myopic perspective. More commonly, an unbounded solution might be a sign that the analyst had simply reversed one or more inequalities or the form of the objective (max vs. min).
+As with other cases, there are multiple ways of triggering this condition. For the unbounded solution, instead of at *most* a certain amount of resources can be used, the constraints are changed to at *least* that amount of each resource must be used. This doesn't make a lot of sense in the setting of this application. Perhaps a cynic would say that in a cost-plus business arrangement or a situation where the factory manager has a limited purview and doesn't see issues such as downstream demand limits and cost impacts, it results in this kind of myopic perspective. More commonly, an unbounded solution might be a sign that the analyst had simply reversed one or more inequalities or the form of the objective (max vs. min). \index{Unbounded solution}
 
 $$
  \begin{split}
@@ -702,7 +682,7 @@ $$
   \end{split}
 $$
 
-Let's make this change to the model and the implementation by simply changing each $\leq$ to a $\geq$ for each constraint. \vspace{12pt}
+Let's make this change to the model and the implementation by simply changing each $\leq$ to a $\geq$ for each constraint.\
 
 ```{r Unbounded_Model}
 result4 <- MIPModel() |>
@@ -710,22 +690,20 @@ result4 <- MIPModel() |>
  add_variable(Bats, type = "continuous", lb = 0) |>
  add_variable(Cats, type = "continuous", lb = 0) |>
   
- set_objective(7*Ants + 12*Bats + 5*Cats,"max")|>
+ set_objective(7*Ants + 12*Bats + 5*Cats,"max")  |>
   
- add_constraint(1*Ants + 4*Bats + 2*Cats>= 800) |>
+ add_constraint(1*Ants + 4*Bats + 2*Cats>= 800)  |>
     #machining
- add_constraint(3*Ants + 6*Bats + 2*Cats>= 900) |> 
+ add_constraint(3*Ants + 6*Bats + 2*Cats>= 900)  |> 
     #assembly
- add_constraint(2*Ants + 2*Bats + 1*Cats>= 480) |>
+ add_constraint(2*Ants + 2*Bats + 1*Cats>= 480)  |>
     #testing
  add_constraint(2*Ants + 10*Bats + 2*Cats>= 1200)|> 
     #sensors
  solve_model(with_ROI(solver = "glpk"))
 ```
 
-\vspace{12pt}
-
-Now let's see what is reported from trying to solve this model. \vspace{12pt}
+Now let's see what is reported from trying to solve this model. 
 
 ```{r Unbounded_Results}
 print(solver_status(result4))
@@ -742,9 +720,9 @@ This is another good reminder that it is important to always check the status of
 
 ## Abstracting the Production Planning Model
 
-We have explicitly created two variable model and a three variable model by naming each variable independently. This process doesn't scale well for companies with dozens, hundreds, or thousands of different products. Simply writing out the full linear program gets very tedious, hard to read, and even maintain. An application for a company with a thousand products and a thousand resources would have a million terms. Assume that variables are on average seven letters long, each resource consumed is a single digit whole number and a plus symbol is used to add terms together and no spaces. This means that there will be (7+1)\*1000+999=8999 characters in each line before the inequality. Just say each constraint corresponds to 9000. If a line has 60 characters, this would mean 150 lines or around two pages for each resource (constraint.) The 1000 resources would correspond to about 2000 pages, along with an objective function, and non-negativity constraints. All in all, this single model would make for some rather dry reading. \vspace{12pt}
+We have explicitly created two variable model and a three variable model by naming each variable independently. This process doesn't scale well for companies with dozens, hundreds, or thousands of different products. Simply writing out the full linear program gets very tedious, hard to read, and even maintain. An application for a company with a thousand products and a thousand resources would have a million terms. Assume that variables are on average seven letters long, each resource consumed is a single digit whole number and a plus symbol is used to add terms together and no spaces. This means that there will be $(7+1)\cdot 1000+999=8999$ characters in each line before the inequality. Just say each constraint has  9000 characters. If a line has 60 characters, this would mean 150 lines or around two pages for each resource (constraint.) The 1000 resources would correspond to about 2000 pages, along with an objective function, and non-negativity constraints. All in all, this single model would make for some rather dry reading. \
 
-In practice, people don't write out the full LP explicitly for large models. This includes journals, no journal's page limit would be able to accommodate the above explicit linear program even if readers had the patience to wade through the model.\
+In practice, people don't write out the full LP explicitly for large models. This includes journals, no journal's page limit would be able to accommodate the above explicit linear program even if readers had the patience to wade through the model. \index{Explicit linear program} \
 
 Rather than writing out models explicitly, instead we should express them algebraically. The products are numbered instead of given names: Ants, Bats, and Cats become products 1, 2, and 3 respectively. \
 
@@ -766,7 +744,6 @@ Subscripting makes for a more succinct and compact way of expressing the same co
 Similarly, the resources: Machining, Assembly, Testing, and Sensors resources are numbered as 1, 2, 3, and 4 respectively. Note that we do not need to separate the resources by units, the first three are in units of hours while the last is a count of sensors.\
 
 Here we are talking about abstracting the model in terms of variable names and notation. In the next chapter we will continue with generalizing the model's number of products and resources.\
-
 
 ::: {.exercise name="Adding a Dog Drone"}
 Your company has extended production to allow for producing the dog drone and is now including a finishing department that primes and paints the drones. See Table to the right for all the data.

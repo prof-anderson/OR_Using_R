@@ -19,20 +19,15 @@ library (dplyr)
 
 ## Policies for Houselessness
 
-Up until this point, we assumed that there would be a single, clear objective function. Often we have more complex situations where there are multiple conflicting objectives.  In our earlier production planning case, we might have additional objectives besides maximizing profit such as minimizing environmental waste or longer term strategic positioning. In the case of our capital budgeting problem, we can envision a range of additional considerations beyond simple expected net present value maximization.  
-\vspace{12pt}
+Up until this point, we assumed that there would be a single, clear objective function. Often we have more complex situations where there are multiple conflicting objectives.  In our earlier production planning case, we might have additional objectives besides maximizing profit such as minimizing environmental waste or longer term strategic positioning. In the case of our capital budgeting problem, we can envision a range of additional considerations beyond simple expected net present value maximization.\
 
-Let's use an example that is a pressing issue for many cities - homelessness.  Note that is often better characterized as houselesness and the term will be used interchangeably for the sake of this illustration.  
-\vspace{12pt}
+Let's use an example that is a pressing issue for many cities - homelessness.  Note that is often better characterized as houselesness and the term will be used interchangeably for the sake of this illustration.\
 
-The City of Bartland has a problem with houselessness.  Two ideas have been proposed for dealing with the houselessness problem.  The first option is to build new, government subsidized tiny homes for annual cost of $\$10K$ which would serve one adult 90% of the time and a parent with a child 10% of the time. Another option is to create a rental subsidy program which costs $\$25K$ per year per unit which typically serves a single adult (15%), two adults (20%), an adult with one child (30%), an adult with two children (20%), two adults with one child (10%), and two adults with two children (5%). 
-\vspace{12pt}
+The City of Bartland has a problem with houselessness.  Two ideas have been proposed for dealing with the houselessness problem.  The first option is to build new, government subsidized tiny homes for annual cost of $\$10K$ which would serve one adult 90% of the time and a parent with a child 10% of the time. Another option is to create a rental subsidy program which costs $\$25K$ per year per unit which typically serves a single adult (15%), two adults (20%), an adult with one child (30%), an adult with two children (20%), two adults with one child (10%), and two adults with two children (5%). \
 
-Bartland's official Chief Economist has estimated that this subsidy program would tend to increase housing prices in a very tight housing market by an average of 0.001%. The Bartland City Council has $\$1000K$ available to reappropriate from elsewhere in the budget and would like to find the _best_ way to use this budget to help with the houselessness problem.  Both programs require staff support - in particular 10% of a full time equivalent staff member to process paperwork, conduct visits, and other service related activities.  There are seven staff members available to work on these activities.
-\vspace{12pt}
+Bartland's official Chief Economist has estimated that this subsidy program would tend to increase housing prices in a very tight housing market by an average of 0.001%. The Bartland City Council has $\$1000K$ available to reappropriate from elsewhere in the budget and would like to find the _best_ way to use this budget to help with the houselessness problem. Both programs require staff support - in particular 10% of a full time equivalent staff member to process paperwork, conduct visits, and other service related activities.  There are seven staff members available to work on these activities.\
 
-Let's summarize the data for two programs.  Let's focus on expected numbers of people served for each policy intervention.  \vspace{12pt}
-
+Let's summarize the data for two programs.  Let's focus on expected numbers of people served for each policy intervention.\
 
 |  Per unit                     | Tiny Homes (H)   | Rent Subsidy (R)   |   
 |------------------------------:|:----------------:|:------------------:|
@@ -50,21 +45,19 @@ Let's summarize the data for two programs.  Let's focus on expected numbers of p
 
 Table:  Policy Options for Addressing Houselessness
 
-One group on the city council wants to serve as many people (both children and adults) as possible while keeping under the total budget limit.  \vspace{12pt}
+One group on the city council wants to serve as many people (both children and adults) as possible while keeping under the total budget limit.\
 
-The second group feels that adults are responsible for their own situation but wants to save as many children from houselessness as possible within budget limits.  \vspace{12pt}
+The second group feels that adults are responsible for their own situation but wants to save as many children from houselessness as possible within budget limits.\
 
-As usual, start by thinking of the decision variables.  In this case, let's define _H_ to be number of tiny homes to be built and _R_ to be the rental housing subsidies provided.  Of course these should be non-negative variables.  We could use integer variables or continuous variables.    
-\vspace{12pt}
+As usual, start by thinking of the decision variables.  In this case, let's define _H_ to be number of tiny homes to be built and _R_ to be the rental housing subsidies provided.  Of course these should be non-negative variables.  We could use integer variables or continuous variables.\
 
-Next let's look at our constraints and formulate them in terms of the decision variables. We have two constraints. The first one for the budget is simply: $10 \cdot H+ 25\cdot R \leq 1000$.  The second is to ensure we have sufficient staff support, $0.1 \cdot H+ 0.1\cdot R \leq 7$.  
-  \vspace{12pt}
-Now, let's think about our objectives.  The first group wants to serve as many people as possible so the objective function is $\text {max } 1.1 \cdot H + 2.25 \cdot R$.
-\vspace{12pt}
+Next let's look at our constraints and formulate them in terms of the decision variables. We have two constraints. The first one for the budget is simply: $10 \cdot H+ 25\cdot R \leq 1000$.  The second is to ensure we have sufficient staff support, $0.1 \cdot H+ 0.1\cdot R \leq 7$.\
 
-Similarly, since the second group is focused on children, their objective function is $$\text {max } 0.1\cdot H + 0.9\cdot R$$.    \vspace{12pt}
+Now, let's think about our objectives.  The first group wants to serve as many people as possible so the objective function is $\text {max } 1.1 \cdot H + 2.25 \cdot R$.\
 
-Let's put this all together in a formulation.
+Similarly, since the second group is focused on children, their objective function is $$\text {max } 0.1\cdot H + 0.9\cdot R$$.\
+
+Let's put this all together in a formulation.\
 
 $$
  \begin{split}
@@ -111,10 +104,9 @@ sum_Home1           <- cbind(res_Home1$objective_value,H, R)
 colnames(sum_Home1) <- c("Obj. Func. Val.", "H", "R")
 rownames(sum_Home1) <- "Group 1: Max People"
 kbl(sum_Home1,booktabs=T)
-
 ```
 
-Now, let's examine the group's model that has an objective of maximizing the expected number of children served.    \vspace{12pt}
+Now, let's examine the group's model that has an objective of maximizing the expected number of children served.\
 
 $$
  \begin{split}
@@ -145,13 +137,13 @@ kbl (rbind(sum_Home1, sum_Home2), booktabs=T,
   kable_styling(latex_options = "hold_position")
 ```
 
-So which group has the _better_ model?  The objective function value for group 1's model is higher but it is in different units (people served) versus group 2's model of children served.    \vspace{12pt}
+So which group has the _better_ model?  The objective function value for group 1's model is higher but it is in different units (people served) versus group 2's model of children served.\
 
-Both group's have admirable objectives.  We can view this as a case of goal programming.  By definition, we know that these are the best values that can be achieved in terms of that objective function.  Let's treat these optimal values as targets to strive for and measure the amount by which fail to achieve these targets.  We'll define target $T_1 =$ `r res_Home1$objective_value` and $T_2 =$ `r res_Home2$objective_value`.  \vspace{12pt}
+Both group's have admirable objectives.  We can view this as a case of goal programming.  By definition, we know that these are the best values that can be achieved in terms of that objective function.  Let's treat these optimal values as targets to strive for and measure the amount by which fail to achieve these targets.  We'll define target $T_1 =$ `r res_Home1$objective_value` and $T_2 =$ `r res_Home2$objective_value`.\
 
-In order to do this, we need to use deviational variables.  These are like slack variables from the standard form of linear programs.  Since the deviations can only be one sided in this case, we only need to have deviations in one direction.  We will define $d_1$ as the deviation in goal 1 (Maximizing people served) and $d_2$ as the deviation in goal 2 (Maximizing children served).  \vspace{12pt}
+In order to do this, we need to use deviational variables.  These are like slack variables from the standard form of linear programs.  Since the deviations can only be one sided in this case, we only need to have deviations in one direction.  We will define $d_1$ as the deviation in goal 1 (Maximizing people served) and $d_2$ as the deviation in goal 2 (Maximizing children served).\
 
-Let's now create the modified formulation.  \vspace{12pt}
+Let's now create the modified formulation.\
 
 $$
  \begin{split}
@@ -273,7 +265,7 @@ $$
   \end{split}
 $$
 
-Let's show the full R implementation of our minimax model.
+Let's show the full R implementation of our minimax model.\
 
 ```{r MiniMaxModel, echo=TRUE}
 Home5Model <- MIPModel() |>
@@ -318,16 +310,13 @@ kbl (rbind(sum_Home3, sum_Home4, sum_Home5),
 
 The minimax solution finds an alternative that is still Pareto optimal.  
 
-Careful readers may note that children are effectively double counted between the two objective functions when deviations are added.    \vspace{12pt}
+Careful readers may note that children are effectively double counted between the two objective functions when deviations are added.\
 
-This example can be expanded much further in the future with additional policy interventions, other stakeholders, and other characteristics, such as policies on drug addiction treatment, policing practices, and more.  We did not factor in the Chief Economist's impact on housing prices.    \vspace{12pt}
-
-We'll leave these issues to future work.    \vspace{12pt}
+This example can be expanded much further in the future with additional policy interventions, other stakeholders, and other characteristics, such as policies on drug addiction treatment, policing practices, and more.  We did not factor in the Chief Economist's impact on housing prices. We'll leave these issues to future work.\
 
 ## Mass Mailings
 
-Let's take a look at another example. We have a mailing outreach campaign across the fifty states to do in the next eight weeks. You have $C_s$ customers in each state.  Since the statewide campaign needs to be coordinated, each state should be done in a single week but different states can be done in different weeks. You want to create a model to have the workload, in terms of numbers of customers, to be as balanced as possible across the eight weeks.   
-\vspace{12pt}
+Let's take a look at another example. We have a mailing outreach campaign across the fifty states to do in the next eight weeks. You have $C_s$ customers in each state.  Since the statewide campaign needs to be coordinated, each state should be done in a single week but different states can be done in different weeks. You want to create a model to have the workload, in terms of numbers of customers, to be as balanced as possible across the eight weeks.\
 
 As an exercise, pause to think of how you would set this up.  
 \vspace{12pt}
@@ -345,7 +334,6 @@ Try to give some thoughts as to how to set this up before moving on to seeing ou
 
 To provide some space before we discuss the formulation, let's show the data.  Rather than providing a data table that must be retyped, let's use a dataset already available in R so you can simply load the state data.  Note that you can grab the population in 1977 in terms of thousands.    \vspace{12pt}
 
-
 ```{r loading-mailing-data}
 data(state)
 Customers <- state.x77[,1]
@@ -358,28 +346,21 @@ kbl (head (Customers), booktabs=T,
 _Formulating the Model_
 \vspace{12pt}
 
-Presumably you have created your own formulation. If so, your model will likely differ from what follows in some ways such as naming conventions for variables or subscripts.  That is fine.  The process of trying to build a model is important.  
-\vspace{12pt}
+Presumably you have created your own formulation. If so, your model will likely differ from what follows in some ways such as naming conventions for variables or subscripts.  That is fine.  The process of trying to build a model is important.\
 
-Let's start by defining our decision variables, $x_{s,w}$ as a binary variable to indicate whether we are going to send a mailing to state _s_ in week _w_.  
-\vspace{12pt}
+Let's start by defining our decision variables, $x_{s,w}$ as a binary variable to indicate whether we are going to send a mailing to state _s_ in week _w_.\
 
-Now, we need to ensure that every state is mailed to in one of the eight weeks. We simply need to add up the variable for each state's decision to mail in week 1, 2, 3, ..., up to 8.  Mathematically, this would be $\sum\limits_{w=1}^{8}   x_{s,w} = 1, \; \forall \; s$.  
-\vspace{12pt}
+Now, we need to ensure that every state is mailed to in one of the eight weeks. We simply need to add up the variable for each state's decision to mail in week 1, 2, 3, ..., up to 8.  Mathematically, this would be $\sum\limits_{w=1}^{8}   x_{s,w} = 1, \; \forall \; s$.\
 
-It is useful to take a moment to reflect on why $\sum\limits_{s=1}^{50} \sum\limits_{w=1}^{8}   x_{s,w} = 50$ is not sufficient to ensure that all 50 states get mailed to during the eight week planning period.
-\vspace{12pt}
+It is useful to take a moment to reflect on why $\sum\limits_{s=1}^{50} \sum\limits_{w=1}^{8}   x_{s,w} = 50$ is not sufficient to ensure that all 50 states get mailed to during the eight week planning period.\
 
-Combined with the variable $x_{s,w}$ being defined to be binary, this is sufficient to ensure that we have a _feasible_ answer but not necessarily a well-balanced solution across the eight weeks.  
-\vspace{12pt}
+Combined with the variable $x_{s,w}$ being defined to be binary, this is sufficient to ensure that we have a _feasible_ answer but not necessarily a well-balanced solution across the eight weeks.\
 
-We could easily calculate the amount of material to mail each as a function of $x_s,w$  and $C_s$.  For week 1, it would be $\sum\limits_{s=1}^{50}   C_s \cdot x_{s,1}$  For week 2, it would be $\sum\limits_{s=1}^{50}   C_s \cdot x_{s,2}$, and so on.  This could be generalized as $\sum\limits_{s=1}^{50}   C_s \cdot x_{s,w} \; \forall \; w$.  
-\vspace{12pt}
+We could easily calculate the amount of material to mail each as a function of $x_s,w$  and $C_s$.  For week 1, it would be $\sum\limits_{s=1}^{50}   C_s \cdot x_{s,1}$  For week 2, it would be $\sum\limits_{s=1}^{50}   C_s \cdot x_{s,2}$, and so on.  This could be generalized as $\sum\limits_{s=1}^{50}   C_s \cdot x_{s,w} \; \forall \; w$.\
 
-Creating a balanced schedule can be done in multiple ways. Let's start by using the _minimax_ approach discussed earlier. To do this, we add a new variable _Q_ and constrain it to be at least as large as each week.  Therefore, for week 1, $Q \geq \sum\limits_{s=1}^{50}   C_s \cdot x_{s,1}$ and for week 2, $Q \geq \sum\limits_{s=1}^{50}   C_s \cdot x_{s,2}$.  Again, to generalize for all eight weeks, we could write $Q \geq \sum\limits_{s=1}^{50}   C_s \cdot x_{s,w} \; \forall \; w$
-\vspace{12pt}
+Creating a balanced schedule can be done in multiple ways. Let's start by using the _minimax_ approach discussed earlier. To do this, we add a new variable _Q_ and constrain it to be at least as large as each week.  Therefore, for week 1, $Q \geq \sum\limits_{s=1}^{50}   C_s \cdot x_{s,1}$ and for week 2, $Q \geq \sum\limits_{s=1}^{50}   C_s \cdot x_{s,2}$.  Again, to generalize for all eight weeks, we could write $Q \geq \sum\limits_{s=1}^{50}   C_s \cdot x_{s,w} \; \forall \; w$. \
 
-we can then use our minimax objective function of simply minimizing _Q_.    \vspace{12pt}
+we can then use our minimax objective function of simply minimizing _Q_.\
 
 We'll summarize our formulation now.
 
@@ -394,7 +375,7 @@ $$
   \end{aligned}
   \end{split}
 $$
-Let's now move on to implement this model in R.    \vspace{12pt}
+Let's now move on to implement this model in R. \
 
 ```{r build_mail1_model}
 States <- 50  # Options to shrink problem for testing
@@ -432,15 +413,15 @@ res_Mail1 <- solve_model(Mail1,
 res_Mail1
 ```
 
-Note that the the messages from Symphony indicate that the solution found was feasible while `ompr` interprets the status as `infeasible.`  This is a bug that we have discussed earlier.  Turning on an option for more messages from the solver such as `verbose=TRUE` for `verbose=TRUE` or `verbosity=0` for `symphony` can give confirmation that the final status is *not* infeasible.  \vspace{12pt}
+Note that the the messages from Symphony indicate that the solution found was feasible while `ompr` interprets the status as `infeasible.`  This is a bug that we have discussed earlier.  Turning on an option for more messages from the solver such as `verbose=TRUE` for `verbose=TRUE` or `verbosity=0` for `symphony` can give confirmation that the final status is *not* infeasible.\
 
-Another useful to thing to note is that solving this problem to optimality can take a long time despite having fewer binary variables than some of our earlier examples.  Using `glpk` with  `verbose=FALSE` means that the MIP is solved with no progress information displayed and makes it look like the solver is hung.  Turning on more information (increasing the verbosity) helps explain that the Solver is working, it is just taking a while, on my computer I let it run 20 minutes without making further progress than a feasible solution it had found quickly.  \vspace{12pt}
+Another useful to thing to note is that solving this problem to optimality can take a long time despite having fewer binary variables than some of our earlier examples.  Using `glpk` with  `verbose=FALSE` means that the MIP is solved with no progress information displayed and makes it look like the solver is hung.  Turning on more information (increasing the verbosity) helps explain that the Solver is working, it is just taking a while, on my computer I let it run 20 minutes without making further progress than a feasible solution it had found quickly.\
 
-In fact, I realized that the feasible solution found was very close to the best remaining branches so perhaps this solution was optimal but it was taking a very long time to prove that it was optimal.  In any case, it is probably good enough.  Often data may only be accurate to $\pm5\%$ so spending extensive time trying to get significantly more accurate results is not very productive.  This suggests  setting stopping options such as a time limit, number of LPs, or a _good enough_ setting.  For this problem, I chose the latter option.  \vspace{12pt}
+In fact, I realized that the feasible solution found was very close to the best remaining branches so perhaps this solution was optimal but it was taking a very long time to prove that it was optimal.  In any case, it is probably good enough.  Often data may only be accurate to $\pm5\%$ so spending extensive time trying to get significantly more accurate results is not very productive.  This suggests  setting stopping options such as a time limit, number of LPs, or a _good enough_ setting.  For this problem, I chose the latter option.\
 
-We solved this with a mixed integer programming problem gap limit of $1.5\%$ meaning that while we have not _proven_ this solution to be optimal, we do know that it is impossible to find a solution more than 1.5% better. From a branch and bound algorithm perspective, this means that while we have not searched down fully or pruned every branch, we know that no branch has the potential of being more than $1.5\%$ better than the feasible solution that we have already found.    \vspace{12pt}
+We solved this with a mixed integer programming problem gap limit of $1.5\%$ meaning that while we have not _proven_ this solution to be optimal, we do know that it is impossible to find a solution more than 1.5% better. From a branch and bound algorithm perspective, this means that while we have not searched down fully or pruned every branch, we know that no branch has the potential of being more than $1.5\%$ better than the feasible solution that we have already found.\
 
-Now let's move on to discussing the results. We will start with filtering out all the variables that have zero values so we can focus on the ones of interest - the states that are assigned to each week. Also, notice that a `dplyr` function was used to add state names to the data frame.    \vspace{12pt}
+Now let's move on to discussing the results. We will start with filtering out all the variables that have zero values so we can focus on the ones of interest - the states that are assigned to each week. Also, notice that a `dplyr` function was used to add state names to the data frame.\
 
 ```{r Sample-of-States-Week1}
 assigned1a <- res_Mail1 |> 
@@ -454,7 +435,7 @@ kbl (head(assigned1a), booktabs=T,
   kable_styling(latex_options = "hold_position")
 ```
 
-That is just for six states in the first week though.  
+That is just for six states in the first week though.\
 
 ```{r Build_Table_of_Results}
 assigned1b <- tibble::rownames_to_column(assigned1a)
@@ -474,8 +455,7 @@ table_results1 <- append(table_results1,weeksmail1a)
 kbl(table_results1[-1])
 ```
 
-Since this is state level data, let's look at a map of the schedule.  
-  \vspace{12pt}
+Since this is state level data, let's look at a map of the schedule.\
   
 ```{r Map_of_Mailing_Resultsm, fig.width=4, eval=TRUE}
 library (ggplot2)
@@ -492,11 +472,11 @@ scale_fill_viridis_c(option = "C") +
 expand_limits(x = states_map$long, y = states_map$lat)
 ```
 
-Note that this leaves off Alaska and Hawaii for visualization.  For completeness, Alaska is in week `r assigned1a["Alaska",] [,2]` and Hawaii is in week `r assigned1a["Hawaii",] [,2]`.  \vspace{12pt}
+Note that this leaves off Alaska and Hawaii for visualization.  For completeness, Alaska is in week `r assigned1a["Alaska",] [,2]` and Hawaii is in week `r assigned1a["Hawaii",] [,2]`.\
 
-This formulation generates solutions that have high symmetry.  Essentially it would be feasible and have the same objective function value if we simply swap any two weeks of assignments.  For example, if we all of the states assigned to week 1 and week 2, it would still be feasible and have exactly the same objective function value.  This would result in a high number of alternate optimal solutions.  The numbering by week is essentially arbitrary since the weeks don't make a difference.    \vspace{12pt}
+This formulation generates solutions that have high symmetry.  Essentially it would be feasible and have the same objective function value if we simply swap any two weeks of assignments.  For example, if we all of the states assigned to week 1 and week 2, it would still be feasible and have exactly the same objective function value.  This would result in a high number of alternate optimal solutions.  The numbering by week is essentially arbitrary since the weeks don't make a difference.\
 
-When there exists a high degree of symmetry, it may be useful to implement one or more constraints to _break_ the symmetry by differentiating between solutions.  One approach to doing this is to require a particular ordering of weeks.  For example, we could require that weeks get progressively lighter in terms of workload.    \vspace{12pt}
+When there exists a high degree of symmetry, it may be useful to implement one or more constraints to _break_ the symmetry by differentiating between solutions.  One approach to doing this is to require a particular ordering of weeks.  For example, we could require that weeks get progressively lighter in terms of workload.\
 
 $$
  \begin{split}
@@ -505,8 +485,8 @@ $$
   \end{aligned}
   \end{split}
 $$
-  \vspace{12pt}
-We could then extend our `ompr` model, `Mail1` with the additional constraints.  \vspace{12pt}
+
+We could then extend our `ompr` model, `Mail1` with the additional constraints.\
 
 ```{r}
 Mail2 <- add_constraint(Mail1, 
@@ -517,10 +497,8 @@ Mail2 <- add_constraint(Mail1,
                w = 2:Weeks)
 ```
 
-  \vspace{12pt}
-To speed up the solution time, I'll set the gap_limit to $15\%$.
-  \vspace{12pt}
-  
+To speed up the solution time, I'll set the gap_limit to $15\%$.\
+
 ```{r break-symmetry, echo=FALSE, results='markup'}
 res_Mail2 <- solve_model(Mail2, 
                         with_ROI(solver = "symphony",
@@ -542,17 +520,13 @@ for (week_counter in 1:Weeks) {
 colnames(weeksmail2a)<-paste0("Week ",week_counter)
 table_results2 <- append(table_results2,weeksmail2a)
 }
-#kbl (table_results2[-1],   # Removes first item
-#     booktabs=T,
-#     caption="Results with symmetry breaking")|>
-#   kable_styling(latex_options="scale_down")
 kbl(table_results1[-1]) |>
   kable_styling(latex_options = "hold_position")
 ```
-  \vspace{12pt}
-Notice that then the workload in week 1 would essentially be the same as _Q_. In other words, the _Q_ minimax variable and constraints could be removed and still give the equivalent model.  This highlights that in mixed integer optimization, there are often many different ways to implement models for the same application.  \vspace{12pt}
 
-Solving times are also hard to predict in advance.  The symmetry breaking constraint appears to have caused slowed down the solving significantly as it spends a lot of time early on with a gap of 10.34%.  This suggests that perhaps symphony's algorithms do a better job on this problem than the simple symmetry breaking constraints that we added.  This warrants future attention or experimentation.  \vspace{12pt}
+Notice that then the workload in week 1 would essentially be the same as _Q_. In other words, the _Q_ minimax variable and constraints could be removed and still give the equivalent model.  This highlights that in mixed integer optimization, there are often many different ways to implement models for the same application.\
+
+Solving times are also hard to predict in advance.  The symmetry breaking constraint appears to have caused slowed down the solving significantly as it spends a lot of time early on with a gap of 10.34%.  This suggests that perhaps symphony's algorithms do a better job on this problem than the simple symmetry breaking constraints that we added.  This warrants future attention or experimentation.\
 
 This application and model can be adjusted to fit a wide variety of other situations such as:
 
@@ -586,8 +560,6 @@ Does the revised solution match your expected result?
 
 :::
 
-
-
 ::: {.exercise name="Extending State Mailing"}
 The mailing by state example in chapter 8 is just another example of mixed integer programming.
 
@@ -612,4 +584,3 @@ d) Write a constraint or set of constraints to ensure that states Oregon and Cal
 d) After solving above, compare the results with exercise 8.1 and discuss.
 
 :::
-

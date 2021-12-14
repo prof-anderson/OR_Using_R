@@ -1,11 +1,9 @@
 ```{r Ch98setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = F)
-library (tufte)
-library (pander)
 ```
 
-# References
+# References {.unnumbered}
 
 There currently appears to be an incompatibility between the current version of pandoc (2.14.0.3) used by RStudio, the bibliography styles, and LaTeX such that direct generation of the bibliography fails. As a temporary fix, the header for `index.rmd` disables live generation of the bibliography by using `suppress-bibliography: true`. The bibliography generation can be re-enabled by simply changing this to `false`.
 

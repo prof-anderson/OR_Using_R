@@ -121,9 +121,7 @@ $$
 ### Implementing the Warehouse Model
 
 Rather than typing in fixed data or loading it from data file, Dirk simply generated a collection of random data for testing purposes.
-This highlights the advantage of R in that we have a rich collection of numerical tools available that we can leverage.
-
-\vspace{12pt}
+This highlights the advantage of R in that we have a rich collection of numerical tools available that we can leverage.\
 
 > The first thing we need is the data.
 > In this article we will simply generate artificial data.
@@ -137,12 +135,9 @@ This highlights the advantage of R in that we have a rich collection of numerica
 > It could just as easily have been 4321 or any other integer.\
 > Let's unpack this further.\
 
-\vspace{12pt}
-
 The grid size is set to 1000.
 You can think of this as a map for a square region that is 1000 kilometers in both horizontal (East-West) and vertical (North-South) directions for visualization purposes.
 We are then randomly placing customers on the map.\
-\vspace{12pt}
 
 Next we set the number of customers to be 200 and the number of warehouses to be 40.
 The size of this problem can have a tremendous impact on solving speed.[^more-mixed-mip-1]
@@ -355,22 +350,15 @@ kbl (head( get_solution(result, Vx[i,j])), booktabs=T,
   kable_styling(latex_options = "hold_position")
 ```
 
-```{marginfigure}
-Notice that most of the results are simply zero indicating that the first six customers are not assigned to warehouse 1.  It is common in many binary programming cases for the vast majority of variables to have a value of zero.  
-```
-
 Notice that in the table of raw results, the first six entries (obtained using the `head` function) did not show any customers assigned to a warehouse.
-This isn't surprising given that only one in twenty values are non-zero.
+This isn't surprising given that only one in twenty values are non-zero.  It is common in many binary programming cases for the vast majority of variables to have a value of zero.  
+
 
 ```{r processed-results-table}
 kbl (head( matching), booktabs=T, 
        caption=
    "Subset of Customers (i) Assigned to Warehouses (j)") |>
   kable_styling(latex_options = "hold_position")
-```
-
-```{marginfigure}
-Example of some of the processed results for variable x from matching.
 ```
 
 The processed results table shows that the `matching` object simply lists six customers and to which warehouse it is assigned.

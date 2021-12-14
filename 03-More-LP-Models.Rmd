@@ -83,7 +83,7 @@ The concise, algebraic representation can be easily scaled to any number of prod
 Let's write this as the following.
 I'll expand the names of data slightly for making the R code more readable but this is meant to be consistent with the above formulation.\
 
-```{r, fig.margin=TRUE, echo=FALSE}
+```{r, echo=FALSE}
 NProd <- 4
 NResources <- 5
 ProdNames <- lapply(list(rep("Prod",NProd)),paste0,1:NProd) 
@@ -140,15 +140,14 @@ kbl(Combined, booktabs=T,
 We have used the `cbind` function to do a column binding of the data.
 In this way the representation is more visually intuitive.
 
-To ensure that we know how to access the data, if we want to see how the amount of the first resource used by the second product, you can enter `Resources[1,2]` in R Studio's console which is then evaluated as `r Resources[1,2]`.\^[Using inline code is a great feature of RMarkdown.
-In the text of your RMarkdown, anything enclosed by a pair of single tick marks will be shown as a code chunk.
-If it starts with the letter r, it will be passed instead to R for evaluation.
-This allows for discussing results in a reproducible manner.
+To ensure that we know how to access the data, if we want to see how the amount of the first resource used by the second product, you can enter `Resources[1,2]` in R Studio's console which is then evaluated as `r Resources[1,2]`.
+
+Using inline code is a great feature of RMarkdown. In the text of your RMarkdown, anything enclosed by a pair of single tick marks will be shown as a code chunk. If it starts with the letter r, it will be passed instead to R for evaluation. This allows for discussing results in a reproducible manner.
 Rather than discussing the result giving a value of 47.1 in the text and a later rerun of the analysis has an updated table of results showing the result to be 47.2, by using inline code evaluation, it will always show the up to date result, in this case, 47.2.]\
 
 Now, let's begin building our optimization model.\
 
-First, we'll start by loading the packages that we are using.
+First, we'll start by loading the packages that we are using.\
 
 ```{r warning=FALSE}
 suppressPackageStartupMessages(library (dplyr, quietly = TRUE))
@@ -158,7 +157,7 @@ library (ompr, quietly = TRUE)
 library (ompr.roi, quietly = TRUE)
 ```
 
-And we will continue with the code to build the mode in a generic format.  Note that in the `ompr` model, every variable is given a `V` prefix to differentiate it from a regular `R` data object that might exist elsewhere in my `R` environment.  Conflicts between `R` objects and `ompr` variables are a common problem for modelers and this helps to avoid the problem, assuming that you don't have a lot of other `R` objects that start with `V`.  For more discussion about this issue and other common problems, see Appendix B.  
+And we will continue with the code to build the mode in a generic format.  Note that in the `ompr` model, every variable is given a `V` prefix to differentiate it from a regular `R` data object that might exist elsewhere in my `R` environment.  Conflicts between `R` objects and `ompr` variables are a common problem for modelers and this helps to avoid the problem, assuming that you don't have a lot of other `R` objects that start with `V`.  For more discussion about this issue and other common problems, see Appendix B.\
 
 ```{r Build_Prod_Model}
 prodmodel <- MIPModel()                          |>
@@ -182,7 +181,7 @@ Displaying the object of `prodmodel` only shows a simple summary of the results 
 It indicates whether the model was solved to optimality (and it was!) and the objective function value (profit).\
 
 This is useful to know but we are really interested in how to generate this profit.
-To do this, we need to extract the values of the variables.
+To do this, we need to extract the values of the variables.\
 
 ```{r Display-Results}
 results.products <- matrix (rep(-1.0,NProd), 
@@ -236,9 +235,9 @@ This section covered a lot of concepts including defining the data, setting name
 
 ## Changing the Model
 
-Let's modify the above model. We can do this by simply changing the data that we pass into the model.\
+Let's modify the above model. We can do this by simply changing the data that we pass into the model and rebuilding the model.\
 
-Let's number of sensors required for an Ant to 5. Recall that this is the first product and the fourth resource. This is how we can change the value.\
+Let's change the number of sensors required for an Ant to 5. Recall that this is the first product and the fourth resource. This is how we can change the value.\
 
 ```{r Change_Data}
 Resources[4,1] <- 5 
@@ -268,7 +267,7 @@ prodmodel
 
 We can see that the objective function has changed.
 
-```{r Examine-Results-of-Changed-Model, fig.margin=TRUE}
+```{r Examine-Results-of-Changed-Model}
 results.products <- matrix (rep(-1.0,NProd), 
                             nrow = NProd, 
                             ncol=1,
@@ -289,7 +288,7 @@ The production plan has significantly changed. \
 
 ## Blending Problems
 
-Specific blend limitations arise in many situations.  Recall from our three variable case in Chapter 2 that the vast majority of drones produced were Cat models.  Let's assume that we can't have more than 40% of total production made up of Cats.  Let's start by building our original three variable model. In our original case, this would be expressed as the following.\
+Specific blend limitations arise in many situations. Recall from our three variable case in Chapter 2 that the vast majority of drones produced were Cat models. Let's assume that we can't have more than 40% of total production made up of Cats. \index{Blending constraint} Let's start by building our original three variable model. In our original case, this would be expressed as the following.\
 
 $$
  \begin{split}
@@ -332,7 +331,7 @@ colnames (base_case_res) <- c("Ants","Bats","Cats")
 ```
 
 
-```{r}
+```{r, cache=FALSE}
 kbl(base_case_res, booktabs=T, 
     caption="Production Plan for Base Case") |>
   kable_styling(latex_options = "hold_position")
@@ -350,7 +349,7 @@ $$Cats - 0.4 \cdot Ants-0.4 \cdot Bats-0.4 \cdot Cats \leq 0$$
 
 Let's simplify this a little, which gives us the following: 
 
-$$0.6 \cdot Ants-0.4 \cdot Bats+0.6 \cdot Cats \leq 0$$
+$$-0.4 \cdot Ants-0.4 \cdot Bats+0.6 \cdot Cats \leq 0$$
 
 Now we can just this to the original formulation.  The result is the following formulation.
 
@@ -369,7 +368,7 @@ $$
   \end{split}
 $$
 
-We can simply add a constraint to an existing `ompr` model of our 3 variable base case.\
+We can simply add a constraint to an existing `ompr` model of our 3 variable base case and then solve again.\
 
 ```{r Blending}
 ModelBlending<- add_constraint(model1,
@@ -401,9 +400,7 @@ As a summary, we can see on the table on the right a comparative between the bas
 
 ## Allocation Models
 
-An allocation model divides resources and assigns them to competing activities.
-Typically it has a maximization objective with less than or equal to constraints.
-Note that our production planning problem from Chapter 2 is an allocation model.
+An allocation model divides resources and assigns them to competing activities. \index{Allocation model} Typically it has a maximization objective with less than or equal to constraints. Note that our production planning problem from Chapter 2 is an allocation model.
 
 $$
  \begin{split}
@@ -418,8 +415,7 @@ $$
 
 ## Covering Models
 
-A covering model combines resources and coordinates activities.
-A classic covering application would be what mix of ingredients "covers" the requirements at the lowest possible cost.
+A covering model combines resources and coordinates activities. \index{Covering model} A classic covering application would be what mix of ingredients "covers" the requirements at the lowest possible cost.
 Typically it has a minimization objective function and greater than or equal to constraints.
 
 $$
@@ -431,9 +427,6 @@ $$
   \end{aligned}
   \end{split}
 $$
-
-
-See the Formula 3.6 on the right to understand the mathematical expression.
 
 Consider the case of Trevor's Trail Mix Company.
 Trevor creates a variety of custom trail mixes for health food fans.
@@ -470,14 +463,14 @@ CharMin <- matrix(c(1440, 1440, 2000, 1000),
               ncol=1,dimnames=c(CharNames,"Minimum"))
 ```
 
-```{r Display-Trail-Mix-Data, fig.margin=TRUE}
+```{r Display-Trail-Mix-Data}
 TTMix <-cbind(MixChar,CharMin)
 kbl(TTMix, booktabs=T, 
     caption="Data for Trevor Trail Mix Company") |>
   kable_styling(latex_options = "hold_position")
 ```
 
-**Hint**: You might need to add a total amount to make! Modify the numbers until it runs...
+**Hint**: You might need to add a total amount to make! Modify the numbers until it runs.
 
 Now let's build our model.
 
@@ -504,7 +497,7 @@ In this case, a manager is trying to assign workers to cover the required demand
 
 ## Transportation Models
 
-A transportation model is typically for getting material from one place to another at the lowest possible costs.
+A transportation model is typically for getting material from one place to another at the lowest possible costs. \index{Transportation model}
 It has sets of source points or nodes as well as ending or destination nodes.
 The decision variables are the amount to send on each route.
 Constraints are typically based on supply from the source nodes and capacity at the destination nodes.
@@ -535,11 +528,6 @@ $$
   \end{split}
 $$
 
-
-```{marginfigure}
-**Formula 3.7**: Base Case for Transportation model  
-```
-
 If we simply run this model, as is, the minimum cost plan would be to just do nothing!
 The cost would be zero.
 In reality, even though we are focused on costs in this application, there is an implied revenue and therefore profit (we hope!) that we aren't directly modeling.
@@ -562,12 +550,9 @@ Table: Demand and Supply Constrained Transportation Problems.
 In the balanced situation, either source or demand constraints can be equalities.
 
 Similarly, if we try to use equality constraints for both the supply and demand nodes but the supply and demand are not balanced, the LP will not be feasible.
-\vspace{12pt}
 
-**Hint**:  In `ompr`, a double subscripted non-negative variable, $x_{i,j}$ can be defined easily as the following:
-`add_variable(x[i, j], type = "continuous", i = 1:10, j = 1:10, lb=0)`
-
-Let's show how to set up a basic implementation of the transportation problem in `ompr`. This demonstrates the use of double subscripted variables. Also, it should be customized for a particular application of being demand or supply constrained but it will give a good running head start.
+In `ompr`, a double subscripted non-negative variable, $x_{i,j}$ can be defined easily as the following:
+`add_variable(x[i, j], type = "continuous", i = 1:10, j = 1:10, lb=0)`.  Let's show how to set up a basic implementation of the transportation problem in `ompr`. This demonstrates the use of double subscripted variables. Also, it should be customized for a particular application of being demand or supply constrained but it will give a good running head start.
 
 ```{r transp_data}
 NSupply <- 3   # 3 Supply nodes
@@ -581,12 +566,9 @@ Cost <- matrix (c(65, 36, 65, 57, 30, 70,
 S <- c(1000, 1500, 1500)
 
 D <- c(700,  900, 1200, 900)
-
 ```
 
-\vspace{12pt}
-
-At this point, it may be a good idea to look at the arcs and see if you can expect which routes are likely to be heavily used and which are likely to be unused.  You can also do this by looking at the matrix of transportation costs to the right.
+At this point, it may be a good idea to look at the arcs and see if you can expect which routes are likely to be heavily used and which are likely to be unused.  You can also do this by looking at the matrix of transportation costs to the right.\
 
 ```{r Show-Transp-Cost}
 kbl (Cost, booktabs=T,
@@ -594,10 +576,7 @@ kbl (Cost, booktabs=T,
   kableExtra::kable_styling(latex_options = "hold_position")
 ```
 
-\vspace{12pt}
-
-Now, let's move on to implementing the model.  
-\vspace{12pt}
+Now, let's move on to implementing the model.\
 
 ```{r transportation, eval=TRUE}
 transportationmodel <- MIPModel()             |>
@@ -616,7 +595,6 @@ transportationmodel <- MIPModel()             |>
 
 res.transp <-solve_model(
   transportationmodel, with_ROI(solver ="glpk"))
-
 ```
 
 Let's confirm that our model solved correctly.\
@@ -626,6 +604,7 @@ res.transp$status
 ```
 
 Since it was solved to optimality, the optimal objective function value is meaningful and again we can use an inline code chunk of `R` to extract this value `r  res.transp$objective_value`.  The actual decision variable values of the solution are more interesting though.  Let's first prepare these results by extracting them from the solution object and then applying our names to them.\
+
 ```{r}
 Transp <- matrix(res.transp$solution,
                 nrow = NSupply,
@@ -642,7 +621,7 @@ kbl (Transp, booktabs=T,
 
 ## Transshipment Models
 
-A generalization of the transportation model is that of transshipment where some nodes are intermediate nodes that are neither pure sources or destinations but can have both inflow and outflow.  We could extend our previous example with factories in Vietnam and Thailand.  Note that the facilities in the middle (Minnesota, Pennsylvania, and Wyoming) are better described as distribution centers rather than warehouses.
+A generalization of the transportation model is that of transshipment \index{Transshipment model} where some nodes are intermediate nodes that are neither pure sources or destinations but can have both inflow and outflow.  We could extend our previous example with factories in Vietnam and Thailand.  Note that the facilities in the middle (Minnesota, Pennsylvania, and Wyoming) are better described as distribution centers rather than warehouses.
 
 ```{r Fig-Transshipment, echo=FALSE, out.width="3in", fig.show='hold', fig.align='center', fig.cap="Transshipment Application."}
 knitr::include_graphics("images/Fig03-02-Transshipment.PNG")
@@ -650,13 +629,11 @@ knitr::include_graphics("images/Fig03-02-Transshipment.PNG")
 
 In this case, the standard convention might be to work from left to right and index the set of factories by _i_, the set of distribution centers by _j_ and the set of customers by _k_.  We might also use $x_{i,j}$ to be the amount to ship from factory _i_ to distribution center _j_ and $y_{j,k}$ to be the amount to ship from distribution center _j_ to customer _k_.
 
-A common characteristic of this kind of problem is then that the inflow at each distribution center must equal the outflow.  This means that for Minnesota, $(j=1)$, we would would have a relationship of the following.
-\vspace{12pt}
+A common characteristic of this kind of problem is then that the inflow at each distribution center must equal the outflow.  This means that for Minnesota, $(j=1)$, we would would have a relationship of the following.\
 
 $$x_{1,1}+x_{2,1}=y_{1,1}+y_{1,2}+y_{1,3}+y_{1,4}$$ 
 
-This lends itself to a summation.
-\vspace{12pt}
+This lends itself to a summation.\
 
 $$\sum_{i=1}^2 x_{i,1}=\sum_{k=1}^4 y_{1,k}$$
 
@@ -688,19 +665,17 @@ Real world applications applications often also require modeling a time dimensio
 
 ## Production and Inventory
 
-A common application is production planning and inventory management planning over time.
+A common application is production planning and inventory management planning over time.\index{Production planning} \index{Inventory management}
 Let's assume a company has a manufacturing cost for product *p* in time period *t* of $C^M_{p,t}$.
 The cost to carry a unit of product *p* in inventory from period *t* to *t+1* is $C^I_{p,t}$.
 Demand of $D_{p,t}$ must be met each period.
 The maximum production in any period can vary and is denoted as $M_{p,t}$.
 The beginning inventory for each product is $B_{p}$.
 The goal of the manager is to find a production plan that minimizes cost.\
-\vspace{12pt}
 
 We can start by defining our decision variables.
 We will need a set of decision variables for the amount to produce of each product *p* in each period *t*.
 Let's define that as $x_{p,t}$.\
-\vspace{12pt}
 
 Similarly, we will define a variable for the inventory at the end of each period, $y_{p,t}$.\
 \vspace{12pt}
@@ -723,12 +698,11 @@ We would generalize this then as $B_p + x_{p,1} - D_{p,1} = y_{p,1}$.
 \vspace{12pt}
 
 For periods after the first $(t>1)$) Essentially the ending inventory is equal to the beginning inventory plus the inflow (production) minus the outflow (demand).
-For product *p* in time period *t*, this then becomes $y_{p,t-1} + x_{p,t} - D_{p,t} = y_{p,t}$ \vspace{12pt}
+For product *p* in time period *t*, this then becomes $y_{p,t-1} + x_{p,t} - D_{p,t} = y_{p,t}$.\
 
 Of course we would need to ensure appropriate upper and lower bounds on the decision variables.\
-\vspace{12pt}
 
-Let's wrap it all together in the follow formulation.
+Let's wrap it all together in the follow formulation.\
 
 $$
  \begin{split}
@@ -752,7 +726,7 @@ For example:
 
 ## Standard Form
 
-Any linear program with inequality constraints can be converted into what is referred to as standard form.
+Any linear program with inequality constraints can be converted into what is referred to as standard form. \index{Standard form}
 First, all strictly numerical terms are collected or moved to the right hand side and all variables are on the left hand side.\
 
 It makes little difference as to whether the objective function is a *min* or a *max* function since a min objective function can be converted to a max objective function by multiplying everything by a negative one.
@@ -760,7 +734,7 @@ The converse is also true.\
 
 The last step is where all of the inequalities are replaced by strict equality relations.
 The conversion of inequalities to equalities warrants a little further explanation.
-This is done by introducing a new, non-negative "slack" variable for each inequality.
+This is done by introducing a new, non-negative "slack" variable for each inequality. \index{Slack variable}
 If the inequality is a $\leq$, then the slack variable can be thought of as filling the left hand side to make it equal to the right hand side so the slack variable is added to the left hand side.
 If the inequality is $\geq$, then the slack variable is the amount that must be absorbed from the left hand side to make it equal the right hand side.\
 
@@ -835,12 +809,11 @@ This is consistent with our solution, where $s_1$ is zero and the other three va
 ## Vector and Matrix Forms of LPs
 
 One of the benefits of using an algebraic modeling approach for linear programming such as `ompr` is that it provides a direct mapping from the mathematical model of the application to the implementation.
-The actual solver used such as `glpk,` `symphony,` or `gurobi` take the linear program in a different form though and `ompr` processes it into a form they can handle.
+The actual solver used such as `glpk,` `symphony,` or `lpSolve` take the linear program in a different form though and `ompr` processes it into a form they can handle. \index{glpk} \index{symphony} \index{lpSolve} \index{ROI}
 
 ```{r Fig-ompr-structure, echo=FALSE, fig.show='hold', fig.align='center', out.width="100%", fig.cap="Relationship between ompr and solvers."}
 knitr::include_graphics("images/Fig03-03-ROI-1.PNG")
 ```
-
 
 In general, the solver thinks of the problem in terms of a vector of coefficients for the objective function, *C*, a vector of right hand side constraint values, *B*, a matrix of data, *A*, and a vector of variables, *x*.
 The result is that any linear program can be thought of in a form to the right.
@@ -855,13 +828,7 @@ $$
   \end{split}
 $$
 
-```{marginfigure}
-**Formula 3.10**: Optimization base model with 2 variables.
-```
-
-\vspace{12pt}
-
-Let's examine building our first two variable LP model in this way using the `lpsolveAPI` package.  
+Let's examine building our first two variable LP model in this way using the `lpsolveAPI` \index{lpsolveAPI} package.\
 
 $$
  \begin{split}
@@ -877,7 +844,7 @@ $$
   \end{split}
 $$
 
-Now let's implement the model.
+Now let's implement the model.\
 
 ```{r}
 library(lpSolveAPI)
@@ -897,7 +864,6 @@ plot.lpExtPtr(lps.model)
 solve(lps.model)
 get.primal.solution(lps.model, orig=TRUE)
 ```
-
 
 Earlier in the chapter, we created data structures for the generalized version of the optimization model. Recall that earlier in this chapter we created a `Resources` matrix of the resources used by each product - this corresponds to our $A$ matrix.  We also created a single column  matrix, `Available`, for the amount of each resource available which is our $B$ vector.  The `Profit` single row matrix serves as our $C$ vector.  The last item that we need to do is to specify a direction for each inequality. 
 \vspace{12pt}
@@ -938,13 +904,13 @@ res2 <- Rglpk_solve_LP(obj=Profit,    # C vector
 ```
 \vspace{12pt}
 
-Notice that calling the solver directly such as in this way using `Rglpk` does not require naming decision variables.  A decision variable is created for each column of the matrix.  Directly accessing the solver allows for all the same features that we use through `ompr` such as placing bounds on the variables, changing to a minimization objective function, and more such as advanced solving options.  Other LP solving engines available in `R` such as `RSymphony` and `lpSolve` have similar syntax for solving. Let's look at the results. As usual, we start by examining the status. \
+Notice that calling the solver directly such as in this way using `Rglpk` does not require naming decision variables.  A decision variable is created for each column of the matrix.  Directly accessing the solver allows for all the same features that we use through `ompr` such as placing bounds on the variables, changing to a minimization objective function, and more such as advanced solving options.  Other LP solving engines available in `R` such as `RSymphony` and `lpSolve` have similar syntax for solving. Let's look at the results. As usual, we start by examining the status. \index{Rglpk}  \index{RSymphony}  \index{lpSolve}  \
 
 ```{r}
 res2$status
 ```
 
-The status returned by `Rglpk` is zero.  This may sound bad but the package's help file indicates that returning a status value of zero means that no problems occurred and it found an optimal solution.  We can then proceed to examine the objective function value.\
+The status returned by `Rglpk` is zero.  This may sound bad but the package's help file indicates that returning a status value of zero means that no problems occurred and it found an optimal solution. We can then proceed to examine the objective function value.\
 ```{r}
 res2$optimum
 ```
@@ -1055,10 +1021,6 @@ $$
   \end{split}
 $$
 
-
-```{marginfigure}
-**Formula 3.6**: Generalized LP case
-```
 :::
 
 ::: {.exercise name="Staff Scheduling"}
@@ -1067,7 +1029,7 @@ Happy Patient Hospital (HPH), has varying needs for nurses throughout the day.
 They expect the following numbers of nurses to be needed over the typical 24 hour period.
 Nurses work eight hour shifts, starting at each 4 hour time period specified in the table.
 
-```{r, nurse-scheduling, fig.margin=TRUE}
+```{r, nurse-scheduling}
 hph_needs <- matrix (c(50, 140, 260, 140, 100, 80), ncol=1, 
     dimnames = c(list(c("midnight - 4 AM",
                         "4 AM - 8 AM",
