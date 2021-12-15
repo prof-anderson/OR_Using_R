@@ -20,10 +20,9 @@ library (TRA)
 library(bookdown); library(rmarkdown); rmarkdown::render("06-Integer-Programming.Rmd", "pdf_book")
 ```
 
-Up until this point, we have always assumed that variables could take on fractional (or non-integer) values. In other words, they were continuous variables. Sometimes the values conveniently turned out to be integer-valued, in other cases, we would brush off the non-integer values of the results. \vspace{12pt}
+Up until this point, we have always assumed that variables could take on fractional (or non-integer) values. In other words, they were continuous variables. Sometimes the values conveniently turned out to be integer-valued, in other cases, we would brush off the non-integer values of the results.\
 
-Allowing for integer values opens up many more important areas of applications as we will see.\
-\vspace{12pt} Let's look at two numerical examples. The first shows a case where integrality makes little difference, the second where it has a major impact. \vspace{12pt}
+Allowing for integer values opens up many more important areas of applications as we will see. Let's look at two numerical examples. The first shows a case where integrality makes little difference, the second where it has a major impact. \
 
 Unfortunately, there is no such thing as a free lunch-adding and integrality can make problems much more computationally demanding. We will go through an example of how many optimization routines do integer optimization to demonstrate why it can be more difficult algorithmically even if looks trivially easy from the perspective of the change in the `ompr`function.\
 
@@ -45,24 +44,20 @@ $$
   \end{split}
 $$
 
-We use the following implementation.
+We use the following implementation.\
 
 ```{r base-case-3varB}
 model1 <- MIPModel() |>
   add_variable(Ants, type = "continuous", lb = 0) |>
-  add_variable(Bats, type = "continuous",lb = 0) |>
+  add_variable(Bats, type = "continuous",lb = 0)  |>
   add_variable(Cats, type = "continuous", lb = 0) |>
   
-  set_objective(7*Ants + 12*Bats + 5*Cats,"max")|>
+  set_objective(7*Ants + 12*Bats + 5*Cats,"max")  |>
   
-  add_constraint(1*Ants + 4*Bats + 2*Cats<=800) |> 
-  #machining
-  add_constraint(3*Ants + 6*Bats + 2*Cats<=901) |> 
-  #assembly
-  add_constraint(2*Ants + 2*Bats + 1*Cats<=480) |> 
-  #testing
-  add_constraint(2*Ants + 10*Bats + 2*Cats<=1200) 
-  #sensors
+  add_constraint(1*Ants + 4*Bats + 2*Cats<=800)   |> # machining
+  add_constraint(3*Ants + 6*Bats + 2*Cats<=901)   |> # assembly
+  add_constraint(2*Ants + 2*Bats + 1*Cats<=480)   |> # testing
+  add_constraint(2*Ants + 10*Bats + 2*Cats<=1200)    # sensors
 
 result1 <-  solve_model(model1, with_ROI(solver="glpk"))
 
@@ -74,11 +69,11 @@ kbl (inc_as_res, digits=6, booktabs=T,
   kable_styling(latex_options = "hold_position")
 ```
 
-In this case, the fractional value of *Cats* would be only somewhat concerning. We wouldn't actually ship an 80% complete Cat drone to a customer-at least I hope not. The difference between 374 and 375 is relatively small over a month of production. This is a difference of much less than 1% and none of the numbers specified in the model appear to be reported to more than two significant digits or this level of precision. The result is that we could specify the answer as 374.8 and be satisfied that while it is our actual best guess or might reflect a chair half finished for the next month, it isn't a major concern. \vspace{12pt}
+In this case, the fractional value of *Cats* would be only somewhat concerning. We wouldn't actually ship an 80% complete Cat drone to a customer-at least I hope not. The difference between 374 and 375 is relatively small over a month of production. This is a difference of much less than 1% and none of the numbers specified in the model appear to be reported to more than two significant digits or this level of precision. The result is that we could specify the answer as 374.8 and be satisfied that while it is our actual best guess or might reflect a chair half finished for the next month, it isn't a major concern. \
 
 For the sake of illustration, let's show how we would modify the model to be integers. If we had wanted to modify the problem to force the amount of each item to be produced to be an integer value, we can modify our formulation and the implementation with only a few small changes. \
 
-In the formulation, we can replace the non-negativity requirement with a restriction that the variables are drawn from the set of non-negative integers.
+In the formulation, we can replace the non-negativity requirement with a restriction that the variables are drawn from the set of non-negative integers.\
 
 $$
  \begin{split}
@@ -104,11 +99,13 @@ model1 <- add_variable(model1, Cats,
                        type = "integer", lb = 0)
 ```
 
-Let's confirm that the implemented model is of the form desired.
+Let's confirm that the implemented model is of the form desired.\
 
 ```{r}
 model1
 ```
+
+We can see that it now has three integer variables so let's move on to solving it and comparing our results.\
 
 ```{r}
 result1 <-  solve_model(model1, with_ROI(solver="glpk"))
@@ -157,12 +154,12 @@ $$
 
 The last constraint cannot be solved directly strictly using linear programming. It is instead referred to as an integer linear program or ILP.\
 
-Again, we could try solving it with and without the imposition of the integrality constraint.
+Again, we could try solving it with and without the imposition of the integrality constraint.\
 
 ```{r SolveLPRelaxation0}
 LPRmod <- MIPModel() |>
   add_variable(Vx1, type = "continuous", lb = 0) |>
-  add_variable(Vx2, type = "continuous",lb = 0)  |>
+  add_variable(Vx2, type = "continuous", lb = 0) |>
   set_objective(2*Vx1 + 3*Vx2, "max")            |>
   add_constraint(1.0*Vx1 + 3.0*Vx2 <= 8.25)      |> # Surfactant
   add_constraint(2.5*Vx1 + 1.0*Vx2  <= 8.75)        # Steel
@@ -214,9 +211,9 @@ The simplicity of making the change in the model from continuous to integer vari
 
 At its core, the basic problem is that the simplex method and linear programming solves a system of equations and unknowns (or variables). It is trivial to solve one equation with one unknown such as $5x=7$. It is only slightly harder to solve a system of two equations and two unknowns. Doing three equations and three unknowns requires some careful algebra but is not too hard. In general, solving *n* equations and *n* unknowns is readily solvable. On the other hand, none of this algebraic work of solving for unknown variables can require that the variables take on integer values. Even with only one equation and one unknown, *x* will only be integer for certain combinations of numbers in the above equation. Specifically when the number on the right is a multiple of the number in front of *x*. It gets even less likely to have an all integer solution as the number of equations and unknowns increase.\
 
-Another way to visualize integer solutions for general systems of inequalities is to think of the two equation and two unknown (*x* and *y*) case. Finding a solution is the same as finding where two lines intersect in two dimensional space. The odds of getting lucky and having the two lines intersect at an integer solution is small. Even if we limit ourselves to x and y both being between 0 and 10, this means that there are $11^2=121$ possible integer valued points in this space such as (0,0), (0,3), and (10,10). In contrast, the set of all points, including non-integers, in this region includes all of the above points as well as (0,0.347) and (4.712, 7.891) among infinitely more. The result is that if you think of this as a target shooting, the probability of finding an integer solution by blind luck is $\frac{121}{\infty}\approx 0$. \
+Another way to visualize integer solutions for general systems of inequalities is to think of the case with two equations and two unknowns (*x* and *y*). Finding a solution is the same as finding where two lines intersect in two dimensional space. The odds of getting lucky and having the two lines intersect at an integer solution is small. Even if we limit ourselves to x and y both being between 0 and 10, this means that there are $11^2=121$ possible integer valued points in this space such as (0,0), (0,3), and (10,10). In contrast, the set of all points, including non-integers, in this region includes all of the above points as well as (0,0.347) and (4.712, 7.891) among infinitely more. The result is that if you think of this as a target shooting, the probability of finding an integer solution by blind luck is $\frac{121}{\infty}\approx 0$. \
 
-What we need to do is an algorithm around the simplex method to accomplish this. A basic and common and approach often used for solving integer variable linear programming problems is called branch and bound. We start with a solution that has presumably continuous valued variables. We then branch (create subproblems) off of this result and add bounds (additional constraints) to rule out the fractional value of that variable.\
+What we need to do is an algorithm around the simplex method to accomplish this. A basic and common and approach often used for solving integer variable linear programming problems is called branch and bound. We start with a solution that has presumably continuous valued variables. We then branch (create subproblems) off of this result and add bounds (additional constraints) to rule out the fractional value of that variable. \index{Integer programming!Branch and bound}  \index{Branch and bound|see{Integer programming!Branch and bound}} \
 
 ### The LP Relaxation
 
@@ -309,7 +306,7 @@ To simplify the implementation, I can simply change the upper and lower bounds o
 ```{r SolveLPSubIII}
 LPSubIII <- LPRmod |>
   add_variable(Vx1, type = "continuous", lb = 0, ub = 2) |>
-  add_variable(Vx2, type = "continuous",lb = 0, ub = 2) |>
+  add_variable(Vx2, type = "continuous", lb = 0, ub = 2) |>
   solve_model(with_ROI(solver = "glpk"))
 
 obj_val <- objective_value(LPSubIII )
@@ -372,7 +369,7 @@ Now, we have searched down all branches or subproblems except for subproblem II.
 ```{r SolveLPSubII}
 LPSubII <- LPRmod |>
   add_variable(Vx1, type = "continuous", lb = 3) |>
-  add_variable(Vx2, type = "continuous",lb = 0) |>
+  add_variable(Vx2, type = "continuous", lb = 0) |>
   solve_model(with_ROI(solver = "glpk"))
 
 obj_val <- objective_value(LPSubII )
@@ -444,7 +441,7 @@ Note that in our earlier example, if we had a wide enough suboptimality toleranc
 
 ## Binary Variables and Logical Relations
 
-Binary variables are a special case of general integer variables. Rather than variables taking on values such as 46 and 973, acceptable values are limited to just 0 and 1. This greatly reduces the possible search space for branch and bound since you know that in any branch, you will never branch on a single variable more than once. On the other hand, with a large number of variables, the search space can still be very large. If the previous case with 1000 variables were binary, a full enumeration list would rely on a list of $2^{1000}$ or one followed by about 300 zeros) possible solutions. While better than the case of integers, it is still vastly more than the number of atoms in the universe. \
+Binary variables are a special case of general integer variables. Rather than variables taking on values such as 46 and 973, acceptable values are limited to just 0 and 1. This greatly reduces the possible search space for branch and bound since you know that in any branch, you will never branch on a single variable more than once. On the other hand, with a large number of variables, the search space can still be very large. If the previous case with 1000 variables were binary, a full enumeration list would rely on a list of $2^{1000}$ or one followed by about 300 zeros) possible solutions. While better than the case of integers, it is still vastly more than the number of atoms in the universe. \index{Integer programming!Binary variables}  \index{Binary variables|see{Integer programming!Binary variables}}\
 
 The important thing is is that binary variables give us a lot of rich opportunities to model complex, real world situations. \
 Examples include assigning people to projects, go-no go decisions on projects, and much more.\
@@ -537,7 +534,7 @@ Fixed charge models are a special case of integer programming models where situa
 
 In our example, we need to connect or *link* the two decision variables of how much to produce and whether to produce for each of the products.^[This example is based on an example from Thanh Thuy Nguyen.]\  
   
-Let's explore an example of a fixed charge problem. Widget Inc. is re-evaluating their product production mix. As the plant manager, you are responsible for determining what products the company should manufacture. Since the company is leasing equipment, there are setup costs for each product. You need to determine the mix that will maximize profit for the company.\
+Let's explore an example of a fixed charge problem. Widget Inc. is re-evaluating their product production mix. As the plant manager, you are responsible for determining what products the company should manufacture. Since the company is leasing equipment, there are setup costs for each product. You need to determine the mix that will maximize profit for the company. \index{Integer programming!Fixed charge}  \index{Fixed charge|see{Integer programming!Fixed charge}}\
 
 The profit for each Widget is shown below, as well as the setup costs (if you decide to produce any of that that Widget). The materials you have sourced allow you to only produce each Widget up to its capacity.
 
@@ -605,7 +602,7 @@ $$
 
 Let's examine the results if we run this model.\
 
-For Fixed Charge problems, we need to link our Widgets to our decision on whether or not we produce the Widget (and its associated setup costs). We do this what is called the "Big M" method.\
+For fixed charge problems, we need to link our Widget production volume to our decision on whether or not we produce the Widget (and its associated setup costs). We do this what is called the "Big M" method and the aptly named *linking constraint*. \index{Integer programming!Linking constraint}  \index{Linking constraint|see{Integer programming!Linking constraint}} \index{Integer programming!Big M}\
 
 ```{r base_fixed_charge}
 fc_base_model <- MIPModel() |>

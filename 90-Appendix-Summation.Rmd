@@ -12,11 +12,11 @@ knitr::opts_chunk$set(tidy = F)
 
 ## Purpose
 
-This Appendix provides a brief introduction to relevant notation constructs that arise often in optimization.   In this appendix we will both briefly review some of these mathematical relationships that commonly arise in mathematical models as well as how these can be expressed using LaTeX in Rmarkdown. A major benefit of using the Rmarkdown workflow is that it enables precise mathematical descriptions alongside the actual analysis.
+This Appendix provides a brief introduction to relevant notation constructs that arise often in optimization.   In this appendix we will both briefly review some of these mathematical relationships that commonly arise in mathematical models as well as how these can be expressed using LaTeX in Rmarkdown. A major benefit of using the RMarkdown workflow is that it enables precise mathematical descriptions alongside the actual analysis.
 
 ## Basic Summation Notation
 
-In linear programming, we often need to sum sets of numbers, such as:
+In linear programming, we often need to add together a lot of numbers (or variables), such as:
 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10
 + 11 + 12 + 13 + 14 + 15 + 16 + 17 + 18 + 19 + 20
 + 21 + 22 + 23 + 2 + 25 + 26 + 27 + 28 + 29 + 30
@@ -46,21 +46,20 @@ The summation above means that we will take the $x$ values, starting at $x=1$, a
 $$
 \begin{split}
 \begin{aligned}
-\sum_{x=1}^5 2x\\
-& =2*1+2*2+2*3+2*4+2*5\\
+\sum_{x=1}^5 2x & =2\cdot 1+2\cdot 2+2\cdot 3+2\cdot 4+2\cdot 5\\
 & =2+4+6+8+10\\
 & =30
 \end{aligned}
 \end{split}
 $$
 
-Summation can be calculated over a variety of algebraic expressions.  Another, perhaps more challenging, example is shown below.  
+Summation can be calculated over a variety of algebraic expressions.Another, perhaps more challenging, example is shown below.  
 
 $$
 \begin{split}
 \begin{aligned}
-\sum_{x=0}^3 x^2-4x+1\\
-& =(0^2-4*0+1)+(1^2-4*1+1)+(2^2-4*2+1)+(3^2-4*3+1)\\
+&\sum_{x=0}^3 x^2-4x+1\\
+& =(0^2-4\cdot 0+1)+(1^2-4\cdot 1+1)+(2^2-4\cdot 2+1)+(3^2-4\cdot 3+1)\\
 & =1+(-2)+(-3)+(-2)\\
 & =-6
 \end{aligned}
@@ -69,22 +68,28 @@ $$
 
 ## Using LaTeX in RMarkdown
 
-LaTex is a common typesetting used to express mathematical notation.  The summation notation symbols thus far in this text have been written using LaTeX.  Inline LaTeX commands can be added by including a \$ symbol on either side of the LaTeX command.  To create entire LaTeX code chunks, include two \$$ symbols before and after the chunk of LaTeX.
+LaTex is a common typesetting used to express mathematical notation.  The summation notation symbols thus far in this text have been written using LaTeX.  Inline LaTeX commands can be added by including a \$ symbol on either side of the LaTeX command.  To create entire LaTeX code chunks, include two \$$ symbols before and after the chunk of LaTeX. \index{RMarkdown!LaTeX}
 
-## In-line Notation
+## Inline Notation
 
-Rmarkdown makes it easy to switch between regular and "in-line LaTeX" by selecting whether you use a single or a double \$ to wrap the math. Most of the above examples were written using the double \$. 
+Rmarkdown makes it easy to switch between regular and "inline LaTeX" by selecting whether you use a single or a double \$ to wrap the math. Most of the above examples were written using the double \$. \
 
-Inline tries to help fit the math in the normal height of a line of text. For example, notice how this equation doesn't really disrupt the line spacing in a paragraph $\sum_{x=0}^3 x^2-4x+1$. The most obvious difference is in the summation. If it is selected as in-line, the summation limits will be to the right of the summation symbol. If it is regular, the limits will be above and below the summation symbol.  As an example, here is the same equation $$\sum_{x=0}^3 x^2-4x+1\\$$ entered in-line with the regular text of the paragraph. The simple rule of thumb in Rmarkdown is to use a double-dollar sign for equations that are entered on their own line and a single dollar sign for symbols that are entered as text.
+Inline tries to help fit the math in the normal height of a line of text. For example, notice how this equation doesn't really disrupt the line spacing in a paragraph $\sum_{x=0}^3 x^2-4x+1$. The most obvious difference is in the summation. If it is selected as in-line, the summation limits will be to the right of the summation symbol. If it is regular, the limits will be above and below the summation symbol.  As an example, here is the same equation $$\sum_{x=0}^3 x^2-4x+1\\$$ entered in the middle with regular text. Entering a regular summation in the paragraph causes problems.\
+
+Let's try the opposite now by showing what an in-line summation looks like when entered on its own line.
+
+$\sum_{x=0}^3 x^2-4x+1$
+
+Again, in this case, the summation is not quite right.  Given that vertical space is no longer at a premium, it is just harder to read than the regular summation.  
+
+The simple rule of thumb in Rmarkdown is to use a double-dollar sign for equations that are entered on their own line and a single dollar sign for symbols that are entered as text.  \index{RMarkdown!Inline} \
 
 ## Sums
 
-To display the $\sum$ symbol in LaTex, use the command `\sum_{lower}^{upper}`.  
-
-The sum expression can be added using the command:  
+To display the $\sum$ symbol in LaTex, use the command `\sum_{lower}^{upper}`.  The lower and upper limits of summation after the `\sum` are both optional. The upper and sometimes the lower are omitted when the interpretation would be unambiguous.  The summation expression can be added using the command:  
 $$\sum_{lower}^{upper}$$ 
 
-Sum limits can be written to appear above and below the operator.  
+Sum limits can be written to appear above and below the operator using the same notation as for superscript and subscript.
 
 $$
 \sum\limits_{t=0}^{n}\dfrac{CF_t}{(1+r)^t}
@@ -92,15 +97,20 @@ $$
 
 ## Products
 
-The multiplication or product over a sequence is denoted as the uppercase Greek letter pi, $\prod$.  The product command can be added using the expression `\prod_{x = a}^{b} f(x)`
+The multiplication or product over a sequence is denoted as the uppercase Greek letter pi, $\prod$.  The product command can be added using the expression `\prod_{x = a}^{b} f(x)`.  Products and integrals work in the same way as summation, only with `\prod` and `\int`.
+
 
 $$\prod_{x = a}^{b} f(x)$$
 
-The lower and upper limits of summation after the `\sum` are both optional.  Products and integrals work similarly, only with `\prod` and `\int`:
-
-Delimiters, like parentheses or braces, can automatically re-size to match what they are surrounding. This is done by using `\left` and `\right`:
+Delimiters, like parentheses or braces, can automatically re-size to match what they are surrounding. This is done by using `\left` and `\right` before the particular parentheses or brace being used. This is a well formatted example:
 
 $$\left( \sum_{i=1}^{n}{i} \right)^2 = \left( \frac{n(n-1)}{2}\right)^2 = \frac{n^2(n-1)^2}{4}$$
+
+For illustration purposes, let's at the code for the right hand side.  `\left( \frac{n(n-1)}{2}\right)^2 = \frac{n^2(n-1)^2}{4}`
+
+If we had not used the `\left` and `\right` the original equation would have looked like this.
+
+$$( \sum_{i=1}^{n}{i} )^2 = ( \frac{n(n-1)}{2})^2 = \frac{n^2(n-1)^2}{4}$$
 
 ## Summary of Mathematical Notations
 
@@ -147,7 +157,14 @@ $$\sum_{i=1}^5 x_i=x_1+x_2+x_3+x_4+x_5$$
 
 Coefficient values may also be included in a summation, as shown below.
 
-$$\sum_{i=1}^5 (10-i)x_i=9x_1+8x_2+7x_3+6x_4+5x_5$$
+$$\sum_{i=1}^5 \left(10-i\right)x_i=9x_1+8x_2+7x_3+6x_4+5x_5$$
+A common mistake is to use an asterisk, \*, to indicate multiplication in LaTeX. 
+
+$$\sum_{i=1}^5 \left(10-i\right)x_i=9*x_1+8*x_2+7*x_3+6*x_4+5*x_5$$
+
+While it is used for multiplication in R, it both takes more space and and is not considered formal mathematical notation.  In LaTeX you should instead use `\\cdot` in place of the asterisk. In other words, $\cdot$ in place of $*$.  The result is the following:
+
+$$\sum_{i=1}^5 \left(10-i\right)x_i=9\cdot x_1+8\cdot x_2+7\cdot x_3+6\cdot x_4+5\cdot x_5$$
 
 ## Applications of Summation
 
@@ -324,8 +341,6 @@ http://www.columbia.edu/itc/sipa/math/summation.html
 https://www.overleaf.com/learn/latex/Integrals,_sums_and_limits#Sums_and_products 
 
 http://www.u.arizona.edu/~kuchi/Courses/MAT167/Files/LH_LEC.0130.Intro.SummationNotation.pdf
-
-https://www.bates.edu/mathematics/resources/what-is-latex/
 
 http://math.hws.edu/gassert/LaTeX_Guide_Title.pdf 
 

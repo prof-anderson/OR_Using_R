@@ -139,9 +139,9 @@ kbl (rbind(sum_Home1, sum_Home2), booktabs=T,
 
 So which group has the _better_ model?  The objective function value for group 1's model is higher but it is in different units (people served) versus group 2's model of children served.\
 
-Both group's have admirable objectives.  We can view this as a case of goal programming.  By definition, we know that these are the best values that can be achieved in terms of that objective function.  Let's treat these optimal values as targets to strive for and measure the amount by which fail to achieve these targets.  We'll define target $T_1 =$ `r res_Home1$objective_value` and $T_2 =$ `r res_Home2$objective_value`.\
+Both group's have admirable objectives.  We can view this as a case of goal programming. \index{Goal programming} By definition, we know that these are the best values that can be achieved in terms of that objective function.  Let's treat these optimal values as targets to strive for and measure the amount by which fail to achieve these targets.  We'll define target $T_1 =$ `r res_Home1$objective_value` and $T_2 =$ `r res_Home2$objective_value`.\
 
-In order to do this, we need to use deviational variables.  These are like slack variables from the standard form of linear programs.  Since the deviations can only be one sided in this case, we only need to have deviations in one direction.  We will define $d_1$ as the deviation in goal 1 (Maximizing people served) and $d_2$ as the deviation in goal 2 (Maximizing children served).\
+In order to do this, we need to use deviational variables. \index{Deviational variables} These are like slack variables from the standard form of linear programs.  Since the deviations can only be one sided in this case, we only need to have deviations in one direction.  We will define $d_1$ as the deviation in goal 1 (Maximizing people served) and $d_2$ as the deviation in goal 2 (Maximizing children served).\
 
 Let's now create the modified formulation.\
 
@@ -197,7 +197,7 @@ kbl (sum_Home3, booktabs=T,
 ```
 
 
-The deviation variables have different units though.  One way to accommodate this would be to minimize the sum of percentages missed.    \vspace{12pt}
+The deviation variables have different units though.  One way to accommodate this would be to minimize the sum of percentages missed.\
 
 $$
  \begin{split}
@@ -248,7 +248,7 @@ kbl (sum_Home4, booktabs=T,
 
 ```
 
-Another approach is to minimize the maximum deviation.  This is often abbreviated as a minimax. This is essentially the same as the expression, "a chain is only as strong as its weakest link".  In Japan, there is an expression that the "the nail that sticks up, gets pounded down" and in China, "the tallest blade of grass gets cut down."  We can implement the same idea here by introducing a new variable, _Q_ that must be at least as large as the largest miss.\
+Another approach is to minimize the maximum deviation.  This is often abbreviated as a *minimax*. \index{Minimax} This is essentially the same as the expression, "a chain is only as strong as its weakest link".  In Japan, there is an expression that the "the nail that sticks up, gets pounded down" and in China, "the tallest blade of grass gets cut down."  We can implement the same idea here by introducing a new variable, _Q_ that must be at least as large as the largest miss.\
 $$
  \begin{split}
  \begin{aligned}
@@ -304,11 +304,11 @@ rownames(sum_Home5) <- "Minimax"
 kbl (rbind(sum_Home3, sum_Home4, sum_Home5), 
      booktabs=T, 
      caption="Minimax Solution.") |>
-  kable_styling(latex_options = "hold_position")
-
+  kable_styling(latex_options = 
+                  c("hold_position", "scale_down"))
 ```
 
-The minimax solution finds an alternative that is still Pareto optimal.  
+The minimax solution finds an alternative that is still Pareto optimal. \index{Pareto optimal} \ 
 
 Careful readers may note that children are effectively double counted between the two objective functions when deviations are added.\
 
@@ -341,10 +341,8 @@ kbl (head (Customers), booktabs=T,
      caption="Number of customers for first six states.") |>
   kable_styling(latex_options = "hold_position")
 ```
-\vspace{12pt}
 
-_Formulating the Model_
-\vspace{12pt}
+### Formulating the State Mailing Model
 
 Presumably you have created your own formulation. If so, your model will likely differ from what follows in some ways such as naming conventions for variables or subscripts.  That is fine.  The process of trying to build a model is important.\
 
@@ -358,12 +356,11 @@ Combined with the variable $x_{s,w}$ being defined to be binary, this is suffici
 
 We could easily calculate the amount of material to mail each as a function of $x_s,w$  and $C_s$.  For week 1, it would be $\sum\limits_{s=1}^{50}   C_s \cdot x_{s,1}$  For week 2, it would be $\sum\limits_{s=1}^{50}   C_s \cdot x_{s,2}$, and so on.  This could be generalized as $\sum\limits_{s=1}^{50}   C_s \cdot x_{s,w} \; \forall \; w$.\
 
-Creating a balanced schedule can be done in multiple ways. Let's start by using the _minimax_ approach discussed earlier. To do this, we add a new variable _Q_ and constrain it to be at least as large as each week.  Therefore, for week 1, $Q \geq \sum\limits_{s=1}^{50}   C_s \cdot x_{s,1}$ and for week 2, $Q \geq \sum\limits_{s=1}^{50}   C_s \cdot x_{s,2}$.  Again, to generalize for all eight weeks, we could write $Q \geq \sum\limits_{s=1}^{50}   C_s \cdot x_{s,w} \; \forall \; w$. \
+Creating a balanced schedule can be done in multiple ways. Let's start by using the _minimax_ approach discussed earlier. \index{Minimax} To do this, we add a new variable _Q_ and constrain it to be at least as large as each week.  Therefore, for week 1, $Q \geq \sum\limits_{s=1}^{50}   C_s \cdot x_{s,1}$ and for week 2, $Q \geq \sum\limits_{s=1}^{50}   C_s \cdot x_{s,2}$.  Again, to generalize for all eight weeks, we could write $Q \geq \sum\limits_{s=1}^{50}   C_s \cdot x_{s,w} \; \forall \; w$. \
 
 we can then use our minimax objective function of simply minimizing _Q_.\
 
 We'll summarize our formulation now.
-
 
 $$
  \begin{split}
@@ -375,6 +372,9 @@ $$
   \end{aligned}
   \end{split}
 $$
+
+### Implementing the State Mailing Model
+
 Let's now move on to implement this model in R. \
 
 ```{r build_mail1_model}
@@ -388,18 +388,15 @@ Mail1 <- add_variable(Mail1, Vx[s, w],
   
 Mail1 <- add_variable(Mail1, VQ, type = "continuous")
   
-Mail1 <-   set_objective(Mail1, VQ, "min")
-     # maximize the preferences
+Mail1 <- set_objective(Mail1, VQ, "min")
 
 # every state  needs to be assigned to a week
 Mail1 <- add_constraint(Mail1, sum_expr(Vx[s, w], 
                           w=1:Weeks)==1, s=1:States) 
-Mail1 <-   add_constraint(Mail1, VQ >= 
-                            sum_expr(Customers [s]*Vx[s, w], 
-                                s=1:States), w = 1:Weeks) 
-  
+Mail1 <- add_constraint(Mail1, VQ >= 
+                          sum_expr(Customers [s]*Vx[s, w], 
+                                   s=1:States), w = 1:Weeks) 
 Mail1
-
 ```
 
 ```{r Solve_glpk_gap15 }

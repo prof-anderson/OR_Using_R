@@ -502,8 +502,7 @@ get_solution(result1infeas, Bats)
 get_solution(result1infeas, Cats)
 ```
 
-Notice that since the solver status was infeasible, the values for the decision variables are not feasible and therefore cannot be considered a reliable (or possible) production plan. This highlights why the solver's status should always be confirmed to be "Optimal" before results are discussed. \index{Infeasible}
-\index{No feasible solution|see{Infeasible}} \
+Notice that since the solver status was infeasible, the values for the decision variables are not feasible and therefore cannot be considered a reliable (or possible) production plan. This highlights why the solver's status should always be confirmed to be "Optimal" before results are discussed. \index{Infeasible} \
 
 ### Case 2: Multiple Optima 
 
@@ -712,9 +711,9 @@ get_solution(result4, Bats)
 get_solution(result4, Cats)
 ```
 
-The solver status reports that the problem is *infeasible* rather than *unbounded* but by inspection, the solution is feasible in that it satisfies all of the constraints of $\geq$ and therefore the LP is feasible. \vspace{12pt}
+The solver status reports that the problem is *infeasible* rather than *unbounded* but by inspection, the solution is feasible in that it satisfies all of the constraints of $\geq$ and therefore the LP is feasible.\
 
-**Infeasible vs Unbounded**. This is a known issue in `ompr` as of 0.8.0 reported on github. It is caused by not distinguishing between the different status conditions for situations other than solved to guaranteed optimality.  The result is that you should read the `ompr` status of "infeasible" to indicate not assured of  optimal solution.\
+**Infeasible vs Unbounded**. This is a known issue in `ompr` as of 0.8.1 and reported on github. It is caused by not being able to distinguish between the different status conditions for situations other than being solved to guaranteed optimality. This is caused by the variety of status codes used by different LP solvers (`glpk`, `symphony`, and others) passing a numerical status code to `ROI`. Each solver has defined their status codes in different ways.)  The result is that you should read the `ompr` status of "infeasible" to indicate that is not assured of being an optimal solution. \index{ompr!Misreporting of Status} The misinterpretation of solver status is an outcome of the independent toolchain from the solver (`glpk` to `ROI` to `ompr`.) \
 
 This is another good reminder that it is important to always check the status of the solver.\
 

@@ -803,13 +803,12 @@ kbl(base_case_res, booktabs=T,
   kable_styling(latex_options = "hold_position")
 ```
 
-Notice that we had three equations and four variables (both regular and slack variables.) This meant that at every iteration of the simplex algorithm, it would set one variable equal to zero and solve for the other three variables because solving three equations with three unknowns is very easy.
-This is consistent with our solution, where $s_1$ is zero and the other three variables all had values.\
+Notice that we had three equations and four variables (both regular and slack variables.) This meant that at every iteration of the simplex algorithm, it would set one variable equal to zero and solve for the other three variables because solving three equations with three unknowns is very easy. This is consistent with our solution, where $s_1$ is zero and the other three variables all had values.\
 
 ## Vector and Matrix Forms of LPs
 
 One of the benefits of using an algebraic modeling approach for linear programming such as `ompr` is that it provides a direct mapping from the mathematical model of the application to the implementation.
-The actual solver used such as `glpk,` `symphony,` or `lpSolve` take the linear program in a different form though and `ompr` processes it into a form they can handle. \index{glpk} \index{symphony} \index{lpSolve} \index{ROI}
+The actual solver used such as `glpk,` `symphony,` or `lpSolve` take the linear program in a different form though and `ompr` processes it into a form they can handle. \index{glpk} \index{symphony} \index{lpSolve package} \index{ROI package} Technically, the `glpk` and `symphony` are made available on CRAN as `Rglpk` and `Rsymphony` to distinguish them from other implementations of their optimization engines.
 
 ```{r Fig-ompr-structure, echo=FALSE, fig.show='hold', fig.align='center', out.width="100%", fig.cap="Relationship between ompr and solvers."}
 knitr::include_graphics("images/Fig03-03-ROI-1.PNG")
