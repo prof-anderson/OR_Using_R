@@ -1,0 +1,179 @@
+# Making Good Tables
+
+```{r, eval=FALSE, include=FALSE}
+library(bookdown); library(rmarkdown); rmarkdown::render("_kable.Rmd", "pdf_book")
+```
+
+## Importance of Tables in Modeling
+
+```{r setup}
+library(knitr)
+library (kableExtra)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The data scientist may interpret "A picture is worth a thousand words" as "A figure or table may be worth a thousand words." The most elegant and sophisticated analysis is useless if the results are not documented or used. While figures are a subject too broad for an appendix, tables are so core to analysis that it warrants explaining how we created the tables for the book.  This Appendix is provided to show all the techniques that were used in making the tables throughout the book to enable the reader to use them as well. Providing the information in one place in the Appendix will reduce the repetition in the other chapters.
+
+Throughout the bulk of the book, sometimes the command for generating the table is shown for demonstrating particular techniques but they are discussed in more detail in this appendix. The RMarkdown source documents have the code for each table in the book. 
+
+Because of the importance of tables, many packages have been developed for creating rich and sophisticated tables such as knitr's `kable`, `pander`, `grid.table`, `huxtable`, `flextable`, `gt`, `xtable`, `ztable`, and more. Previous versions of this book extensively used `pander` and `grid.table`.  After a lot of trial and error, I settled on knitr's `kable` using the enhancements provided by `kableExtra` for the following reasons:
+
+- Ease of use
+- Widely used
+- Well documented, including use with `bookdown`
+- Straightforward table resizing
+- Ability to use LaTeX in row and column names
+- Relatively compact syntax
+
+Just as `ggplot` implemented a widely used and powerful grammar of graphics, some of the recent packages have taken a similar approach and philosophy, specifically `huxtable`, `flextable`, and gives rise to the name of the recent `gt` from team at RStudio. These are powerful packages worth considering in the future but for the timebeing, I will focus on `kable` as assisted with `kableExtra`. \index{kable|(}
+
+There are more options in `kable` and `kableExtra` than we are covering here but this covers everything that was used in the book.
+
+## Kable vs. kbl
+
+In theory, everything done with `kableExtra` could be done through just `kable` since `kableExtra` serves as a friendly interface to `kable`. Actually doing everything directly through `kable` would be much more difficult and prone to user error so `kableExtra` is recommended. The first item to note is `kableExtra` provides a shorthand function, `kbl`, similar to knitr's native `kable`.  In fact, it is essentially a wrapper that provides several useful benefits: \index{kable!kbl}
+
+- automatic format recognition rather than requiring setting format="latex",
+- provides direction options for important `kable` options which makes the command more readable and provides autocomplete, and 
+- shortens every line by 2 letters helping fit commands within a single printed line.
+
+We will use `kbl` throughout this Appendix and book.  If you are getting an error that `kbl` function is not recognized, you will need to load the `kableExtra` package.
+
+## Setting Row and Column Names in Kable
+
+Kable has an option for changing `col.names` in the function directly. This is helpful because often the data structure has a specific naming convention for specific reasons but are not in very human readable format.  Rather than always changing the column names before displaying the table or creating a new table with just different column names, this gives you the option just changing it for display purposes without affecting the original table. \index{kable!Column and Row Names}
+
+One tricky thing is that column names can be changed, row names cannot be changed in `kable`, despite the options looking equivalent `col.names=` vs. `row.names=`. Row names are not handled as consistent in R as column names. 
+
+The following code chunk seems like it should work but `row.names` generates an error because it wants a `TRUE` or `FALSE` rather than the row names. The code chunk was set to `eval=FALSE` in order to avoid causing an error.
+
+```{r eval=FALSE}
+# eval=FALSE to avoid breaking error.
+
+m <- matrix(c(1:4),nrow=2, ncol=2) 
+kable (m, 
+     col.names=c("C1", "C2"),
+     row.names=c("R1", "R2")) 
+# Works for col.names but not row.names
+#The following demonstrates use of row.names
+```
+
+Since col.names works well, there is no reason to spend more time on it.  Let's instead show how to replace row names for a table. The following example gives bad row names to a matrix that I want to replace and use with an alternative set of row names.  It then generates three tables.  
+
+```{r, eval=TRUE}
+m <- matrix(1:4, 2, 2)
+
+BR <- c("Bad row name 1", "Bad row name 2")
+GR <- c("Good row name 1", "Good row name 2")
+
+row.names (m)<-BR  # Treat as default to be avoided
+
+kbl (m, booktabs=T, caption="Using `row.name=T`",
+     col.names=c("C1", "C2"), 
+     row.names=T) |>
+  kable_styling(latex_options = "hold_position")
+
+kbl (m, booktabs=T, caption="Using `row.name=F`",
+     col.names=c("C1", "C2"), 
+     row.names=F) |>
+  kable_styling(latex_options = "hold_position")
+
+kbl (cbind(as.matrix(GR),m), booktabs=T,
+       caption="Adding row names as leading column",
+     col.names=c("", "C1", "C2"), 
+     row.names=F) |>
+  kable_styling(latex_options = "hold_position")
+
+```
+
+The `kable_styling` command has a parameter, `latex_options` that can be passed a lot of different parameters that only apply to the output of `latex`. I often use the `"hold_position"` option to encourage LaTeX to keep the table placement near the code chunk.  If `"hold_position"` is not passed, LaTeX will float the table to a good place that might be well away from the actual intent. \index{kbl!hold_position}
+
+To summarize:
+
+- `col.names` from `kable` makes it very easy to temporarily change the column names just for the purpose of the table.
+- Rownames can be added using a `cbind` to pre-pend the rownames as the first column.  Note that this means that an additional column name needs to be added. Here I add `""` to make it a blank column name.
+- Kable treats `row.names` as a simple flag that can be set to show the original rownames `TRUE` (or `T`) and `FALSE` (or `F`) to hide the original rownames. 
+
+## Booktabs vs. Default
+
+The `booktabs` option is used to provide the formatting commonly used in books and journals.  Notably it reduces the extra border lines for every element that leaves an otherwise nice table looking like it is an Excel screen capture. \index{kable!booktabs}
+
+```{r, eval=TRUE}
+kbl (cbind(as.matrix(GR),m),
+     caption="Default format using kbl",
+     col.names=c("", "C1", "C2"), 
+     row.names=F) |>
+  kable_styling(latex_options = "hold_position")
+kbl (cbind(as.matrix(GR),m), booktabs=T,
+     caption="Default format using kbl",
+     col.names=c("", "C1", "C2"), 
+     row.names=F)|>
+  kable_styling(latex_options = "hold_position")
+
+
+```
+
+## Table Footnotes with Kable
+
+Footnotes can be text or listed with demarcations for numbers, letters, or symbols. \index{kable!footnotes}
+
+```{r}
+kbl (cbind(as.matrix(GR),m), booktabs=T,
+     caption="Footnotes in Tables Using kbl",
+     col.names=c("", "C1", "C2"), 
+     row.names=F)|>
+  kable_styling(latex_options = "hold_position")|>
+  footnote(general = "General comments about the table. ",
+       number = c("Footnote 1; ", "Footnote 2; "),
+       alphabet = c("Footnote A; ", "Footnote B; "),
+       symbol = c("Footnote Symbol 1; ", "Footnote Symbol 2"))
+```
+
+## Using LaTeX in Kable Column Names
+
+Some applications require richer notation than simple plain text.  With a little extra effort, you can get full LaTeX notation in tables.  The primary use is likely to be in row and column names. \index{kable!LaTeX in coumn names} As discussed earlier, column names can be set from within the `kbl` function call. Two important things to account for:
+
+- Set `escape=F` to allow using LaTeX,
+- Any command requiring a slash character in LaTeX requires a double slash.  For example, `$\theta^{CRS}$` to create $\theta^{CRS}$ would instead require `$\\theta^{CRS}$` as shown below.
+
+```{r, eval=TRUE}
+
+m <- matrix(1:4, 2, 2)
+
+GR <- c("$\\phi$", "$\\omega$")
+
+kbl(cbind(as.matrix(GR),m), booktabs=T, escape=F, caption=
+    "Using LaTeX in Row and Column Names",
+    col.names=c("","$\\theta^{CRS}$", "$\\lambda_A$"), 
+    row.names=F)|>
+  kable_styling(latex_options = "hold_position")
+
+```
+
+## Fitting Tables to Page Width
+
+Large tables can be problematic. Kable can scale a table to fit the page width easily using the `scale_down` option in `kableExtra` via the `kable_styling` and `latex_options`. \index{kable!scale_down}
+
+```{r}
+mbig <- matrix(1:100, ncol= 50)
+
+kbl(cbind(as.matrix(mbig)),booktabs=T, caption=
+    "Scaling Table to Fit Page")|>
+  kable_styling(latex_options = 
+                  c("hold_position", "scale_down"))
+```
+
+A few things to note:
+
+- Multiple options can be passed at once to `latex_options` as shown above.
+- The `scale_down` option is done through `latex_options` highlighting that it only works for PDFs generated through LaTeX.
+- When shrunk, the font may be too small to read.
+- The `scale_down` option will also scale up a table that does not fit the full page width which may make a small table look cartoonishly large.
+- Some oversized tables may benefit from using the `kbl` option of `longtable=T`.
+- Sometimes this is a sign that the display of this information needs to be rethought:
+    - transposing the table to be taller rather than wider,
+    - not displaying certain columns or rows with less information value,
+    - using a figure of some form rather than a table, 
+    - turning the table (or page) sideways, 
+    - sticking the table into an appendix or as a file for download, or
+    - providing a summary table of means, standard deviations, or other information. \index{kable|(}

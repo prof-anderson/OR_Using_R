@@ -29,25 +29,43 @@ As an example, new modelers often get confused between which items are pieces of
 
 When conducting a complex optimization application, it is helpful to look at the literature. Others have likely built related models that can give a starting point for ideas on formulating. Usually some customizing is needed to fit address aspects of the new application but it is much easier than starting with a blank sheet of paper (or screen as the case may be.) In fact, by doing this you may find implementations in algebraic modelings languages that are straightforward to translate to `ompr` as well.\
 
+### Misrendering of PDF
+
+Just because a PDF is knitted or rendered does not mean that it is correct. A variety of common errors often creep in such as unrendered section headings from the RMarkdown file.  Consider the following text from an RMarkdown document.  
+
+```
+end of sentence.
+##Section Heading
+Beginning of next sentence.
+```
+
+This fragment has three problems, each of which may cause the author's intended 2nd level heading to not be recognized as a heading.
+
+1. There should be a blank line after the "end of sentence." line.
+2. The pound symbols should be followed by a space before the "Section Heading."
+3. There should be another blank line before the "Beginning of next sentence."
+
+None of these will cause an error message to appear and they can easily occur by accident while editing a document so it is just good  practice to look over the PDF for this or similar issues.  
+
 ### Blank Lines in LaTeX
 
 Put simply, blank lines are not allowed in LaTeX equations but this problem can be one of the most puzzling ones that readers have seen.  The problem is that everything looks right and knits to HTML but it doesn't knit to PDF.  Part of the confusion is caused by the LaTeX processor being different from RStudio's Math rendering system which is used for previewing in an RMarkdown document. The result is that something may be visible in the preview and look correct but not render in the PDF because of differing strictness in the implementation of parsing of the math notation. \
 
 The following screen capture shows a LaTeX formulation in an RMarkdown document that has a blank line in between the inequality constraint and the non-negativity constraints. The RStudio math preview ignores the empty line and everything looks fine. \index{LaTeX!Blank line}\ 
 
-```{r Fig-LaTeX_blank_line1, echo=FALSE,  out.width='100%', fig.cap="Preview Ignores Blank LaTeX Line" }
+```{r Fig-LaTeX-blank-line1, echo=FALSE,  out.width='100%', fig.cap="Preview Ignores Blank LaTeX Line" }
 knitr::include_graphics("images/ERRORS_LaTeX_blank_line1.PNG")
 ```
 
 It renders in HTML and in the RMarkdown preview without generating an error by ignoring the blank line but when knitted to PDF, a full LaTeX processor is used which is generally more strict in enforcing LaTeX requirements. The result is that this blank line causes an error when attempting to knit to PDF and terminates. \
 
-```{r Fig-LaTeX_blank_line2, echo=FALSE, out.width='100%', fig.cap="Rendering Error Caused by Blank LaTeX Line"}
+```{r Fig-LaTeX-blank-line2, echo=FALSE, out.width='100%', fig.cap="Rendering Error Caused by Blank LaTeX Line"}
 knitr::include_graphics("images/ERRORS_LaTeX_blank_line2.PNG")
 ```
 
 Again, the error message may not be obvious but googling would often find a hint as to the source of the error. \
 
-If you had really intended to add a blank line before the non-negativity constraints, simply add the LaTeX linebreak code of a double slash. `\\\\`\
+If you had really intended to add a blank line before the non-negativity constraints, simply add the LaTeX linebreak code of a double slash. `\\`\
 
 $$
 \begin{split}
@@ -67,7 +85,9 @@ Note that LaTeX may return a lot of warnings that do not represent problems but 
 
 The line number refer to the intermediate .tex file rather than the original .Rmd file. When LaTeX fails, it is sometimes necessary to look at both the .log and .tex files to see where the error is occurring.
 
-## Problems with PDF Creation
+### Problems with PDF Creation
+
+Knitting to PDF uses the LaTeX environment so a variety of other issues may arise.  While sometimes these are spotted late in a project, the source is often at early stage of work so I am including it in the Model Building section.
 
 Typically everything must be correct for an RMarkdown to be knitted. For example, when I want to rebuild this book, I will often use the `Build Book` command in RStudio. This will go through all analyses and generate a fully up to date version of the book. Alas, sometimes I only want a specific chapter, perhaps because there is an error in another chapter that I'm wrestling with. Even a single error can cause this to not build. Knitting to PDF would be next option but the various options and settings that I'm using for this book seem to prevent the Knit to PDF from working. A third option is to use the render command directly. The following command will render the file for the second chapter of the book.
 
@@ -77,14 +97,15 @@ rmarkdown::render("02-A_First_LP.Rmd", "pdf_document")
     # Renders as a regular PDF document
 ```
 
-Miscellaneous PDF and LaTeX Issues
+Another possible problem is having the PDF file open from having previously created it. This will typically generate a message about being unable to write the PDF file. The solution is to simply ensure that the PDF is not open in any other program.
 
-Knitting to PDF uses the LaTeX environment so a variety of other issues may arise..
+A related issue is that there could be a temporary file for debugging purposes that needs to be deleted before it can be done. I often see this with a Markdown file (`.md`), not to be confused with the RMarkdown file (`.Rmd`).
 
--   Another possible problem is having the PDF file open from having previously created it. This will typically generate a message about being unable to write the PDF file. The solution is to simply ensure that the PDF is not open in any other program.
--   A related issue is that there could be a temporary file for debugging purposes that needs to be deleted before it can be done. I often see this with a Markdown file (`.md`), not to be confused with the RMarkdown file (`.Rmd`).
--   Avoid using an underscore, `_`, in the code chunk label for any code chunk that involves a `kable` or graphical figure.  This can cause strange errors when knitting to PDF. While the underscore is valid for a code chunk name, its importance in LaTeX causes problems - it is best to just a dash.
--   Some PDF errors are caused by the strict enforcement of LaTeX requirements.  If the `.tex` file is generated but the `.pdf` is incomplete or missing, you can sometimes overcome these problems by using `latexmk` to rerun the Tex engine on the PDF. This is not meant to be a cure-all and is only meant for late stage errors.  For example, this book sometimes requires running `latexmk OMUR.tex -pdf -f -interaction=nonstopmode` after building the `pdf_book` generates a LaTeX error at the bibliography stage. Of course tracking down the LaTeX error is preferred. \index{LaTeX!latexmk}
+Avoid using an underscore, `_`, in the code chunk label for any code chunk that involves a `kable` or graphical figure.  This can cause strange errors when knitting to PDF. While the underscore is valid for a code chunk name, its importance in LaTeX causes problems - it is best to just a dash.
+
+Some PDF errors are caused by the strict enforcement of LaTeX requirements.  If the `.tex` file is generated but the `.pdf` is incomplete or missing, you can sometimes overcome these problems by using `latexmk` to rerun the Tex engine on the PDF. This is not meant to be a cure-all and is only meant for late stage errors.  For example, this book sometimes requires running `latexmk OMUR.tex -pdf -f -interaction=nonstopmode` after building the `pdf_book` generates a LaTeX error at the bibliography stage. Of course tracking down the LaTeX error is preferred. \index{LaTeX!latexmk}
+
+If there is a code chunk that is causing fatal errors, you can always use the code chunk option of `eval=FALSE` in order to temporarily turn off the execution while working on other parts of the PDF and model. 
 
 ## Implementation Troubleshooting
 

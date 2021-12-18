@@ -123,7 +123,7 @@ rownames(temp1)<-c("Continuous", "Integer")
 
 ```{r}
 kbl (temp1, booktabs=T, 
-     caption="Production plans based on variable type.") |>
+     caption="Production Plans based on Variable Type.") |>
   kable_styling(latex_options = "hold_position")
 ```
 
@@ -502,7 +502,7 @@ Let's start with a truth table summarizing the interaction between projects (var
 | **1**       | **1**       | **Yes**                                         |
 +-------------+-------------+---------------------------------------------+
 
-Table: Relationships between Projects A, B, and the need for Chip Architects.
+Table: Relationships between Projects A, B, and the Need for Chip Architects.
 
 Now we need to create a constraint that blocks the situations that violate the relationship ($y_A=y_B=1$ ) but allows the other situations to be unblocked. Recall that you want to have a linear constraint or constraints that would be added to the model. In this case, we can use $y_A+y_B\leq1$. It is a good exercise to check this relationship against the truth table. \
 

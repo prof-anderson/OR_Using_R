@@ -35,7 +35,7 @@ library (TRA) # Requires installation from github
 
 ## Introduction
 
-Data envelopment analysis or DEA is a powerful tool for conducting studies of efficiency and has been used in thousands of publications since its inception in the 1970s.[^dea-1] \index{Data envelopment analysis} \index{DEA|see{Data envelopment analysis}}
+Data envelopment analysis or DEA is a powerful tool for conducting studies of efficiency and has been used in thousands of publications since its inception in the 1970s.[^dea-1] \index{Data envelopment analysis|(} \index{DEA|see{Data envelopment analysis}}
 
 [^dea-1]: This chapter is drawn from an introduction chapter in the book, *Data Envelopment Analysis Using R* by the same author. More details on DEA are available from that book. This book is also available via github at <https://github.com/prof-anderson>\[github.com/prof-anderson\]
 
@@ -102,13 +102,10 @@ x <- matrix(c(10,20,30,50),ncol=1,
 y <- matrix(c(75,100,300,400),ncol=1,
             dimnames=list(LETTERS[1:4],"y"))
 
-storenames<- c("Al\'s Pantry", 
-               "Bob\'s Mill", 
-               "Trader Carrie\'s", 
-               "Dilbertson\'s")
+storenames<- c("Al\'s Pantry", "Bob\'s Mill", 
+               "Trader Carrie\'s", "Dilbertson\'s")
 temp<-cbind(storenames,x,y)
-colnames(temp)<-c("Store Name", "Employees (x)", 
-                  "Sales (y)")
+colnames(temp)<-c("Store Name", "Employees (x)", "Sales (y)")
 ```
 
 ```{r first-dataset-table}
@@ -161,13 +158,13 @@ We could express the evaluation of store B as a linear program as follows.\
 $$
  \begin{split}
  \begin{aligned}
-    \text{Min    } & \theta \\
+    \text{Min    } & \theta &\text{[Efficiency]}\\
     \text{S.t.:  } & 10 \lambda_A + 20 \lambda_B +
                     30 \lambda_C + 50 \lambda_D 
-                    \leq 20 \theta \\
+                    \leq 20 \theta &\text{[Input]}\\
                   & 75 \lambda_A + 100 \lambda_B +
                     300 \lambda_C + 400 \lambda_D 
-                    \geq 100 \\
+                    \geq 100 &\text{[Output]}\\
                   & \theta, \; \lambda_A , \; \lambda_B , \; \lambda_D , \; \lambda_D \geq 0  
   \end{aligned}
   \end{split}
@@ -190,12 +187,11 @@ This gives us two sets of constraints along with a restriction of non-negativity
 $$
  \begin{split}
  \begin{aligned}
-    \ & \sum_{j=1}^{N^D} x_{i,j}\lambda_j \leq x_{i,k} \; \forall \; i\\
-                       & \sum_{j=1}^{N^D} y_{r,j}\lambda_j \geq  y_{r,k} \; \forall \; r\\
+    \ & \sum_{j=1}^{N^D} x_{i,j}\lambda_j \leq x_{i,k} \; \forall \; i &\text{[Use no more input than k]}\\
+                       & \sum_{j=1}^{N^D} y_{r,j}\lambda_j \geq  y_{r,k} \; \forall \; r &\text{[At least as much output]}\\
                        & \lambda_j \geq 0  \; \forall \; j
   \end{aligned}
   \end{split}
-  (\#eq:ConstructingTargets)
 $$
 
 This is not yet a linear program because it is missing an objective function. It defines what is an acceptable target of performance that is at least as good as DMU *k* but does not try to find a *best* target.\
@@ -285,8 +281,8 @@ Let's define some data structures for holding our data and results.
 We're going to use our data from earlier but first we will load a collection of libraries to be used later. The `ompr`package is for optimization and serves as a general human readable format of optimization models that can then interface with a variety of solver engines. The `ROI.plugin.glpk` package is for the specific solver engine, `glpk`, that we used. Other LP solving engines are available and can be used instead. We demonstrate other solvers in chapter 7.\
 
 ```{r loading_packages, message=FALSE, warning=FALSE}
-library(dplyr, quietly=TRUE)           # For data structure manipulation
-library(ROI, quietly=TRUE)             # R Optimization Interface package
+library(dplyr, quietly=TRUE)           # For data organizing
+library(ROI, quietly=TRUE)             # R Optimization Interface 
 library(ROI.plugin.glpk, quietly=TRUE) # Connection to glpk as solver
 library(ompr, quietly=TRUE)            # Optimization Modeling using R
 library(ompr.roi, quietly=TRUE)        # Connective tissue
@@ -323,24 +319,25 @@ results.lambda <- t(omprlambda[3])
    # Takes third column from results and transposes results
    #  to be structured correctly for later viewing
 results_B <- cbind (results.efficiency, results.lambda)
-colnames(results_B) <- 
-  c("$\\theta^{CRS}$", "$\\lambda_A$", "$\\lambda_B$",
-    "$\\lambda_C$", "$\\lambda_D$")
 rownames(results_B) <- c("Optimal results for DMU B")
-kbl(results_B, digits=4,booktabs=T, escape=F, caption=
-      "Input-Oriented Envelopment Analysis for DMU B") |>
-  kable_styling(latex_options = "hold_position")
+
+kbl(results_B, digits=4,booktabs=T, escape=F, 
+    col.names=c("$\\theta^{CRS}$", "$\\lambda_A$", 
+                "$\\lambda_B$", "$\\lambda_C$", "$\\lambda_D$"),
+    caption="Input-Oriented Envelopment Analysis for DMU B") |>
+  kable_styling(latex_options = "hold_position") |>
+  footnote(general="Creating a table with LaTeX in column names is covered in Appendix C.")
 ```
 
 The above table follows a few convenient conventions. First, rather than using $\theta$, we label the efficiency score by the model used for the model, in this case the constant returns to scale is labeled as CCR after Charnes, Cooper, and Rhodes [@RhodesDataEnvelopmentAnalysis1978]. Later we will cover other models including the variable returns to scale model, labeled BCC after Banker, Charnes, and Cooper [@banker1984].
 
-Another convention is to embed the *orientation* in the table. The term IO refers to an input-oriented model where the primary focus is on achieving efficiency through input reduction. Output-orientation is also very common where the primary goal is for a unit to increase output with the requirement of not using any more input. \index{Data envelopment analysis!Orientation}\ \index{Orientation|see{Data envelopment analysis!Orientation}} \index{Data envelopment analysis!Input-oriented}\  \index{Input-oriented|see{Data envelopment analysis!Input-oriented}} \index{Data envelopment analysis!Output-oriented}\  \index{Output-oriented|see{Data envelopment analysis!Output-oriented}} 
+Another convention is to embed the *orientation* in the table. This an input-oriented model where the primary focus is on achieving efficiency through input reduction. Output-orientation is also very common where the primary goal is for a unit to increase output with the requirement of not using any more input. \index{Data envelopment analysis!Orientation}\ \index{Orientation|see{Data envelopment analysis!Orientation}} \index{Data envelopment analysis!Input-oriented}\  \index{Input-oriented|see{Data envelopment analysis!Input-oriented}} \index{Data envelopment analysis!Output-oriented}\  \index{Output-oriented|see{Data envelopment analysis!Output-oriented}} 
 
 The results in the table indicate that DMU *B* has an efficiency score of 50%. The target of performance is made of DMU *C* scaled down by a factor of 0.33. These results match the graphical results from earlier.\
 
-Let's now extend it to handle multiple inputs, *NX,* and outputs, *NY.* Of course this doesn't have any impact on our results just yet since we are still only using a single input and output but we now have the structure to accommodate the more general case of DEA. To provide a little variety, we'll change it to the first DMU, A, to give a little more variety.\
-
 Another item to note is that we are using some of the flexibility of `kable` in our table.  In particular, we are able to use LaTeX in ou in column headings as long as we set `escape=F`. Note from the code chunk that the actual use requires an extra slash. \index{kable!LaTeX in column names} \index{LaTeX!LaTeX in tables|see{kable!LaTeX in column names}} \
+
+Let's now extend it to handle multiple inputs, `NX`, and outputs, `NY`. Of course this doesn't have any impact on our results just yet since we are still only using a single input and output but we now have the structure to accommodate the more general case of DEA. To provide a little variety, we'll change it to the first DMU, A, to give a little more variety.\
 
 ```{r ompr-mult-IO, message=FALSE, results='asis'}
 k<-1    # Analyze first unit, DMU A.
@@ -363,12 +360,12 @@ results.lambda <- t(omprlambda[3])
 # Note the use of LaTeX formatting in column names.
 
 results_A <- cbind (results.efficiency, results.lambda)
-colnames(results.lambda) <- c("$\\theta^{CRS}$, 
-                              $\\lambda_A$", "$\\lambda_B$",
-                              "$\\lambda_C$", "$\\lambda_D$")
-rownames(results_B) <- c("Optimal results for DMU A")
-kbl(results_A, booktabs=T, escape=F, caption=
-      "Input-Oriented Envelopment Analysis for DMU A") |>
+rownames(results_A) <- c("Optimal results for DMU A")
+
+kbl(results_A, booktabs=T, escape=F, 
+    col.names= c("$\\theta^{CRS}$", "$\\lambda_A$", 
+                 "$\\lambda_B$", "$\\lambda_C$", "$\\lambda_D$"),
+    caption="Input-Oriented Envelopment Analysis for DMU A") |>
   kable_styling(latex_options = "hold_position")
 ```
 
@@ -432,7 +429,7 @@ Up until this point, we have assumed constant returns to scale but there are oth
 
 ## Returns to Scale
 
-Let's also add a constraint that will accommodate returns to scale. All it needs to do is constrain the sum of the $\lambda$ variables equal to 1 enforces variables returns to scale or VRS. or redundant under CRS.\
+Let's also add a constraint that will accommodate returns to scale. All it needs to do is constrain the sum of the $\lambda$ variables equal to 1 enforces variables returns to scale or VRS. or redundant under CRS. \index{Data envelopment analysis!Returns to scale|(}\
 
 $$
 \begin{split}
@@ -460,11 +457,9 @@ for (k in 1:ND) {
                  lb = 0) |>
     add_variable(vtheta, type = "continuous") |>
     set_objective(vtheta, "min") |>
-    add_constraint(sum_expr(vlambda[j] * xdata[j,i], 
-                            j = 1:ND) 
+    add_constraint(sum_expr(vlambda[j] * xdata[j,i], j = 1:ND) 
                    <= vtheta * xdata[k,i], i = 1:NX) |>
-    add_constraint(sum_expr(vlambda[j] * ydata[j,r], 
-                            j = 1:ND) 
+    add_constraint(sum_expr(vlambda[j] * ydata[j,r], j = 1:ND) 
                    >= ydata[k,r], r = 1:NY) 
     if (RTS=="VRS") {result <- add_constraint(result, 
                        sum_expr(vlambda[j], j = 1:ND)
@@ -476,7 +471,7 @@ result <- solve_model(result, with_ROI (solver = "glpk"))
     results.lambda[k,] <- t(as.matrix(as.numeric(
               get_solution(result, vlambda[j])[,3] )))
 }  # Repeat for each unit, k
-dimnames(results.efficiency)<-list(DMUnames,"BCC-IO")
+dimnames(results.efficiency)<-list(DMUnames,"$\\theta^{VRS}$")
 eff.vrs <- results.efficiency
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
 kbl (cbind(results.efficiency, results.lambda),
@@ -495,7 +490,7 @@ dea.plot(x, y, RTS="vrs", ORIENTATION="in-out",
          fex=1, GRID=TRUE, RANGE=FALSE, param=NULL)
 ```
 
-The Constant Returns to Scale, CRS, model is often referred to in the DEA literature by CCR after Charnes, Cooper, and Rhodes [@CharnesDataEnvelopmentAnalysis1978]. The Variable Returns to Scale, VRS, model is also referred to as the BCC model after Banker, Charnes, and Cooper. In addition to the CRS and VRS models, two other common approaches are Increasing Returns to Scale (IRS) and Decreasing Returns to Scale (DRS). Technically, IRS is sometimes more precisely referred to as non-decreasing returns to scale. Similarly, DRS corresponds to non-increasing returns to scale.  A less commonly used approach is Free Disposal Hull (FDH).  In the case of FDH, DMUs are only compared against other individual units.  Since it makes use of binary variables and is less commonly used in DEA, we will not implement it in the chapter. \index{Data envelopment analysis!Returns to scale}\  \index{Returns to Scale|see{Data envelopment analysis!Returns to Scale}} \index{RTS|see{Data envelopment analysis!Returns to scale}} \index{CRS|see{Data envelopment analysis!Returns to scale}} \index{VRS|see{Data envelopment analysis!Returns to scale}} \index{IRS|see{Data envelopment analysis!Returns to scale}} \index{DRS|see{Data envelopment analysis!Returns to scale}} \index{NDRS|see{Data envelopment analysis!Returns to scale}} \index{NIRS|see{Data envelopment analysis!Returns to scale}} \index{FDH|see{Data envelopment analysis!Returns to scale}}\ 
+The Constant Returns to Scale, CRS, model is often referred to in the DEA literature by CCR after Charnes, Cooper, and Rhodes [@CharnesDataEnvelopmentAnalysis1978]. The Variable Returns to Scale, VRS, model is also referred to as the BCC model after Banker, Charnes, and Cooper. In addition to the CRS and VRS models, two other common approaches are Increasing Returns to Scale (IRS) and Decreasing Returns to Scale (DRS). Technically, IRS is sometimes more precisely referred to as non-decreasing returns to scale. Similarly, DRS corresponds to non-increasing returns to scale.  A less commonly used approach is Free Disposal Hull (FDH).  In the case of FDH, DMUs are only compared against other individual units.  Since it makes use of binary variables and is less commonly used in DEA, we will not implement it in the chapter. \index{Returns to Scale|see{Data envelopment analysis!Returns to Scale}} \index{RTS|see{Data envelopment analysis!Returns to scale}} \index{CRS|see{Data envelopment analysis!Returns to scale}} \index{VRS|see{Data envelopment analysis!Returns to scale}} \index{IRS|see{Data envelopment analysis!Returns to scale}} \index{DRS|see{Data envelopment analysis!Returns to scale}} \index{NDRS|see{Data envelopment analysis!Returns to scale}} \index{NIRS|see{Data envelopment analysis!Returns to scale}} \index{FDH|see{Data envelopment analysis!Returns to scale}}\ 
 
 | Returns to Scale | Envelopment Constraint              |
 |------------------|-------------------------------------|
@@ -518,21 +513,16 @@ for (k in 1:ND) {
                  lb = 0) |>
     add_variable(vtheta, type = "continuous") |>
     set_objective(vtheta, "min") |>
-    add_constraint(sum_expr(vlambda[j] * xdata[j,i], 
-                            j = 1:ND) 
+    add_constraint(sum_expr(vlambda[j] * xdata[j,i], j = 1:ND) 
                    <= vtheta * xdata[k,i], i = 1:NX) |>
-    add_constraint(sum_expr(vlambda[j] * ydata[j,r], 
-                            j = 1:ND) 
+    add_constraint(sum_expr(vlambda[j] * ydata[j,r], j = 1:ND) 
                    >= ydata[k,r], r = 1:NY)
     if (RTS=="VRS") {result <-
-      add_constraint(result, sum_expr(vlambda[j], 
-                                      j = 1:ND) == 1) }  
+      add_constraint(result, sum_expr(vlambda[j], j = 1:ND) == 1) }  
     if (RTS=="IRS") {result <-
-      add_constraint(result, sum_expr(vlambda[j], 
-                                      j = 1:ND) >= 1) }  
+      add_constraint(result, sum_expr(vlambda[j], j = 1:ND) >= 1) }  
     if (RTS=="DRS") {result <-
-      add_constraint(result, sum_expr(vlambda[j], 
-                                      j = 1:ND) <= 1) }  
+      add_constraint(result, sum_expr(vlambda[j], j = 1:ND) <= 1) }  
 result <- solve_model(result, with_ROI(solver = "glpk")) 
     
     results.efficiency[k] <-  get_solution(result, vtheta)       
@@ -560,21 +550,16 @@ for (k in 1:ND) {
                  lb = 0) |>
     add_variable(vtheta, type = "continuous") |>
     set_objective(vtheta, "min") |>
-    add_constraint(sum_expr(vlambda[j] * xdata[j,i], 
-                            j = 1:ND) 
+    add_constraint(sum_expr(vlambda[j] * xdata[j,i], j = 1:ND) 
                    <= vtheta * xdata[k,i], i = 1:NX) |>
-    add_constraint(sum_expr(vlambda[j] * ydata[j,r], 
-                            j = 1:ND) 
+    add_constraint(sum_expr(vlambda[j] * ydata[j,r], j = 1:ND) 
                    >= ydata[k,r], r = 1:NY)
     if (RTS=="VRS") {result <-
-      add_constraint(result, sum_expr(vlambda[j], 
-                                      j = 1:ND) == 1) }  
+      add_constraint(result, sum_expr(vlambda[j], j = 1:ND) == 1) }  
     if (RTS=="IRS") {result <-
-      add_constraint(result, sum_expr(vlambda[j], 
-                                      j = 1:ND) >= 1) }  
+      add_constraint(result, sum_expr(vlambda[j], j = 1:ND) >= 1) }  
     if (RTS=="DRS") {result <-
-      add_constraint(result, sum_expr(vlambda[j], 
-                                      j = 1:ND) <= 1) }  
+      add_constraint(result, sum_expr(vlambda[j], j = 1:ND) <= 1) }  
 result <- solve_model(result, with_ROI(solver = "glpk")) 
     
     results.efficiency[k] <-  get_solution(result, vtheta)       
@@ -602,7 +587,7 @@ dea.plot(x, y, RTS="irs", ORIENTATION="in-out",
          fex=1, GRID=TRUE, RANGE=FALSE, param=NULL)
 ```
 
-```{r DEA-DRS-Frontier-Plot, echo=FALSE, fig.height=4, fig.cap="Decreasing(Non-Increasing) Returns to Scale Efficiency Frontier"}
+```{r DEA-DRS-Frontier-Plot, echo=FALSE, fig.height=4, fig.cap="Decreasing(Non-Increasing) Returns to Scale Efficiency Frontier", results='asis'}
 library(Benchmarking, quietly=TRUE)
 dea.plot(x, y, RTS="drs", ORIENTATION="in-out", 
          txt=LETTERS[1:length(x)], 
@@ -610,15 +595,17 @@ dea.plot(x, y, RTS="drs", ORIENTATION="in-out",
          fex=1, GRID=TRUE, RANGE=FALSE, param=NULL)
 ```
 
-\index{Data envelopment analysis!Returns to scale}
 
-```{r Compare-RTS-Results}
+```{r Compare-RTS-Results, echo=FALSE}
 kbl (cbind(eff.crs, eff.vrs, eff.drs, eff.irs), 
      booktabs=T, digits=4,
+     col.names=c("$\\theta^{CRS}$", "$\\theta^{VRS}$", 
+                 "$\\theta^{DRS}$", "$\\theta^{IRS}$"),
      caption="Comparison of Efficiency under 
        Alternate Returns to Scale Assumptions") |>
   kable_styling(latex_options = "hold_position")
 ```
+\index{Data envelopment analysis!Returns to scale|(}\
 
 ## Multiple Inputs and Multiple Outputs
 
@@ -634,22 +621,17 @@ univ_lic_2007 <- read_csv("univ_lic_2007.csv", show_col_types=FALSE)
 Next, it is always helpful to look over the dataset. The names of the columns will be long and awkward for displaying results. Let's abbreviate the names to make it more manageable.\
 
 ```{r Simplify-data}
-colnames(univ_lic_2007) <- c("University", 
-                             "LicInc", 
-                             "LicOpt",
-                             "Startup", 
-                             "PatFile",
-                             "PatIss",
-                             "Spend")
+colnames(univ_lic_2007) <- c("University", "LicInc", 
+                             "LicOpt", "Startup", 
+                             "PatFile", "PatIss", "Spend")
 
-utt2007 <- univ_lic_2007 [1:25,]  
-           # Use first 25 universities
+utt2007 <- univ_lic_2007 [1:25,] # Use first 25 universities
 
 utt2007 <- utt2007 [,-5]   
            # Drop the fifth column (Patents Filed)
 
 kbl (head(utt2007), booktabs=T, 
-     caption="Simplified data for University Technology Transfer") |>
+     caption="Simplified Data for University Technology Transfer") |>
   kable_styling(latex_options = "hold_position")
 ```
 
@@ -670,7 +652,6 @@ Ynames <- colnames(ydata)
 DMUnames <-list(as.matrix(utt2007[,1]))
 
 dimnames(xdata)              <- c(DMUnames,Xnames)
-#dimnames(ydata)              <- c(DMUnames,Ynames)
 colnames(ydata)              <- Ynames
 
 ND <- nrow(xdata)  # Number of DMUs (universities)
@@ -695,8 +676,8 @@ As usual, let's preview the data.\
 
 ```{r}
 kbl (head(cbind(xdata,ydata)), booktabs=T, 
-     caption="Selected university technology 
-     transfer characteristics from 2004.")
+     caption="Selected University Technology 
+     Transfer Characteristics.")
 ```
 
 Now, let's move on to the DEA input-output diagram. We use the total research spending as an input and then five separate outputs for the various dimensions of technology transfer success measured by AUTM. This can be visualized with our input-output diagram.\
@@ -721,12 +702,10 @@ for (k in 1:ND) {
                  lb = 0) |>
     add_variable(vtheta, type = "continuous") |>
     set_objective(vtheta, "min") |>
-    add_constraint(sum_expr(vlambda[j] * xdata[j,i], 
-                            j = 1:ND) 
+    add_constraint(sum_expr(vlambda[j] * xdata[j,i], j = 1:ND) 
                    <= vtheta * xdata[k,i], i = 1:NX, 
                    .show_progress_bar=FALSE ) |>
-    add_constraint(sum_expr(vlambda[j] * ydata[j,r], 
-                            j = 1:ND) 
+    add_constraint(sum_expr(vlambda[j] * ydata[j,r], j = 1:ND) 
                    >= ydata[k,r], r = 1:NY, 
                    .show_progress_bar=FALSE ) 
     if (RTS=="VRS") {result <- add_constraint(result, 
@@ -742,7 +721,10 @@ for (k in 1:ND) {
 
 ```{r full-table}
 kbl (cbind(res.efficiency, poscol(res.lambda)),
-     booktabs=T, digits=4,
+     booktabs=T, digits=4, escape=F,
+     col.names = c("$\\theta^{CRS}$", "$\\lambda_{text{NYU}}$",
+                   "$\\lambda_{text{UW-Madison}}$", 
+                   "$\\lambda_{text{Cal Tech}}$"),
      caption="Results from University Technology 
      Transfer Example (CRS)") |>
   kable_styling(latex_options = 
@@ -754,9 +736,9 @@ Note that the results are different from those in the UTT paper because the mode
 
 Every DMU is compared to one or more of the efficient DMUs. In this case there are three efficient DMUs. These are New York University (NYU), University of Wisconsin at Madison (UW-Madison), and California Institute of Technology (Cal Tech). The `poscol` function from the `TRA` package trimmed out all of the unused columns in the matrix of lambdas. \index{poscol function} \index{TRA package} This then left us with just the efficiency scores and the three columns with values of $\lambda$ for each of these efficient universities. Given the length of the names of the names of the universities, it would still exceed text size. The `kableExtra` package has an option of `scale_down` which makes it easy to fit a table in the printable area. \
 
-The University of California System, UC-System, receives an efficiency score of 0.4663. It is made up of approximately 0.107 of New York University (NYU), 1.066 of the University of Wisconsin at Madison, 1.186 of Cal Tech. This means that if the UC-System were operating efficiently as defined in this model, it would be able to produce the same or more outputs as it actually did using only 47% of the input (Research Funding) as it actually used. This target of performance is made up more more than two other universities and part of a third.
+The University of California System, UC-System, receives an efficiency score of 0.4663. It has a target made up of approximately 0.107 of New York University (NYU), 1.066 of the University of Wisconsin at Madison, 1.186 of Cal Tech that produces similar output using only 47% of the input. This means that if the UC-System were operating efficiently as defined in this model, it would be able to produce the same or more outputs as it actually did using only 47% of the input (Research Funding) as it actually used. This target of performance is made up more more than two other full universities and part of a third.
 
-Note that these values are rounded using the `digits=4` from `kable`. The result of this is it masks odd some values of $\lambda$ that could warrant a more careful look. In particular, there may be very small positive or negative numbers in the table that are shown as 0.0000. These numbers are due to computational issues in the linear programming solvers and should be interpreted as zero. Rounding the results can make the tables easier for interpretation by the user. The pander packages makes it easy to round numbers to varying levels of precision. The small, nearly zero, values that may appear in DEA calculations can cause some computational difficulty. For example, testing for zero lambda values could miss cases where the value is approximately but not exactly zero.\
+Note that these values are rounded using the `digits=4` from `kable`. \index{kable!digits} The result of this is it masks odd some values of $\lambda$ that could warrant a more careful look. In particular, there may be very small positive or negative numbers in the table that are shown as 0.0000. These numbers are due to computational issues in the linear programming solvers and should be interpreted as zero. Rounding the results can make the tables easier for interpretation by the user. The pander packages makes it easy to round numbers to varying levels of precision. The small, nearly zero, values that may appear in DEA calculations can cause some computational difficulty. For example, testing for zero lambda values could miss cases where the value is approximately but not exactly zero.\
 \
 
 Perhaps the leader of the UC-System would contend that running a ten campus university system with over a quarter million students is very much unlike running the others added together (although NYU is also a large system.) This could suggest a Variable Returns to Scale model which reflects that it operating at a very large and very small scale provide special challenges.
@@ -772,12 +754,10 @@ for (k in 1:ND) {
                  lb = 0) |>
     add_variable(vtheta, type = "continuous") |>
     set_objective(vtheta, "min") |>
-    add_constraint(sum_expr(vlambda[j] * xdata[j,i], 
-                            j = 1:ND) 
+    add_constraint(sum_expr(vlambda[j] * xdata[j,i], j = 1:ND) 
                    <= vtheta * xdata[k,i], i = 1:NX, 
                    .show_progress_bar=FALSE ) |>
-    add_constraint(sum_expr(vlambda[j] * ydata[j,r], 
-                            j = 1:ND, 
+    add_constraint(sum_expr(vlambda[j] * ydata[j,r], j = 1:ND, 
                    .show_progress_bar=FALSE ) 
                    >= ydata[k,r], r = 1:NY) 
     if (RTS=="VRS") {modUTT_BCC <- 
@@ -792,12 +772,12 @@ res <- solve_model(modUTT_BCC, with_ROI(solver = "glpk"))
 }
 #UTT_BCC.Res<-cbind(res.efficiency, res.lambda)
 UTT_BCC.Res<-res.efficiency
-colnames(UTT_BCC.Res)[1] <- "$//theta^{BCC}$"
 ```
 
-```{r Compare-CRS-to-VRS, fig.fullwidth = TRUE}
-kbl (cbind(UTT_CCR.Res[,1, drop=FALSE],
-           UTT_BCC.Res), digits=6, booktabs=T,
+```{r Compare-CRS-to-VRS, echo=FALSE}
+kbl (cbind(UTT_CCR.Res[,1, drop=FALSE], UTT_BCC.Res), 
+     escape=F, digits=6, booktabs=T,
+     col.names=c("$\\theta^{CRS}$", "$\\theta^{VRS}$"),
      caption=
          "Comparison of CRS vs. VRS Efficiency Scores") |>
   kable_styling(latex_options = "hold_position")
@@ -812,35 +792,37 @@ A few takeaways from these results:
 
 ## Extracting Multiplier Weights from Sensitivity Analysis
 
-The following process can be used for extracting the row duals from the linear program results. This extraction is based upon knowing the structure of the model that was built. \index{Data envelopment analysis!Multiplier weights} \
+The following process can be used for extracting the shadow prices (row duals) from the linear program results. This extraction is based upon knowing the structure of the model that was built. \index{Data envelopment analysis!Multiplier weights} \index{Shadow prices}
 
 ```{r Multiplier-Weights-from-Env-Model}
 res.vweight    <- matrix(rep(-1.0, ND*NX), nrow=ND,ncol=NX) 
 res.uweight    <- matrix(rep(-1.0, ND*NY), nrow=ND,ncol=NY) 
 
-Vnames<- lapply(list(rep("v",NX)),paste0,1:NX)
-     # Input weight names: v1, ...
-Unames<- lapply(list(rep("u",NY)),paste0,1:NY)  
-     # Output weight names: u1, ...
+Vnames<- lapply(list(rep("v",NX)),paste0,1:NX) # Input weight: v1, ...
+Unames<- lapply(list(rep("u",NY)),paste0,1:NY) # Output weight: u1, ...
 
 dimnames(res.vweight)    <- c(DMUnames,Vnames)
 dimnames(res.uweight)    <- c(DMUnames,Unames)
 
 rduals <- as.matrix(get_row_duals(res))
 res.vweight[k,] <- -1*rduals[1:NX]
-   # Extract first NX row duals assuming first set of 
-   #    constraints for inputs
-   # Multiply input weights by -1 to adjust 
-   #    for inequality direction
+   # Extract first NX row duals assuming first constraints are inputs
+   # Multiply input weights by -1 to adjust for inequality direction
 res.uweight[k,] <- rduals[(NX+1):(NX+NY)]
-   # Extract next NY row duals, assuming output 
-   #    constraints follow inputs 
-kbl (c(res.vweight[k,],res.uweight[k,]), booktabs=T, digits=5,
-       caption="Input and output weights for last DMU") |>
+   # Extract next NY row duals, assuming output constraints follow inputs 
+weights <- t(c(res.vweight[k,],res.uweight[k,]))
+kbl (weights, booktabs=T, digits=5, escape=F,
+     col.names=c("$v_{\\text{Research Spending}}$",
+                 "$u_{\\text{Licensing Income}}$",
+                 "$u_{\\text{Licenses and Options}}$",
+                 "$u_{\\text{Startups}}$",
+                 "$u_{\\text{Patents Issued}}$"),
+     row.names=F,
+     caption="Input and Output Weights for Last DMU") |>
   kable_styling(latex_options = "hold_position")
 ```
 
-These results are for just the last unit examined.\
+These results are for just the last unit examined.  Care must be had in interpreting them \
 
 Let's now wrap this into the full series of linear programs so as to calculate the multiplier weights for each unit.\
 
@@ -853,12 +835,10 @@ for (k in 1:ND) {
                  lb = 0) |>
     add_variable(vtheta, type = "continuous") |>
     set_objective(vtheta, "min") |>
-    add_constraint(sum_expr(vlambda[j] * xdata[j,i], 
-                            j = 1:ND) 
+    add_constraint(sum_expr(vlambda[j] * xdata[j,i], j = 1:ND) 
                    <= vtheta * xdata[k,i], i = 1:NX, 
                    .show_progress_bar=FALSE ) |>
-    add_constraint(sum_expr(vlambda[j] * ydata[j,r], 
-                            j = 1:ND) 
+    add_constraint(sum_expr(vlambda[j] * ydata[j,r], j = 1:ND) 
                    >= ydata[k,r], r = 1:NY, 
                    .show_progress_bar=FALSE ) 
     if (RTS=="VRS") {modUTT_CRS <- 
@@ -1115,9 +1095,13 @@ Conduct a DEA study on the given sample data about cameras specifications in dif
 | Phone C |   300    |        32         |       16       |        4.5         |
 | Phone D |   275    |        32         |       8        |         4          |
 
-a)  Add more DMUs to above data so that there are minimum 10 in total.
-b)  Add more inputs and outputs as needed. Describe and justify the data including the inputs and outputs used as well as items explicitly not used.
-c)  Select an appropriate DEA model and conduct the analysis.
-d)  Discuss the results.
+Table: Camera Data.
+
+a.  Add more DMUs to above data so that there are minimum 10 in total.
+b.  Add more inputs and outputs as needed. Describe and justify the data including the inputs and outputs used as well as items explicitly not used.
+c.  Select an appropriate DEA model and conduct the analysis.
+d.  Discuss the results.
+
 :::
 
+\index{Data envelopment analysis|)}

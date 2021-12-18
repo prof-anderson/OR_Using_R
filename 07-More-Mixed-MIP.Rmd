@@ -311,7 +311,7 @@ Let's review what the two versions of the results look like.
 
 ```{r raw-results-table}
 kbl (head( get_solution(result, Vx[i,j])), booktabs=T,
-       caption = "Raw results for Vx Variable.") |>
+       caption = "Raw Results for Vx Variable.") |>
   kable_styling(latex_options = "hold_position")
 ```
 
@@ -351,11 +351,11 @@ Now, let's calculate how many customers each warehouse serves.
 ```{r customer-count}
 customer_count <- matching |> 
   # Process matching and save result to customer_count
-  group_by(j) |>         # Group by warehouse
-  summarise(n = n()) |>  # Summarize count
-  rename(id = j)          # Rename column from j to id
+  group_by(j)              |> # Group by warehouse
+  summarise(n = n())       |> # Summarize count
+  rename(id = j)              # Rename column from j to id
 kbl (customer_count, booktabs=T, caption=
-  "Count of customers assigned to each operating warehouse") |>
+  "Count of Customers Assigned to Each Operating Warehouse") |>
   kable_styling(latex_options = "hold_position")
 ```
 
@@ -364,12 +364,12 @@ Let's gather more information to examine the fixed cost of the selected.
 How does this compare with the histogram of fixed costs?\
 
 ```{r prepare-to-plot-warehouses}
-plot_warehouses <- warehouse_locations |> 
-  mutate(costs = fixedcost) |> 
-  inner_join(customer_count, by = "id") |> 
+plot_warehouses <- warehouse_locations              |> 
+  mutate(costs = fixedcost)                         |> 
+  inner_join(customer_count, by = "id")             |> 
   filter(id %in% unique(matching$j))
 kbl (plot_warehouses, booktabs=T, caption = 
-          "Table of information about warehouses used") |>
+          "Summary of Results for Warehouses Used") |>
   kable_styling(latex_options = "hold_position")
 ```
 

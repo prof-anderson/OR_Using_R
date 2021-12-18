@@ -15,6 +15,7 @@ library (ROI.plugin.symphony, quietly = TRUE)
 library (ompr, quietly = TRUE)
 library (ompr.roi, quietly = TRUE)
 library (dplyr)
+library (kableExtra)
 ```
 
 ## Policies for Houselessness
@@ -71,7 +72,7 @@ $$
   \end{split}
 $$
 
-Alas, linear programming models and the Simplex method only allow for a single objective function.  Let's start by solving from the perspective of the first group. 
+Alas, linear programming models and the Simplex method only allows for a single objective function.  Let's start by solving from the perspective of the first group. 
 
 $$
  \begin{split}
@@ -86,8 +87,7 @@ $$
 
 ```{r HomeModel, echo=TRUE}
 Home1Model <- MIPModel() |>
- # To avoid name space conflicts, using a prefix of V
- #    for ompr variables.
+ # Avoid name space conflicts by using a prefix of V
   add_variable(VH, type = "integer", lb = 0) |>
   add_variable(VR, type = "integer",lb = 0)  |>
   set_objective(1.1*VH + 2.25*VR,"max")      |>
@@ -103,10 +103,12 @@ R  <- get_solution (res_Home1 , VR)
 sum_Home1           <- cbind(res_Home1$objective_value,H, R)
 colnames(sum_Home1) <- c("Obj. Func. Val.", "H", "R")
 rownames(sum_Home1) <- "Group 1: Max People"
-kbl(sum_Home1,booktabs=T)
+kbl(sum_Home1, booktabs=T,
+     caption="Group 1's Ideal Solution.") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
-Now, let's examine the group's model that has an objective of maximizing the expected number of children served.\
+Now, let's examine the secpmd group's model that has an objective of maximizing the expected number of children served.\
 
 $$
  \begin{split}
@@ -305,7 +307,7 @@ kbl (rbind(sum_Home3, sum_Home4, sum_Home5),
      booktabs=T, 
      caption="Minimax Solution.") |>
   kable_styling(latex_options = 
-                  c("hold_position", "scale_down"))
+                  c("hold_position"))
 ```
 
 The minimax solution finds an alternative that is still Pareto optimal. \index{Pareto optimal} \ 
@@ -338,7 +340,7 @@ To provide some space before we discuss the formulation, let's show the data.  R
 data(state)
 Customers <- state.x77[,1]
 kbl (head (Customers), booktabs=T,
-     caption="Number of customers for first six states.") |>
+     caption="Number of Customers for First Six States.") |>
   kable_styling(latex_options = "hold_position")
 ```
 
@@ -377,7 +379,7 @@ $$
 
 Let's now move on to implement this model in R. \
 
-```{r build_mail1_model}
+```{r build-mail1-model, message=FALSE}
 States <- 50  # Options to shrink problem for testing
 Weeks <- 8
   
@@ -449,12 +451,14 @@ table_results1 <- append(table_results1,weeksmail1a)
 
 ```{r Display-weekly-Mailings, results='markup', eval=TRUE}
 
-kbl(table_results1[-1])
+kbl(table_results1[-1], booktabs=T,
+     caption="Display of States by Week") |>
+  kable_styling(latex_options = c("hold_position","scale_down"))
 ```
 
 Since this is state level data, let's look at a map of the schedule.\
   
-```{r Map_of_Mailing_Resultsm, fig.width=4, eval=TRUE}
+```{r Map-of-Mailing-Results, out.width='100%', eval=TRUE, fig.cap="Map of Mailing Results"}
 library (ggplot2)
 library (maps)
 mapx = data.frame(region=tolower(rownames(assigned1a)), 
@@ -485,7 +489,7 @@ $$
 
 We could then extend our `ompr` model, `Mail1` with the additional constraints.\
 
-```{r}
+```{r, message=FALSE}
 Mail2 <- add_constraint(Mail1, 
                         sum_expr(Customers [s]*Vx[s, w-1], 
                               s=1:States) >=
@@ -494,7 +498,7 @@ Mail2 <- add_constraint(Mail1,
                w = 2:Weeks)
 ```
 
-To speed up the solution time, I'll set the gap_limit to $15\%$.\
+To speed up the solution time, I'll set the `gap_limit` to $15\%$.\
 
 ```{r break-symmetry, echo=FALSE, results='markup'}
 res_Mail2 <- solve_model(Mail2, 
@@ -517,7 +521,8 @@ for (week_counter in 1:Weeks) {
 colnames(weeksmail2a)<-paste0("Week ",week_counter)
 table_results2 <- append(table_results2,weeksmail2a)
 }
-kbl(table_results1[-1]) |>
+kbl(table_results1[-1], booktabs=T, caption=
+      "Solution with Symmetry Breaking") |>
   kable_styling(latex_options = "hold_position")
 ```
 

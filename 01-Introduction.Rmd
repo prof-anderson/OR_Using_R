@@ -152,7 +152,9 @@ Let's confirm that it works.\
 b
 ```
 
-This table is still not that "nice" looking. Let's use a package that does a nicer job of formatting tables. To do this, we will use an extra package. Up to this point, everything that we have done just simply uses standard built in functions of R. The package that we will use is `kable` \index{kable} but there are plenty of others available such as `pander`, `kable`, `xtable`, and `huxtable`. While `kable` is a function of `knitr`, it is significantly enhanced by the `kableExtra`  \index{kable!kableExtra} package. Let's start by loading the `kableExtra` package.\
+This table is still not that "nice" looking. Let's use a package that does a nicer job of formatting tables. To do this, we will use an extra package. Up to this point, everything that we have done just simply uses standard built in functions of R. The package that we will use is `kable` \index{kable} but there are plenty of others available such as `pander`, `kable`, `xtable`, and `huxtable`. While `kable` is a function of `knitr`, it is significantly enhanced by the `kableExtra`  \index{kable!kableExtra} package. For more information on the specifics of creating rich tables, see Appendix C.  
+
+Let's start by loading the `kableExtra` package.\
 
 ```{r Loading-a-Package}
 library (kableExtra)
@@ -160,7 +162,7 @@ library (kableExtra)
 
 If R indicates that you don't have the `kableExtra` package installed on your computer, you can press the "Install" command under the Packages tab and then type in `kableExtra` or use the `install.packages` command from RStudio.  The `kbl`  \index{kable!kbl} is a shorthand way of entering the `kable` function that is provided by `kableExtra`.\
 
-Notice the hash symbol is used to mark comment in the above code chunk. It is also used to "comment out" a command that I don't need to use at the current time. Using comments to explain what a command is doing can be helpful to anyone that needs to revisit your code in the future, including yourself! \
+Notice the hash symbol is used to mark a comment in the above code chunk. It is also used to "comment out" a command that I don't need to use at the current time. Using comments to explain what a command is doing can be helpful to anyone that needs to revisit your code in the future, including yourself! \
 
 ```{r Using-kable}
 knitr::kable (b, booktabs=T, 
@@ -243,7 +245,7 @@ kbl (temp3, booktabs=T,
   kable_styling(latex_options = "hold_position")
 ```
 
-Let's take the first row of `b` and combine it with the second row of `c` to form a new matrix, `e`. Since these are rows that are going to be combined, we will use a command, `rbind`, to bind these rows together. \index{rbind} \
+Let's take the first row of `b` and combine it with the second row of `c` to form a new matrix, `e`. Since these are rows that are going to be combined, we will use a command, `rbind`, to bind these rows together. \index{rbind function} \
 
 ```{r Combined-Matrix}
 temp4 <- rbind(b[1,],c[2,])
@@ -261,7 +263,7 @@ kbl (temp4, booktabs=T,
   kable_styling(latex_options = "hold_position")
 ```
 
-We could combine all of matrix `b` and matrix `c` together using row binding or column binding. Table Let's view the results of binding using columns (`cbind`) and rows (`rbind`). \index{cbind}
+We could combine all of matrix `b` and matrix `c` together using row binding or column binding. Table Let's view the results of binding using columns (`cbind`) and rows (`rbind`). \index{cbind function}
 
 ```{r  }
 temp5<- cbind(b,c)
