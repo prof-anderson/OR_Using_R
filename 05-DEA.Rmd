@@ -598,7 +598,7 @@ dea.plot(x, y, RTS="drs", ORIENTATION="in-out",
 
 ```{r Compare-RTS-Results, echo=FALSE}
 kbl (cbind(eff.crs, eff.vrs, eff.drs, eff.irs), 
-     booktabs=T, digits=4,
+     booktabs=T, digits=4, escape=F,
      col.names=c("$\\theta^{CRS}$", "$\\theta^{VRS}$", 
                  "$\\theta^{DRS}$", "$\\theta^{IRS}$"),
      caption="Comparison of Efficiency under 
