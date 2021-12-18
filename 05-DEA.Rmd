@@ -722,9 +722,9 @@ for (k in 1:ND) {
 ```{r full-table}
 kbl (cbind(res.efficiency, poscol(res.lambda)),
      booktabs=T, digits=4, escape=F,
-     col.names = c("$\\theta^{CRS}$", "$\\lambda_{text{NYU}}$",
-                   "$\\lambda_{text{UW-Madison}}$", 
-                   "$\\lambda_{text{Cal Tech}}$"),
+     col.names = c("$\\theta^{CRS}$", "$\\lambda_{\\text{NYU}}$",
+                   "$\\lambda_{\\text{UW-Madison}}$", 
+                   "$\\lambda_{\\text{Cal Tech}}$"),
      caption="Results from University Technology 
      Transfer Example (CRS)") |>
   kable_styling(latex_options = 
