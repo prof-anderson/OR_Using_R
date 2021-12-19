@@ -502,7 +502,7 @@ The Constant Returns to Scale, CRS, model is often referred to in the DEA litera
 
 : Returns to Scale Envelopment Constraints
 
-Now, we will generalize this by allowing a parameter to set the returns to scale.\
+Now, we will generalize this by allowing a parameter to set the returns to scale.
 
 ```{r Adding-RTS}
 RTS<-"DRS"
@@ -560,7 +560,8 @@ for (k in 1:ND) {
       add_constraint(result, sum_expr(vlambda[j], j = 1:ND) >= 1) }  
     if (RTS=="DRS") {result <-
       add_constraint(result, sum_expr(vlambda[j], j = 1:ND) <= 1) }  
-result <- solve_model(result, with_ROI(solver = "glpk")) 
+
+  result <- solve_model(result, with_ROI(solver = "glpk")) 
     
     results.efficiency[k] <-  get_solution(result, vtheta)       
     results.lambda[k,] <- t(as.matrix(as.numeric(
@@ -595,7 +596,6 @@ dea.plot(x, y, RTS="drs", ORIENTATION="in-out",
          fex=1, GRID=TRUE, RANGE=FALSE, param=NULL)
 ```
 
-
 ```{r Compare-RTS-Results, echo=FALSE}
 kbl (cbind(eff.crs, eff.vrs, eff.drs, eff.irs), 
      booktabs=T, digits=4, escape=F,
@@ -605,7 +605,8 @@ kbl (cbind(eff.crs, eff.vrs, eff.drs, eff.irs),
        Alternate Returns to Scale Assumptions") |>
   kable_styling(latex_options = "hold_position")
 ```
-\index{Data envelopment analysis!Returns to scale|(}\
+
+\index{Data envelopment analysis!Returns to scale|(}
 
 ## Multiple Inputs and Multiple Outputs
 

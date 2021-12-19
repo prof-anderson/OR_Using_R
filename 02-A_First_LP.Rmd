@@ -78,7 +78,7 @@ $$
 $$
 
 Note that since the objective function and each constraint is a simple linear function of the decision variables, this is what we call a *linear* programming model \index{Linear programming} \index{LP|see{Linear programming}}
-or LP for short. It would not be linear if any nonlinear function is made of the decision variables. For example, squaring a decision variable, using conditional logic based on the variable value, multiplying two variables, or deviding a variable by a function of a variable. These and other issues would then require using nonlinear programming or NLP. NLP is also widely used but has limitations. \index{Linear programming} \index{NLP|see{Nonlinear programming}}
+or LP for short. It would not be linear if any nonlinear function is made of the decision variables. For example, squaring a decision variable, using conditional logic based on the variable value, multiplying two variables, or dividing a variable by a function of a variable. These and other issues would then require using nonlinear programming or NLP. NLP is also widely used but has limitations. \index{Nonlinear programming} \index{NLP|see{Nonlinear programming}}
 
 **Linear programming**: (LP, also called linear optimization) is a method to achieve the best outcome (such as maximum profit or lowest cost) in a mathematical model whose requirements are represented by linear relationships.
 
@@ -269,7 +269,7 @@ Notice that we used two ways to get solution of decision variables from `ompr`. 
 - `solution_column_duals`:  Used in sensitivity analysis, (Chapter 4)
 - `solution_row_duals`:  Also used in sensitivity analysis, (Chapter 4)
 
-Using this way of examining the solution, (`result0$solution`) is particularly straightforward in an explicit model like this and where variables are conveniently alphabetized. Another approach is extract each variable's solution separately using the `get_solution` function from `ompr`.  
+Using this way of examining the solution, (`result0$solution`) is particularly straightforward in an explicit model like this and where variables are conveniently alphabetized. Another approach is extract each variable's solution separately using the `get_solution` function from `ompr`.  \index{Linear programming!Explicit formulation}
 
 ```{r Base-2Var-Solution}
 kbl(res0, booktabs=T,
@@ -696,7 +696,7 @@ get_solution(result4, Cats)
 
 The solver status reports that the problem is *infeasible* rather than *unbounded* but by inspection, the solution is feasible in that it satisfies all of the constraints of $\geq$ and therefore the LP is feasible.\
 
-**Infeasible vs Unbounded**. This is a known issue in `ompr` as of 0.8.1 and reported on github. It is caused by not being able to distinguish between the different status conditions for situations other than being solved to guaranteed optimality. This is caused by the variety of status codes used by different LP solvers (`glpk`, `symphony`, and others) passing a numerical status code to `ROI`. Each solver has defined their status codes in different ways.)  The result is that you should read the `ompr` status of "infeasible" to indicate that is not assured of being an optimal solution. \index{ompr!Misreporting of Status} The misinterpretation of solver status is an outcome of the independent toolchain from the solver (`glpk` to `ROI` to `ompr`.) \
+**Infeasible vs Unbounded**. This is a known issue in `ompr` as of 0.8.1 and reported on github. It is caused by not being able to distinguish between the different status conditions for situations other than being solved to guaranteed optimality. This is caused by the variety of status codes used by different LP solvers (`glpk`, `symphony`, and others) passing a numerical status code to `ROI`. Each solver has defined their status codes in different ways.)  The result is that you should read the `ompr` status of "infeasible" to indicate that is not assured of being an optimal solution. \index{ompr!Misreporting of status} The misinterpretation of solver status is an outcome of the independent toolchain from the solver (`glpk` to `ROI` to `ompr`.) \
 
 This is another good reminder that it is important to always check the status of the solver.\
 
@@ -704,7 +704,7 @@ This is another good reminder that it is important to always check the status of
 
 We have explicitly created two variable model and a three variable model by naming each variable independently. This process doesn't scale well for companies with dozens, hundreds, or thousands of different products. Simply writing out the full linear program gets very tedious, hard to read, and even maintain. An application for a company with a thousand products and a thousand resources would have a million terms. Assume that variables are on average seven letters long, each resource consumed is a single digit whole number and a plus symbol is used to add terms together and no spaces. This means that there will be $(7+1)\cdot 1000+999=8999$ characters in each line before the inequality. Just say each constraint has  9000 characters. If a line has 60 characters, this would mean 150 lines or around two pages for each resource (constraint.) The 1000 resources would correspond to about 2000 pages, along with an objective function, and non-negativity constraints. All in all, this single model would make for some rather dry reading. \
 
-In practice, people don't write out the full LP explicitly for large models. This includes journals, no journal's page limit would be able to accommodate the above explicit linear program even if readers had the patience to wade through the model. \index{Explicit linear program} \
+In practice, people don't write out the full LP explicitly for large models. This includes journals, no journal's page limit would be able to accommodate the above explicit linear program even if readers had the patience to wade through the model. \index{Linear programming!Explicit formulation} \
 
 Rather than writing out models explicitly, instead we should express them algebraically. The products are numbered instead of given names: Ants, Bats, and Cats become products 1, 2, and 3 respectively. \
 

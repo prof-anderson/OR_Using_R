@@ -1203,8 +1203,8 @@ Now, let's create the full formulation.
 $$
 \begin{split}
 \begin{aligned}
-\text{min   } \; & \sum\limits_{t=1}^{4} \left(C^P_A\cdot x_{t,A} + C^S_A\cdot y_{t,A} + C^I_A\cdot z_{t,A}+\\
-                 & C^P_B\cdot x_{t,B} + C^S_B\cdot y_{t,B} + C^I_B\cdot z_{t,B}\right)\\
+\text{min   } \; & \sum\limits_{t=1}^{4} ( C^P_A\cdot x_{t,A} + C^S_A\cdot y_{t,A} + C^I_A\cdot z_{t,A}+\\
+                 & C^P_B\cdot x_{t,B} + C^S_B\cdot y_{t,B} + C^I_B\cdot z_{t,B} ) \\
 \text{s.t.: } \; & z_{1,A}=B_{A} + x_{1,A} - D_{1,A}\\
                  & z_{1,B}=B_{B} + x_{1,B} - D_{1,B}\\
                  & z_{t,A}=z_{t-1,A} + x_{t,A} - D_{t,A}, \; \forall t>1\\

@@ -21,7 +21,7 @@ highlight: tango
 
 # Preface {.unnumbered}
 
-This book covers using R for doing optimization, a key area of operations research, which has been applied to virtually every industry. The current focus is on linear and mixed integer optimization. In the future it may grow to include a broader range of Operations Research methods. \vspace{12pt}
+This book covers using R for doing optimization, a key area of operations research, which has been applied to virtually every industry. The current focus is on linear and mixed integer optimization. In the future it may grow to include a broader range of Operations Research methods. \
 
 Pedagogically, since the late 1990s, I had been a proponent of teaching introductory optimization using spreadsheets as a way to bridge the barrier between data and applications as well as teaching better spreadsheet practices. While this worked well, the disconnect with algebraic modeling was always a problem. Excel add-ins enabling algebraic tools were rich but not seamless. In 2018, I decided to switch to R for a variety of reasons:
 
@@ -29,7 +29,7 @@ Pedagogically, since the late 1990s, I had been a proponent of teaching introduc
 -   Working technology and business professionals should have an awareness of the tools and language of data analysis to deal with consultants, data scientists, and others.
 -   New software and extensions reduced the barrier to entry for people to start using data analytics tools.
 
-This book has been used multiple times for a ten week graduate course on operations research \index{Operations research} emphasizing optimization \index{Optimization}. It can be used for graduate and undergraduate courses for people without a background in optimization and varying levels of mathematical backgrounds. The focus is on applications (formulating, implementing, and interpreting rather than algorithms. The book could be used as a supplement in a more theoretical or algorithm-oriented class. Key principles in the development of the book include the following:
+This book has been used multiple times for a ten week graduate course on operations research \index{Operations research} emphasizing optimization. \index{Optimization} It can be used for graduate and undergraduate courses for people without a background in optimization and varying levels of mathematical backgrounds. The focus is on applications (formulating, implementing, and interpreting rather than algorithms. The book could be used as a supplement in a more theoretical or algorithm-oriented class. Key principles in the development of the book include the following:
 
 -   An assumption the reader is willing to use R and getting their hands dirty with experimenting.
 -   Providing and explaining code, sometimes repeated in different places so that examples are relatively clear and self-contained.
@@ -78,8 +78,6 @@ In addition, several groups have been of tremendous help:
 -   Past ETM 540/640 Operations Research Group classes, particularly the Fall 2018 and Winter 2019 classes which helped test the early versions of this book.
 
 Most of all, I would like to also express my appreciation for my family's patience while working on this book with many late nights: Carrie, Trent, and Paige.
-
-This version of the book was built with files from <https://github.com/prof-anderson/OR_Using_R>. \vspace{12pt}
 
 > Tim Anderson
 > `r tufte::quote_footer(Sys.Date())`

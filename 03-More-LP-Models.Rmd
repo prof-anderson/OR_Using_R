@@ -24,7 +24,7 @@ In each case, try to follow along with the application.\
 In the previous chapter, we examined situations with only a few products and constraints.
 In general, most companies have many more products and we won't be wanting to name each variable explicitly and uniquely. We refer to this type of model as an *explicit linear program.* Instead, we use sets of products and resources.  \index{Explicit model} \
 
-We could also reframe the model more algebraically. Let's use subscripts to differentiate between products and resources. We can define to  *i=1* to represent Ants, *i=2* to represent Bats, and *i=3* to represent Cats.  Similarly, *j=1* represents machining, *j=2*, represents assembly, etc. \index{Algebraic model}\
+We could also reframe the model more algebraically. Let's use subscripts to differentiate between products and resources. We can define to  *i=1* to represent Ants, *i=2* to represent Bats, and *i=3* to represent Cats.  Similarly, *j=1* represents machining, *j=2*, represents assembly, etc. \index{Algebraic model} \
 
 Now, let's move on to defining the data.
 Let's define the amount to produce of each product, *i*, as $x_i$ and resource *j* consumed by product *i* as $R_{i,j}$.
@@ -36,8 +36,8 @@ The LP can now be rewritten as shown below with the three products and four cons
 $$
  \begin{split}
  \begin{aligned}
-    \text{Maximize  }   &  \sum_{i=1}^3 P_i x_i \\
-    \text{subject to } & \sum_{i=1}^3 R_{i,j}x_i \leq A_j, \; j=1, 2, 3, 4\\
+    \text{Max   }   &  \sum_{i=1}^3 P_i x_i \\
+    \text{s.t.: } & \sum_{i=1}^3 R_{i,j}x_i \leq A_j, \; j=1, 2, 3, 4\\
                        & x_1, \; x_2, \;x_3 \geq 0 
   \end{aligned}
   \end{split}
@@ -138,7 +138,7 @@ Similarly, we can display the resources used by each product and the amount of e
 ```{r Display-Resources-Available-Combined}
 Combined <- cbind(Resources, Available) 
 kbl(Combined, booktabs=T, 
-    caption="Resources Used by Each Product and Available") |>
+    caption="Resources Used by Each Product and Amount Available") |>
   kable_styling(latex_options = "hold_position")
 ```
 
@@ -234,7 +234,7 @@ ResourceSlacks <- cbind (results.Resources,
                          Available-results.Resources)
 colnames(ResourceSlacks)<-c("Used", "Available", "Slack")      
 kbl(format(head(ResourceSlacks),digits=4), booktabs=T,
-    caption="Resources Used") |>
+    caption="Resources Used in Optimal Solution") |>
   kable_styling(latex_options = "hold_position")
 ```
 

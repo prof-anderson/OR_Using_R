@@ -20,15 +20,15 @@ library (kableExtra)
 
 ## Policies for Houselessness
 
-Up until this point, we assumed that there would be a single, clear objective function. Often we have more complex situations where there are multiple conflicting objectives.  In our earlier production planning case, we might have additional objectives besides maximizing profit such as minimizing environmental waste or longer term strategic positioning. In the case of our capital budgeting problem, we can envision a range of additional considerations beyond simple expected net present value maximization.\
+Up until this point, we assumed that there would be a single, clear objective function. Often we have more complex situations where there are multiple conflicting objectives. In our earlier production planning case, we might have additional objectives besides maximizing profit such as minimizing environmental waste or longer term strategic positioning. In the case of our capital budgeting problem, we can envision a range of additional considerations beyond simple expected net present value maximization.\
 
 Let's use an example that is a pressing issue for many cities - homelessness.  Note that is often better characterized as houselesness and the term will be used interchangeably for the sake of this illustration.\
 
-The City of Bartland has a problem with houselessness.  Two ideas have been proposed for dealing with the houselessness problem.  The first option is to build new, government subsidized tiny homes for annual cost of $\$10K$ which would serve one adult 90% of the time and a parent with a child 10% of the time. Another option is to create a rental subsidy program which costs $\$25K$ per year per unit which typically serves a single adult (15%), two adults (20%), an adult with one child (30%), an adult with two children (20%), two adults with one child (10%), and two adults with two children (5%). \
+The City of Bartland has a problem with houselessness. Two ideas have been proposed for dealing with the houselessness problem. The first option is to build new, government subsidized tiny homes for annual cost of $\$10K$ which would serve one adult 90% of the time and a parent with a child 10% of the time. Another option is to create a rental subsidy program which costs $\$25K$ per year per unit which typically serves a single adult (15%), two adults (20%), an adult with one child (30%), an adult with two children (20%), two adults with one child (10%), and two adults with two children (5%). \
 
-Bartland's official Chief Economist has estimated that this subsidy program would tend to increase housing prices in a very tight housing market by an average of 0.001%. The Bartland City Council has $\$1000K$ available to reappropriate from elsewhere in the budget and would like to find the _best_ way to use this budget to help with the houselessness problem. Both programs require staff support - in particular 10% of a full time equivalent staff member to process paperwork, conduct visits, and other service related activities.  There are seven staff members available to work on these activities.\
+Bartland's official Chief Economist has estimated that this subsidy program would tend to increase housing prices in a very tight housing market by an average of 0.001%. The Bartland City Council has $\$1000K$ available to reappropriate from elsewhere in the budget and would like to find the _best_ way to use this budget to help with the houselessness problem. Both programs require staff support - in particular 10% of a full time equivalent staff member to process paperwork, conduct visits, and other service related activities. There are seven staff members available to work on these activities.\
 
-Let's summarize the data for two programs.  Let's focus on expected numbers of people served for each policy intervention.\
+Let's summarize the data for two programs. Let's focus on expected numbers of people served for each policy intervention.\
 
 |  Per unit                     | Tiny Homes (H)   | Rent Subsidy (R)   |   
 |------------------------------:|:----------------:|:------------------:|
@@ -50,9 +50,9 @@ One group on the city council wants to serve as many people (both children and a
 
 The second group feels that adults are responsible for their own situation but wants to save as many children from houselessness as possible within budget limits.\
 
-As usual, start by thinking of the decision variables.  In this case, let's define _H_ to be number of tiny homes to be built and _R_ to be the rental housing subsidies provided.  Of course these should be non-negative variables.  We could use integer variables or continuous variables.\
+As usual, start by thinking of the decision variables.  In this case, let's define _H_ to be number of tiny homes to be built and _R_ to be the rental housing subsidies provided. Of course these should be non-negative variables. We could use integer variables or continuous variables.\
 
-Next let's look at our constraints and formulate them in terms of the decision variables. We have two constraints. The first one for the budget is simply: $10 \cdot H+ 25\cdot R \leq 1000$.  The second is to ensure we have sufficient staff support, $0.1 \cdot H+ 0.1\cdot R \leq 7$.\
+Next let's look at our constraints and formulate them in terms of the decision variables. We have two constraints. The first one for the budget is simply: $10 \cdot H+ 25\cdot R \leq 1000$. The second is to ensure we have sufficient staff support, $0.1 \cdot H+ 0.1\cdot R \leq 7$.\
 
 Now, let's think about our objectives.  The first group wants to serve as many people as possible so the objective function is $\text {max } 1.1 \cdot H + 2.25 \cdot R$.\
 
@@ -72,7 +72,7 @@ $$
   \end{split}
 $$
 
-Alas, linear programming models and the Simplex method only allows for a single objective function.  Let's start by solving from the perspective of the first group. 
+Alas, linear programming models and the Simplex method only allows for a single objective function. Let's start by solving from the perspective of the first group. 
 
 $$
  \begin{split}
@@ -141,9 +141,9 @@ kbl (rbind(sum_Home1, sum_Home2), booktabs=T,
 
 So which group has the _better_ model?  The objective function value for group 1's model is higher but it is in different units (people served) versus group 2's model of children served.\
 
-Both group's have admirable objectives.  We can view this as a case of goal programming. \index{Goal programming} By definition, we know that these are the best values that can be achieved in terms of that objective function.  Let's treat these optimal values as targets to strive for and measure the amount by which fail to achieve these targets.  We'll define target $T_1 =$ `r res_Home1$objective_value` and $T_2 =$ `r res_Home2$objective_value`.\
+Both group's have admirable objectives. We can view this as a case of goal programming. \index{Goal programming} By definition, we know that these are the best values that can be achieved in terms of that objective function. Let's treat these optimal values as targets to strive for and measure the amount by which fail to achieve these targets. We'll define target $T_1 =$ `r res_Home1$objective_value` and $T_2 =$ `r res_Home2$objective_value`.\
 
-In order to do this, we need to use deviational variables. \index{Deviational variables} These are like slack variables from the standard form of linear programs.  Since the deviations can only be one sided in this case, we only need to have deviations in one direction.  We will define $d_1$ as the deviation in goal 1 (Maximizing people served) and $d_2$ as the deviation in goal 2 (Maximizing children served).\
+In order to do this, we need to use deviational variables. \index{Deviational variables} These are like slack variables from the standard form of linear programs. Since the deviations can only be one sided in this case, we only need to have deviations in one direction. We will define $d_1$ as the deviation in goal 1 (Maximizing people served) and $d_2$ as the deviation in goal 2 (Maximizing children served).\
 
 Let's now create the modified formulation.\
 
@@ -181,10 +181,10 @@ Home3Model <- MIPModel() |>
 res_Home3 <- solve_model(Home3Model, 
                         with_ROI(solver = "glpk"))
   
-H  <- get_solution (res_Home3 , VH)
-R  <- get_solution (res_Home3 , VR)
-d1  <- get_solution (res_Home3 , Vd1)
-d2  <- get_solution (res_Home3 , Vd2)
+H  <- get_solution (res_Home3, VH)
+R  <- get_solution (res_Home3, VR)
+d1 <- get_solution (res_Home3, Vd1)
+d2 <- get_solution (res_Home3, Vd2)
 
 sum_Home3           <- cbind(res_Home3$objective_value,
                              H, R, d1, d1/T1, d2, d2/T2)
@@ -199,7 +199,7 @@ kbl (sum_Home3, booktabs=T,
 ```
 
 
-The deviation variables have different units though.  One way to accommodate this would be to minimize the sum of percentages missed.\
+The deviation variables have different units though. One way to accommodate this would be to minimize the sum of percentages missed.\
 
 $$
  \begin{split}
@@ -235,8 +235,8 @@ res_Home4
   
 H  <- get_solution (res_Home4, VH)
 R  <- get_solution (res_Home4, VR)
-d1  <- get_solution (res_Home4, Vd1)
-d2  <- get_solution (res_Home4, Vd2)
+d1 <- get_solution (res_Home4, Vd1)
+d2 <- get_solution (res_Home4, Vd2)
 
 sum_Home4           <- cbind(res_Home4$objective_value,
                              H, R, d1, d1/T1, d2, d2/T2)
@@ -292,8 +292,8 @@ res_Home5
   
 H  <- get_solution (res_Home5, VH)
 R  <- get_solution (res_Home5, VR)
-d1  <- get_solution (res_Home5, Vd1)
-d2  <- get_solution (res_Home5, Vd2)
+d1 <- get_solution (res_Home5, Vd1)
+d2 <- get_solution (res_Home5, Vd2)
 
 sum_Home5  <- cbind(
   res_Home5$objective_value, H, R, 
@@ -405,7 +405,6 @@ Mail1
 res_Mail1 <- solve_model(Mail1, 
                         with_ROI(solver = "symphony",
                    verbosity=-1, gap_limit=1.5))
-
 ```
 
 ```{r}
@@ -414,9 +413,9 @@ res_Mail1
 
 Note that the the messages from Symphony indicate that the solution found was feasible while `ompr` interprets the status as `infeasible.`  This is a bug that we have discussed earlier.  Turning on an option for more messages from the solver such as `verbose=TRUE` for `verbose=TRUE` or `verbosity=0` for `symphony` can give confirmation that the final status is *not* infeasible.\
 
-Another useful to thing to note is that solving this problem to optimality can take a long time despite having fewer binary variables than some of our earlier examples.  Using `glpk` with  `verbose=FALSE` means that the MIP is solved with no progress information displayed and makes it look like the solver is hung.  Turning on more information (increasing the verbosity) helps explain that the Solver is working, it is just taking a while, on my computer I let it run 20 minutes without making further progress than a feasible solution it had found quickly.\
+Another useful to thing to note is that solving this problem to optimality can take a long time despite having fewer binary variables than some of our earlier examples. Using `glpk` with `verbose=FALSE` means that the MIP is solved with no progress information displayed and makes it look like the solver is hung. Turning on more information (increasing the verbosity) helps explain that the Solver is working, it is just taking a while, on my computer I let it run 20 minutes without making further progress than a feasible solution it had found quickly.\
 
-In fact, I realized that the feasible solution found was very close to the best remaining branches so perhaps this solution was optimal but it was taking a very long time to prove that it was optimal.  In any case, it is probably good enough.  Often data may only be accurate to $\pm5\%$ so spending extensive time trying to get significantly more accurate results is not very productive.  This suggests  setting stopping options such as a time limit, number of LPs, or a _good enough_ setting.  For this problem, I chose the latter option.\
+In fact, I realized that the feasible solution found was very close to the best remaining branches so perhaps this solution was optimal but it was taking a very long time to prove that it was optimal. In any case, it is probably good enough.  Often data may only be accurate to $\pm5\%$ so spending extensive time trying to get significantly more accurate results is not very productive.  This suggests  setting stopping options such as a time limit, number of LPs, or a _good enough_ setting.  For this problem, I chose the latter option.\
 
 We solved this with a mixed integer programming problem gap limit of $1.5\%$ meaning that while we have not _proven_ this solution to be optimal, we do know that it is impossible to find a solution more than 1.5% better. From a branch and bound algorithm perspective, this means that while we have not searched down fully or pruned every branch, we know that no branch has the potential of being more than $1.5\%$ better than the feasible solution that we have already found.\
 
@@ -449,9 +448,9 @@ table_results1 <- append(table_results1,weeksmail1a)
 }
 ```
 
-```{r Display-weekly-Mailings, results='markup', eval=TRUE}
+```{r Display-weekly-Mailings, results='asis', eval=FALSE}
 
-kbl(table_results1[-1], booktabs=T,
+kbl(as.matrix(table_results1[-1]), booktabs=T,
      caption="Display of States by Week") |>
   kable_styling(latex_options = c("hold_position","scale_down"))
 ```
@@ -475,9 +474,11 @@ expand_limits(x = states_map$long, y = states_map$lat)
 
 Note that this leaves off Alaska and Hawaii for visualization.  For completeness, Alaska is in week `r assigned1a["Alaska",] [,2]` and Hawaii is in week `r assigned1a["Hawaii",] [,2]`.\
 
-This formulation generates solutions that have high symmetry.  Essentially it would be feasible and have the same objective function value if we simply swap any two weeks of assignments.  For example, if we all of the states assigned to week 1 and week 2, it would still be feasible and have exactly the same objective function value.  This would result in a high number of alternate optimal solutions.  The numbering by week is essentially arbitrary since the weeks don't make a difference.\
+### Frontloading the Work
 
-When there exists a high degree of symmetry, it may be useful to implement one or more constraints to _break_ the symmetry by differentiating between solutions.  One approach to doing this is to require a particular ordering of weeks.  For example, we could require that weeks get progressively lighter in terms of workload.\
+This formulation generates solutions that have high symmetry.  Essentially it would be feasible and have the same objective function value if we simply swap any two weeks of assignments.  For example, if we swap all of the states assigned to week 1 and week 2, it would still be feasible and have exactly the same objective function value.  This would result in a high number of alternate optimal solutions.  The numbering by week is essentially arbitrary since the weeks don't make a difference.\
+
+When there exists a high degree of symmetry, it may be useful to implement one or more constraints to _break_ the symmetry by differentiating between solutions.  One approach to doing this is to require a particular ordering of weeks. For example, we could require that weeks get progressively lighter in terms of workload. In fact, this might be a managerial preference to ensure that if problems develop, there is some organizational slack later to deal with this.\
 
 $$
  \begin{split}
@@ -498,16 +499,15 @@ Mail2 <- add_constraint(Mail1,
                w = 2:Weeks)
 ```
 
-To speed up the solution time, I'll set the `gap_limit` to $15\%$.\
+While it might be thought that adding constraints limits the search space of possible solutions and might speed up solution, in this case it slows down solving speed tremendously.  Despite having having less than half the binary variables of applications from Chapter 8 and the same number the earlier mail problem, this problem turns out to be most computationally demanding so far. The branch and bound process from symphony takes hours to solve.\
 
-```{r break-symmetry, echo=FALSE, results='markup'}
+```{r break-symmetry, echo=FALSE, eval=FALSE}
 res_Mail2 <- solve_model(Mail2, 
-                        with_ROI(solver = "symphony",
-                   verbosity=-1, gap_limit=15))
+                        with_ROI(solver = "symphony", verbosity=-1))
 
-assigned2 <- res_Mail2 |> 
- get_solution(Vx[s,w]) |>
- filter(value >.9) |>
+assigned2 <- res_Mail2           |> 
+ get_solution(Vx[s,w])           |>
+ filter(value >.9)               |>
  select (s,w)
 rownames(assigned2)<-c(names(Customers[assigned2[,1]]))
 
@@ -515,20 +515,35 @@ assigned2a <- tibble::rownames_to_column(assigned2)
 table_results2<-""
 weeksmail2a<-""
 for (week_counter in 1:Weeks) {
-  weeksmail2a<- assigned2a |>
-  filter(w==week_counter) |>
+  weeksmail2a<- assigned2a       |>
+  filter(w==week_counter)        |>
   select(rowname)
 colnames(weeksmail2a)<-paste0("Week ",week_counter)
 table_results2 <- append(table_results2,weeksmail2a)
 }
-kbl(table_results1[-1], booktabs=T, caption=
+```
+
+```{r, eval=FALSE, results='markup'}
+kbl(as.matrix(table_results1[-1]), booktabs=T, caption=
       "Solution with Symmetry Breaking") |>
   kable_styling(latex_options = "hold_position")
 ```
 
-Notice that then the workload in week 1 would essentially be the same as _Q_. In other words, the _Q_ minimax variable and constraints could be removed and still give the equivalent model.  This highlights that in mixed integer optimization, there are often many different ways to implement models for the same application.\
+The solving time using this modification to the LP changed tremendously. On an Intel i7 mobile CPU and R4.1.2. the following results were obtained before terminating the solver after nearly four hours. Within 6 seconds it found a feasible solution as demonstrated by the Lower Bound of 26,540 but the upper bound of what could still be undiscovered was 29,602.  This is possible suboptimality gap of 10.34%. Over the next half hour the Solver did not find a better solution (Lower Bound stays unchanged) but is able to reduce the Upper Bound. At this point I terminated the solver. There had been modest improvement in the search process in the first 30 minutes with two and a half million iterations (linear programming subproblems) but then no change for the three and half hours and almost six million more iterations.
 
-Solving times are also hard to predict in advance.  The symmetry breaking constraint appears to have caused slowed down the solving significantly as it spends a lot of time early on with a gap of 10.34%.  This suggests that perhaps symphony's algorithms do a better job on this problem than the simple symmetry breaking constraints that we added.  This warrants future attention or experimentation.\
+|           | Time       |            |               |               |         |           |
+| Seconds   | (HH:MM:SS) | Iterations | Lower Bound   | Upper Bound   | Gap (%) | Comments  |
+|----------:|:----------:|:----------:|:-------------:|:-------------:|:-------:|:----------|
+|        6  |   00:00:06 |      9,397 |   26540.12    |    29602.00   | 10.34   | Initial Solution |
+|     1291  |   00:21:31 |  2,015,431 |   26540.12    |  **28940.00** |  8.24   | New Bound  |
+|     1711  |   00:28:31 |  2,508,415 |   26540.12    |  **28510.00** |  6.91   | New Bound  |
+|    14311  |   03:58:31 |  8,391,692 |   26540.12    |    28510.00   |  6.91   | **Forced termination** |
+
+Table: Solving Progress for Modified Mailing Model.
+
+This highlights that large or complex optimization problems may take extra effort and attention. Analysts can make judicious tradeoffs of potentially suboptimal results, solving time, and data accuracy. For our purpose, to speed up the solution time, you could do an early termination option such as setting the `gap_limit` to $15\%$ by adding `gap_limit=15`. Setting an appropriate termination parameter based on gap, number of iterations, or time can be particularly helpful while developing a model. It also underscores that the benefits of implementing and testing algebraic models with smaller sized problems before expanding to the full sized problems.  By separating the data from the model, we can easily just shrink or expand the problem without affecting the formulation or the implementation. In this case, we could shrink the problem by using fewer weeks and states by changing the upper limits (`Weeks<-10; States<-10`) used in the model, resulting in 30 binary variables instead of 400.  
+
+We could further modify the model to eliminate _Q_ since the workload in week 1 would essentially be the heaviest workload (tallest nail.) This highlights that in optimization and particularly integer programming, there are often many different ways to implement models for the same application. This underscores the importance of clearly defining the elements of the formulation.\
 
 This application and model can be adjusted to fit a wide variety of other situations such as:
 
