@@ -170,8 +170,8 @@ kbl(cbind(as.matrix(GR),m), booktabs=T, escape=F, caption=
 Large tables can be problematic. Kable can scale a table to fit the page width easily using the `scale_down` option in `kableExtra` via the `kable_styling` and `latex_options`. \index{kable!scale_down}
 
 ```{r}
-NProd <- 52
-mbig <- matrix(1:(2*NProd), ncol= NProd)
+NWeeks <- 24
+mbig <- matrix(1:(2*NWeeks), ncol= NWeeks, byrow=TRUE,)
 rownames (mbig) <- c("Widgets", "Gadgets")
 
 kbl(mbig,booktabs=T, 

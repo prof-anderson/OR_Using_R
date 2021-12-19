@@ -147,14 +147,14 @@ In this way the representation is more visually intuitive.
 
 To ensure that we know how to access the data, if we want to see how the amount of the first resource used by the second product, you can enter `Resources[1,2]` in R Studio's console which is then evaluated as `r Resources[1,2]`.
 
-Using inline code is a great feature of RMarkdown. In the text of your RMarkdown, anything enclosed by a pair of single tick marks will be shown as a code chunk. If it starts with the letter r, it will be passed instead to R for evaluation. This allows for discussing results in a reproducible manner.
-Rather than discussing the result giving a value of 47.1 in the text and a later rerun of the analysis has an updated table of results showing the result to be 47.2, by using inline code evaluation, it will always show the up to date result, in this case, 47.2.]\
+Using inline code is a great feature of RMarkdown. In the text of your RMarkdown, anything enclosed by a pair of single tick marks will be shown as a code chunk. If it starts with the letter `r`, it will be passed instead to R for evaluation. This allows for discussing results in a reproducible manner.
+For example, rather than discussing a result giving a value of 42.00 in the text and a later rerun of the analysis has an updated table of results showing the result to be 42.42, by using inline code evaluation, it will always show the up to date result.
 
-Now, let's begin building our optimization model.\
+Now, let's begin building our optimization model.
 
 #### Implementing the Model
 
-First, we'll start by loading the packages that we are using. I'll typically do this as at the beginning of an RMarkdown document but for demonstration purposes, I'll put it here at the beginning of our model implementation.  Note that it is important \
+First, we'll start by loading the packages that we are using. I'll typically do this as at the beginning of an RMarkdown document but for demonstration purposes, I'll put it here at the beginning of our model implementation.  It is important to note that when knitting an RMarkdown document, it will run as a fresh environment without having items in memory from your environment and packages loaded.  When you run all code chunks, it will retain the currently loaded packages.
 
 ```{r warning=FALSE}
 suppressPackageStartupMessages(library (dplyr, quietly = TRUE))
@@ -252,7 +252,7 @@ Resources[4,1] <- 5
 # In our example, this is the number of sensors needed per Ant
 ```
 
-Now we will rebuild the the optimization model. Note that simply changing the data does not change the model.\
+Now we will rebuild the the optimization model. Note that simply changing the data does not change the model.
 
 ```{r Rebuild_and_Solve_Model}
 prodmodel <- MIPModel() |>
@@ -348,9 +348,11 @@ kbl(base_case_res, booktabs=T,
 
 These results clearly violate the required production mix for Cats. Let's now work on adding the constraint that Cats can't make up more than 40% of the total production.
 
-The constraint is simply  $\frac{Cats}{Ants+Bats+Cats} \leq 0.40$.  Alas, this is not a linear function since we are dividing a variable by a function of variables so we need to clear the denominator.  For demonstration purposes, we will write out each step.
+$$\frac{Cats}{Ants+Bats+Cats} \leq 0.4$$
 
-$$Cats \leq 0.40 \cdot (Ants+Bats+Cats)$$ 
+Alas, this is not a linear function since we are dividing a variable by a function of variables so we need to clear the denominator. For demonstration purposes, we will write out each step.
+
+$$Cats \leq 0.4 \cdot (Ants+Bats+Cats)$$ 
 
 We like to get all the variables on the left side so let's move them over.
 
@@ -584,7 +586,7 @@ kbl (Cost, booktabs=T,
   kableExtra::kable_styling(latex_options = "hold_position")
 ```
 
-Now, let's move on to implementing the model.\
+Now, let's move on to implementing the model.
 
 ```{r transportation, eval=TRUE}
 transportationmodel <- MIPModel()             |>

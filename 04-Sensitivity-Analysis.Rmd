@@ -164,9 +164,8 @@ The shadow price on sensors is zero (as was also the case for testing hours). Th
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max:  }   & 7\cdot Ants+12\cdot Bats+5\cdot Cats \\
-    \text{s.t.} & \\
-        & 1\cdot Ants+4\cdot Bats+2\cdot Cats \leq 800 \\
+    \text{Max:  } & 7\cdot Ants+12\cdot Bats+5\cdot Cats \\
+    \text{s.t.  } & 1\cdot Ants+4\cdot Bats+2\cdot Cats \leq 800 \\
         & 3\cdot Ants+6\cdot Bats+2\cdot Cats \leq 900 \\
         & 2\cdot Ants+2\cdot Bats+1\cdot Cats \leq 480 \\
         & 2\cdot Ants+10\cdot Bats+2\cdot Cats \leq 
@@ -391,7 +390,6 @@ to perform different steps in order to make Burgers, Coffee, Ice cream and Fries
 These steps include: Order receiving, Processing, Preparing, Packaging, and 
 Delivery.
 
-
 | Time (Mins.)   | Burger | Coffee | Ice cream | Fries | Available Minutes |
 |---------------:|:----:|:----:|:----:|:----:|:---------:|
 |         Profit | \$2   | \$2  | \$3  | \$1  |          |
@@ -409,8 +407,3 @@ d.  Interpret and discuss the model in R Markdown.
 e.  Examine and reflect upon the reduced costs and shadow prices. Discuss which step's available hours need to increases/decrease to make the most profit.
 
 :::
-
-
-
-
-
