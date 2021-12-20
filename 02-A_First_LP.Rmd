@@ -344,7 +344,7 @@ Furthermore, we can do the same thing to extract the objective function value.
 print(objective_value(result0))
 ```
 
-The command `objective_value(result0)` extracts the numerical result of the objective function (i.e. maximum possible profit) but it does not tell us what decisions give us this profit.\index{ompr!objective_value} \index{objective_value|see{ompr!objective_value}}
+The command `objective_value(result0)` extracts the numerical result of the objective function (i.e. maximum possible profit) but it does not tell us what decisions give us this profit.\index{ompr!objective\_value} \index{objective\_value|see{ompr!objective\_value}}
 
 Since the LP solver found an optimal solution, let's now extract the solution values of the decision variables that give us this profit.
 

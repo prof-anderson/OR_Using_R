@@ -146,7 +146,7 @@ kbl (cbind(as.matrix(GR),m), booktabs=T,
 
 ## Using LaTeX in Kable Column Names
 
-Some applications require richer notation than simple plain text.  With a little extra effort, you can get full LaTeX notation in tables.  The primary use is likely to be in row and column names. \index{kable!LaTeX in coumn names} As discussed earlier, column names can be set from within the `kbl` function call. Two important things to account for:
+Some applications require richer notation than simple plain text.  With a little extra effort, you can get full LaTeX notation in tables.  The primary use is likely to be in row and column names. \index{kable!LaTeX in column names} As discussed earlier, column names can be set from within the `kbl` function call. Two important things to account for:
 
 - Set `escape=F` to allow using LaTeX,
 - Any command requiring a slash character in LaTeX requires a double slash.  For example, `$\theta^{CRS}$` to create $\theta^{CRS}$ would instead require `$\\theta^{CRS}$` as shown below.
@@ -167,7 +167,7 @@ kbl(cbind(as.matrix(GR),m), booktabs=T, escape=F, caption=
 
 ## Fitting Tables to Page Width
 
-Large tables can be problematic. Kable can scale a table to fit the page width easily using the `scale_down` option in `kableExtra` via the `kable_styling` and `latex_options`. \index{kable!scale_down}
+Large tables can be problematic. Kable can scale a table to fit the page width easily using the `scale_down` option in `kableExtra` via the `kable_styling` and `latex_options`. \index{kable!scale\_down}
 
 ```{r}
 NWeeks <- 24

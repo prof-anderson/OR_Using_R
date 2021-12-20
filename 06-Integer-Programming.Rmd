@@ -5,7 +5,7 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = FALSE)
 knitr::opts_chunk$set(cache = FALSE)
 knitr::opts_chunk$set(asis_output = FALSE)
-suppressPackageStartupMessages(library(dplyr))     # Used for data management
+suppressPackageStartupMessages(library(dplyr))  # Used for data management
 suppressPackageStartupMessages(library(ROI))
 suppressPackageStartupMessages(library(ROI.plugin.glpk))
 suppressPackageStartupMessages(library(ompr))
@@ -44,7 +44,7 @@ $$
   \end{split}
 $$
 
-We use the following implementation.\
+We use the following implementation.
 
 ```{r base-case-3varB}
 model1 <- MIPModel() |>
@@ -91,12 +91,9 @@ $$
 The `ompr` implementation has a similar, straightforward change. In the declaration of variables (`add_variable` function), we simply set the type to be `integer` rather than `continuous`. Since nothing else is changing in the model, we can simply re-add the variables to redefine them from being continuous to be integer.\
 
 ```{r IncAssemHrs_ch6}
-model1 <- add_variable(model1, Ants, 
-                       type = "integer", lb = 0)
-model1 <- add_variable(model1, Bats, 
-                       type = "integer", lb = 0)
-model1 <- add_variable(model1, Cats, 
-                       type = "integer", lb = 0)
+model1 <- add_variable(model1, Ants, type = "integer", lb = 0)
+model1 <- add_variable(model1, Bats, type = "integer", lb = 0)
+model1 <- add_variable(model1, Cats, type = "integer", lb = 0)
 ```
 
 Let's confirm that the implemented model is of the form desired.\
@@ -112,28 +109,24 @@ result1 <-  solve_model(model1, with_ROI(solver="glpk"))
 
 inc_as_res_int <- cbind (result1$objective_value, 
                          t(result1$solution))
-colnames(inc_as_res_int)<-
-  c("Profit", "Ants", "Bats", "Cats")
-
+colnames(inc_as_res_int) <- c("Profit", "Ants", "Bats", "Cats")
 temp1 <- rbind(inc_as_res, inc_as_res_int)
-
-rownames(temp1)<-c("Continuous", "Integer")
-
+rownames(temp1) <-c("Continuous", "Integer")
 ```
 
-```{r}
+```{r, echo=FALSE}
 kbl (temp1, booktabs=T, 
      caption="Production Plans based on Variable Type.") |>
   kable_styling(latex_options = "hold_position")
 ```
 
-Notice that in this case, there was a small adjustment to the production plan and a small decrease to the optimal objective function value. This is not always the case, sometimes the result can be unchanged. In other cases, it may be changed in a very large way. In still others, the problem may in fact even become infeasible. \
+Notice that in this case, there was a small adjustment to the production plan and a small decrease to the optimal objective function value. This is not always the case, sometimes the result can be unchanged. In other cases, it may be changed in a very large way. In still others, the problem may in fact even become infeasible. 
 
 ## Example of Major Integality Impact
 
-Let's take a look at another example. Acme makes two products, let's refer to them as product 1 and 2. Product 1 generates a profit of \$2000 per product, requires one liter of surfactant for cleaning, and 2.5 kilograms of high grade steel.\
+Let's take a look at another example. Acme makes two products, let's refer to them as product 1 and 2. Product 1 generates a profit of \$2000 per product, requires three liters of surfactant for cleaning, and eight kilograms of high grade steel.\
 
-In contrast, each unit of Product 2 produced generates a higher profit of \$3000 per product, requires 3.0 liters of surfactant, and 1.0 kilograms of high grade steel. Acme has 8.25 liters of surfactant and 8.75 kilograms of high grade steel.
+In contrast, each unit of Product 2 produced generates a higher profit of \$3000 per product, requires eight liters of surfactant, and three kilograms of high grade steel. Acme has 31 liters of surfactant and 26 kilograms of high grade steel.
 
 Only completed products are sellable, what should be Acme's production plan?
 
@@ -142,17 +135,14 @@ Formulating the optimization problem is similar to our earliest production plann
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max   } & 2000 x_1 + 3000 x_2 \\
-    \text{s.t.  } & 1.0 x_1 + 3.0 x_2 \leq 8.25 \\
-                  & 2.5 x_1 + 1.0 x_2 \leq 8.75 \\
-                  & x_1,  \; x_2 \geq 0  \\
+    \text{Max   } & 2 x_1 + 3 x_2 \\
+    \text{s.t.  } & 3 x_1 + 9 x_2 \leq 31 & \text{[Surfactant]}\\
+                  & 8 x_1 + 3 x_2 \leq 26 & \text{[Steel]}\\
                   & x_1,  \; x_2  \in \{0,1,2,3,...\}
   \end{aligned}
   \end{split}
-  (\#eq:ILP)
 $$
-
-The last constraint cannot be solved directly strictly using linear programming. It is instead referred to as an integer linear program or ILP.\
+At first glance, this looks the same as our earlier drone eample but the last constraint cannot be solved directly strictly using linear programming. It is instead referred to as an integer linear program or ILP.\
 
 Again, we could try solving it with and without the imposition of the integrality constraint.\
 
@@ -160,15 +150,15 @@ Again, we could try solving it with and without the imposition of the integralit
 LPRmod <- MIPModel() |>
   add_variable(Vx1, type = "continuous", lb = 0) |>
   add_variable(Vx2, type = "continuous", lb = 0) |>
-  set_objective(2*Vx1 + 3*Vx2, "max")            |>
-  add_constraint(1.0*Vx1 + 3.0*Vx2 <= 8.25)      |> # Surfactant
-  add_constraint(2.5*Vx1 + 1.0*Vx2  <= 8.75)        # Steel
+  set_objective(2*Vx1 + 3*Vx2, "max")         |>
+  add_constraint(3.0*Vx1 + 9.0*Vx2 <= 31)     |> # Surfactant
+  add_constraint(8.0*Vx1 + 3.0*Vx2 <= 26)        # Steel
 
-LPRelax <- solve_model(LPRmod, with_ROI(solver = "glpk"))
+LPSolR <-  solve_model(LPRmod, with_ROI(solver = "glpk"))
 
-obj_val <- objective_value(LPRelax)
-x1 <- get_solution (LPRelax, 'Vx1')
-x2  <- get_solution (LPRelax, 'Vx2')
+obj_val <- objective_value(LPSolR)
+x1 <- get_solution (LPSolR, 'Vx1')
+x2 <- get_solution (LPSolR, 'Vx2')
 acme_res_lp  <- cbind(x1,x2,obj_val)
 colnames(acme_res_lp) <- list("x1", "x2", "Profit")
 rownames(acme_res_lp) <- "LP Solution"
@@ -177,30 +167,34 @@ rownames(acme_res_lp) <- "LP Solution"
 All we need to do is repeat the same process with changing the variable type to `integer` instead of `continuous`.
 
 ```{r SolveIP0}
-IPSoln <- MIPModel() |>
-  add_variable(Vx1, type = "integer", lb = 0) |>
-  add_variable(Vx2, type = "integer",lb = 0)  |>
-  set_objective(2*Vx1 + 3*Vx2, "max")         |>
-  add_constraint(1.0*Vx1 + 3.0*Vx2 <= 8.25)   |> # Surfactant
-  add_constraint(2.5*Vx1 + 1.0*Vx2  <= 8.75)  |> # Steel
-  solve_model(with_ROI(solver = "glpk"))
 
-obj_val <- objective_value(IPSoln)
-x1 <- get_solution (IPSoln, 'Vx1')
-x2  <- get_solution (IPSoln, 'Vx2')
+IPmod <- add_variable(LPRmod, Vx1, type = "integer", lb = 0) |>
+  add_variable(Vx2, type = "integer", lb = 0)
+IPSolR <-  solve_model (IPmod, with_ROI(solver = "glpk"))
+obj_val <- objective_value(IPSolR)
 
-  acme_res_ip  <- cbind(x1,x2,obj_val)
+rbind(LPSolR$solution, 
+           IPSolR$solution)
+
+```
+
+```{r Fig-LP-Feasible-Region, echo=FALSE, out.width="45%", fig.show='hold', fig.align='center', fig.cap="LP Region and 10 IP Feasible Solutions" }
+knitr::include_graphics( c ("images/BB01.PNG", 
+                            "images/BB03.PNG"))
+```
+
+```{r}
+ x1 <- get_solution (IPSolR, 'Vx1')
+ x2 <- get_solution (IPSolR, 'Vx2')
+
+acme_res_ip  <- cbind(x1,x2,obj_val)
+
 colnames(acme_res_ip) <- list("x1", "x2", "Profit")
 rownames(acme_res_ip) <- "IP Solution"
 kbl (rbind(acme_res_lp,acme_res_ip),
-     booktabs=T, caption=
+     caption=
        "Production Plan-Continuous vs. Integer") |>
   kable_styling(latex_options = "hold_position")
-```
-
-```{r Fig-LP-Feasible-Region, echo=FALSE, out.width="49%", fig.show='hold', fig.align='center', fig.cap="LP Region and 11 IP Feasible Solutions" }
-knitr::include_graphics( c ("images/Fig06-1-LP-Feasible-Region.PNG", 
-                            "images/Fig06-2-IP-Feasible.PNG"))
 ```
 
 Simply rounding down did not yield an optimal solution. Notice that production of product 1 went down while product 2 went up. The net impact was a profit reduction of almost *10%*.
@@ -222,26 +216,25 @@ To solve this using branch and bound, we *relax* the integrality requirements an
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max  }   & 2000 x_1 + 3000 x_2 \\
-    \text{subject to } & 1.0 x_1 + 3.0 x_2 \leq 8.25 \\
-                       & 2.5 x_1 + 1.0 x_2 \leq 8.75 \\
-                       & x_1,  \; x_2 \geq 0  \\
+    \text{Max   } & 2 x_1 + 3 x_2 \\
+    \text{s.t.  } & 3 x_1 + 9 x_2 \leq 31 & \text{[Surfactant]}\\
+                  & 8 x_1 + 3 x_2 \leq 26 & \text{[Steel]}\\
+                  & x_1,  \; x_2  \geq 0 
   \end{aligned}
   \end{split}
-  (\#eq:LPRelaxation)
 $$
 
 This is a problem that we **can** solve using linear programming so let's go ahead do it! Well, we already did so let's just review the results for what is now called the LP Relaxation because we are *relaxing* the integrality requirements.
 
 ```{r SolveLPRelaxation}
-kbl (acme_res_lp, booktabs=T, 
+kbl (acme_res_lp, booktabs=T, digits=3,
      caption="Acme's Production Plan based on the LP Relaxation") |>
   kable_styling(latex_options = "hold_position")
 ```
 
-```{r Fig-LPRelaxation, echo=FALSE, out.width="3in", fig.align='center', fig.cap="LP Relaxation", fig.show='hold'}
-knitr::include_graphics("images/Fig06-3-LP-Relaxation.PNG")
-
+```{r Fig-LPRelaxation, echo=FALSE, out.width="45%", fig.show='hold', fig.align='center',fig.cap="LP Relaxation", fig.show='hold'}
+knitr::include_graphics("images/BB02.PNG")
+knitr::include_graphics("images/BB04.PNG")
 ```
 
 ### Subproblem I
@@ -250,14 +243,14 @@ Alas, this production plan from the LP Relaxation is not feasible from the persp
 
 Instead, we will need to proceed with the branch and bound process. Since both of the variables in the LP relaxation have fractional values, we need to start by choosing which variable to use for branching first. Algorithmic researchers would focus on how to best pick a branch but for our purposes to improve solution speed but it doesn't really matter for illustration so let's arbitrarily choose to branch on $x_1$.
 
-For the branch and bound algorithm, we want to include two subproblems that exclude the *illegal* value of $x_1=2.769$ as well as everything else between 2 and 3. We say that we are *branching* on $x_1$ to create two subproblems. The first subproblem (I) has an added constraint of $x_1\le 2.0$ and the other subproblem (II) has an added constraint of $x_1\ge 3.0$.
+For the branch and bound algorithm, we want to include two subproblems that exclude the *illegal* value of $x_1=2.238$ as well as everything else between 2 and 3. We say that we are *branching* on $x_1$ to create two subproblems. The first subproblem (I) has an added constraint of $x_1\le 2.0$ and the other subproblem (II) has an added constraint of $x_1\ge 3.0$.
 
 $$
  \begin{split}
  \begin{aligned}
-    \text{Max  }   & 2000 x_1 + 3000 x_2 \\
-    \text{subject to } & 1.0 x_1 + 3.0 x_2 \leq 8.25 \\
-                       & 2.5 x_1 + 1.0 x_2 \leq 8.75 \\
+    \text{Max  }   & 2 x_1 + 3 x_2 \\
+    \text{subject to } & 3 x_1 + 9 x_2 \leq 31 \\
+                       & 8 x_1 + 3 x_2 \leq 26 \\
                        & \textcolor{red} {x_1 \leq 2.0} \\
                        & x_1,  \; x_2 \geq 0  \\
   \end{aligned}
@@ -265,7 +258,7 @@ $$
   (\#eq:Sub1)
 $$
 
-Since this is just a bound on the decision variable, we can implement it by just modifying the LP Relaxation's model `LPRmod` that we created earlier by redefining the \$x_1\$ variable (`Vx1`).
+Since this is just a bound on the decision variable, we can implement it by just modifying the LP Relaxation's model `LPRmod` that we created earlier by redefining the $x_1$ variable (`Vx1`).
 
 ```{r SolveLPSub1}
 LPSubI <- add_variable(LPRmod, Vx1, type = "continuous", 
@@ -278,22 +271,17 @@ x2  <- get_solution (LPSubI, 'Vx2')
 
 LPSubI_res  <- cbind(x1,x2,obj_val)
 rownames(LPSubI_res) <- ""
-kbl (LPSubI_res, booktabs=T, 
+kbl (LPSubI_res, booktabs=T, digits=3,
      caption="Production Plan based on Subproblem I") |>
   kable_styling(latex_options = "hold_position")
 ```
 
-```{r Fig-Subproblem-I, echo=FALSE, out.width="3in", fig.align='center', fig.cap="Subproblem I"}
-knitr::include_graphics("images/Fig06-4-Subproblem-I.PNG")
-
+```{r Fig-Subproblem-I, echo=FALSE, out.width="45%", fig.show='hold', fig.align='center', fig.cap="Subproblem I"}
+knitr::include_graphics("images/BB05.PNG")
+knitr::include_graphics("images/BB06.PNG")
 ```
 
 Looking over the results, we now get an integer value for $x_1$ but not for $x_2$. We repeat the same process by creating subproblems from subproblem I by branching off of $x_2$.
-
-```{r Fig-Subproblem-Ia, echo=FALSE, out.width="3in",  fig.align='center', fig.show='hold', fig.cap="Excluding a region to branch off of Subproblem I."}
-knitr::include_graphics("images/Fig06-5-Subproblem-Ia.PNG")
-
-```
 
 ### Subproblem III 
 
@@ -319,48 +307,140 @@ kbl (LPSubIII_res, booktabs=T,
   kable_styling(latex_options = "hold_position")
 ```
 
-```{r Fig-Subproblem-III-and-II, echo=FALSE, out.width="3in", fig.align='center',  fig.show='hold', fig.cap="Subproblems II and III"}
-knitr::include_graphics("images/Fig06-5-Subproblem-III-and-II.PNG")
+```{r Fig-Subproblem-III-and-II, echo=FALSE, out.width="3in", fig.align='center',  fig.show='hold', fig.cap="Subproblem III-An IP Feasible Solution"}
+knitr::include_graphics("images/BB07.PNG")
 ```
 
-This results in integer values for both $x_1$ and $x_2$ so it is feasible with respect to integrality in addition to the production constraints. It does generate less profit than the LP relaxation. While it is feasible, it doesn't prove that it is optimal though. We need to explore the other potential branches.\
+This results in integer values for both $x_1$ and $x_2$ so it is feasible with respect to integrality in addition to the production constraints. It does generate less profit than the LP relaxation. While it is feasible, it doesn't prove that it is optimal though. We need to explore the other potential branches.
 
 ### Subproblem IV
 
-Next, let's look at Subproblem IV. This problem adds the bound of $x_2\ge3.0$ to subproblem I. Notice that in the `MIPModel` implementation the variable for $x_1$ (Vx1) has an upperbound of 2, (`ub=2`) in order to implement the bounding constraint for subproblem I and the lower bound on $x_2$ of 3 in the variable declarations.
+Next, let's look at Subproblem IV. This problem adds the bound of $x_2\ge3.0$ to subproblem I. Notice that in the `MIPModel` implementation the variable for $x_1$ (Vx1) has an upperbound of 2, (`ub=2`) in order to implement the bounding constraint for subproblem I and the lower bound on $x_2$ of 3 in the variable declarations. Notice from the earlier graphical examples, there is no feasible region (blue area) that has  $x_2\geq3$. By visual inspection, we expect this to be an infeasible subproblem but let's confirm it.
 
 ```{r SolveLPSubIV}
-LPSubIV <- MIPModel() |>
-  add_variable(Vx1, type = "continuous", lb = 0, ub = 2) |>
-  add_variable(Vx2, type = "continuous",lb = 3) |>
-  solve_model(with_ROI(solver = "glpk"))
+LPSubIV <- add_variable(LPRmod, Vx1, type = "continuous", 
+                        lb = 0, ub = 2) 
+LPSubIV <- add_variable(LPSubIV, Vx2, type = "continuous",lb = 3) 
+LPSubIV <-  solve_model(LPSubIV, with_ROI(solver = "glpk"))
 
 obj_val <- objective_value(LPSubIV )
 x1 <- get_solution (LPSubIV , 'Vx1')
 x2  <- get_solution (LPSubIV , 'Vx2')
 LPSubIV_res  <- cbind(x1,x2,obj_val)
-LPSubIV$status
 rownames(LPSubIV_res) <- ""
-kbl (LPSubIV_res, booktabs=T,
+kbl (LPSubIV_res, booktabs=T, digits=3,
      caption=
-"Infeasible Production Plan based on Subproblem IV") |>
+"Production Plan based on Subproblem IV") |>
   kable_styling(latex_options = "hold_position")
 ```
 
-At first glance, this looks okay but if you look more closely at the value of $x_2$, and the surfactant constraint, $x_1+3x_2=9\not\leq8.25$, there isn't enough enough surfactant to make three units of the second product. This means that by inspection we can see that this production plan is infeasible! What is going on here?\
-\vspace{12pt}
+```{r Fig-Subproblem-IV, echo=FALSE, out.width="45%", fig.show='hold', fig.align='center', fig.cap="Subproblem IV"}
+knitr::include_graphics("images/BB08.PNG")
+knitr::include_graphics("images/BB09.PNG")
+```
 
-We should check the status of the solver before examining the result.
+At first glance, this looks okay but if you look more closely at the value of $x_2$, and the surfactant constraint, $x_1+3x_2=9\not\leq8.25$, there isn't enough enough surfactant to make three units of the second product. This means that by inspection we can see that this production plan is infeasible! What is going on here? We should check the status of the solver before examining the result.
 
 ```{r subproblem-IV-status}
 LPSubIV
 ```
+### Subproblem V
 
-The returned status value of this solved LP indicates that this tell us that subproblem IV is *infeasible.* It still returned values that were used when it determined that the problem was infeasible which is why it gave the results in the previous table. From here on out, it is good to check the status. Note that it can be used as an in-line evaluated expression to simply say was it feasible or not? Yes, it was `r LPSubIV$status`. The screen capture to the right shows what this in-line code chunk looks like in RMarkdown.
+The ompr's status value of this solved LP indicates that subproblem IV is *infeasible.* It still returned values that were used when it determined that the problem was infeasible which is why it gave the results in the previous table. From here on out, it is a good reminder to check the status. Note that it can be used as an in-line evaluated expression to simply say was it feasible or not? Yes, it was `r LPSubIV$status`. 
 
-```{r Fig-Ex-In-line-code-chunk, echo=FALSE, out.width="3in", fig.align='center', fig.show='hold', fig.cap="Example of in-line code in RMarkdown."}
-knitr::include_graphics("images/Fig06-5a-In-line-Code-Chunk.PNG")
+```{r SolveLPSubV}
+LPSubV <- add_variable(LPRmod, Vx1, type = "continuous", 
+                        lb = 0, ub = 1) 
+LPSubV <- add_variable(LPSubV, Vx2, type = "continuous",lb = 3) 
+LPSubV <-  solve_model(LPSubV, with_ROI(solver = "glpk"))
+
+obj_val <- objective_value(LPSubV )
+x1 <- get_solution (LPSubV , 'Vx1')
+x2  <- get_solution (LPSubV , 'Vx2')
+LPSubV_res  <- cbind(x1,x2,obj_val)
+rownames(LPSubV_res) <- ""
+kbl (LPSubV_res, booktabs=T, digits=3,
+     caption=
+"Production Plan based on Subproblem V") |>
+  kable_styling(latex_options = "hold_position")
 ```
+
+```{r Fig-Subproblem-V, echo=FALSE, out.width="45%", fig.show='hold', fig.align='center', fig.cap="Subproblems V and VI"}
+knitr::include_graphics("images/BB10.PNG")
+knitr::include_graphics("images/BB11.PNG")
+```
+
+### Subproblem VI
+
+The ompr's status value of this solved LP indicates that subproblem IV is *infeasible.* It still returned values that were used when it determined that the problem was infeasible which is why it gave the results in the previous table. From here on out, it is a good reminder to check the status. Note that it can be used as an in-line evaluated expression to simply say was it feasible or not? Yes, it was `r LPSubIV$status`. 
+
+```{r SolveLPSubVI}
+LPSubVI <- add_variable(LPRmod, Vx1, type = "continuous", 
+                        lb = 2, ub = 2) 
+LPSubVI <- add_variable(LPSubVI, Vx2, type = "continuous",
+                        lb = 3) 
+LPSubVI <-  solve_model(LPSubVI, with_ROI(solver = "glpk"))
+
+obj_val <- objective_value(LPSubVI )
+x1 <- get_solution (LPSubVI , 'Vx1')
+x2 <- get_solution (LPSubVI , 'Vx2')
+LPSubVI_res  <- cbind(x1,x2,obj_val)
+rownames(LPSubVI_res) <- ""
+kbl (LPSubVI_res, booktabs=T, digits=3,
+     caption=
+"Infeasible Production Plan based on Subproblem VI") |>
+  kable_styling(latex_options = "hold_position")
+```
+
+```{r Fig-Subproblem-VI, echo=FALSE, out.width="45%", fig.show='hold', fig.align='center', fig.cap="Subproblem VI"}
+knitr::include_graphics("images/BB12.PNG")
+```
+
+### Subproblem VII
+
+The ompr's status value of this solved LP indicates that subproblem IV is *infeasible.* It still returned values that were used when it determined that the problem was infeasible which is why it gave the results in the previous table. From here on out, it is a good reminder to check the status. Note that it can be used as an in-line evaluated expression to simply say was it feasible or not? Yes, it was `r LPSubIV$status`. 
+
+```{r SolveLPSubVII}
+LPSubVII <- add_variable(LPRmod, Vx1, type = "continuous", 
+                         lb = 0, ub = 1) 
+LPSubVII <- add_variable(LPSubVII, Vx2, type = "continuous", 
+                         lb=0, ub=3) 
+LPSubVII <-  solve_model(LPSubVII, with_ROI(solver = "glpk"))
+
+obj_val <- objective_value(LPSubVII )
+x1 <- get_solution (LPSubVII , 'Vx1')
+x2 <- get_solution (LPSubVII , 'Vx2')
+LPSubVII_res  <- cbind(x1,x2,obj_val)
+rownames(LPSubVII_res) <- ""
+kbl (LPSubVII_res, booktabs=T, digits=3,
+     caption=
+"Infeasible Production Plan based on Subproblem VI") |>
+  kable_styling(latex_options = "hold_position")
+```
+
+```{r Fig-Subproblem-VII, echo=FALSE, out.width="45%", fig.show='hold', fig.align='center', fig.cap="Subproblem VII"}
+knitr::include_graphics("images/BB13.PNG")
+```
+
+
+```{r SolveLPSubVIII}
+LPSubVIII <- add_variable(LPRmod, Vx1, type = "continuous", 
+                        lb = 1,) 
+LPSubVIII <- add_variable(LPSubVIII, Vx2, type = "continuous",
+                        lb = 4) 
+LPSubVIII <-  solve_model(LPSubVIII, with_ROI(solver = "glpk"))
+
+obj_val <- objective_value(LPSubVIII )
+x1 <- get_solution (LPSubVIII , 'Vx1')
+x2 <- get_solution (LPSubVIII , 'Vx2')
+LPSubVIII_res  <- cbind(x1,x2,obj_val)
+rownames(LPSubVIII_res) <- ""
+kbl (LPSubVIII_res, booktabs=T, digits=3,
+     caption=
+"Infeasible Production Plan based on Subproblem VI") |>
+  kable_styling(latex_options = "hold_position")
+```
+
 
 ### Subproblem II
 
@@ -378,66 +458,80 @@ x2  <- get_solution (LPSubII , 'Vx2')
 LPSubII_res  <- cbind(x1,x2,obj_val)
 cat("Status of Subproblem II:",LPSubII$status)
 rownames(LPSubII_res) <- ""
-kbl (LPSubII_res, booktabs=T,
+kbl (LPSubII_res, booktabs=T, digits=3,
      caption="Production Plan based on LP Subproblem II") |>
   kable_styling(latex_options = "hold_position")
 ```
 
-At this point, our first reaction may be to breathe deeply and do the same branch and bound off of $x_2$. On the other hand, if we step back and take note that the objective function value is 9.75, while optimal for this subproblem, it is less than what we found from a feasible, fully integer-valued solution to subproblem III. Given that adding constraints can't improve an objective function value, we can cleverly trim all branches below subproblem II.\
+```{r Fig-Subproblem-II, echo=FALSE, out.width="45%", fig.show='hold', fig.align='center', fig.cap="Subproblems VI and VII"}
+knitr::include_graphics("images/BB12.PNG")
+knitr::include_graphics("images/BB13.PNG")
+```
+
+At this point, our first reaction may be to breathe deeply and do the same branch and bound off of $x_2$. On the other hand, if we step back and take note that the objective function value is 9.75, while optimal for this subproblem, it is less than what we found from a feasible, fully integer-valued solution to subproblem III. Given that adding constraints can't improve an objective function value, we can cleverly trim all branches below subproblem II.
 
 Given that we now no longer have any branches to explore, we can declare that we have found the optimal solution. The optimal solution can now be definitively stated to be what we found from Subproblem III.
 
-```{r create-table-subproblem-III}
-kbl (LPSubIII_res,
+```{r create-table-subproblem-VII}
+kbl (LPSubVII_res,
        booktabs=T, caption=
-       "Acme's Optimal Production Plan based on Subproblem III")
+       "Acme's Integer Optimal Production Plan based on Subproblem VII")
 ```
 
-Before this, we could only say that it was feasible solution and candidate to be optimal since no better integer feasible solution had been found.\
+Before this, we could only say that it was feasible solution and candidate to be optimal since no better integer feasible solution had been found.
 
-Let's summarize the results of the series of LPs solved.\
+Let's summarize the results of the series of LPs solved.
 
 ```{r create-table-of-subproblem-results, echo=FALSE}
-LPSubIV_res <- c("-", "-", "Infeasible")
+LPSubVI_res <- c("-", "-", "Infeasible")
+LPSubVIII_res <- c("-", "-", "Infeasible")
         # Make adjustment for misinterpretation of status
 BandB <- rbind(format(round(acme_res_lp,  3), nsmall = 3), 
                format(round(LPSubI_res,   3), nsmall = 3),
                format(round(LPSubIII_res,  3), nsmall = 3),
-               LPSubIV_res, 
+               format(round(LPSubIV_res,  3), nsmall = 3),
+               format(round(LPSubV_res,  3), nsmall = 3),
+               LPSubVI_res, 
+               format(round(LPSubVII_res,  3), nsmall = 3),
+               LPSubVIII_res, 
                format(round(LPSubII_res,  3), nsmall = 3))
-rownames(BandB) <- list("LP Relaxation", "Subproblem I", 
+
+rownames(BandB) <- list("LP Relaxation",  "Subproblem I", 
                         "Subproblem III", "Subproblem IV", 
+                        "Subproblem V",   "Subproblem VI", 
+                        "Subproblem VII", "Subproblem VIII",
                         "Subproblem II")
 kbl (BandB, booktabs=T, 
      caption="Branch and Bound's Sequence of LPs") |>
   kable_styling(latex_options = "hold_position")
 ```
 
-The Branch and Bound process is often characterized as a tree.  
+The Branch and Bound process is often characterized as a tree.
+
 ```{r Fig-B-and-B-Summary, echo=FALSE, fig.align='center', fig.show='hold', out.width="4in", fig.cap="Branch and Bound Tree"}
-knitr::include_graphics("images/Fig06-6-B-and-B-Summary.PNG")
+knitr::include_graphics("images/BB16.PNG")
 
 ```
 
 ## Computational Complexity
 
-As for computational complexity, this was a small problem with only two integer variables but it still required solving the LP Relaxation and four separate LP subproblems for a total of five linear programs in all. As the number of variables and constraints increases, so do the number of LPs needed to typically find a solution using branch and bound. Small and medium size problems can generally be solved quickly but worst case scenarios have a combinatorial explosion.\
+As for computational complexity, this was a small problem with only two integer variables but it still required solving the LP Relaxation and four separate LP subproblems for a total of five linear programs in all. As the number of variables and constraints increases, so do the number of LPs needed to typically find a solution using branch and bound. Small and medium size problems can generally be solved quickly but worst case scenarios have a combinatorial explosion.
 
 ### Full Enumeration
 
-Another approach to integer programming is full enumeration which means listing out all possible solutions and then determining if that solution is feasible and if so, what the objective function value is. Alas, this can result in a combinatorial explosion. For example, if a problem has 1,000 non-negative integer variables each of which can range from zero to nine, full enumeration would require listing $10^{1000}$ possible solutions. This is far larger than the number of grains of sand on Earth (\~$10^{19}$) or the number of stars in the universe (\~$10^{19}$). In fact this is much larger than the number of atoms in the universe (\~$10^{80}$). Needless to say explicit enumeration for large problems is not an option.\
+Another approach to integer programming is full enumeration which means listing out all possible solutions and then determining if that solution is feasible and if so, what the objective function value is. Alas, this can result in a combinatorial explosion. For example, if a problem has 1,000 non-negative integer variables each of which can range from zero to nine, full enumeration would require listing $10^{1000}$ possible solutions. This is far larger than the number of grains of sand on Earth (\~$10^{19}$) or the number of stars in the universe (\~$10^{19}$). In fact this is much larger than the number of atoms in the universe (\~$10^{80}$). Needless to say explicit enumeration for large problems is not an option.
 
-The Branch and Bound algorithm has the benefit that it will find the optimal solution. Sometimes it will find it quickly, other times it may take a very long time.\
+The Branch and Bound algorithm has the benefit that it will find the optimal solution. Sometimes it will find it quickly, other times it may take a very long time.
 
-Worst case scenarios for Branch and Bound may approach that of full enumeration but in practice performs much better. A variety of sophisticated algorithmic extensions have been added by researchers over the years but solving large scale integer programming problems can still be quite difficult.\
+Worst case scenarios for Branch and Bound may approach that of full enumeration but in practice performs much better. A variety of sophisticated algorithmic extensions have been added by researchers over the years but solving large scale integer programming problems can still be quite difficult.
 
-One option to deal with long solving times is to set early termination conditions such as running for a certain number of seconds. If it is terminated early, it may report the best feasible solution found so far and a precise bound as to how much better an as yet unfound solution might be based on the best remaining open branch. This difference between the best feasible solution found so far and the theoretically possible best solution to be found gives a gap that an analyst can set. This acceptable gap is sometimes referred to as a suboptimality tolerance factor. In other words, what percentage of suboptimality is the analyst willing to accept for getting a solution more quickly. For example, a suboptimality tolerance factor of 10% would tell the software to terminate the branch and bound algorithm if a feasible solution is found and it is certain that regardless of how much more time is spent solving, it is impossible to improve upon this solution by more than 10%.\
+One option to deal with long solving times is to set early termination conditions such as running for a certain number of seconds. If it is terminated early, it may report the best feasible solution found so far and a precise bound as to how much better an as yet unfound solution might be based on the best remaining open branch. This difference between the best feasible solution found so far and the theoretically possible best solution to be found gives a gap that an analyst can set. This acceptable gap is sometimes referred to as a suboptimality tolerance factor. In other words, what percentage of suboptimality is the analyst willing to accept for getting a solution more quickly. For example, a suboptimality tolerance factor of 10% would tell the software to terminate the branch and bound algorithm if a feasible solution is found and it is certain that regardless of how much more time is spent solving, it is impossible to improve upon this solution by more than 10%.
 
 In practice, even small suboptimality tolerance factors like 1% can allow big problems to be solved quickly and are often well within the margin of error for model data. In other cases, organizations may be interested in finding *any* feasible solution to large, vexing problems.
 
-Note that our Acme example only specified two digits of accuracy for resource usage and may have only one digit of accuracy for profitability per product.\ 
+Note that our Acme example only specified two digits of accuracy for resource usage and may have only one digit of accuracy for profitability per product.
 
-Note that in our earlier example, if we had a wide enough suboptimality tolerance, say 30% and followed the branch for $x_1\ge3.0$ first rather than $x_1\le2.0$, we might have terminated with a suboptimal solution.\
+Note that in our earlier example, if we had a wide enough suboptimality tolerance, say 30% and followed the branch for $x_1\ge3.0$ first rather than $x_1\le2.0$, we might have terminated with a suboptimal solution.
 
 ## Binary Variables and Logical Relations
 
@@ -448,13 +542,13 @@ Examples include assigning people to projects, go-no go decisions on projects, a
 
 Let's explore the impact of binary restrictions with another example. The world famous semiconductor company, Outtel has a choice of five major R&D projects:
 
-A)  Develop processor architecture for autonomous vehicles
-B)  Next generation microprocessor architecture
-C)  Next generation process technology
-D)  New fabrication facility
-E)  New interconnect technology
+1.  Develop processor architecture for autonomous vehicles
+2.  Next generation microprocessor architecture
+3.  Next generation process technology
+4.  New fabrication facility
+5.  New interconnect technology
 
-The key data is described as follows. *NPV* is Net Present Value of the project factoring in costs. *Inv* is the capital expenditures or investment required for each project. The company has \$40 Billion in capital available to fund a portfolio of projects. Let's set up the data as matrices in R.\
+The key data is described as follows. *NPV* is Net Present Value of the project factoring in costs. *Inv* is the capital expenditures or investment required for each project. The company has \$40 Billion in capital available to fund a portfolio of projects. Let's set up the data as matrices in R.
 
 ```{r capital-budgeting-data}
 I <- matrix(c(12,24,20,8, 16), ncol=1, 
@@ -465,7 +559,7 @@ kbl (cbind(I,N), booktabs=T,
      caption="Data for the Outtel Example")
 ```
 
-These projects all carry their own expenses and engineering support. There are limits to both the capital investment and engineering resources available. To start, consider all of these project to be independent.\
+These projects all carry their own expenses and engineering support. There are limits to both the capital investment and engineering resources available. To start, consider all of these project to be independent.
 
 ::: {.exercise name="Create and Solve Model"}
 Formulate and solve a basic, naive model that allows projects to repeated and partially completed. Implement and solve your model. (Hint: You don't need binary variables yet.) What is the optimal decision? Is this result surprising? Does this make sense in terms of the application?
@@ -480,13 +574,13 @@ Now, let's explore one aspect of moving towards binary variables. What constrain
 What change is needed to prevent partial funding of projects. How does this solution compare to that of above? Can you envision a situation where it might make sense to have partially funded projects? Could this be similar to corporate joint ventures where investments and benefits are shared across multiple entities?
 :::
 
-Now that you have binary constraints, let's explore the impact of logical restrictions with a series of separate scenarios. In each of these cases, make sure that you implement the relationship as a linear relationship. This means that you cannot use a function such as an "If-then", "OR", "Exclusive OR", or other relationship. Furthermore, you can't multiply variables together or divide variables into variables.\
+Now that you have binary constraints, let's explore the impact of logical restrictions with a series of separate scenarios. In each of these cases, make sure that you implement the relationship as a linear relationship. This means that you cannot use a function such as an "If-then", "OR", "Exclusive OR", or other relationship. Furthermore, you can't multiply variables together or divide variables into variables.
 
-Let's assume that projects A and B require the focused effort of Outtel's top chip architects and Outtel has decided therefore that it is not possible to do both projects. \
+Let's assume that projects A and B require the focused effort of Outtel's top chip architects and Outtel has decided therefore that it is not possible to do both projects.
 
-Therefore, they want to ensure that at most one of the two projects can be pursued. What needs to be added to enforce this situation? \
+Therefore, they want to ensure that at most one of the two projects can be pursued. What needs to be added to enforce this situation?
 
-Let's start with a truth table summarizing the interaction between projects (variable values) and the "Top Chip Architects" relationship. \
+Let's start with a truth table summarizing the interaction between projects (variable values) and the "Top Chip Architects" relationship.
 
 +-------------+-------------+---------------------------------------------+
 | Project A   | Project B   | Violates "Top Chip Architects" Relationship |
