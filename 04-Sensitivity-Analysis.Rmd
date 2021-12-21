@@ -29,7 +29,7 @@ We can get a lot more than just the objective function value and the decision va
 
 ## Base Case
 
-To demonstrate this, let's revisit our explicit model of production planning. We will use the explicit version for the sake of clarity and simplicity but the same techniques could be used for the generalized model or other linear programs.\
+To demonstrate this, let's revisit our explicit model of production planning. We will use the explicit version for the sake of clarity and simplicity but the same techniques could be used for the generalized model or other linear programs.
 
 Recall the three variable explicit production planning problem from Chapter 2.
 
@@ -153,7 +153,7 @@ kbl(temp1, booktabs=T,
   kable_styling(latex_options = "hold_position")
 ```
 
-These results confirmed that adding one hour of Testing time results in a *new* production plan that generates an increased profit of $\$2.25$, exactly as expected.\
+These results confirmed that adding one hour of Testing time results in a *new* production plan that generates an increased profit of $\$2.25$, exactly as expected.
 
 While it is easy to look at an individual resource when we are looking at problems with only a couple of constraints, the shadow prices can be very helpful in larger problems with dozens, hundreds, or thousands of resources where questions might come up of trying to evaluate or prioritize limited resources.
 
@@ -213,7 +213,7 @@ Even this massive increase of sensors does not result in any increase in profit 
 
 ## Reduced Costs of Variables
 
-Next, we move on to the *reduced costs* of variables. The reduced cost for a variable is the per unit marginal profit (objective function coefficient) minus the per unit value (in terms of shadow prices) of the resources used by a unit in production. The reduced costs is also often referred to as the column duals.  \index{Reduced costs of variables} \index{Column duals|see{Reduced costs of variables}} The concept and use of reduced costs frequently may require rereading several times. The mathematical details rely on the structure of linear programming and the simplex algorithm. \index{Simplex algorithm} We won't go into detail on the origin of this mathematically in detail here.\
+Next, we move on to the *reduced costs* of variables. The reduced cost for a variable is the per unit marginal profit (objective function coefficient) minus the per unit value (in terms of shadow prices) of the resources used by a unit in production. The reduced costs is also often referred to as the column duals.  \index{Reduced costs of variables} \index{Column duals|see{Reduced costs of variables}} The concept and use of reduced costs frequently may require rereading several times. The mathematical details rely on the structure of linear programming and the simplex algorithm. \index{Simplex algorithm} We won't go into detail on the origin of this mathematically in detail here.
 
 ### Reduced Cost of Ants
 
@@ -260,11 +260,11 @@ kbl(format(cat_res_used, digits=4), booktabs=T,
   kable_styling(latex_options = "hold_position")
 ```
 
-In this case, using the columns from Table 4.6 we can calculate the marginal value as $2\cdot 0.25+2\cdot2.25+1\cdot0+2\cdot0=5$. Since the profit per Cat (from the objective function coefficient on Cats) is also $\$ 5$, they are in balance and the difference between them is zero which is why the reduced cost for the *Cats* variable is also zero. \
+In this case, using the columns from Table 4.6 we can calculate the marginal value as $2\cdot 0.25+2\cdot2.25+1\cdot0+2\cdot0=5$. Since the profit per Cat (from the objective function coefficient on Cats) is also $\$ 5$, they are in balance and the difference between them is zero which is why the reduced cost for the *Cats* variable is also zero.
 
 ### Reduced Price of Bats
 
-The situation is more interesting for Bats. The production plan does not call for producing any Bats. This means that it is sitting right at the lower bound of zero Bats. This hints that perhaps we would like to make even less than zero Bats if we could and that being *forced* to make even one Bat would be costly. A reduced cost of $\$-2.5$ means that the opportunity cost of resources used in producing a Bat is $\$2.5$ more than the profit of producing a single Bat In other words, we would expect that if we force the production of a single Bat, the over all production plan's profit will go down by $\$2.5$.\
+The situation is more interesting for Bats. The production plan does not call for producing any Bats. This means that it is sitting right at the lower bound of zero Bats. This hints that perhaps we would like to make even less than zero Bats if we could and that being *forced* to make even one Bat would be costly. A reduced cost of $\$-2.5$ means that the opportunity cost of resources used in producing a Bat is $\$2.5$ more than the profit of producing a single Bat In other words, we would expect that if we force the production of a single Bat, the over all production plan's profit will go down by $\$2.5$.
 
 Let's go ahead and test this interpretation by again looking at the value of the resources consumed in the production of a Bat and the amount of each resource used.\
 
@@ -281,9 +281,9 @@ kbl(bat_res_used, booktabs=T,
   kable_styling(latex_options = "hold_position")
 ```
 
-Notice that the values based on shadow prices of the resources used by a Bat are $4\cdot 0.25+6\cdot2.25+2\cdot0+10\cdot0=14.5$. Alas, the profit for each Bat is just $\$12$ which means that forcing the production of a single Bat will decrease the production plan's profit by $\$12-14.5=-2.5$. In other words, the impact on the objective function is $\$-2.5$ which is the same as the reduced price of Bats.\
+Notice that the values based on shadow prices of the resources used by a Bat are $4\cdot 0.25+6\cdot2.25+2\cdot0+10\cdot0=14.5$. Alas, the profit for each Bat is just $\$12$ which means that forcing the production of a single Bat will decrease the production plan's profit by $\$12-14.5=-2.5$. In other words, the impact on the objective function is $\$-2.5$ which is the same as the reduced price of Bats.
 
-Now let's test it. We will modify the formulation to set a lower bound on the number of Bats to be 1. Note that we do this in case by setting the `lb` option in the `add_variable` to be 1. Also, if we had a demand constraint for Bats, we could also be accommodated this by setting the upper bound (`ub`).\
+Now let's test it. We will modify the formulation to set a lower bound on the number of Bats to be 1. Note that we do this in case by setting the `lb` option in the `add_variable` to be 1. Also, if we had a demand constraint for Bats, we could also be accommodated this by setting the upper bound (`ub`).
 
 ```{r Bat1Model}
 Bat1Model <- MIPModel() |>
@@ -318,20 +318,19 @@ kbl(temp3, booktabs=T,
 ```
 
 
-As we expected, the forced change of making one additional Bat resulted in a decrease of the overall profit from $\$2225$ to $\$2222.5$. This occurred because making one Bat meant that we had fewer of the precious, limited resources, decreasing overall profit due to limiting our possible production of Ants and Cats. \
+As we expected, the forced change of making one additional Bat resulted in a decrease of the overall profit from $\$2225$ to $\$2222.5$. This occurred because making one Bat meant that we had fewer of the precious, limited resources, decreasing overall profit due to limiting our possible production of Ants and Cats. 
 
-This meant that the number of Ants and Cats were changed resulting in a lower total profit even though a Bat is on its own profitable. \
+This meant that the number of Ants and Cats were changed resulting in a lower total profit even though a Bat is on its own profitable. 
 
 Another way to view the reduced costs for Bats is to think of it as an opportunity cost for not being able to further change the production of Bats due the simple bound. Think of it as a cost for being pinned at the simple upper or lower bound (often 0). A non-zero reduced cost means that the optimizer would like to relax or loosen the lower bound and the value is how much better the objective would be with a unit change of one relaxing the bound. For example, in our case, with bats being pinned at zero at the optimal solution and a reduced cost of bats of -2.5, this means that if we relaxed the non-negativity from $Bats\geq0$ to instead be $Bats\geq-1$ and re-solve, then the objective function would improve by 2.5. In other words, relaxing the simple lower bound would change the production plan to enable profit to increase by 2.5.\
 
 ## Using Sensitivity Analysis to Evaluate a New Product
 
-Let's consider a design proposal for a Dog drone. The Dog has a projected profit of $\$20$ each and uses 8 hours of machining time, 12 of assembly, and 4 of testing. Each dog drone also uses 4 sensors.\
+Let's consider a design proposal for a Dog drone. The Dog has a projected profit of $\$20$ each and uses 8 hours of machining time, 12 of assembly, and 4 of testing. Each dog drone also uses 4 sensors.
 
 ```{r New-Prod-with-Shadow-Prices}
 dog_res_used<-cbind(rduals1,c(8,12,4,4))
-colnames(dog_res_used)<-c("Row Duals", 
-                               "Resources Used")
+colnames(dog_res_used)<-c("Row Duals", "Resources Used")
 dog_res_used <- rbind(dog_res_used,
                       c("TOTAL",t(rduals1)%*%c(8,12,4,4)))
 ```

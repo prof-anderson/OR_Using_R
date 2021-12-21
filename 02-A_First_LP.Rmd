@@ -617,14 +617,12 @@ $$
 Now we can implement the model. Rather than building the model from scratch, let's just add this one constraint to a previously built model.
 
 ```{r Redundant_Constraint_Model}
-model1redund <- add_constraint(model1, 
-                          Ants + Bats + Cats <= 500)  
+model1redund <- add_constraint(model1, Ants + Bats + Cats <= 500)  
           # THIS IS THE NEW CHANGE
 ```
 
 ```{r Solve_with_Redundant_Constraint}
-result3 <- solve_model(model1redund, 
-                       with_ROI(solver = "glpk"))
+result3 <- solve_model(model1redund, with_ROI(solver = "glpk"))
 print(solver_status(result3))
 result3$solution
 ```

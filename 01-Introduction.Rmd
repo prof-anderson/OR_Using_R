@@ -16,19 +16,19 @@ library(kableExtra)
 
 ## What is Operations Research
 
-Operations Research \index{Operations research} is the application of mathematics and scientific approaches to decision making. It is a field deeply connected with applications. \
+Operations Research \index{Operations research} is the application of mathematics and scientific approaches to decision making. It is a field deeply connected with applications. 
 
-The field of Operations Research has strong roots in World War II as nations and militaries urgently tried to best make use of their resources and capabilities. Leaders asked people from various disciplines to help improve a variety of problems such as submarine hunting, mining of resources, and production planning. Essentially, these tools are scientific approaches for making decisions for the design and operation of a system with limited resources. The tools that that they used came from combining applied math and scientific approaches resulting in tremendous improvements. \
+The field of Operations Research has strong roots in World War II as nations and militaries urgently tried to best make use of their resources and capabilities. Leaders asked people from various disciplines to help improve a variety of problems such as submarine hunting, mining of resources, and production planning. Essentially, these tools are scientific approaches for making decisions for the design and operation of a system with limited resources. The tools that that they used came from combining applied math and scientific approaches resulting in tremendous improvements. 
 
-After the war, many of the same approaches were also then used for business applications. Military groups most commonly used the term Operations Research while business groups often used the term Management Science. \
+After the war, many of the same approaches were also then used for business applications. Military groups most commonly used the term Operations Research while business groups often used the term Management Science. 
 
-Neither term, Operations Research nor Management Science \index{Management science}is perfect. Operations Research is often confused with the strongly overlapping area of Operations Management and also the word research implies to some that it is strictly theoretical. Conversely, Management Science might imply that the rest of management is non-scientific or that it is just limited to business applications. In this book, we will use the term Operations Research to mean both Operations Research and Management Science as well as often abbreviate it as OR. \
+Neither term, Operations Research nor Management Science \index{Management science}is perfect. Operations Research is often confused with the strongly overlapping area of Operations Management and also the word research implies to some that it is strictly theoretical. Conversely, Management Science might imply that the rest of management is non-scientific or that it is just limited to business applications. In this book, we will use the term Operations Research to mean both Operations Research and Management Science as well as often abbreviate it as OR. 
 
 ## Purpose of this Book
 
-There are many comprehensive introductions to Operations Research available [@hillier2020] [@winston2003], and others. In the past, I had emphasized a spreadsheet-centric based introduction to operations research such as [@RagsdaleSpreadsheetModelingDecision2017] and [@baker2015] which had the side benefit of also encouraging better spreadsheet usage practices. Unfortunately the spreadsheet metaphor constrains the reader's perspective often leading people to tie models to closely to the data analyzed, specific dimensions of a particular problem, and the rows/columns construct often prevents people from thinking of richer problems. A more rigorous and tool agnostic coverage of optimization can be beneficial, for example, Tovey's recent book stands out [@tovey_linear_2021]. The goal of this book is to provide a timely introduction to Operations Research using a powerful open source tool, R. It was written to support the ETM 540/640 Operations Research course at Portland State University which is taught on a quarter basis for people without a background in Operations Research or R. As such the current scope is limited to what can be readily accomplished in a 10 week quarter, giving an introduction to the tools and methods available. There are many other Operations Research tools available besides R. \
+There are many comprehensive introductions to Operations Research available [@hillier2020] [@winston2003], and others. In the past, I had emphasized a spreadsheet-centric based introduction to operations research such as [@RagsdaleSpreadsheetModelingDecision2017] and [@baker2015] which had the side benefit of also encouraging better spreadsheet usage practices. Unfortunately the spreadsheet metaphor constrains the reader's perspective often leading people to tie models to closely to the data analyzed, specific dimensions of a particular problem, and the rows/columns construct often prevents people from thinking of richer problems. A more rigorous and tool agnostic coverage of optimization can be beneficial, for example, Tovey's recent book stands out [@tovey_linear_2021]. The goal of this book is to provide a timely introduction to Operations Research using a powerful open source tool, R. It was written to support the ETM 540/640 Operations Research course at Portland State University which is taught on a quarter basis for people without a background in Operations Research or R. As such the current scope is limited to what can be readily accomplished in a 10 week quarter, giving an introduction to the tools and methods available. There are many other Operations Research tools available besides R. 
 
-This book is meant to be a hybrid, both serving as an introduction to R and to Operations Research in the context of optimization. \
+This book is meant to be a hybrid, both serving as an introduction to R and to Operations Research in the context of optimization. 
 
 You can always access the current version of this book on Github. <https://github.com/prof-anderson/OR_Using_R>
 
@@ -45,27 +45,47 @@ Operations Research covers many different techniques. They can be classified in 
 -   Game Theory
 -   Decision Theory
 
-Each of these topics can require a full graduate level class or more to cover. In particular, Optimization \index{Optimization} and Simulation \index{Simulation} can be further subdivided into separate sub areas that represent entire specialties of their own. In this book, we currently limit ourselves to the field of Optimization but Chapter 7 incorporates elements of simulation. The interested reader is welcome to explore each area further.\
+Each of these topics can require a full book on its own. The focus of this book is on the most widely used operations research technique, optimization and more specifically, linear and mixed integer optimization.  
 
-Analysis methods are typically characterized as either descriptive \index{Descriptive models} or prescriptive {Prescriptive models}. A descriptive technique would be one that describes the current state of the system. A prescriptive technique is one that would prescribe a certain course of action to achieve a desired outcome. For example, weather forecasting is a very sophisticated descriptive discipline since we don't generally have control over short term weather. On the other hand, if we were to look at intervention approaches such as cloud seeding we might try to come up a prescriptive application. Prescriptive applications are abundant and can often be wherever decisions need to be made. \
+In particular, Optimization \index{Optimization} and Simulation \index{Simulation} can be further subdivided into separate sub areas that represent entire specialties of their own. In this book, we currently limit ourselves to the field of Optimization but Chapter 7 incorporates elements of simulation. The interested reader is welcome to explore each area further.
+
+Analysis methods are typically characterized as either descriptive \index{Descriptive models} or prescriptive {Prescriptive models}. A descriptive technique would be one that describes the current state of the system. A prescriptive technique is one that would prescribe a certain course of action to achieve a desired outcome. For example, weather forecasting is a very sophisticated descriptive discipline since we don't generally have control over short term weather. On the other hand, if we were to look at intervention approaches such as cloud seeding we might try to come up a prescriptive application. Prescriptive applications are abundant and can often be wherever decisions need to be made. 
 
 ## Relationship between Operations Research and Analytics
 
-The field of Operations Research significantly predates that of the term analytics but they are closely linked. This is strongly demonstrated by the leading professional organization for operations research, INFORMS (The Institute for Operations Research and Management Science), developing a professional certification for analytics. This certification process had leadership from industry representing the diverse users of Operations Research techniques. \
+The field of Operations Research significantly predates that of the term analytics but they are closely linked. This is strongly demonstrated by the leading professional organization for operations research, INFORMS (The Institute for Operations Research and Management Science), developing a professional certification for analytics. This certification process had leadership from industry representing the diverse users of Operations Research techniques.
+
+## Importance of Optimization
+
+Optimization has fundamentally changed the world in diverse applications.
+
+To highlight this, let's look at how a broad range of industries affected by Covid-19 have been using optimization.
+
+**Supply Chain Management:**  Amazon executives have given keynote speeches at INFORMS international conferences discussing how optimization is used in designing their network of warehouses and delivery services. The rapid growth of online shopping and acceleration of ever faster delivery options in the last decade relies on optimization, even moreso as supply chains have been disrupted by Covid-19 and product demand for certain items has skyrocketed.  
+
+**Scheduling of sports events:**  Major League Baseball retained optimization experts for scheduling all regular season games. Dr. Michael Trick from Carnegie Mellon University recounted this his work in an INFORMS Omega Rho 2017 Distinguished Lecture. The need for optimizaton in this domain has only increased with additional complexity of the constant drumbeat of sporting event cancellations and rescheduling due to Covid-19. Analytics revolutionized sports in many ways as documented by the Michael Lewis book, Moneyball, the impact on of optimizaton on scheduling may be just as significant.
+
+**Medical Staff Scheduling** Management of human resources in the health care area can be a matter of life and death.  Having fully staffed emergency departments is a critical issue that is now getting featured regularly on the news due to Covid-19 but the need for optimization was recognized long before the pandemic.  Scheduling is so complicated of nursing with that it has created a vertical market industry of companies that tools with built-in optimization engines to provide 24x7 coverage across departments and critical skills.
+
+**Transportation** Airlines often have their own optimization teams in house to continually reexamine their network of flights, planes used, and crews. In addition to the steady state, using optimization models to rapidly adjust to disruptions whether it is caused by weather, Covid-19, security, or maintenance issues.  
+
+In this book we provide tools for engaging with these kinds of applications. 
+
+Optimization provides a framework for analyzing a broad range of 
 
 ## Why R?
 
-This book adopts the platform of R for doing operations research and analytics. R is a popular, open source programming language developed by statisticians, originally as an open source alternative to the statistics language S. As such, it has very strong numerical methods implementations. Given the open source nature, it has been popular for researchers and many of these researchers have written their own packages to extend the functionality of R. These packages cover a tremendously broad range of topics and well over 16,000 are available from CRAN (the Comprehensive R Archive Network) \index{CRAN} as of December, 2020. \
+This book adopts the platform of R for doing optimization. R is a popular, open source programming language developed by statisticians, originally as an open source alternative to the statistics language S. As such, it has very strong numerical methods implementations. Given the open source nature, it has been popular for researchers and many of these researchers have written their own packages to extend the functionality of R. These packages cover a tremendously broad range of topics and well over 18,000 are available from CRAN (the Comprehensive R Archive Network) \index{CRAN} as of December, 2021. 
 
-In about 2012, my Extreme Technology Analytics Research Group was facing a decision. We had been using proprietary analytics tools for years but had problems with software licensing and the limited range of specialized languages. We wanted a single platform that could do both statistics and optimization, was freely available with no ongoing license renewal, and was readily extensible. \
+In about 2012, my Extreme Technology Analytics Research Group was facing a decision. We had been using proprietary analytics tools for years but had problems with software licensing and the limited range of specialized languages. We wanted a single platform that could do both statistics and optimization, was freely available with no ongoing license renewal, and was readily extensible. 
 
-In the end, we debated between Python \index{Python} and R. While R grew out from statisticians to encompass broader areas, Python grew from a general purpose programming language to add features to address a broad range of different application areas including statistics. While they both have deep roots with over 20 years of active development, this also means that aspects of their original designs are somewhat dated and carry forward the burden of legacies of past decisions when computers were more limited and the meaning of a big dataset would have been much smaller. \
+In the end, we debated between Python \index{Python} and R. While R grew out from statisticians to encompass broader areas, Python grew from a general purpose programming language to add features to address a broad range of different application areas including statistics. While they both have deep roots with over 20 years of active development, this also means that aspects of their original designs are somewhat dated and carry forward the burden of legacies of past decisions when computers were more limited and the meaning of a big dataset would have been much smaller. 
 
-Python had some advantages from the optimization side while R had advantages from the statistical side. In the end, we chose R because Python's numerical methods capabilities were not quite as rich. Since that time, both R and Python have significantly matured. \
+Python had some advantages from the optimization side while R had advantages from the statistical side. In the end, we chose R because Python's numerical methods capabilities were not quite as rich. Since that time, both R and Python have significantly matured. 
 
-As time has gone by, R has developed robust toolsets such as RStudio making it more powerful and easier to use. R's extensive package community has become so diverse and powerful that proprietary statistics software such as SPSS and JMP now promote that they can use R packages. The result is that R is still a great choice for analysts and code developed for R should be usable for a long time. \
+As time has gone by, R has developed robust toolsets such as RStudio making it more powerful and easier to use. R's extensive package community has become so diverse and powerful that proprietary statistics software such as SPSS and JMP now promote that they can use R packages. The result is that R is still a great choice for analysts and code developed for R should be usable for a long time. 
 
-As should be expected, new tools continue to arise. In particular, Julia is a new, modern language developed around numerical analysis. Industry adoption of Julia is far behind R and Python given their head start of multiple decades. Even if Julia or some other environment does someday become more popular, skills developed using R will be readily transferable and provide an excellent foundation for learning new languages. \
+As should be expected, new tools continue to arise. In particular, Julia is a new, modern language developed around numerical analysis. Industry adoption of Julia \index{Julia} is far behind R and Python given their head start of multiple decades. Even if Julia or some other environment does someday become more popular, skills developed using R will be readily transferable and provide an excellent foundation for learning new languages. 
 
 A PhD student that I knew was preparing for his final defense and did a practice presentation with his advisor and a professor. He was proud of a well polished 250 page thesis with dozens of tables of numerical results. The analysis included dozens of regressions, all with similar form and dependent variables. The professor asked him why his dependent variable was the number of projects rather than projects per year. The student thought for a moment and realized that all of his analysis needed to be redone. This would take days or weeks if he had used a GUI based tool. Using R and a scripting approach, he did a search and replace for the dependent variable, cross-checked results, and met the next day to update that professor and his advisor of the new (and much better!) results. He successfully defended his thesis a couple weeks later.
 
@@ -78,254 +98,4 @@ I've adopted the following conventions \index{Conventions} in this book.
 -   Tables of information and code fragments are provided liberally and at times erring on the side of being repetitious to assist in interpretation and reproducing analyses.
 -   There may be more efficient ways of performing operations but the focus is on readability.
 -   When formatting piping \index{Piping} operators such as `|>`, an intent is made to line them up for readability.
-
-## Getting Started with R
-
-A quick getting started with R will be helpful. I strongly recommend using RStudio. There are a lot of online resources for getting started with R, for example, *A Modern Dive* is a web book on using R and refreshing statistics that is very helpful with a corresponding traditional book [@IsmayIntroductionStatisticalData]. I also like books such as *R in a Nutshell* [@AdlerNutshell2012] or *R in Action* [@KabacoffActionDataAnalysis2011].\
-
-I usually find the best way for me to learn a new tool is to roll up my sleeves and jump right in. This book can be approached in that way - just be ready for a little more experimentation. This book is available on Github and the R Markdown files are available for use. Code fragments are shown quite liberally for demonstrating how things work. While this may be a bit verbose it is meant to enable readers to jump in at various points of the book.\
-
-While code fragments can be copied from the R markdown files for this book, it is often best to physically retype many of the code fragments shown as that gives time to reflect on what each statement is doing. \
-
-Let's define some conventions to be used throughout the book. First, let me be clear, the goal of this section is not to provide a comprehensive introduction to R. Entire books are written on that subject. My goal here is to simply make sure that everyone can get started productively in the material covered later.
-
-Since this book is focused on using R for operations research, we will focus on the capabilities that are needed for this area and introduce additional features and functions as needed. If you are already comfortable with R, RStudio, and RMarkdown, you may skip the remainder of this section. \
-
-Begin by ensuring that you have access to or installed R and RStudio. Both are available for Windows, Mac, and Linux operating systems as well as being available as web services. \
-
-Now, let's assume that you are running RStudio. \
-
-In this book, I will frequently show code fragments called chunks to show R code. In general, these code chunks can be run by simply retyping the command(s) in the Console. \
-
-```{r Assigning}
-a <- 7
-```
-
-This command assigns the value of 7 to the variable *a*. It is standard in R to use `<-` as an assignment operator rather than an equals sign. We can then use R to process this information. \
-
-```{r Math-operation}
-6*a
-```
-
-Yes, not surprisingly, $6*7$ is $42$. Notice that if we don't assign that result to something, it gives an immediate result to the screen.\
-
-We will often be using or defining data that has more than one element. In fact, R is designed around more complex data structures. Let's go ahead and define a matrix of data. \
-
-```{r Create-Matrix}
-b<-matrix(c(1,2,3,4,5,6,7,8))
-```
-
-By default, it is assuming that the matrix has one column which means that every data value is in a separate row. The `c` function is a concatenate operator meaning that it combines all the following items together. \
-
-Let's look at *b* now to see what it contains. \
-
-```{r Looking-at-an-Object}
-b
-```
-
-Let's instead define this matrix to have four columns and two rows. \
-
-```{r Resizing-Matrix}
-b<-matrix(c(1,2,3,4,5,6,7,8), ncol=4)
-b
-```
-
-Notice that since there are eight elements, we only needed to tell R that the matrix has four columns and it then knew that there would be only two rows. Of course we could have set the number of rows to be two for the same result. \
-
-This is still a little ambiguous. Let's give the rows and columns names. For now we will simply name them Row and Col. \
-
-```{r Naming-Rows-and-Columns}
-b<-matrix(c(1,2,3,4,5,6,7,8), ncol=4, 
-          dimnames=c(list(c("Row1", "Row2")),
-                     list(c("Col1", "Col2","Col3","Col4"))))
-```
-
-::: {.remark name="RStudio Console"}
-The RStudio console can save typing by pressing the up arrow key to view previous command(s) which can then be further edited.
-:::
-
-Okay, this command has a lot more going on. The term `dimnames` \index{dimnames} is a parameter that contain names for rows and columns. One thing to note is that this line fills up more space than a single line so it rolls over to multiple line. The `dimnames` parameter will get get two concatenated (combined) lists. The first list is a combined list of two text strings "Row1" and "Row2". The next line does the same for columns.\
-
-Let's confirm that it works.\
-
-```{r Displaying-New-Matrix}
-b
-```
-
-This table is still not that "nice" looking. Let's use a package that does a nicer job of formatting tables. To do this, we will use an extra package. Up to this point, everything that we have done just simply uses standard built in functions of R. The package that we will use is `kable` \index{kable} but there are plenty of others available such as `pander`, `kable`, `xtable`, and `huxtable`. While `kable` is a function of `knitr`, it is significantly enhanced by the `kableExtra`  \index{kable!kableExtra} package. For more information on the specifics of creating rich tables, see Appendix C.  
-
-Let's start by loading the `kableExtra` package.\
-
-```{r Loading-a-Package}
-library (kableExtra)
-```
-
-If R indicates that you don't have the `kableExtra` package installed on your computer, you can press the "Install" command under the Packages tab and then type in `kableExtra` or use the `install.packages` command from RStudio.  The `kbl`  \index{kable!kbl} is a shorthand way of entering the `kable` function that is provided by `kableExtra`.\
-
-Notice the hash symbol is used to mark a comment in the above code chunk. It is also used to "comment out" a command that I don't need to use at the current time. Using comments to explain what a command is doing can be helpful to anyone that needs to revisit your code in the future, including yourself! \
-
-```{r Using-kable}
-knitr::kable (b, booktabs=T, 
-     caption="Example using Kable with booktabs") |>
-  kableExtra::kable_styling(latex_options = "hold_position")
-```
-
-The table looks very nice in the book.  Let's explain in detail how the table is generated.  This code chunk has a lot going and is worth a careful look. \index{kable!caption} \index{kable!booktabs} \index{kable!kable\_styling} \index{kable!hold\_position} 
-
-* The first line `knitr::kable` means that we should run the `kable` function from within `knitr`.  In general, as a long as the library is loaded and the same function is not defined by two different loaded libraries, you don't need to specify where the function is being run from.
-* The `booktabs=T` sets a format for clean published table style by setting the option to `T` for `TRUE`.
-* The second line provides a caption. 
-* The last part of the second line warrants a little attention. It is the new pipe operator  \index{Piping} and requires `R` version 4.1.0 or higher.  The pipe operator basically says pass this commands output into the beginning of the next command.  We'll use it a lot for table generation.  Prior to R version 4.1.0, people that used pipes in R often used the `%>%` operator from a separate package such as `magrittr`.  For most users, including us, the built-in `|>` will suffice.
-* The last command, `kable_styling`, has an option for `hold_position`  which holds the placement closer to where it is called, keeping LaTeX from second guessing where the ideal location would be for the table. Note that is also specifying its source package, in this case, `kableExtra`. There are a lot of other options in `kable_styling` that we will use in later chapters as needed.
-* For your own use, you could shorten all of this to just `kable (b)`. On the other hand, `kableExtra` has one more small trick up its sleeve. It provides a shorter name for the `kable` function of just `kbl`.  When space is at premium, this shortcut is handy. It also serves as a helpful check to ensure that `kableExtra` is loaded.
-
-Let's continue experimenting with operators.\
-
-```{r}
-c<-a*b
-```
-
-```{r Scalar-Multiplication, echo=FALSE}
-kbl(c, booktabs=T,
-    caption= "Scalar Multiplication of Matrix b to Make Matrix c") |>
-  kable_styling(latex_options = "hold_position")
-```
-
-Now let's do a transpose operation on the original matrix. What this means that it converts rows into columns and columns into rows.
-
-```{r}
-d<-t(b)
-```
-
-```{r Transposing, echo=FALSE}
-kbl (d, booktabs=T,
-     caption = "Transposition of Matrix b")      |>
-  kable_styling(latex_options = "hold_position") |>
-  footnote (general = "Row and column names were changed at the same time.")
-```
-
-Notice that row and column names are also transposed. The result is that we now have rows labeled as columns and columns labeled as rows!  This is only a problem given that we used the words rows and columns in the names.  If these had been more descriptive such as weeks and product names, it would have been a good thing to change them at the same time.
-
-Now we have done some basic operations within R.
-
-We could try this but but we aren't quite there yet.
-
-```{r Displaying-My-Solution}
-c
-d
-```
-
-Try renaming the rows and columns for `d`. As a hint, you could use `dimnames` or `colnames` and `rownames`.\
-
-Recall that we have created a variety of objects now: a, b, c, and d. R provides a lot of tools for slicing, dicing, and combining data.\
-
-```{r Original-Matrix, echo=FALSE}
-kbl (b, booktabs=T,
-     caption="Original Matrix b") |>
-  kable_styling(latex_options = "hold_position")
-```
-
-Let's look at the original matrix, b and what we can do with it. Let's grab the second row, third column and last element.\
-
-```{r Extracting-Second-Row, echo=FALSE}
-temp1 <- as.matrix(b[2,])
-kbl (temp1, booktabs=T,
-     caption = "Second Row of b") |>
-  kable_styling(latex_options = "hold_position")
-```
-
-The `as.matrix` function is used to convert the object into a matrix so that `kable` can display it well.
-
-```{r}
-temp2 <- as.matrix(b[,3])
-```
-
-```{r Extracting-Third-Column, echo=FALSE}
-kbl (temp2, booktabs=T,
-       caption="Third Column of b") |>
-  kable_styling(latex_options = "hold_position")
-```
-
-Grabbing the third column is not terribly interesting but operations such as this will often be quite useful.
-
-```{r}
-temp3 <- as.matrix(b[2,4]) 
-```
-
-```{r Bottom-Right-Element, echo=FALSE}
-kbl (temp3, booktabs=T,
-     caption="Last Element of b") |>
-  kable_styling(latex_options = "hold_position")
-```
-
-Let's take the first row of `b` and combine it with the second row of `c` to form a new matrix, `e`. Since these are rows that are going to be combined, we will use a command, `rbind`, to bind these rows together. \index{rbind function} 
-
-```{r}
-temp4 <- rbind(b[1,],c[2,])
-```
-
-```{r Combined-Matrix, echo=FALSE}
-kbl (temp4, booktabs=T,
-     caption="Combined Matrix") |>
-  kable_styling(latex_options = "hold_position")
-```
-
-Notice that *temp4* has inherited the column names but lost the row names. Let's set the row names for this matrix.
-
-```{r}
-rownames(temp4)<-list("From b", "From c")
-```
-
-```{r Changing-Row-Names, echo=FALSE }
-kbl (temp4, booktabs=T,
-     caption="Combined Matrix with Explanation of Source") |>
-  kable_styling(latex_options = "hold_position")
-```
-
-We could combine all of matrix `b` and matrix `c` together using row binding or column binding. Table Let's view the results of binding using columns (`cbind`) and rows (`rbind`). \index{cbind function}
-
-```{r}
-temp5<- cbind(b,c)
-```
-
-
-```{r, echo=FALSE }
-kbl (temp5, booktabs=T, 
-     caption="Column Binding of Matrices b and c") |>
-  kable_styling(latex_options = "hold_position")
-```
-
-```{r}
-temp6 <- rbind(b,c)
-```
-
-```{r Row-Binding, echo=FALSE}
-kbl (temp6, booktabs=T,
-       caption="Row Binding of Matrices b and c") |>
-  kable_styling(latex_options = "hold_position")
-```
-
-Data organizing is a less glamorous part of the job for practicing analytics professionals but can consume a majority of the workday. There is a lot more that can be said about data wrestling but scripting the data cleansing in terms R commands will make the work more repeatable, consistent, and in the end save time.\
-
-## Exercises
-
-::: {.exercise name="Creating a Matrix of Daily Demand for Four Weeks"}
-Assume that your company's product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday. Build a matrix of four weeks of demand where each row is a separate week. Each Monday starts over with the same demand. The rows should be named Week1, Week2, etc. The columns should have names corresponding to the day of the week.
-:::
-
-::: {.exercise name="Creating a Matrix of Demand for Two Products"}
-Assume that your company's product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday. Gadgets have a demand of 20 on Monday, increasing by 3 units a day through Sunday. Build a matrix showing each product as a separate row. Rows should have names for the products and columns for the days of the week.
-:::
-
-::: {.exercise name="Creating a Matrix of Monthly Demand"}
-Consider some top selling online products for the year 2021: toys, shoes, pens and pencils, decorative bottles, drills, cutters, and GPS navigation systems. Create your own assumed starting counts per item for throughout year by increasing each item sales by 50 units per month, starting from January till December.
-:::
-
-::: {.exercise name="Displaying Selective Data from the Matrix"}
-In the above matrix, grab the columns and rows to show the data only for pens and pencils during the months of June, August and October.
-:::
-
-::: {.exercise name="Creating Separate Demands for Products"}
-In the above matrix, demand for toys and shoes has been increased by 20 and 10 units respectively. Create a matrix for only these products for the first 6 months. Display the matrix twice--once without formatting and a second time using an R package that provides better table formatting (`pander`, `kable` via `knitr`, `huxtable` or similar tool. Be sure to provide a table caption.)
-:::
 

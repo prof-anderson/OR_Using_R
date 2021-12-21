@@ -373,7 +373,7 @@ $$
                  & 3\cdot Ants + 6\cdot Bats +2\cdot Cats \leq 900 \\
                  & 2\cdot Ants + 2\cdot Bats +1\cdot Cats \leq 480 \\
                  & 2\cdot Ants + 10\cdot Bats +2\cdot Cats \leq 1200 \\
-                 & \textcolor{red}{-0.4 \cdot Ants-0.4 \cdot Bats +0.6 \cdot Cats \leq 0 &\text{[Blend]}}\\
+                 & \textcolor{red}{-0.4 \cdot Ants-0.4 \cdot Bats +0.6 \cdot Cats \leq 0}\\
                  & Ants,  \; Bats, \; Cats \geq 0  
   \end{aligned}
   \end{split}
@@ -855,14 +855,10 @@ Now let's implement the model.\
 ```{r plot-via-lpSolveAPI}
 library(lpSolveAPI)
 lps.model <- make.lp(0, 2) # Make empty 2 var model
-xt <- c(1,4)
-add.constraint(lps.model, xt, "<=", 40)
-xt <- c(3,6)
-add.constraint(lps.model, xt, "<=", 45)
-xt <- c(2,2)
-add.constraint(lps.model, xt, "<=", 24)
-xt <- c(2,10)
-add.constraint(lps.model, xt, "<=", 60)
+add.constraint(lps.model, c(1,4), "<=", 40)
+add.constraint(lps.model, c(3,6), "<=", 45)
+add.constraint(lps.model, c(2,2), "<=", 24)
+add.constraint(lps.model, c(2,10), "<=", 60)
 set.objfn(lps.model, c(-7,-12))
 name.lp(lps.model, "Simple LP")
 name.lp(lps.model)

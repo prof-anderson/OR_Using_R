@@ -49,7 +49,7 @@ We use the following implementation.
 ```{r base-case-3varB}
 model1 <- MIPModel() |>
   add_variable(Ants, type = "continuous", lb = 0) |>
-  add_variable(Bats, type = "continuous",lb = 0)  |>
+  add_variable(Bats, type = "continuous", lb = 0) |>
   add_variable(Cats, type = "continuous", lb = 0) |>
   
   set_objective(7*Ants + 12*Bats + 5*Cats,"max")  |>
@@ -102,7 +102,7 @@ Let's confirm that the implemented model is of the form desired.\
 model1
 ```
 
-We can see that it now has three integer variables so let's move on to solving it and comparing our results.
+We can see that it now has three integer variables replacing the variables of the same name that were continuous so let's move on to solving it and comparing our results.
 
 ```{r}
 result1 <-  solve_model(model1, with_ROI(solver="glpk"))
@@ -124,7 +124,7 @@ Notice that in this case, there was a small adjustment to the production plan an
 
 ## Example of Major Integality Impact
 
-Let's take a look at another example. Acme makes two products, let's refer to them as product 1 and 2. Product 1 generates a profit of \$2000 per product, requires three liters of surfactant for cleaning, and eight kilograms of high grade steel.\
+Let's take a look at another example. Acme makes two products, let's refer to them as product 1 and 2. Product 1 generates a profit of \$2000 per product, requires three liters of surfactant for cleaning, and eight kilograms of high grade steel.
 
 In contrast, each unit of Product 2 produced generates a higher profit of \$3000 per product, requires eight liters of surfactant, and three kilograms of high grade steel. Acme has 31 liters of surfactant and 26 kilograms of high grade steel.
 
@@ -142,9 +142,9 @@ $$
   \end{aligned}
   \end{split}
 $$
-At first glance, this looks the same as our earlier drone eample but the last constraint cannot be solved directly strictly using linear programming. It is instead referred to as an integer linear program or ILP.\
+At first glance, this looks the same as our earlier drone eample but the last constraint cannot be solved directly strictly using linear programming. It is instead referred to as an integer linear program or ILP.
 
-Again, we could try solving it with and without the imposition of the integrality constraint.\
+Again, we could try solving it with and without the imposition of the integrality constraint.
 
 ```{r SolveLPRelaxation0}
 LPRmod <- MIPModel() |>
@@ -167,15 +167,10 @@ rownames(acme_res_lp) <- "LP Solution"
 All we need to do is repeat the same process with changing the variable type to `integer` instead of `continuous`.
 
 ```{r SolveIP0}
-
 IPmod <- add_variable(LPRmod, Vx1, type = "integer", lb = 0) |>
   add_variable(Vx2, type = "integer", lb = 0)
 IPSolR <-  solve_model (IPmod, with_ROI(solver = "glpk"))
 obj_val <- objective_value(IPSolR)
-
-rbind(LPSolR$solution, 
-           IPSolR$solution)
-
 ```
 
 ```{r Fig-LP-Feasible-Region, echo=FALSE, out.width="45%", fig.show='hold', fig.align='center', fig.cap="LP Region and 10 IP Feasible Solutions" }
@@ -184,16 +179,14 @@ knitr::include_graphics( c ("images/BB01.PNG",
 ```
 
 ```{r}
- x1 <- get_solution (IPSolR, 'Vx1')
- x2 <- get_solution (IPSolR, 'Vx2')
-
+x1 <- get_solution (IPSolR, 'Vx1')
+x2 <- get_solution (IPSolR, 'Vx2')
 acme_res_ip  <- cbind(x1,x2,obj_val)
 
 colnames(acme_res_ip) <- list("x1", "x2", "Profit")
 rownames(acme_res_ip) <- "IP Solution"
-kbl (rbind(acme_res_lp,acme_res_ip),
-     caption=
-       "Production Plan-Continuous vs. Integer") |>
+kbl (rbind(acme_res_lp,acme_res_ip), booktabs=T, digits=3,
+     caption="Production Plan-Continuous vs. Integer") |>
   kable_styling(latex_options = "hold_position")
 ```
 
@@ -267,14 +260,18 @@ LPSubI <- solve_model(LPSubI, with_ROI(solver = "glpk"))
 
 obj_val <- objective_value(LPSubI)
 x1 <- get_solution (LPSubI, 'Vx1')
-x2  <- get_solution (LPSubI, 'Vx2')
+x2 <- get_solution (LPSubI, 'Vx2')
 
 LPSubI_res  <- cbind(x1,x2,obj_val)
-rownames(LPSubI_res) <- ""
-kbl (LPSubI_res, booktabs=T, digits=3,
+```
+
+```{r, echo=FALSE}
+# rownames(LPSubI_res) <- ""
+kbl (LPSubI_res, booktabs=T, digits=3, row.names=F,
      caption="Production Plan based on Subproblem I") |>
   kable_styling(latex_options = "hold_position")
 ```
+
 
 ```{r Fig-Subproblem-I, echo=FALSE, out.width="45%", fig.show='hold', fig.align='center', fig.cap="Subproblem I"}
 knitr::include_graphics("images/BB05.PNG")
@@ -301,13 +298,16 @@ obj_val <- objective_value(LPSubIII )
 x1 <- get_solution (LPSubIII , 'Vx1')
 x2  <- get_solution (LPSubIII , 'Vx2')
 LPSubIII_res  <- cbind(x1,x2,obj_val)
-rownames(LPSubIII_res) <- ""
-kbl (LPSubIII_res, booktabs=T,
+```
+
+```{r}
+kbl (LPSubIII_res, booktabs=T, row.names=F,
        caption="Production Plan based on Subproblem III") |>
   kable_styling(latex_options = "hold_position")
 ```
 
-```{r Fig-Subproblem-III-and-II, echo=FALSE, out.width="3in", fig.align='center',  fig.show='hold', fig.cap="Subproblem III-An IP Feasible Solution"}
+
+```{r Fig-Subproblem-III-and-II, echo=FALSE, out.width="45%", fig.align='center',  fig.show='hold', fig.cap="Subproblem III-An IP Feasible Solution"}
 knitr::include_graphics("images/BB07.PNG")
 ```
 
@@ -315,7 +315,7 @@ This results in integer values for both $x_1$ and $x_2$ so it is feasible with r
 
 ### Subproblem IV
 
-Next, let's look at Subproblem IV. This problem adds the bound of $x_2\ge3.0$ to subproblem I. Notice that in the `MIPModel` implementation the variable for $x_1$ (Vx1) has an upperbound of 2, (`ub=2`) in order to implement the bounding constraint for subproblem I and the lower bound on $x_2$ of 3 in the variable declarations. Notice from the earlier graphical examples, there is no feasible region (blue area) that has  $x_2\geq3$. By visual inspection, we expect this to be an infeasible subproblem but let's confirm it.
+Next, let's look at Subproblem IV. This problem adds the bound of $x_2\ge3.0$ to subproblem I. Notice that in the `MIPModel` implementation the variable for $x_1$ (`Vx1`) has an upperbound of 2, (`ub=2`) in order to implement the bounding constraint for subproblem I and the lower bound on $x_2$ of 3 in the variable declarations. Notice from the earlier graphical examples, there is no feasible region (blue area) that has  $x_2\geq3$. By visual inspection, we expect this to be an infeasible subproblem but let's confirm it.
 
 ```{r SolveLPSubIV}
 LPSubIV <- add_variable(LPRmod, Vx1, type = "continuous", 
@@ -327,12 +327,15 @@ obj_val <- objective_value(LPSubIV )
 x1 <- get_solution (LPSubIV , 'Vx1')
 x2  <- get_solution (LPSubIV , 'Vx2')
 LPSubIV_res  <- cbind(x1,x2,obj_val)
-rownames(LPSubIV_res) <- ""
-kbl (LPSubIV_res, booktabs=T, digits=3,
+```
+
+```{r}
+kbl (LPSubIV_res, booktabs=T, digits=3, row.names=F,
      caption=
 "Production Plan based on Subproblem IV") |>
   kable_styling(latex_options = "hold_position")
 ```
+
 
 ```{r Fig-Subproblem-IV, echo=FALSE, out.width="45%", fig.show='hold', fig.align='center', fig.cap="Subproblem IV"}
 knitr::include_graphics("images/BB08.PNG")
@@ -359,6 +362,9 @@ x1 <- get_solution (LPSubV , 'Vx1')
 x2  <- get_solution (LPSubV , 'Vx2')
 LPSubV_res  <- cbind(x1,x2,obj_val)
 rownames(LPSubV_res) <- ""
+```
+
+```{r, echo=FALSE}
 kbl (LPSubV_res, booktabs=T, digits=3,
      caption=
 "Production Plan based on Subproblem V") |>
@@ -379,7 +385,7 @@ LPSubVI <- add_variable(LPRmod, Vx1, type = "continuous",
                         lb = 2, ub = 2) 
 LPSubVI <- add_variable(LPSubVI, Vx2, type = "continuous",
                         lb = 3) 
-LPSubVI <-  solve_model(LPSubVI, with_ROI(solver = "glpk"))
+LPSubVI <- solve_model(LPSubVI, with_ROI(solver = "glpk"))
 
 obj_val <- objective_value(LPSubVI )
 x1 <- get_solution (LPSubVI , 'Vx1')
@@ -412,11 +418,15 @@ x1 <- get_solution (LPSubVII , 'Vx1')
 x2 <- get_solution (LPSubVII , 'Vx2')
 LPSubVII_res  <- cbind(x1,x2,obj_val)
 rownames(LPSubVII_res) <- ""
+```
+
+```{r, echo=FALSE}
 kbl (LPSubVII_res, booktabs=T, digits=3,
      caption=
 "Infeasible Production Plan based on Subproblem VI") |>
   kable_styling(latex_options = "hold_position")
 ```
+
 
 ```{r Fig-Subproblem-VII, echo=FALSE, out.width="45%", fig.show='hold', fig.align='center', fig.cap="Subproblem VII"}
 knitr::include_graphics("images/BB13.PNG")
@@ -424,17 +434,18 @@ knitr::include_graphics("images/BB13.PNG")
 
 
 ```{r SolveLPSubVIII}
-LPSubVIII <- add_variable(LPRmod, Vx1, type = "continuous", 
-                        lb = 1,) 
-LPSubVIII <- add_variable(LPSubVIII, Vx2, type = "continuous",
-                        lb = 4) 
-LPSubVIII <-  solve_model(LPSubVIII, with_ROI(solver = "glpk"))
+LPSubVIII <- add_variable(LPRmod, Vx1, type = "continuous", lb = 1,) 
+LPSubVIII <- add_variable(LPSubVIII, Vx2, type = "continuous", lb = 4) 
+LPSubVIII <- solve_model(LPSubVIII, with_ROI(solver = "glpk"))
 
 obj_val <- objective_value(LPSubVIII )
 x1 <- get_solution (LPSubVIII , 'Vx1')
 x2 <- get_solution (LPSubVIII , 'Vx2')
 LPSubVIII_res  <- cbind(x1,x2,obj_val)
 rownames(LPSubVIII_res) <- ""
+```
+
+```{r, echo=FALSE}
 kbl (LPSubVIII_res, booktabs=T, digits=3,
      caption=
 "Infeasible Production Plan based on Subproblem VI") |>
@@ -458,10 +469,14 @@ x2  <- get_solution (LPSubII , 'Vx2')
 LPSubII_res  <- cbind(x1,x2,obj_val)
 cat("Status of Subproblem II:",LPSubII$status)
 rownames(LPSubII_res) <- ""
+```
+
+```{r, echo=FALSE}
 kbl (LPSubII_res, booktabs=T, digits=3,
      caption="Production Plan based on LP Subproblem II") |>
   kable_styling(latex_options = "hold_position")
 ```
+
 
 ```{r Fig-Subproblem-II, echo=FALSE, out.width="45%", fig.show='hold', fig.align='center', fig.cap="Subproblems VI and VII"}
 knitr::include_graphics("images/BB12.PNG")
@@ -472,7 +487,7 @@ At this point, our first reaction may be to breathe deeply and do the same branc
 
 Given that we now no longer have any branches to explore, we can declare that we have found the optimal solution. The optimal solution can now be definitively stated to be what we found from Subproblem III.
 
-```{r create-table-subproblem-VII}
+```{r create-table-subproblem-VII, echo=FALSE}
 kbl (LPSubVII_res,
        booktabs=T, caption=
        "Acme's Integer Optimal Production Plan based on Subproblem VII")
@@ -593,7 +608,7 @@ Let's start with a truth table summarizing the interaction between projects (var
 +-------------+-------------+---------------------------------------------+
 | 1           | 0           | No                                          |
 +-------------+-------------+---------------------------------------------+
-| **1**       | **1**       | **Yes**                                         |
+| **1**       | **1**       | **Yes**                                     |
 +-------------+-------------+---------------------------------------------+
 
 Table: Relationships between Projects A, B, and the Need for Chip Architects.
@@ -744,9 +759,8 @@ What we need is a way to connect, associate, or dare I say "link" each productio
 
 Let's return to the idea of the truth table - let's focus on widget 2.
 
-| Amount to produce | Decision to produce |                                                                                     |
-| $w_2$             | $y_2$               | Interpretation of situation                                                         |
-|:-----------------:|:-------------------:|-------------------------------------------------------------------------------------|
+| Amount to Produce $w_2$ | Decision to Produce $y_2$  | Interpretation of situation                                            |
+|:-----------------:|:-------------------:|:-----------------------------------------------------------------------------------|
 | 0                 | 0                   | OK - choosing to do nothing                                                         |
 | 0                 | 1                   | OK - perhaps not a "smart" option but not impossible or unheard of                  |
 | 1                 | 0                   | **impossible** - can't produce even a single sellable product without doing a setup |
@@ -905,7 +919,7 @@ Notice that the the high setup costs have caused us to focus our production plan
 
 ## Model Results and Interpretation
 
-We can also calculate our resource usage. \
+We can also calculate our resource usage. 
 
 ```{r fixed-charge-usage}
 fc_bigM_res.W1 <- get_solution(fc_bigM_res, Vw1) 
