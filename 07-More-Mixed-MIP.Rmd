@@ -408,9 +408,14 @@ Next, it uses these ID numbers to extract fixed-cost values and adds them up.
 Note that when you see a command such as this in R, it can often work to run them one at time in the console to see how they work.
 To demonstrate this, see how each statement builds upon the previous.
 
+`matching$j`
+
+```{r echo=FALSE, out.width="100%", fig.show='hold', fig.align='center', fig.cap="LP Region and 10 IP Feasible Solutions" }
+knitr::include_graphics("images/ch8-MatchingJ.PNG")
+# Image capture used to keep from exceeding page width for output.
+```
+
 ```{r demonstrate_calculation_of_fixed_costs}
-matching$j                          
-   # List the warehouses used by customers
 unique(matching$j)                  
    # Eliminate duplicate warehouse IDs
 fixedcost[unique(matching$j)]       

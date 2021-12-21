@@ -69,7 +69,7 @@ It is even more important to clearly and precisely define the meanings of variab
 
 Learning how to read and write mathematical models is an important skill.
 In this section we will provide a quick overview.
-More information is provided in *Appendix A*.
+More information is provided in *Appendix B*.
 
 Another good practice is to use a mnemonic to help suggest the meaning of data.
 That is why I chose "R" for Resource, "P" for Profit, and "A" for Available resources.
@@ -164,7 +164,7 @@ library (ompr, quietly = TRUE)
 library (ompr.roi, quietly = TRUE)
 ```
 
-We will continue with the code to build the model in a generic format.  Note that in my `ompr` model, I generally like to give each linear programming variable in `ompr` a `V` prefix to differentiate it from a regular `R` data object that might exist elsewhere in my `R` environment. \index{ompr!Prefixing variables} \index{ompr!R and ompr name conflicts} Conflicts between `R` objects and `ompr` variables are a common problem for modelers and this helps to avoid the problem, assuming that you don't have a lot of other `R` objects that start with `V`. For more discussion about this issue and other common problems that are particularly common in optimization modeling using R, see Appendix B.\
+We will continue with the code to build the model in a generic format.  Note that in my `ompr` model, I generally like to give each linear programming variable in `ompr` a `V` prefix to differentiate it from a regular `R` data object that might exist elsewhere in my `R` environment. \index{ompr!Prefixing variables} \index{ompr!R and ompr name conflicts} Conflicts between `R` objects and `ompr` variables are a common problem for modelers and this helps to avoid the problem, assuming that you don't have a lot of other `R` objects that start with `V`. For more discussion about this issue and other common problems that are particularly common in optimization modeling using R, see Appendix C.\
 
 ```{r Build_Prod_Model}
 prodmodel <- MIPModel()                          |>
@@ -845,33 +845,32 @@ $$
                    & 3\cdot Ants + 6 \cdot Bats \leq 900 \\
                    & 2\cdot Ants + 2 \cdot Bats \leq 480 \\
                    & 2\cdot Ants + 10 \cdot Bats \leq 1200 \\
-                   & Ants, Bats \geq 0  
+                   & Ants, \; Bats \geq 0  
   \end{aligned}
   \end{split}
 $$
 
-Now let's implement the model.\
+Now let's implement the model the model using `lpSolveAPI`.
 
 ```{r plot-via-lpSolveAPI}
 library(lpSolveAPI)
 lps.model <- make.lp(0, 2) # Make empty 2 var model
-add.constraint(lps.model, c(1,4), "<=", 40)
-add.constraint(lps.model, c(3,6), "<=", 45)
-add.constraint(lps.model, c(2,2), "<=", 24)
-add.constraint(lps.model, c(2,10), "<=", 60)
+add.constraint(lps.model, c(1,4), "<=", 800)
+add.constraint(lps.model, c(3,6), "<=", 900)
+add.constraint(lps.model, c(2,2), "<=", 480)
+add.constraint(lps.model, c(2,10), "<=", 1200)
 set.objfn(lps.model, c(-7,-12))
 name.lp(lps.model, "Simple LP")
 name.lp(lps.model)
-plot.lpExtPtr(lps.model)
+# plot.lpExtPtr(lps.model)
 solve(lps.model)
 get.primal.solution(lps.model, orig=TRUE)
 ```
+While the graph may not be as elegant our earlier versions, it shows how the problem can be visualized.  
 
 Earlier in the chapter, we created data structures for the generalized version of the optimization model. Recall that earlier in this chapter we created a `Resources` matrix of the resources used by each product - this corresponds to our $A$ matrix.  We also created a single column  matrix, `Available`, for the amount of each resource available which is our $B$ vector.  The `Profit` single row matrix serves as our $C$ vector.  The last item that we need to do is to specify a direction for each inequality. 
-\vspace{12pt}
 
 We could rewrite our formulation then as the following.  
-\vspace{12pt}
 
 $$
  \begin{split}
@@ -882,8 +881,8 @@ $$
   \end{aligned}
   \end{split}
 $$
+
 The `Rglpk` package can then be accessed directly.
-\vspace{12pt}
 
 ```{r Fig-ompr-to-glpk, echo=FALSE, out.width="100%", fig.cap="Relationship between ompr and Rglpk."}
 knitr::include_graphics("images/Fig03-04-ROI-glpk1.PNG")
@@ -904,34 +903,34 @@ res2 <- Rglpk_solve_LP(obj=Profit,    # C vector
    #   LB = 0, UB=infinity (just non-negativity)
    #   Defaults to continuous variables
 ```
-\vspace{12pt}
 
-Notice that calling the solver directly such as in this way using `Rglpk` does not require naming decision variables.  A decision variable is created for each column of the matrix.  Directly accessing the solver allows for all the same features that we use through `ompr` such as placing bounds on the variables, changing to a minimization objective function, and more such as advanced solving options.  Other LP solving engines available in `R` such as `RSymphony` and `lpSolve` have similar syntax for solving. Let's look at the results. As usual, we start by examining the status. \index{Rglpk}  \index{RSymphony}  \index{lpSolve}  \
+Notice that calling the solver directly such as in this way using `Rglpk` does not require naming decision variables.  A decision variable is created for each column of the matrix.  Directly accessing the solver allows for all the same features that we use through `ompr` such as placing bounds on the variables, changing to a minimization objective function, and more such as advanced solving options.  Other LP solving engines available in `R` such as `RSymphony` and `lpSolve` have similar syntax for solving. Let's look at the results. As usual, we start by examining the status.\index{Rglpk} \index{RSymphony} \index{lpSolve}
 
 ```{r}
 res2$status
 ```
 
-The status returned by `Rglpk` is zero.  This may sound bad but the package's help file indicates that returning a status value of zero means that no problems occurred and it found an optimal solution. We can then proceed to examine the objective function value.\
+The status returned by `Rglpk` is zero.  This may sound bad but the package's help file indicates that returning a status value of zero means that no problems occurred and it found an optimal solution. We can then proceed to examine the objective function value.
+
 ```{r}
 res2$optimum
 ```
 
-This objective function value may look familiar.  Now let's look at the solution in terms of optimal decision variable values.\
+This objective function value may look familiar.  Now let's look at the solution in terms of optimal decision variable values.
 
 ```{r}
 res2$solution
 ```
 
-Most of these LP solving engines can also allow models to be built up incrementally as well by creating an empty model, then adding an objective function and adding constraints, bounds on variables as separate lines of `R` code.\
+Most of these LP solving engines can also allow models to be built up incrementally as well by creating an empty model, then adding an objective function and adding constraints, bounds on variables as separate lines of `R` code.
 
-While working with the solver directly has the benefit of avoiding ambiguities such as the difficulty of parsing solution status correctly, creating a single _A_ matrix for optimization problems with multiple sets of decision variables and decision variables that may have 3 or more subscripts can be very tricky, hard to maintain, and even harder to debug.  Also, the results require just as much or more care in unpacking as the solution variable values are returned as a single vector, _x_ containing all the separate decision variables.  Think of having three triple subscripted variables, _u_, _v_, and _y_ with each subscript having 12 values.  The resulting _x_ vector will have $3 \cdot 12^3=5184$ elements, each of which must always be considered in exactly the same order for each constraint or building of the _A_ matrix.\
+While working with the solver directly has the benefit of avoiding ambiguities such as the difficulty of parsing solution status correctly, creating a single _A_ matrix for optimization problems with multiple sets of decision variables and decision variables that may have 3 or more subscripts can be very tricky, hard to maintain, and even harder to debug.  Also, the results require just as much or more care in unpacking as the solution variable values are returned as a single vector, _x_ containing all the separate decision variables.  Think of having three triple subscripted variables, _u_, _v_, and _y_ with each subscript having 12 values.  The resulting _x_ vector will have $3 \cdot 12^3=5184$ elements, each of which must always be considered in exactly the same order for each constraint or building of the _A_ matrix.
 
-At this point, it may be apparent that a chief benefit of `ompr` is that allows the modeler to deal with the model at a higher level and forces the computer to handle the detailed accounting translating the model into a lower level solvable structure and then translating the solution back into the original terms.  These conversions are analogous to using a high level computer language versus a low level assembly code.  A talented programmer can write a program in assembly code to do anything that could be done in a high level language but the cost in terms of time and effort is typically prohibitive.\
+At this point, it may be apparent that a chief benefit of `ompr` is that allows the modeler to deal with the model at a higher level and forces the computer to handle the detailed accounting translating the model into a lower level solvable structure and then translating the solution back into the original terms.  These conversions are analogous to using a high level computer language versus a low level assembly code.  A talented programmer can write a program in assembly code to do anything that could be done in a high level language but the cost in terms of time and effort is typically prohibitive.
 
-The investment of time and effort to use a lower level, more direct access to the solver engine may be warranted when developing a package that does optimization. For example, packages for doing Data Envelopment Analysis require doing many linear programs.  These are typically done using the lower level engines such as lpSolveAPI, `Rglkp`, `lpSolveAPI`, or other tools rather than `ompr` but the platform decision should be made carefully.  A more indepth example of building optimization models using lower level access calls is in _DEA Using R_.\
+The investment of time and effort to use a lower level, more direct access to the solver engine may be warranted when developing a package that does optimization. For example, packages for doing Data Envelopment Analysis require doing many linear programs.  These are typically done using the lower level engines such as lpSolveAPI, `Rglkp`, `lpSolveAPI`, or other tools rather than `ompr` but the platform decision should be made carefully.  A more indepth example of building optimization models using lower level access calls is in _DEA Using R_.
 
-Since each low level solver may have different choices made in terms of the name or format of parameters to be passed for the LP as well as a different naming convention of elements being passed back, a translation layer has been developed, `ROI` which stands for the R Optimization Interface. There is the core `ROI` package and a specific `ROI` interface for each LP solver such as `ROI.plugin.glpk`. `ROI` can then be used to simplify switching between LP solvers.  This is demonstrated in Chapter 8.\
+Since each low level solver may have different choices made in terms of the name or format of parameters to be passed for the LP as well as a different naming convention of elements being passed back, a translation layer has been developed, `ROI` which stands for the R Optimization Interface. There is the core `ROI` package and a specific `ROI` interface for each LP solver such as `ROI.plugin.glpk`. `ROI` can then be used to simplify switching between LP solvers.  This is demonstrated in Chapter 8.
 
 ## Exercises
 

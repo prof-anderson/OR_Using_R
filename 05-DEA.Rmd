@@ -29,8 +29,6 @@ library (rsvg, quietly=TRUE)
 library (htmltools, quietly=TRUE)
 library (kableExtra)
 library (TRA) # Requires installation from github
-     # DiagrammeRsvg, rsvg, htmltools are used for IO diagrams
-
 ```
 
 ## Introduction
@@ -278,7 +276,7 @@ Let's define some data structures for holding our data and results.
   dimnames(results.yslack)<-c(DMUnames,SYnames)
 ```
 
-We're going to use our data from earlier but first we will load a collection of libraries to be used later. The `ompr`package is for optimization and serves as a general human readable format of optimization models that can then interface with a variety of solver engines. The `ROI.plugin.glpk` package is for the specific solver engine, `glpk`, that we used. Other LP solving engines are available and can be used instead. We demonstrate other solvers in chapter 7.\
+We're going to use our data from earlier but first we will load a collection of libraries to be used later. The `ompr`package is for optimization and serves as a general human readable format of optimization models that can then interface with a variety of solver engines. The `ROI.plugin.glpk` package is for the specific solver engine, `glpk`, that we used. Other LP solving engines are available and can be used instead. We demonstrate other solvers in chapter 7.
 
 ```{r loading_packages, message=FALSE, warning=FALSE}
 library(dplyr, quietly=TRUE)           # For data organizing
@@ -295,15 +293,15 @@ We are going to start by building a model for just one DMU, in this case, the se
 ```{r first-ompr-model}
 k<-2    # DMU to analyze.  
         # Let's start with just one DMU, B, for now.
-result <- MIPModel() |>
+result <- MIPModel()                                         |>
   add_variable(vlambda[j], j = 1:ND, type = "continuous", 
-               lb = 0) |>
-  add_variable(vtheta, type = "continuous") |>
-  set_objective(vtheta, "min") |>
+               lb = 0)                                       |>
+  add_variable(vtheta, type = "continuous")                  |>
+  set_objective(vtheta, "min")                               |>
   add_constraint(sum_expr(vlambda[j] * xdata[j,1], j = 1:ND) 
-                 <= vtheta * xdata[k,1]) |>
+                 <= vtheta * xdata[k,1])                     |>
   add_constraint(sum_expr(vlambda[j] * ydata[j,1], j = 1:ND) 
-                 >= ydata[k,1]) |>
+                 >= ydata[k,1])                              |>
   solve_model(with_ROI(solver = "glpk")) 
 omprtheta <-  get_solution(result, vtheta) 
 omprlambda <-  get_solution(result, vlambda[j])
@@ -325,8 +323,8 @@ kbl(results_B, digits=4,booktabs=T, escape=F,
     col.names=c("$\\theta^{CRS}$", "$\\lambda_A$", 
                 "$\\lambda_B$", "$\\lambda_C$", "$\\lambda_D$"),
     caption="Input-Oriented Envelopment Analysis for DMU B") |>
-  kable_styling(latex_options = "hold_position") |>
-  footnote(general="Creating a table with LaTeX in column names is covered in Appendix C.")
+  kable_styling(latex_options = "hold_position")
+# Note: Creating LaTeX column names is covered in appendix D.
 ```
 
 The above table follows a few convenient conventions. First, rather than using $\theta$, we label the efficiency score by the model used for the model, in this case the constant returns to scale is labeled as CCR after Charnes, Cooper, and Rhodes [@RhodesDataEnvelopmentAnalysis1978]. Later we will cover other models including the variable returns to scale model, labeled BCC after Banker, Charnes, and Cooper [@banker1984].
@@ -341,16 +339,17 @@ Let's now extend it to handle multiple inputs, `NX`, and outputs, `NY`. Of cours
 
 ```{r ompr-mult-IO, message=FALSE, results='asis'}
 k<-1    # Analyze first unit, DMU A.
-result <- MIPModel() |>
+result <- MIPModel()                                          |>
   add_variable(vlambda[j], j = 1:ND, type = "continuous", 
-               lb = 0) |>
-  add_variable(vtheta, type = "continuous") |>
-  set_objective(vtheta, "min") |>
+               lb = 0)                                        |>
+  add_variable(vtheta, type = "continuous")                   |>
+  set_objective(vtheta, "min")                                |>
   add_constraint(sum_expr(vlambda[j] * xdata[j,i], j = 1:ND) 
-                 <= vtheta * xdata[k,i], i = 1:NX) |>
+                 <= vtheta * xdata[k,i], i = 1:NX)            |>
   add_constraint(sum_expr(vlambda[j] * ydata[j,r], j = 1:ND) 
-                 >= ydata[k,r], r = 1:NY) |>
+                 >= ydata[k,r], r = 1:NY)                     |>
   solve_model(with_ROI(solver = "glpk")) 
+
 omprtheta <-  get_solution(result, vtheta) 
 omprlambda <-  get_solution(result, vlambda[j])
 results.efficiency <- t(omprtheta)
@@ -365,7 +364,7 @@ rownames(results_A) <- c("Optimal results for DMU A")
 kbl(results_A, booktabs=T, escape=F, 
     col.names= c("$\\theta^{CRS}$", "$\\lambda_A$", 
                  "$\\lambda_B$", "$\\lambda_C$", "$\\lambda_D$"),
-    caption="Input-Oriented Envelopment Analysis for DMU A") |>
+    caption="Input-Oriented Envelopment Analysis for DMU A")  |>
   kable_styling(latex_options = "hold_position")
 ```
 
@@ -452,13 +451,13 @@ The other very common returns to scale option is constant returns to scale or CR
 RTS<-"VRS"
 for (k in 1:ND) {
   
-  result <- MIPModel() |>
+  result <- MIPModel()                                         |>
     add_variable(vlambda[j], j = 1:ND, type = "continuous", 
-                 lb = 0) |>
-    add_variable(vtheta, type = "continuous") |>
-    set_objective(vtheta, "min") |>
+                 lb = 0)                                       |>
+    add_variable(vtheta, type = "continuous")                  |>
+    set_objective(vtheta, "min")                               |>
     add_constraint(sum_expr(vlambda[j] * xdata[j,i], j = 1:ND) 
-                   <= vtheta * xdata[k,i], i = 1:NX) |>
+                   <= vtheta * xdata[k,i], i = 1:NX)           |>
     add_constraint(sum_expr(vlambda[j] * ydata[j,r], j = 1:ND) 
                    >= ydata[k,r], r = 1:NY) 
     if (RTS=="VRS") {result <- add_constraint(result, 
@@ -476,7 +475,7 @@ eff.vrs <- results.efficiency
 dimnames(results.lambda)<-list(DMUnames,Lambdanames)
 kbl (cbind(results.efficiency, results.lambda),
      booktabs=T, escape=F, digits=4, caption=
-       "Input-Oriented VRS Envelopment Results") |>
+       "Input-Oriented VRS Envelopment Results")               |>
   kable_styling(latex_options = "hold_position")
 ```
 
@@ -508,13 +507,13 @@ Now, we will generalize this by allowing a parameter to set the returns to scale
 RTS<-"DRS"
 for (k in 1:ND) {
   
-  result <- MIPModel() |>
+  result <- MIPModel()                                             |>
     add_variable(vlambda[j], j = 1:ND, type = "continuous", 
-                 lb = 0) |>
-    add_variable(vtheta, type = "continuous") |>
+                 lb = 0)                                           |>
+    add_variable(vtheta, type = "continuous")                      |>
     set_objective(vtheta, "min") |>
     add_constraint(sum_expr(vlambda[j] * xdata[j,i], j = 1:ND) 
-                   <= vtheta * xdata[k,i], i = 1:NX) |>
+                   <= vtheta * xdata[k,i], i = 1:NX)               |>
     add_constraint(sum_expr(vlambda[j] * ydata[j,r], j = 1:ND) 
                    >= ydata[k,r], r = 1:NY)
     if (RTS=="VRS") {result <-
@@ -548,10 +547,10 @@ for (k in 1:ND) {
   result <- MIPModel() |>
     add_variable(vlambda[j], j = 1:ND, type = "continuous", 
                  lb = 0) |>
-    add_variable(vtheta, type = "continuous") |>
-    set_objective(vtheta, "min") |>
+    add_variable(vtheta, type = "continuous")                      |>
+    set_objective(vtheta, "min")                                   |>
     add_constraint(sum_expr(vlambda[j] * xdata[j,i], j = 1:ND) 
-                   <= vtheta * xdata[k,i], i = 1:NX) |>
+                   <= vtheta * xdata[k,i], i = 1:NX)               |>
     add_constraint(sum_expr(vlambda[j] * ydata[j,r], j = 1:ND) 
                    >= ydata[k,r], r = 1:NY)
     if (RTS=="VRS") {result <-
@@ -628,8 +627,7 @@ colnames(univ_lic_2007) <- c("University", "LicInc",
 
 utt2007 <- univ_lic_2007 [1:25,] # Use first 25 universities
 
-utt2007 <- utt2007 [,-5]   
-           # Drop the fifth column (Patents Filed)
+utt2007 <- utt2007 [,-5] # Drop the fifth column (Patents Filed)
 
 kbl (head(utt2007), booktabs=T, 
      caption="Simplified Data for University Technology Transfer") |>
@@ -750,14 +748,14 @@ Let's compare the results from the constant and variable returns to scale cases.
 RTS<-"VRS"
 for (k in 1:ND) {
   
-  modUTT_BCC <- MIPModel() |>
+  modUTT_BCC <- MIPModel()                                    |>
     add_variable(vlambda[j], j = 1:ND, type="continuous", 
-                 lb = 0) |>
-    add_variable(vtheta, type = "continuous") |>
-    set_objective(vtheta, "min") |>
+                 lb = 0)                                      |>
+    add_variable(vtheta, type = "continuous")                 |>
+    set_objective(vtheta, "min")                              |>
     add_constraint(sum_expr(vlambda[j] * xdata[j,i], j = 1:ND) 
                    <= vtheta * xdata[k,i], i = 1:NX, 
-                   .show_progress_bar=FALSE ) |>
+                   .show_progress_bar=FALSE )                 |>
     add_constraint(sum_expr(vlambda[j] * ydata[j,r], j = 1:ND, 
                    .show_progress_bar=FALSE ) 
                    >= ydata[k,r], r = 1:NY) 
@@ -932,21 +930,21 @@ Implementing this is straightforward.
 RTS<-"CRS"
 for (k in 1:ND) {
   
-  LPSlack <- MIPModel() |>
+  LPSlack <- MIPModel()                                     |>
     add_variable(vlambda[j], j = 1:ND, type = "continuous", 
-                 lb = 0) |>
-    add_variable(vtheta, type = "continuous") |>
+                 lb = 0)                                    |>
+    add_variable(vtheta, type = "continuous")               |>
     add_variable(xslack[i], i = 1:NX, type = "continuous", 
-                 lb=0) |>
+                 lb=0)                                      |>
     add_variable(yslack[r], r = 1:NY, type = "continuous", 
-                 lb=0) |>
+                 lb=0)                                      |>
     
-    set_objective(vtheta, "min") |>
+    set_objective(vtheta, "min")                            |>
     
     add_constraint(sum_expr(vlambda[j] * xdata[j,i] + 
                               xslack[i], j = 1:ND) 
                    - vtheta * xdata[k,i]==0, i = 1:NX, 
-                   .show_progress_bar=FALSE ) |>
+                   .show_progress_bar=FALSE )               |>
     
     add_constraint(sum_expr(vlambda[j] * ydata[j,r] -
                               yslack[r], j = 1:ND) 

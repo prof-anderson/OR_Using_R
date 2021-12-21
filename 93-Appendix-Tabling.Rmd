@@ -7,7 +7,7 @@ library(bookdown); library(rmarkdown); rmarkdown::render("_kable.Rmd", "pdf_book
 ## Importance of Tables in Modeling
 
 ```{r setup}
-library(knitr)
+library(knitr)  # Only two packages used in this Appendix
 library (kableExtra)
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -29,7 +29,7 @@ Just as `ggplot` implemented a widely used and powerful grammar of graphics, som
 
 There are more options in `kable` and `kableExtra` than we are covering here but this covers everything that was used in the book.
 
-## Kable vs. kbl
+## Kable vs. Kbl
 
 In theory, everything done with `kableExtra` could be done through just `kable` since `kableExtra` serves as a friendly interface to `kable`. Actually doing everything directly through `kable` would be much more difficult and prone to user error so `kableExtra` is recommended. The first item to note is `kableExtra` provides a shorthand function, `kbl`, similar to knitr's native `kable`.  In fact, it is essentially a wrapper that provides several useful benefits: \index{kable!kbl}
 
@@ -69,17 +69,16 @@ The following code chunk seems like it should work but `row.names` generates an 
 
 ```{r eval=FALSE}
 # eval=FALSE to avoid breaking error.
-
-m <- matrix(c(1:4),nrow=2, ncol=2) 
+m <- matrix(1:4,nrow=2, ncol=2) 
 
 kable (m, 
      col.names=c("C1", "C2"),
      row.names=c("R1", "R2")) 
 # Works for col.names but not row.names
-#The following demonstrates use of row.names
+# The following demonstrates use of row.names
 ```
 
-Since `col.names` works well, there is no reason to spend more time on it.  Let's instead show how to replace row names for a table. The following example gives bad row names to a matrix that I want to replace and use with an better set of row names.  It then generates three tables showing three situations.  
+Since `col.names` works well, there is no reason to spend more time on it.  Let's instead show how to replace row names for a table. The following example gives bad row names to a matrix that I want to replace and use with an better set of row names.  It then generates four tables showing these situations.  The last two options give good results.
 
 ```{r, eval=TRUE}
 m <- matrix(1:4, 2, 2)
@@ -90,34 +89,27 @@ GR <- c("Good row name 1", "Good row name 2")
 row.names (m)<-BR  # Treat as default to be avoided
 
 kbl (m, booktabs=T, caption="Retain Row Names by Using `row.name=T`",
-     col.names=c("C1", "C2"), 
-     row.names=T) |>   
-  kable_styling (latex_options = "hold_position") |>
-  footnote (general="Not the intended result because it has bad row names.")
+     col.names=c("C1", "C2"), row.names=T)                            |>   
+  kable_styling (latex_options = "hold_position")  
 
 kbl (m, booktabs=T, caption="Drop Row Name by Using `row.name=F`",
-     col.names=c("C1", "C2"), 
-     row.names=F) |>
-  kable_styling (latex_options = "hold_position") |> 
-  footnote (general="Not ideal but at least it avoids the bad row names.")
+     col.names=c("C1", "C2"), row.names=F)                            |>
+  kable_styling (latex_options = "hold_position")  
 
 kbl (cbind(as.matrix(GR),m), booktabs=T,
        caption="Adding Row Names as a Leading Column",
-     col.names=c("", "C1", "C2"), 
-     row.names=F) |>
-  kable_styling (latex_options = "hold_position") |> 
-  footnote (general="Good solution.")
+     col.names=c("", "C1", "C2"), row.names=F)                        |>
+  kable_styling (latex_options = "hold_position")  
 
 rownames(m)<-GR  
 kbl (m, booktabs=T,
        caption="Replacing row names in matrix before kable",
-     col.names=c("C1", "C2"), 
-     row.names=T) |>
-  kable_styling (latex_options = "hold_position")  |> 
-  footnote (general="Traditional approach.")
+     col.names=c("C1", "C2"), row.names=T)                            |>
+  kable_styling (latex_options = "hold_position")  
 ```
 
-The `kable_styling` command has a parameter, `latex_options` that can be passed a lot of different parameters that only apply to the output of `latex`. I often use the `"hold_position"` option to encourage LaTeX to keep the table placement near the code chunk.  If `"hold_position"` is not passed, LaTeX will float the table to what it considers a good place relative to the rest of the text that might be well away from the actual intent. \index{kbl!hold\_position}
+The `kable_styling` command has a parameter, `latex_options` that can be passed a lot of different parameters that only apply to the output of `latex`. I often use the `"hold_position"` option to encourage LaTeX to keep the table placement near the code chunk.  If `"hold_position"` is not passed, LaTeX will float the table to what it considers a good place relative to the rest of the text that might be well away from the actual intent. \index{kable!hold\_position}  \index{kable} \index{kbl|see{kable!kbl}} 
+
 
 To summarize:
 
@@ -152,9 +144,7 @@ Some applications require richer notation than simple plain text.  With a little
 - Any command requiring a slash character in LaTeX requires a double slash.  For example, `$\theta^{CRS}$` to create $\theta^{CRS}$ would instead require `$\\theta^{CRS}$` as shown below.
 
 ```{r, eval=TRUE}
-
 m <- matrix(1:4, 2, 2)
-
 GR <- c("$\\phi$", "$\\omega$")
 
 kbl(cbind(as.matrix(GR),m), booktabs=T, escape=F, caption=
@@ -197,4 +187,3 @@ On the other hand, sometimes this is a sign that the display of this information
 - providing a summary table of means, standard deviations, or other information. 
 
 \index{kable|(}
-
