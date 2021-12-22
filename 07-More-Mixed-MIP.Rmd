@@ -74,14 +74,14 @@ To enforce this constraint, we can simply add the $x$ variables for warehouse 1 
 We could do this with $x_{1,1}+x_{1,2}+ \ldots + x_{1,m}$ and requiring it to be one.
 We could rewrite this using a summation as $\sum\limits_{j=1}^{m} x_{1, j} = 1$.
 That constraint is limited to just customer 1 though.
-We don't want to write this constraint out separately for each customer so we can generalize this by repeating it for all $n$ customers as $\sum\limits_{j=1}^{m} x_{i, j} = 1, \> i=1 ,\ldots, n$.\
+We don't want to write this constraint out separately for each customer so we can generalize this by repeating it for all $n$ customers as $\sum\limits_{j=1}^{m} x_{i, j} = 1, \> i=1 ,\ldots, n$.
 
 It would not work to assign a customer to an unbuilt warehouse.
 For example, it would not work to have customer 23 assigned to warehouse 7 if warehouse 7 was not built.
 In other words, the combination of $x_{23,7}=1$ and $y_7=0$ would be a big problem and should not happen.
 We need to connect the decision variable $x_{23,7}$ and $y_7$.
 One way to do that is creating a constraint, $x_{23,7} \leq y_7$ which explicitly blocks assigning customer 23 to warehouse 7 unless warehouse 7 is operating.
-This can be generalized as $x_{i, j} \leq y_j, \> i=1 , \ldots, n, \> j=1 ,\ldots, m$.\
+This can be generalized as $x_{i, j} \leq y_j, \> i=1 , \ldots, n, \> j=1 ,\ldots, m$.
 
 Our objective is to minimize cost.
 We have a cost assumed for each customer to warehouse assignment.
@@ -1404,12 +1404,10 @@ d. *Challenge:* Solve the revised problem.
 :::
 
 ::: {.exercise name="Chemical Factories"}
-Similar to Warehouse problem above, here we have Chemical Factories for which 
-we need to decide the locations. We need to set up 2 factories with 100 residents 
-in the town. The town government is trying to keep the factories at maximum 
-possible distance from the residents to avoid any decrease the impacts and risk of mishaps.
+Similar to the Warehouse problem in this chapter, here we have Chemical Factories for which we need to decide the locations. We need to set up 2 factories with 100 residents in the town. The town government is trying to keep the factories at maximum possible distance from the residents to avoid any decrease the impacts and risk of mishaps.
 
-Taking the randomly generated setup costs for factories similar to warehouses,
-run the analysis to decide the location for these 2 chemical factories which are 
+A. Create an appropriate formulation.
+B. Taking the randomly generated setup costs for factories similar to warehouses, run the analysis to decide the location for these 2 chemical factories which are 
 at maximum possible distance from all residents.
+C. Discuss the results.
 :::

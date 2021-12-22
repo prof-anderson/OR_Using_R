@@ -601,14 +601,12 @@ d. Given the minimax objective function, how do you think the above requirements
 :::
 
 ::: {.exercise name="Experimenting with State Mailing"}
-In the mailing by state example in chapter, there is a change discovered that Week 4 is going to be during a Holidays week and Mailing Center will be closed for whole week.
-
-Make appropriate changes to model in example discussed in chapter to solve below queries.
+In the mailing by state example in chapter, there is a change discovered that Week 4 is going to be during a Holiday week and the Mailing Center will be closed for whole week. Make appropriate changes to the model in example presented in the chapter to reflect these changes.
 
 a. Write the optimization model using LaTeX to ensure that no week has more than 8 states assigned to the week.
-b. Write a constraint or set of constraints using LaTeX that would ensure state 3 is done before state 7.
-c. Write a constraint or set of constraints to ensure that state 9 and 24 are done in the same week.
-d. Write a constraint or set of constraints to ensure that states Oregon and California are done before holiday week.
+b. Write a constraint or set of constraints using LaTeX that would ensure state 4 is done before state 6.
+c. Write a constraint or set of constraints to ensure that state 5 and 9 are done in the same week.
+d. Write a constraint or set of constraints to ensure that the states of Oregon and California are done before holiday week.
 e. After solving above, compare the results with exercise 8.1 and discuss.
 
 :::
