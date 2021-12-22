@@ -71,8 +71,8 @@ I would like to thank many people for their contributions, collaborations, and a
 -   **Dr. K. Louis Luangkesorn,** author of the first vignette on using `glpk` in R
 -   **Dr. Chester Ismay,** contributions to the Portland and broader R community
 -   **Dr. Jili Hu,** rich interactions during his sabbatical in Portland
--   **Tom Shott,** primary author of the `TFDEA` package
 -   **Dr. Nina Chaichi,** many suggestions over the years
+-   **Tom Shott,** primary author of the `TFDEA` package
 -   **Aurobindh Kalathil Kumar,** PhD student, many suggestions over time
 -   **Kevin van Blommestein,** earlier DEA & R work
 -   **William (Ike) Eisenhauer,** LaTeX formulation improvements
