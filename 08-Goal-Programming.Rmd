@@ -18,9 +18,64 @@ library (dplyr)
 library (kableExtra)
 ```
 
-## Policies for Houselessness
+## Introduction
 
-Up until this point, we assumed that there would be a single, clear objective function. Often we have more complex situations where there are multiple conflicting objectives. In our earlier production planning case, we might have additional objectives besides maximizing profit such as minimizing environmental waste or longer term strategic positioning. In the case of our capital budgeting problem, we can envision a range of additional considerations beyond simple expected net present value maximization.
+Up until this point, we assumed that there would be a single, clear objective function. Often we have more complex situations where there are multiple conflicting objectives. In our earlier production planning case, we might have additional objectives besides maximizing profit such as minimizing environmental waste or longer term strategic positioning. In the case of our capital budgeting problem, we can envision a range of additional considerations beyond simple expected net present value maximization. In the warehouse site selection problem from Chapter 7, we can envision other considerations such as political placement in certain states, being prepared for future varying growth levels in different regions, and other issues which could further influence a simple minimum cost solution. 
+
+## Preemptive Goal Programming
+
+Let's begin with a simple example.  Recall the example of multiple optima from Chapter 2. We had adjusted the characteristics of *Cats* so that there were multiple optima with different mixes of *Ants* and *Cats*. The LP solver found an initial solution that only produced Ants and we had to force the LP solver to find the *Cats* oriented production. \index{Goal programming|(}  \index{Goal Programming!Preemptive Goal Programming} \index{Preemptive goal programming|see{ompr!get_solution}}
+
+$$
+ \begin{split}
+ \begin{aligned}
+    \text{Max  }  & 7\cdot Ants +12 \cdot Bats +\textcolor{red}{14}\cdot Cats \\
+    \text{s.t.: } & 1\cdot Ants + 4 \cdot Bats  +\textcolor{red}{2}\cdot Cats \leq 800 \\
+                  & 3\cdot Ants + 6 \cdot Bats  +\textcolor{red}{6}\cdot Cats \leq 900 \\
+                  & 2\cdot Ants + 2 \cdot Bats  +\textcolor{red}{4}\cdot Cats \leq 480 \\
+                  & 2\cdot Ants + 10 \cdot Bats  +\textcolor{red}{4}\cdot Cats \leq 1200 \\
+                  & Ants, \; Bats, \; Cats \geq 0  
+\end{aligned}
+\end{split}
+$$
+
+Let's reframe this problem where the company's primary goal is to maximize profit but the Cat product is more prestigious than the Ant product and emphasizing it will benefit the company in long term market positioning.  The company doesn't want to hurt profit but holding everything else equal, wants to then maximize Cat production.
+
+The first step is to make the primary goal more direct. The objective function is now a fourth variable, *Profit* that is a direct function of the other three variables. The following formulation would then be considered the first phase.
+
+$$
+ \begin{split}
+ \begin{aligned}
+    \text{Max   } & \textcolor{red}{Profit}\\  
+    \text{s.t.: } & \textcolor{red}{Profit=7\cdot Ants +12 \cdot Bats +14\cdot Cats} \\
+                  & 1\cdot Ants + 4 \cdot Bats  +2\cdot Cats \leq 800 \\
+                  & 3\cdot Ants + 6 \cdot Bats  +6\cdot Cats \leq 900 \\
+                  & 2\cdot Ants + 2 \cdot Bats  +4\cdot Cats \leq 480 \\
+                  & 2\cdot Ants + 10 \cdot Bats  +4\cdot Cats \leq 1200 \\
+                  & Ants, \; Bats, \; Cats \geq 0  
+\end{aligned}
+\end{split}
+$$
+
+The optimal objective function value from this LP is 1980 as shown in Chapter 2. Now we modify the above formulation to keep the *Profit* fixed at 1980 and maximize the production of *Cats.*
+
+$$
+ \begin{split}
+ \begin{aligned}
+    \text{Max   } & \textcolor{red}{Cats}\\  
+    \text{s.t.: } & Profit=7\cdot Ants +12 \cdot Bats +14\cdot Cats \\
+                  & 1\cdot Ants + 4 \cdot Bats  +2\cdot Cats \leq 800 \\
+                  & 3\cdot Ants + 6 \cdot Bats  +6\cdot Cats \leq 900 \\
+                  & 2\cdot Ants + 2 \cdot Bats  +4\cdot Cats \leq 480 \\
+                  & 2\cdot Ants + 10 \cdot Bats  +4\cdot Cats \leq 1200 \\
+                  & \textcolor{red}{Profit=1980}\\
+                  & Ants, \; Bats, \; Cats \geq 0  
+\end{aligned}
+\end{split}
+$$
+ Rather than directly stating the solution value of 1980, a more general approach would use the term, $Profit^*$ to denote the optimal solution from the first Phase and the new Phase 2 constraint would then be $Profit=Profit^*$.  This would then give a revised solution that emphasizes Cat production in so far as it doesn't detract from Profit.  In other words, maximizing Profit preempts maximizing Cat production.
+
+## Policies for Houselessness
 
 Let's use an example that is a pressing issue for many cities - homelessness.  Note that is often better characterized as houselesness and the term will be used interchangeably for the sake of this illustration.
 
@@ -147,7 +202,7 @@ kbl (rbind(sum_Home1, sum_Home2), booktabs=T,
 
 So which group has the _better_ model?  The objective function value for group 1's model is higher but it is in different units (people served) versus group 2's model of children served.
 
-Both group's have admirable objectives. We can view this as a case of goal programming. \index{Goal programming} By definition, we know that these are the best values that can be achieved in terms of that objective function. Let's treat these optimal values as targets to strive for and measure the amount by which fail to achieve these targets. We'll define target $T_1 =$ `r res_Home1$objective_value` and $T_2 =$ `r res_Home2$objective_value`.
+Both group's have admirable objectives. We can view this as a case of goal programming. By definition, we know that these are the best values that can be achieved in terms of that objective function. Let's treat these optimal values as targets to strive for and measure the amount by which fail to achieve these targets. We'll define target $T_1 =$ `r res_Home1$objective_value` and $T_2 =$ `r res_Home2$objective_value`.
 
 In order to do this, we need to use deviational variables. \index{Deviational variables} These are like slack variables from the standard form of linear programs. Since the deviations can only be one sided in this case, we only need to have deviations in one direction. We will define $d_1$ as the deviation in goal 1 (Maximizing people served) and $d_2$ as the deviation in goal 2 (Maximizing children served).
 
@@ -610,3 +665,5 @@ d. Write a constraint or set of constraints to ensure that the states of Oregon 
 e. After solving above, compare the results with exercise 8.1 and discuss.
 
 :::
+
+\index{Goal programming|)}

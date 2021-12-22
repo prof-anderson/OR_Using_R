@@ -590,11 +590,11 @@ kbl(res2z, booktabs=T,
   footnote ("Note that all solutions generate the same profit.")
 ```
 
-Each of three solutions have exactly the same profit but different production plans to generate this profit. Furthermore while we are listing three, there are actually many more solutions. You can force the system to find other solutions by setting the number of Ants to a number between 0 and 180 or Cats between 0 and 90. The number of solutions is infinite if we explore fractional solutions. More generally, when there are two alternate optimal in a linear program with continuous variables, there is actually an infinite number of other optimal solutions between them.
+Each of three solutions have exactly the same profit but different production plans to generate this profit. Furthermore while we are listing three, there are actually many more solutions. You can force the system to find other solutions by setting the number of *Ants* to a number between 0 and 180 or *Cats* between 0 and 90. The number of solutions is infinite if we explore fractional solutions. More generally, when there are two alternate optimal in a linear program with continuous variables, there is actually an infinite number of other optimal solutions between them.
 
-While our first optimization found a solution focused on bats and our second found a solution that only made ants, this is strictly dependent upon the particular solver's algorithmic implementation. The user can consider this to be relatively arbitrary.
+While our first optimization found a solution focused more on Ants and our second found a solution that emphasized *Cats*, this is dependent upon the particular solver's algorithmic implementation. The user can consider this to be relatively arbitrary as there is no difference between them based on the objective function.
 
-Which solution is the best? Within the limits of this problem, we can't distinguish between them and they are equally good. If an application area expert or the end decision maker prefers one solution over the other, there should be extra information that we can use to extend the model.
+Which solution is the best? Within the limits of this problem, we can't distinguish between them and they are equally good. If an application area expert or the end decision maker prefers one solution over the other-refinements in costs or profits could be included directly or additional constraints could be added. Sometimes considering these two otherwise equal solutions will elicit a response such as, "With all other things being equally, we prefer this alternative because of future market positioning." This could represent an additional or secondary goal which is addressed using goal programming as discussed in Chapter 8.
 
 ### Case 3: Redundant Constraint
 

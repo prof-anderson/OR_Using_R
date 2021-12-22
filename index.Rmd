@@ -16,7 +16,6 @@ github-repo: prof-anderson/OR_Using_R
 graphics: yes
 highlight: tango
 #highlight: monochrome
-#cover-image: images/Book_Cover-Optimization_Modeling_Using_R.png
 ---
 
 # Preface {.unnumbered}
@@ -93,7 +92,8 @@ In addition, several groups have been of tremendous help:
 
 -   The Portland Meetup, R User's Group
 -   The Extreme Technology Analytics Research Group
--   Past ETM 540/640 Operations Research Group classes
+-   Past ETM 540/640 Operations Research classes and in particular, the 200 students since 2019 that have used drafts of this book.
+-   My advisors and mentors from Georgia Tech, Dr. Gunter Sharp and Dr. Ronald Bohlander.
 
 Most of all, I would like to also express my appreciation for my family's patience while working on this book with many late nights: Carrie, Trent, and Paige.
 
