@@ -213,7 +213,7 @@ Even this massive increase of sensors does not result in any increase in profit 
 
 ## Reduced Costs of Variables
 
-Next, we move on to the *reduced costs* of variables. The reduced cost for a variable is the per unit marginal profit (objective function coefficient) minus the per unit value (in terms of shadow prices) of the resources used by a unit in production. The reduced costs is also often referred to as the column duals.  \index{Reduced costs of variables} \index{Column duals|see{Reduced costs of variables}} The concept and use of reduced costs frequently may require rereading several times. The mathematical details rely on the structure of linear programming and the simplex algorithm. \index{Simplex algorithm} We won't go into detail on the origin of this mathematically in detail here.
+Next, we move on to the *reduced costs* of variables. The reduced cost for a variable is the per unit marginal profit (objective function coefficient) minus the per unit value (in terms of shadow prices) of the resources used by a unit in production. The reduced costs is also often referred to as the column duals.  \index{Reduced costs of variables} \index{Column duals|see{Reduced costs of variables}} The concept and use of reduced costs frequently may require rereading several times. The mathematical details rely on the structure of linear programming and the Simplex method. \index{Simplex method} We won't go into detail on the origin of this mathematically in detail here.
 
 ### Reduced Cost of Ants
 

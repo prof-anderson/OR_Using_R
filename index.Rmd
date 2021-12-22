@@ -80,19 +80,20 @@ I would like to thank many people for their contributions, collaborations, and a
 -   **Christopher Davis,** graphical example of LP
 -   **Thanh Thuy Nguyen,** fixed charge example
 -   **Roland Richards,** formatting assistance
--   **Caroline Blackledge,** co-author of summation introduction appendix
--   **Alexander Keller,** co-author of summation introduction appendix
--   **Shahram Khorasanizadeh,** co-author of summation introduction appendix
--   **Jose Banos,** contributor of more formatting in the spirit of Tufte
+-   **Caroline Blackledge,** contributed to appendix
+-   **Alexander Keller,** contributed to appendix
+-   **Shahram Khorasanizadeh,** contributed to appendix
+-   **Jose Banos,** formatting assistance
 -   **Jon Syverson,** frequent and thoughtful feedback on early drafts
 -   **Dawei Zhang,** further editorial work on the book
 -   **Navdeep Singh,** assistance with formatting and additional exercises
+-   **Ketsaraporn Kaewkhiaolueang,** assistance with proofreading
 
 In addition, several groups have been of tremendous help:
 
 -   The Portland Meetup, R User's Group
 -   The Extreme Technology Analytics Research Group
--   Past ETM 540/640 Operations Research Group classes, particularly the Fall 2018 and Winter 2019 classes which helped test the early versions of this book.
+-   Past ETM 540/640 Operations Research Group classes
 
 Most of all, I would like to also express my appreciation for my family's patience while working on this book with many late nights: Carrie, Trent, and Paige.
 

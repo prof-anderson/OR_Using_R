@@ -452,7 +452,7 @@ The same concepts can also be applied to other applications.
 
 One of the big benefits of `ompr` is that it separates the process of formulating the optimization model from that of solving it and thereby let's us easily switch to other solvers.
 Up until this point, we have used the `glpk` solver.
-Now that we have a nontrivial optimization model, the Warehouse Location Model, let's use it.\
+Now that we have a nontrivial optimization model, the Warehouse Location Model, let's use it.
 
 The emphasis in this section is not model building but comparing the use of different solvers.
 Since we have the model already defined as an object, simply named `model`, we can easily pass it to the different solvers for optimizing.
@@ -460,16 +460,15 @@ There is a large collection of other solvers that can be used with R.[^more-mixe
 
 [^more-mixed-mip-solvers]: This topic is not covered in Dirk's vignette or blog post.
 
-
 We'll demonstrate the performance for illustration purposes.
-Again, do not run the following code chunks in this section on a cloud-based service such as Rstudio.cloud, unless you are certain that imposing a non-trivial computational load is acceptable.\
+Again, do not run the following code chunks in this section on a cloud-based service such as Rstudio.cloud, unless you are certain that imposing a non-trivial computational load is acceptable.
 
 ### Performance of `glpk`
 
 We have been using `glpk` for all of our earlier examples.
-For the sake of comparison, let's start off with it too.
+For the sake of comparison, let's start off with it too.  We'll set the `verbose=TRUE` option to be passed through ROI to the `glpk` solver.  The exact options available for each solver and their available options varies.
 We will use the `tictoc` package to help us collect data on timing.
-Note that timing can vary even if the same problem is solved on the same computer twice in rapid succession.\
+Note that timing can vary even if the same problem is solved on the same computer twice in rapid succession.
 
 ```{r timeglpk }
 library(tictoc)   # Package used for timing R functions
@@ -483,11 +482,11 @@ glpktime1 <- c("glpk", glpktime$toc - glpktime$tic,
                result_glpk$objective_value)
 ```
 
-The `glpk` solver worked. We'll take the results and combine them with other shortly.
+The more verbose output provides additional details on the solving. For example, it indicates that the Simplex method was used by indicating a Simplex optimizer was used before then passing the LP relaxation solution to the integer optimization. \index{Simplex method} In general, the `glpk` solver worked. We'll take the results and combine them with other shortly.
 
 ### Performance of `symphony`
 
-Let's move on to testing the `symphony` solver.  Symphony is a solver with a long history of development.  
+Let's move on to testing the `symphony` solver. Symphony is a solver with a long history of development.  
 
 ```{r timesymphony }
 tic("symphony")
@@ -606,13 +605,13 @@ The [Gurobi documentation](https://www.gurobi.com/documentation/9.0/refman/param
 
 I've tested the following commonly used parameters with Gurobi and can confirm that they appear to work.
 
--   *TimeLimit* terminates solving based on seconds, (usage: `TimeLimit=40.0`)
--   *SolutionLimit* , limits the number of MIP feasible solutions, (usage: `SolutionLimit=20`)
--   *NodeLimit* , limits the number of MIP nodes, only used in MIP, (usage: `NodeLimit=200`)
--   *BestObjStop* , stops when a solution is as good as value, (usage: `BestObjStop=50000.0`)
--   *BestBdStop* , stops when best bound is as good as value (usage: `BestBdStop=50000.0`)
--   *MIPGap*, stops based on relative gap between best bound and current solution. Note that the default is $10^-4$ rather than 0. A value of 0.1 effectively means that a solution is accepted and solving terminated if it is known that no solution is possible that is 10% better. (usage: `MIPGap=0.1`)
--   *MIPGapAbs*, stops based on absolute gap between best bound and current solution. For example if the objective function is in dollars, a value of 1000.0 means that a solution is accepted and solving terminated if it is known that no solution is possible is more $\$1000$ better. (usage: `MIPGap=1000.0`)
+-   `TimeLimit` terminates solving based on seconds, (usage: `TimeLimit=40.0`)
+-   `SolutionLimit` limits the number of MIP feasible solutions, (usage: `SolutionLimit=20`)
+-   `NodeLimit` limits the number of MIP nodes, only used in MIP, (usage: `NodeLimit=200`)
+-   `BestObjStop` stops when a solution is as good as value, (usage: `BestObjStop=50000.0`)
+-   `BestBdStop` stops when best bound is as good as value (usage: `BestBdStop=50000.0`)
+-   `MIPGap` stops based on relative gap between best bound and current solution. Note that the default is $10^-4$ rather than 0. A value of 0.1 effectively means that a solution is accepted and solving terminated if it is known that no solution is possible that is 10% better. (usage: `MIPGap=0.1`)
+-   `MIPGapAb` stops based on absolute gap between best bound and current solution. For example if the objective function is in dollars, a value of 1000.0 means that a solution is accepted and solving terminated if it is known that no solution is possible is more $\$1000$ better. (usage: `MIPGap=1000.0`)
 
 The gurobi solver has far more capabilities than are presented here. It provides it's own algebraic modeling language and as an integrated solution is able to avoid the issue of misinterpreting solving codes. For people with very large scale optimization problems that they are solving on a frequent basis, it may be worth investigating these other options.  The `ompr` tool and algebraic modeling language used within R will make the transition straightforward.  
 

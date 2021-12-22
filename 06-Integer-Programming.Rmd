@@ -20,11 +20,11 @@ library (TRA)
 library(bookdown); library(rmarkdown); rmarkdown::render("06-Integer-Programming.Rmd", "pdf_book")
 ```
 
-Up until this point, we have always assumed that variables could take on fractional (or non-integer) values. In other words, they were continuous variables. Sometimes the values conveniently turned out to be integer-valued, in other cases, we would brush off the non-integer values of the results.\
+Up until this point, we have always assumed that variables could take on fractional (or non-integer) values. In other words, they were continuous variables. Sometimes the values conveniently turned out to be integer-valued, in other cases, we would brush off the non-integer values of the results.
 
-Allowing for integer values opens up many more important areas of applications as we will see. Let's look at two numerical examples. The first shows a case where integrality makes little difference, the second where it has a major impact. \
+Allowing for integer values opens up many more important areas of applications as we will see. Let's look at two numerical examples. The first shows a case where integrality makes little difference, the second where it has a major impact.
 
-Unfortunately, there is no such thing as a free lunch-adding and integrality can make problems much more computationally demanding. We will go through an example of how many optimization routines do integer optimization to demonstrate why it can be more difficult algorithmically even if looks trivially easy from the perspective of the change in the `ompr`function.\
+Unfortunately, there is no such thing as a free lunch-adding and integrality can make problems much more computationally demanding. We will go through an example of how many optimization routines do integer optimization to demonstrate why it can be more difficult algorithmically even if looks trivially easy from the perspective of the change in the `ompr`function.
 
 ## Example of Minor Integrality Impact
 
@@ -96,7 +96,7 @@ model1 <- add_variable(model1, Bats, type = "integer", lb = 0)
 model1 <- add_variable(model1, Cats, type = "integer", lb = 0)
 ```
 
-Let's confirm that the implemented model is of the form desired.\
+Let's confirm that the implemented model is of the form desired.
 
 ```{r}
 model1
@@ -106,15 +106,14 @@ We can see that it now has three integer variables replacing the variables of th
 
 ```{r}
 result1 <-  solve_model(model1, with_ROI(solver="glpk"))
+```
 
+```{r, echo=FALSE}
 inc_as_res_int <- cbind (result1$objective_value, 
                          t(result1$solution))
 colnames(inc_as_res_int) <- c("Profit", "Ants", "Bats", "Cats")
 temp1 <- rbind(inc_as_res, inc_as_res_int)
 rownames(temp1) <-c("Continuous", "Integer")
-```
-
-```{r, echo=FALSE}
 kbl (temp1, booktabs=T, 
      caption="Production Plans based on Variable Type.") |>
   kable_styling(latex_options = "hold_position")
@@ -194,13 +193,15 @@ Simply rounding down did not yield an optimal solution. Notice that production o
 
 ## The Branch and Bound Algorithm
 
-The simplicity of making the change in the model from continuous to integer variables hides or understates the complexity of what needs to be done to computationally to solve the optimization problem. This small change can have major impacts on the computational effort needed to solve a problem. Solving linear programs with tens of thousands of continuous variables is very quick and easy computationally. Changing those same variables to general integers can make it *very* difficult. Why is this the case? 
+The simplicity of making the change in the model from continuous to integer variables hides or understates the complexity of what needs to be done computationally to solve the optimization problem. This small change can have major impacts on the computational effort needed to solve a problem. Solving linear programs with tens of thousands of continuous variables is very quick and easy computationally. Changing those same variables to general integers can make it *very* difficult. Why is this the case? 
 
-At its core, the basic problem is that the simplex method and linear programming solves a system of equations and unknowns (or variables). It is trivial to solve one equation with one unknown such as $5x=7$. It is only slightly harder to solve a system of two equations and two unknowns. Doing three equations and three unknowns requires some careful algebra but is not too hard. In general, solving *n* equations and *n* unknowns is readily solvable. On the other hand, none of this algebraic work of solving for unknown variables can require that the variables take on integer values. Even with only one equation and one unknown, *x* will only be integer for certain combinations of numbers in the above equation. Specifically when the number on the right is a multiple of the number in front of *x*. It gets even less likely to have an all integer solution as the number of equations and unknowns increase.
+At its core, the basic problem is that the Simplex method \index{Simplex method} and linear programming solves a system of equations and unknowns (or variables). It is trivial to solve one equation with one unknown such as $5x=7$. It is only slightly harder to solve a system of two equations and two unknowns. Doing three equations and three unknowns requires some careful algebra but is not hard. In general, solving *n* equations and *n* unknowns is readily solvable. On the other hand, none of this algebraic work of solving for unknown variables can require that the variables take on integer values. Even with only one equation (say $C\cdot x=12$), one unknown variable ($x$), and one constant ($C$), *x* will only be integer for certain combinations of numbers in the above equation. It gets even less likely to have an all integer solution as the number of equations and unknowns increase.
 
-Another way to visualize integer solutions for general systems of inequalities is to think of the case with two equations and two unknowns (*x* and *y*). Finding a solution is the same as finding where two lines intersect in two dimensional space. The odds of getting lucky and having the two lines intersect at an integer solution is small. Even if we limit ourselves to x and y both being between 0 and 10, this means that there are $11^2=121$ possible integer valued points in this space such as (0,0), (0,3), and (10,10). In contrast, the set of all points, including non-integers, in this region includes all of the above points as well as (0,0.347) and (4.712, 7.891) among infinitely more. The result is that if you think of this as a target shooting, the probability of finding an integer solution by blind luck is $\frac{121}{\infty}\approx 0$.
+Another way to visualize integer solutions for general systems of inequalities is to think of the case with two equations and two unknowns (*x* and *y*). Finding a solution is the same as finding where two lines intersect in two dimensional space. The odds of getting lucky and having the two lines intersect at an integer solution is small. Even if we limit ourselves to *x* and *y* ranging from 0 to 10, this means that there are $11^2=121$ possible integer valued points in this space such as (0,0), (0,3), and (10,10). In contrast, the set of all points, including non-integers, in this region includes all of the above points as well as (0,0.347) and (4.712, 7.891) among infinitely more. The result is that if you think of this as a target shooting, the probability of finding an integer solution by blind luck is $\frac{121}{\infty}\approx 0$.
 
-What we need to do is an algorithm around the simplex method to accomplish this. A basic and common and approach often used for solving integer variable linear programming problems is called branch and bound. We start with a solution that has presumably continuous valued variables. We then branch (create subproblems) off of this result and add bounds (additional constraints) to rule out the fractional value of that variable. \index{Integer programming!Branch and bound}  \index{Branch and bound|see{Integer programming!Branch and bound}}
+What we need is an algorithm around the Simplex method to accomplish this. A basic and common and approach often used for solving integer variable linear programming problems is called Branch and Bound. We start with a solution that has presumably continuous valued variables. We then branch (create subproblems) off of this result for variables that have fractional values but should be integers and add bounds (additional constraints) to rule out the fractional value of that variable. \index{Integer programming!Branch and bound}  \index{Branch and bound|see{Integer programming!Branch and bound}}
+
+Given the importance of integer programming and the impact on solving speed, we'll demonstrate the process by showing the steps graphically and in R.
 
 ### The LP Relaxation
 
@@ -217,7 +218,7 @@ $$
   \end{split}
 $$
 
-This is a problem that we **can** solve using linear programming so let's go ahead do it! Well, we already did so let's just review the results for what is now called the LP Relaxation because we are *relaxing* the integrality requirements.
+Unlike requiring the variables to be integer valued, this is a problem that we **can** solve using linear programming so let's go ahead do it! Well, we already did so let's just review the results for what is now called the LP Relaxation because we are *relaxing* the integrality requirements.
 
 ```{r SolveLPRelaxation}
 kbl (acme_res_lp, booktabs=T, digits=3,
@@ -232,7 +233,7 @@ knitr::include_graphics("images/BB04.PNG")
 
 ### Subproblem I
 
-Alas, this production plan from the LP Relaxation is not feasible from the perspective of the original integer problem because it produces *2.769* of product 1 and *1.827* of product 2. If both of these variables had been integer we could have declared victory and been satisfied that we had easily (*luckily?*) found the optimal solution to the original integer programming problem so quickly.
+Alas, this production plan from the LP Relaxation is not feasible from the perspective of the original integer problem because it produces *2.238* of product 1 and *2.698* of product 2. If both of these variables had been integer we could have declared victory and been satisfied that we had easily (*luckily?*) found the optimal solution to the original integer programming problem so quickly.
 
 Instead, we will need to proceed with the branch and bound process. Since both of the variables in the LP relaxation have fractional values, we need to start by choosing which variable to use for branching first. Algorithmic researchers would focus on how to best pick a branch but for our purposes to improve solution speed but it doesn't really matter for illustration so let's arbitrarily choose to branch on $x_1$.
 
@@ -244,7 +245,7 @@ $$
     \text{Max  }   & 2 x_1 + 3 x_2 \\
     \text{subject to } & 3 x_1 + 9 x_2 \leq 31 \\
                        & 8 x_1 + 3 x_2 \leq 26 \\
-                       & \textcolor{red} {x_1 \leq 2.0} \\
+                       & \textcolor{red} {x_1 \leq 2.0} &text{[Bound for Subproblem I]}\\
                        & x_1,  \; x_2 \geq 0  \\
   \end{aligned}
   \end{split}
@@ -278,11 +279,11 @@ knitr::include_graphics("images/BB05.PNG")
 knitr::include_graphics("images/BB06.PNG")
 ```
 
-Looking over the results, we now get an integer value for $x_1$ but not for $x_2$. We repeat the same process by creating subproblems from subproblem I by branching off of $x_2$.
+Looking over the results, we now get an integer value for $x_1$ but not for $x_2$. We repeat the same process by creating subproblems from Subproblem I by branching off of $x_2$.
 
 ### Subproblem III 
 
-Choosing which subproblem to examine next is one of the areas that large scale integer programming software and algorithms specialize and provide options. One way to think of it is to focus on searching down a branch and bound tree deeply or to search across the breadth of the tree. For this example, let's go deep (we'll return to subproblem II later.)\
+Choosing which subproblem to examine next is one of the areas that large scale integer programming software and algorithms specialize in and provide options. One way to think of it is to focus on searching down a branch and bound tree deeply or to search across the breadth of the tree. For this example, let's go deep which means jumping ahead to Subproblem III but we'll return to Subproblem II later.
 
 Since $x_2$ is now a non-integer solution, we will create branches with bounds (or constraints) on $x_2$ in the same manner as before. Subproblem III has an added constraint of $x_2 \le2.0$ and Subproblem IV has $x_2 \ge3.0$.\
 
@@ -293,16 +294,15 @@ LPSubIII <- LPRmod |>
   add_variable(Vx1, type = "continuous", lb = 0, ub = 2) |>
   add_variable(Vx2, type = "continuous", lb = 0, ub = 2) |>
   solve_model(with_ROI(solver = "glpk"))
-
-obj_val <- objective_value(LPSubIII )
-x1 <- get_solution (LPSubIII , 'Vx1')
-x2  <- get_solution (LPSubIII , 'Vx2')
-LPSubIII_res  <- cbind(x1,x2,obj_val)
 ```
 
-```{r}
+```{r, echo=FALSE}
+obj_val <- objective_value(LPSubIII )
+x1 <- get_solution (LPSubIII , 'Vx1')
+x2 <- get_solution (LPSubIII , 'Vx2')
+LPSubIII_res  <- cbind(x1,x2,obj_val)
 kbl (LPSubIII_res, booktabs=T, row.names=F,
-       caption="Production Plan based on Subproblem III") |>
+       caption="Integer Valued Production Plan based on Subproblem III") |>
   kable_styling(latex_options = "hold_position")
 ```
 
@@ -311,60 +311,55 @@ kbl (LPSubIII_res, booktabs=T, row.names=F,
 knitr::include_graphics("images/BB07.PNG")
 ```
 
-This results in integer values for both $x_1$ and $x_2$ so it is feasible with respect to integrality in addition to the production constraints. It does generate less profit than the LP relaxation. While it is feasible, it doesn't prove that it is optimal though. We need to explore the other potential branches.
+This results in integer values for both $x_1$ and $x_2$ so it is feasible with respect to integrality in addition to of course satisfying the production constraints. It does generate less profit than the LP relaxation. While it is feasible, it doesn't prove that it is optimal though. We need to explore the other potential branches.
 
 ### Subproblem IV
 
-Next, let's look at Subproblem IV. This problem adds the bound of $x_2\ge3.0$ to subproblem I. Notice that in the `MIPModel` implementation the variable for $x_1$ (`Vx1`) has an upperbound of 2, (`ub=2`) in order to implement the bounding constraint for subproblem I and the lower bound on $x_2$ of 3 in the variable declarations. Notice from the earlier graphical examples, there is no feasible region (blue area) that has  $x_2\geq3$. By visual inspection, we expect this to be an infeasible subproblem but let's confirm it.
+Next, let's look at Subproblem IV. This problem adds the bound of $x_2\ge3.0$ to Subproblem I. Notice that in the `MIPModel` implementation the variable for $x_1$ (`Vx1`) has an upperbound of 2, (`ub=2`) in order to implement the bounding constraint for Subproblem I and the lower bound on $x_2$ of 3 in the variable declarations. Notice from the earlier graphical examples, there is no feasible region (blue area) that has  $x_2\geq3$. By visual inspection, we expect this to be an infeasible subproblem but let's confirm it.
 
 ```{r SolveLPSubIV}
 LPSubIV <- add_variable(LPRmod, Vx1, type = "continuous", 
                         lb = 0, ub = 2) 
 LPSubIV <- add_variable(LPSubIV, Vx2, type = "continuous",lb = 3) 
 LPSubIV <-  solve_model(LPSubIV, with_ROI(solver = "glpk"))
-
-obj_val <- objective_value(LPSubIV )
-x1 <- get_solution (LPSubIV , 'Vx1')
-x2  <- get_solution (LPSubIV , 'Vx2')
-LPSubIV_res  <- cbind(x1,x2,obj_val)
 ```
 
-```{r}
+```{r, echo=FALSE}
+obj_val <- objective_value(LPSubIV )
+x1 <- get_solution (LPSubIV , 'Vx1')
+x2 <- get_solution (LPSubIV , 'Vx2')
+LPSubIV_res  <- cbind(x1,x2,obj_val)
 kbl (LPSubIV_res, booktabs=T, digits=3, row.names=F,
      caption=
 "Production Plan based on Subproblem IV") |>
   kable_styling(latex_options = "hold_position")
 ```
 
-
 ```{r Fig-Subproblem-IV, echo=FALSE, out.width="45%", fig.show='hold', fig.align='center', fig.cap="Subproblem IV"}
 knitr::include_graphics("images/BB08.PNG")
 knitr::include_graphics("images/BB09.PNG")
 ```
 
-At first glance, this looks okay but if you look more closely at the value of $x_2$, and the surfactant constraint, $x_1+3x_2=9\not\leq8.25$, there isn't enough enough surfactant to make three units of the second product. This means that by inspection we can see that this production plan is infeasible! What is going on here? We should check the status of the solver before examining the result.
+While $x_2$ is now integer valued, $x_1=1.333$ so it is no longer integer valued. We need to repeat the process of branching on $x_1$ again for Subproblems V and VI.
 
-```{r subproblem-IV-status}
-LPSubIV
-```
 ### Subproblem V
 
-The ompr's status value of this solved LP indicates that subproblem IV is *infeasible.* It still returned values that were used when it determined that the problem was infeasible which is why it gave the results in the previous table. From here on out, it is a good reminder to check the status. Note that it can be used as an in-line evaluated expression to simply say was it feasible or not? Yes, it was `r LPSubIV$status`. 
+For Subproblem V, use a constraint of $x_1\leq 1$. We'll continue with adjusting the bounds of the variables to do the branch and bound.  
 
 ```{r SolveLPSubV}
 LPSubV <- add_variable(LPRmod, Vx1, type = "continuous", 
                         lb = 0, ub = 1) 
 LPSubV <- add_variable(LPSubV, Vx2, type = "continuous",lb = 3) 
 LPSubV <-  solve_model(LPSubV, with_ROI(solver = "glpk"))
+```
 
+```{r, echo=FALSE}
 obj_val <- objective_value(LPSubV )
 x1 <- get_solution (LPSubV , 'Vx1')
 x2  <- get_solution (LPSubV , 'Vx2')
 LPSubV_res  <- cbind(x1,x2,obj_val)
 rownames(LPSubV_res) <- ""
-```
 
-```{r, echo=FALSE}
 kbl (LPSubV_res, booktabs=T, digits=3,
      caption=
 "Production Plan based on Subproblem V") |>
@@ -376,9 +371,11 @@ knitr::include_graphics("images/BB10.PNG")
 knitr::include_graphics("images/BB11.PNG")
 ```
 
+Unfortunately the solution to Subproblem V now has $x_2=3.111$ so we will need to repeat this branch and bound for Subproblems VII and VIII.  Before we do that, let's consider Subproblem VI.  
+
 ### Subproblem VI
 
-The ompr's status value of this solved LP indicates that subproblem IV is *infeasible.* It still returned values that were used when it determined that the problem was infeasible which is why it gave the results in the previous table. From here on out, it is a good reminder to check the status. Note that it can be used as an in-line evaluated expression to simply say was it feasible or not? Yes, it was `r LPSubIV$status`. 
+In this case, we our retaining our previous bounds from Subproblems I and IV while adding a bound for $x_1$.  The result is that our bounds on $x_1$ is  $2\leq x_1\leq 2$ or in other words, $x_1=2$ while $x_2\geq3$. A careful look at the previous figure suggest there is no feasible solution in this situation but let's solve the corresponding LP to confirm this.
 
 ```{r SolveLPSubVI}
 LPSubVI <- add_variable(LPRmod, Vx1, type = "continuous", 
@@ -386,11 +383,14 @@ LPSubVI <- add_variable(LPRmod, Vx1, type = "continuous",
 LPSubVI <- add_variable(LPSubVI, Vx2, type = "continuous",
                         lb = 3) 
 LPSubVI <- solve_model(LPSubVI, with_ROI(solver = "glpk"))
-
+LPSubVI$status
 obj_val <- objective_value(LPSubVI )
 x1 <- get_solution (LPSubVI , 'Vx1')
 x2 <- get_solution (LPSubVI , 'Vx2')
 LPSubVI_res  <- cbind(x1,x2,obj_val)
+```
+
+```{r, echo=FALSE}
 rownames(LPSubVI_res) <- ""
 kbl (LPSubVI_res, booktabs=T, digits=3,
      caption=
@@ -398,13 +398,15 @@ kbl (LPSubVI_res, booktabs=T, digits=3,
   kable_styling(latex_options = "hold_position")
 ```
 
-```{r Fig-Subproblem-VI, echo=FALSE, out.width="45%", fig.show='hold', fig.align='center', fig.cap="Subproblem VI"}
-knitr::include_graphics("images/BB12.PNG")
-```
+The `ompr` status value of this solved LP indicates that Subproblem VI is *infeasible.* It still returned values that were used when it determined that the problem was infeasible which is why it gave the results in the previous table. From here on out, it is a good reminder to check the status. Note that it can be used as an in-line evaluated expression to simply say was it feasible or not? Yes, it was `r LPSubVI$status`. 
 
 ### Subproblem VII
 
-The ompr's status value of this solved LP indicates that subproblem IV is *infeasible.* It still returned values that were used when it determined that the problem was infeasible which is why it gave the results in the previous table. From here on out, it is a good reminder to check the status. Note that it can be used as an in-line evaluated expression to simply say was it feasible or not? Yes, it was `r LPSubIV$status`. 
+Let's return to branching off of Subproblem V to examine Subproblems VII and VIII.
+
+```{r Fig-Subproblem-V-Excluding-Region, echo=FALSE, out.width="45%", fig.show='hold', fig.align='center', fig.cap="Subproblem VI"}
+knitr::include_graphics("images/BB12.PNG")
+```
 
 ```{r SolveLPSubVII}
 LPSubVII <- add_variable(LPRmod, Vx1, type = "continuous", 
@@ -412,66 +414,68 @@ LPSubVII <- add_variable(LPRmod, Vx1, type = "continuous",
 LPSubVII <- add_variable(LPSubVII, Vx2, type = "continuous", 
                          lb=0, ub=3) 
 LPSubVII <-  solve_model(LPSubVII, with_ROI(solver = "glpk"))
+```
 
+```{r, echo=FALSE}
 obj_val <- objective_value(LPSubVII )
 x1 <- get_solution (LPSubVII , 'Vx1')
 x2 <- get_solution (LPSubVII , 'Vx2')
 LPSubVII_res  <- cbind(x1,x2,obj_val)
 rownames(LPSubVII_res) <- ""
-```
-
-```{r, echo=FALSE}
 kbl (LPSubVII_res, booktabs=T, digits=3,
      caption=
-"Infeasible Production Plan based on Subproblem VI") |>
+"Integer Valued Production Plan based on Subproblem VII") |>
   kable_styling(latex_options = "hold_position")
 ```
-
 
 ```{r Fig-Subproblem-VII, echo=FALSE, out.width="45%", fig.show='hold', fig.align='center', fig.cap="Subproblem VII"}
 knitr::include_graphics("images/BB13.PNG")
 ```
 
+This solution is all integer valued and the objective function is better than our previous integer valued solution.  The result is that we have a new candidate optimal solution.  Since there are still branches to explore, we can't declare victory.
+
+### Subproblem VIII
+
+Setting a lower bound of $x_2\geq 4$ makes the problem infeasible.  We can see from the drawings of the feasible region that the feasible region does not extend to that height at all regardless of what $x_1$ is.  We can confirm by solving Subproblem VIII though since we don't generally have the luxury of looking at the feasible region.  Again, the results table highlights that care must be taken to not give credence to values returned from an infeasible solution.
 
 ```{r SolveLPSubVIII}
 LPSubVIII <- add_variable(LPRmod, Vx1, type = "continuous", lb = 1,) 
 LPSubVIII <- add_variable(LPSubVIII, Vx2, type = "continuous", lb = 4) 
 LPSubVIII <- solve_model(LPSubVIII, with_ROI(solver = "glpk"))
+LPSubVIII$status
+```
 
+```{r, echo=FALSE}
 obj_val <- objective_value(LPSubVIII )
 x1 <- get_solution (LPSubVIII , 'Vx1')
 x2 <- get_solution (LPSubVIII , 'Vx2')
 LPSubVIII_res  <- cbind(x1,x2,obj_val)
 rownames(LPSubVIII_res) <- ""
-```
-
-```{r, echo=FALSE}
 kbl (LPSubVIII_res, booktabs=T, digits=3,
      caption=
-"Infeasible Production Plan based on Subproblem VI") |>
+"Infeasible Production Plan based on Subproblem VIII") |>
   kable_styling(latex_options = "hold_position")
 ```
 
-
 ### Subproblem II
 
-Now, we have searched down all branches or subproblems except for subproblem II. Let's go back and do that problem. We do that by simply adding one new bound to the LP Relaxation. That is $x_1\ge 3.0$.
+Now, we have searched down all branches or subproblems descending from Subproblem I so we can return to Subproblem II. Let's go back and do that problem. We do that by simply adding one new bound to the LP Relaxation. That is $x_1\geq 3.0$.
 
 ```{r SolveLPSubII}
 LPSubII <- LPRmod |>
   add_variable(Vx1, type = "continuous", lb = 3) |>
   add_variable(Vx2, type = "continuous", lb = 0) |>
   solve_model(with_ROI(solver = "glpk"))
-
-obj_val <- objective_value(LPSubII )
-x1 <- get_solution (LPSubII , 'Vx1')
-x2  <- get_solution (LPSubII , 'Vx2')
-LPSubII_res  <- cbind(x1,x2,obj_val)
 cat("Status of Subproblem II:",LPSubII$status)
 rownames(LPSubII_res) <- ""
 ```
 
 ```{r, echo=FALSE}
+obj_val <- objective_value(LPSubII )
+x1 <- get_solution (LPSubII , 'Vx1')
+x2  <- get_solution (LPSubII , 'Vx2')
+LPSubII_res  <- cbind(x1,x2,obj_val)
+
 kbl (LPSubII_res, booktabs=T, digits=3,
      caption="Production Plan based on LP Subproblem II") |>
   kable_styling(latex_options = "hold_position")
@@ -483,9 +487,9 @@ knitr::include_graphics("images/BB12.PNG")
 knitr::include_graphics("images/BB13.PNG")
 ```
 
-At this point, our first reaction may be to breathe deeply and do the same branch and bound off of $x_2$. On the other hand, if we step back and take note that the objective function value is 9.75, while optimal for this subproblem, it is less than what we found from a feasible, fully integer-valued solution to subproblem III. Given that adding constraints can't improve an objective function value, we can cleverly trim all branches below subproblem II.
+At this point, our first reaction may be to breathe deeply and do the same branch and bound off of $x_2$. On the other hand, if we step back and take note that the objective function value is 10.0, while optimal for Subproblem II, it is less than what we found from a feasible, fully integer-valued solution to Subproblem III and the even better Subproblem VII. Given that adding constraints can't improve an objective function value, we can safely trim all branches below Subproblem II. 
 
-Given that we now no longer have any branches to explore, we can declare that we have found the optimal solution. The optimal solution can now be definitively stated to be what we found from Subproblem III.
+Given that we no longer have any branches to explore, we can declare that we have found the optimal solution. The optimal solution can now be definitively stated to be what we found from Subproblem VII.
 
 ```{r create-table-subproblem-VII, echo=FALSE}
 kbl (LPSubVII_res,
@@ -495,21 +499,21 @@ kbl (LPSubVII_res,
 
 Before this, we could only say that it was feasible solution and candidate to be optimal since no better integer feasible solution had been found.
 
-Let's summarize the results of the series of LPs solved.
+Let's summarize the results of the series of LPs solved. In this branch and bound tree 
 
 ```{r create-table-of-subproblem-results, echo=FALSE}
 LPSubVI_res <- c("-", "-", "Infeasible")
 LPSubVIII_res <- c("-", "-", "Infeasible")
         # Make adjustment for misinterpretation of status
-BandB <- rbind(format(round(acme_res_lp,  3), nsmall = 3), 
-               format(round(LPSubI_res,   3), nsmall = 3),
-               format(round(LPSubIII_res,  3), nsmall = 3),
-               format(round(LPSubIV_res,  3), nsmall = 3),
-               format(round(LPSubV_res,  3), nsmall = 3),
+BandB <- rbind(format(round(acme_res_lp, 3), nsmall = 3), 
+               format(round(LPSubI_res, 3), nsmall = 3),
+               format(round(LPSubIII_res, 3), nsmall = 3),
+               format(round(LPSubIV_res, 3), nsmall = 3),
+               format(round(LPSubV_res, 3), nsmall = 3),
                LPSubVI_res, 
-               format(round(LPSubVII_res,  3), nsmall = 3),
+               format(round(LPSubVII_res, 3), nsmall = 3),
                LPSubVIII_res, 
-               format(round(LPSubII_res,  3), nsmall = 3))
+               format(round(LPSubII_res, 3), nsmall = 3))
 
 rownames(BandB) <- list("LP Relaxation",  "Subproblem I", 
                         "Subproblem III", "Subproblem IV", 
@@ -525,7 +529,6 @@ The Branch and Bound process is often characterized as a tree.
 
 ```{r Fig-B-and-B-Summary, echo=FALSE, fig.align='center', fig.show='hold', out.width="4in", fig.cap="Branch and Bound Tree"}
 knitr::include_graphics("images/BB16.PNG")
-
 ```
 
 ## Computational Complexity
@@ -778,15 +781,15 @@ Lastly, I like to include a larger production volume to ensure that the constrai
 
 ### Linking Constraints with "Big M"
 
-The linking constraint as the following: $w_1 \leq M \cdot y_1$ The value $M$ is a big value that is so large that it does not prematurely limit the production for widget 1. Whatever value of $M$ is used, $w_1$ can never exceed that value.\
+The linking constraint as the following: $w_1 \leq M \cdot y_1$ The value $M$ is a big value that is so large that it does not prematurely limit the production for widget 1. Whatever value of $M$ is used, $w_1$ can never exceed that value.
 
-Our linking constraints force our new values to be 0 or 1. If $w_1 > 0$, then this constraint forces the associated $y_1$ to be equal to 1. If $w_1 = 0$, then this constraint allows $y_1$ to be either 0 or 1. However, our objective function will cause Solver to avoid paying a setup by setting $y_1=0$.\
+Our linking constraints force our new values to be 0 or 1. If $w_1 > 0$, then this constraint forces the associated $y_1$ to be equal to 1. If $w_1 = 0$, then this constraint allows $y_1$ to be either 0 or 1. However, our objective function will cause Solver to avoid paying a setup by setting $y_1=0$.
 
-It might be tempting to select a very large number such as a billion $10^{10}$ but picking excessively large numbers, can result in poor computational performance. As we've discussed large, real-world optimization problems are hard enough, let's not make it any harder. Albert Einstein once said "A model should be as simple as possible, but no simpler." Essentially, a value for M should be as small as possible, but no smaller.\
+It might be tempting to select a very large number such as a billion $10^{10}$ but picking excessively large numbers, can result in poor computational performance. As we've discussed large, real-world optimization problems are hard enough, let's not make it any harder. Albert Einstein once said "A model should be as simple as possible, but no simpler." Essentially, a value for M should be as small as possible, but no smaller.
 
-Since $M$ serves to impose an upper bound on $w_1$, this might suggest how we can use this information to pick an appropriate value for M and that we can do so for each product separately, using a separate value $M_i$ for each widget. \
+Since $M$ serves to impose an upper bound on $w_1$, this might suggest how we can use this information to pick an appropriate value for M and that we can do so for each product separately, using a separate value $M_i$ for each widget.
 
-Let's examine the constraints for the production plan in the situation gives all resources to the production of Widget 1 and nothing to Widget 2 and Widget 3.\
+Let's examine the constraints for the production plan in the situation gives all resources to the production of Widget 1 and nothing to Widget 2 and Widget 3.
 
 More formally, using the non-negative lower bounds on widget production, we can set $w_2=w_3 = 0$ and substitute into the constraints of the optimization model. The constraints now look like the following:
 
@@ -876,7 +879,7 @@ We could optionally delete the production capacity such as $w_1 \leq 500$ as the
 
 ### Fixed Charge Implementation
 
-Given that we have already created a model without the Big M constraints, we can simply add the constraints to the model. We'll skip the piping operator and just add the constraint directly to the previous model, `fc_base_model`.\
+Given that we have already created a model without the Big M constraints, we can simply add the constraints to the model. We'll skip the piping operator and just add the constraint directly to the previous model, `fc_base_model`.
 
 ```{r fixedcharge}
 fc_bigM_model <- add_constraint(fc_base_model, 
@@ -892,10 +895,9 @@ fc_bigM_res <- solve_model(fc_bigM_model,
 fc_bigM_res
 ```
 
-Our model was able to find an `r {fc_bigM_res$status}` solution with an objective value of `r {fc_bigM_res$objective_value}`. Our optimal production plan is shown below. As we can see, our model returned a production plan with only one model of widget being produced. \
+Our model was able to find an `r {fc_bigM_res$status}` solution with an objective value of `r {fc_bigM_res$objective_value}`. Our optimal production plan is shown below. As we can see, our model returned a production plan with only one model of widget being produced.
 
-Interesting---the objective function value has gone down significantly.\
-Let's look this over in more detail and compare it to the results that we had when we avoided paying for setups. \
+Interesting---the objective function value has gone down significantly. Let's look this over in more detail and compare it to the results that we had when we avoided paying for setups.
 
 ```{r reviewing-bigM-case-results, echo=FALSE}
 fc_base_summary_rev <- fc_base_summary
@@ -915,7 +917,7 @@ kbl (fc_combined_res, booktabs=T, escape=F,
   kable_styling(latex_options = "hold_position")
 ```
 
-Notice that the the high setup costs have caused us to focus our production planning decisions. Rather than spreading ourselves across three different product lines, we are producing as many of widget 1 as we can.\
+Notice that the the high setup costs have caused us to focus our production planning decisions. Rather than spreading ourselves across three different product lines, we are producing as many of widget 1 as we can.
 
 ## Model Results and Interpretation
 

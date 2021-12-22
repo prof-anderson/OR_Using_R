@@ -16,7 +16,7 @@ This Appendix provides a very brief introduction to the basics of R from the per
 
 ## Getting Started with R
 
-This Appendix helps a reader new to R quickly get started. I strongly recommend using RStudio. There are a lot of online resources for getting started with R, for example, *A Modern Dive* is a web book on using R and refreshing statistics that is very helpful with a corresponding traditional book [@IsmayIntroductionStatisticalData]. I also like books such as *R in a Nutshell* [@AdlerNutshell2012] or *R in Action* [@KabacoffActionDataAnalysis2011].
+This Appendix helps a reader new to R quickly get started. I strongly recommend using RStudio. I also like books such as *R in a Nutshell* [@AdlerNutshell2012] or *R in Action* [@KabacoffActionDataAnalysis2011].
 
 I usually find the best way for me to learn a new tool is to roll up my sleeves and jump right in. This book can be approached in that way - just be ready for a little more experimentation. This book is available on Github and the R Markdown files are available for use. Code fragments are shown quite liberally for demonstrating how things work. While this may be a bit verbose it is meant to enable readers to jump in at various points of the book.
 

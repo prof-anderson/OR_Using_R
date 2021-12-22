@@ -123,13 +123,13 @@ The `booktabs` option is used to provide the formatting commonly used in books a
 
 ```{r, eval=TRUE}
 kbl (cbind(as.matrix(GR),m),
-     caption="Default format using kbl without booktabs.",
+     caption="Default format using kable.",
      col.names=c("", "C1", "C2"), 
      row.names=F) |>
   kable_styling(latex_options = "hold_position")
 
 kbl (cbind(as.matrix(GR),m), booktabs=T,
-     caption="Kable (kbl) using booktabs.",
+     caption="Kable using booktabs.",
      col.names=c("", "C1", "C2"), 
      row.names=F)|>
   kable_styling(latex_options = "hold_position")

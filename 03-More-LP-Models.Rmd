@@ -1008,8 +1008,8 @@ Ants. Be sure to interpret the solution and discuss how it compares to the solut
 
 ::: {.exercise name="Convert Generalized LP to Standard Form"}
 
-Convert the generalized production planning LP, displayed on the right in formula 3.7, into standard form.\
-Hint: define a set of variables, $s_j$ to reflect these changes and add it to the following formulation.
+Convert the following generalized production planning LP into standard form.\
+**Hint:** define a set of variables, $s_j$ to reflect these changes and add it to the following formulation.
 
 
 $$
@@ -1025,10 +1025,8 @@ $$
 :::
 
 ::: {.exercise name="Staff Scheduling"}
-
-Happy Patient Hospital (HPH), has varying needs for nurses throughout the day.
-They expect the following numbers of nurses to be needed over the typical 24 hour period.
-Nurses work eight hour shifts, starting at each 4 hour time period specified in the table.
+The need for nurses has increased rapidly during the Covid pandemic.  Specific Hospital has determined their need for nurses throughout the day. They expect the following numbers of nurses to be needed over the typical 24 hour period.
+The nurses work eight hour shifts, starting at each 4 hour time period specified in the table.
 
 ```{r, nurse-scheduling}
 hph_needs <- matrix (c(50, 140, 260, 140, 100, 80), ncol=1, 
@@ -1043,11 +1041,11 @@ kbl (hph_needs, booktabs=T, caption="Staff Scheduling") |>
   kableExtra::kable_styling(latex_options = "hold_position")
 ```
 
-Create an appropriate optimization model to minimize the number of nurses needed to cover the requirements.
+a. Create an appropriate optimization model to minimize the number of nurses needed to cover the requirements.
+b. Implement and solve the model in R.
+c. Discuss and explain your solution.
 
-Implement and solve the model in R.
-
-Discuss and explain your solution.
+:::
 
 :::{.exercise name="Reallocating personnel at Nikola"}
 
