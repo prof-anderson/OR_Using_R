@@ -24,7 +24,7 @@ Up until this point, we assumed that there would be a single, clear objective fu
 
 ## Preemptive Goal Programming
 
-Let's begin with a simple example.  Recall the example of multiple optima from Chapter 2. We had adjusted the characteristics of *Cats* so that there were multiple optima with different mixes of *Ants* and *Cats*. The LP solver found an initial solution that only produced Ants and we had to force the LP solver to find the *Cats* oriented production. \index{Goal programming|(}  \index{Goal Programming!Preemptive Goal Programming} \index{Preemptive goal programming|see{ompr!get_solution}}
+Let's begin with a simple example.  Recall the example of multiple optima from Chapter 2. We had adjusted the characteristics of *Cats* so that there were multiple optima with different mixes of *Ants* and *Cats*. The LP solver found an initial solution that only produced Ants and we had to force the LP solver to find the *Cats* oriented production. \index{Goal programming|(}  \index{Goal programming!Preemptive Goal Programming} \index{Preemptive goal programming|see{Goal Programming!Preemptive goal programming}}
 
 $$
  \begin{split}

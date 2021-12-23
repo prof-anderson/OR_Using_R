@@ -407,7 +407,7 @@ kbl(comparative, booktabs=T,
   kable_styling(latex_options = "hold_position")
 ```
 
-As a summary, we can see on the table on the right a comparative between the baseline case and the new production plan with the blending constraint.
+The table clearly shows that the blending constraint had a major impact on our product mix.
 
 ## Allocation Models
 
@@ -440,7 +440,7 @@ $$
 
 Consider the case of Trevor's Trail Mix Company.
 Trevor creates a variety of custom trail mixes for health food fans.
-He can use a variety of ingredients displayed in the table on the right.
+He can use a variety of ingredients displayed in following table.
 
 |Characteristic |Mix1 |Mix2 |Mix3|Mix4 |Min Req.| 
 |--------------:|:---:|:---:|:--:|:---:|:------:|
@@ -943,7 +943,7 @@ Each manufacturing plant has a maximum amount that they can produce.
 For example, Chicago can produce at most 500.
 Similarly, the PDX region can handle at most 700 units.
 The cost to transport from Dallas to MSP is three times as high as the cost from Dallas to Atlanta.
-The table on the right displays the transportation cost between all the cities.
+The following table displays the transportation cost between all the cities.
 \vspace{12pt}
 
 | Node        | PDX    |  SEA   |  MSP   | ATL    | **Supply**  | 

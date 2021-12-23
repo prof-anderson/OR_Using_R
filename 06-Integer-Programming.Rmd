@@ -172,9 +172,9 @@ IPSolR <-  solve_model (IPmod, with_ROI(solver = "glpk"))
 obj_val <- objective_value(IPSolR)
 ```
 
-```{r Fig-LP-Feasible-Region, echo=FALSE, out.width="45%", fig.show='hold', fig.align='center', fig.cap="LP Region and 10 IP Feasible Solutions" }
-knitr::include_graphics( c ("images/BB01.PNG", 
-                            "images/BB03.PNG"))
+```{r Fig-LP-Feasible-Region, echo=FALSE, out.width="45%", fig.show='hold', fig.align='center', fig.cap="LP Region and 12 IP Feasible Solutions"  }
+
+knitr::include_graphics( c ("images/BB01.PNG", "images/BB03.PNG"))
 ```
 
 ```{r}
@@ -199,13 +199,13 @@ At its core, the basic problem is that the Simplex method \index{Simplex method}
 
 Another way to visualize integer solutions for general systems of inequalities is to think of the case with two equations and two unknowns (*x* and *y*). Finding a solution is the same as finding where two lines intersect in two dimensional space. The odds of getting lucky and having the two lines intersect at an integer solution is small. Even if we limit ourselves to *x* and *y* ranging from 0 to 10, this means that there are $11^2=121$ possible integer valued points in this space such as (0,0), (0,3), and (10,10). In contrast, the set of all points, including non-integers, in this region includes all of the above points as well as (0,0.347) and (4.712, 7.891) among infinitely more. The result is that if you think of this as a target shooting, the probability of finding an integer solution by blind luck is $\frac{121}{\infty}\approx 0$.
 
-What we need is an algorithm around the Simplex method to accomplish this. A basic and common and approach often used for solving integer variable linear programming problems is called Branch and Bound. We start with a solution that has presumably continuous valued variables. We then branch (create subproblems) off of this result for variables that have fractional values but should be integers and add bounds (additional constraints) to rule out the fractional value of that variable. \index{Integer programming!Branch and bound}  \index{Branch and bound|see{Integer programming!Branch and bound}}
+What we need is an algorithm around the Simplex method to accomplish this. A basic and common and approach often used for solving integer variable linear programming problems is called Branch and Bound. We start with a solution that has presumably continuous valued variables. We then branch (create subproblems) off of this result for variables that have fractional values but should be integers and add bounds (additional constraints) to rule out the fractional value of that variable. \index{Integer programming!Branch and bound|(}  \index{Branch and bound|see{Integer programming!Branch and bound}}
 
 Given the importance of integer programming and the impact on solving speed, we'll demonstrate the process by showing the steps graphically and in R.
 
 ### The LP Relaxation
 
-To solve this using branch and bound, we *relax* the integrality requirements and solve what is called the LP Relaxation. To do this, we simply remove the integrality requirement. \
+To solve this using branch and bound, we *relax* the integrality requirements and solve what is called the LP Relaxation. To do this, we simply remove the integrality requirement. 
 
 $$
  \begin{split}
@@ -499,7 +499,7 @@ kbl (LPSubVII_res,
 
 Before this, we could only say that it was feasible solution and candidate to be optimal since no better integer feasible solution had been found.
 
-Let's summarize the results of the series of LPs solved. In this branch and bound tree 
+Let's summarize the results of the series of LPs solved.
 
 ```{r create-table-of-subproblem-results, echo=FALSE}
 LPSubVI_res <- c("-", "-", "Infeasible")
@@ -525,11 +525,13 @@ kbl (BandB, booktabs=T,
   kable_styling(latex_options = "hold_position")
 ```
 
-The Branch and Bound process is often characterized as a tree.
+The Branch and Bound process is often characterized as a tree. Each subproblem is a circle and represents a separate linear program with its objective function value and decision variable values. The arcs or branches connecting to a new node show the added constraint.  
 
 ```{r Fig-B-and-B-Summary, echo=FALSE, fig.align='center', fig.show='hold', out.width="4in", fig.cap="Branch and Bound Tree"}
 knitr::include_graphics("images/BB16.PNG")
 ```
+
+\index{Integer programming!Branch and bound|)}
 
 ## Computational Complexity
 
