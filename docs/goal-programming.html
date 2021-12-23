@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 8 Goal Programming | Optimization Modeling Using R</title>
+  <meta name="description" content="This book introduces optimization using R." />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 8 Goal Programming | Optimization Modeling Using R" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This book introduces optimization using R." />
+  <meta name="github-repo" content="prof-anderson/OR_Using_R" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 8 Goal Programming | Optimization Modeling Using R" />
+  
+  <meta name="twitter:description" content="This book introduces optimization using R." />
+  
+
+<meta name="author" content="Timothy R. Anderson" />
+
+
+<meta name="date" content="2021-12-22" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="more-integer-programming-models.html"/>
+<link rel="next" href="a-very-brief-introduction-to-r.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Optimization Modeling Using R</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#intended-audience"><i class="fa fa-check"></i>Intended Audience</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#features-of-this-book"><i class="fa fa-check"></i>Features of this Book</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#instructor-notes"><i class="fa fa-check"></i>Instructor Notes</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#acknowldegements"><i class="fa fa-check"></i>Acknowldegements</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="about-the-author.html"><a href="about-the-author.html"><i class="fa fa-check"></i>About the Author</a></li>
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#what-is-operations-research"><i class="fa fa-check"></i><b>1.1</b> What is Operations Research</a></li>
+<li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#purpose-of-this-book"><i class="fa fa-check"></i><b>1.2</b> Purpose of this Book</a></li>
+<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#range-of-operations-research-techniques"><i class="fa fa-check"></i><b>1.3</b> Range of Operations Research Techniques</a></li>
+<li class="chapter" data-level="1.4" data-path="introduction.html"><a href="introduction.html#relationship-between-operations-research-and-analytics"><i class="fa fa-check"></i><b>1.4</b> Relationship between Operations Research and Analytics</a></li>
+<li class="chapter" data-level="1.5" data-path="introduction.html"><a href="introduction.html#importance-of-optimization"><i class="fa fa-check"></i><b>1.5</b> Importance of Optimization</a></li>
+<li class="chapter" data-level="1.6" data-path="introduction.html"><a href="introduction.html#why-r"><i class="fa fa-check"></i><b>1.6</b> Why R?</a></li>
+<li class="chapter" data-level="1.7" data-path="introduction.html"><a href="introduction.html#conventions-used-in-this-book"><i class="fa fa-check"></i><b>1.7</b> Conventions Used in this Book</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html"><i class="fa fa-check"></i><b>2</b> Introduction to Linear Programming</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#what-is-linear-programming"><i class="fa fa-check"></i><b>2.1</b> What is Linear Programming</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#two-variable-base-case"><i class="fa fa-check"></i><b>2.2</b> Two Variable Base Case</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#graphically-solving-a-linear-program"><i class="fa fa-check"></i><b>2.3</b> Graphically Solving a Linear Program</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#implementing-and-solving-with-ompr"><i class="fa fa-check"></i><b>2.4</b> Implementing and Solving with <code>ompr</code></a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#preparing-to-implement-the-linear-program"><i class="fa fa-check"></i><b>2.4.1</b> Preparing to Implement the Linear Program</a></li>
+<li class="chapter" data-level="2.4.2" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#implementing-the-base-case-with-piping"><i class="fa fa-check"></i><b>2.4.2</b> Implementing the Base Case with Piping</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#adding-a-third-product-variable"><i class="fa fa-check"></i><b>2.5</b> Adding a Third Product (Variable)</a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#three-variable-base-case-formulation"><i class="fa fa-check"></i><b>2.5.1</b> Three Variable Base Case Formulation</a></li>
+<li class="chapter" data-level="2.5.2" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#three-variable-base-case-implementation"><i class="fa fa-check"></i><b>2.5.2</b> Three Variable Base Case Implementation</a></li>
+<li class="chapter" data-level="2.5.3" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#three-variable-case-results-and-interpretation"><i class="fa fa-check"></i><b>2.5.3</b> Three Variable Case Results and Interpretation</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#linear-programming-special-cases"><i class="fa fa-check"></i><b>2.6</b> Linear Programming Special Cases</a>
+<ul>
+<li class="chapter" data-level="2.6.1" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#case-1-no-feasible-solution"><i class="fa fa-check"></i><b>2.6.1</b> Case 1: No Feasible Solution</a></li>
+<li class="chapter" data-level="2.6.2" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#case-2-multiple-optima"><i class="fa fa-check"></i><b>2.6.2</b> Case 2: Multiple Optima</a></li>
+<li class="chapter" data-level="2.6.3" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#case-3-redundant-constraint"><i class="fa fa-check"></i><b>2.6.3</b> Case 3: Redundant Constraint</a></li>
+<li class="chapter" data-level="2.6.4" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#case-4-unbounded-solution"><i class="fa fa-check"></i><b>2.6.4</b> Case 4: Unbounded Solution</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#abstracting-the-production-planning-model"><i class="fa fa-check"></i><b>2.7</b> Abstracting the Production Planning Model</a></li>
+<li class="chapter" data-level="2.8" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#methods-of-solving-linear-programs"><i class="fa fa-check"></i><b>2.8</b> Methods of Solving Linear Programs</a></li>
+<li class="chapter" data-level="2.9" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#exercises"><i class="fa fa-check"></i><b>2.9</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html"><i class="fa fa-check"></i><b>3</b> More Linear Programming Models</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#types-of-lp-models"><i class="fa fa-check"></i><b>3.1</b> Types of LP Models</a></li>
+<li class="chapter" data-level="3.2" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#the-algebraic-model"><i class="fa fa-check"></i><b>3.2</b> The Algebraic Model</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#tips-and-conventions-for-algebraic-models"><i class="fa fa-check"></i><b>3.2.1</b> Tips and Conventions for Algebraic Models</a></li>
+<li class="chapter" data-level="3.2.2" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#building-the-generalized-model-in-r"><i class="fa fa-check"></i><b>3.2.2</b> Building the Generalized Model in R</a></li>
+<li class="chapter" data-level="3.2.3" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#examining-the-results"><i class="fa fa-check"></i><b>3.2.3</b> Examining the Results</a></li>
+<li class="chapter" data-level="3.2.4" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#changing-the-model"><i class="fa fa-check"></i><b>3.2.4</b> Changing the Model</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#common-linear-programming-applications"><i class="fa fa-check"></i><b>3.3</b> Common Linear Programming Applications</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#blending-problems"><i class="fa fa-check"></i><b>3.3.1</b> Blending Problems</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#allocation-models"><i class="fa fa-check"></i><b>3.4</b> Allocation Models</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#covering-models"><i class="fa fa-check"></i><b>3.4.1</b> Covering Models</a></li>
+<li class="chapter" data-level="3.4.2" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#transportation-models"><i class="fa fa-check"></i><b>3.4.2</b> Transportation Models</a></li>
+<li class="chapter" data-level="3.4.3" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#transshipment-models"><i class="fa fa-check"></i><b>3.4.3</b> Transshipment Models</a></li>
+<li class="chapter" data-level="3.4.4" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#production-and-inventory-planning"><i class="fa fa-check"></i><b>3.4.4</b> Production and Inventory Planning</a></li>
+<li class="chapter" data-level="3.4.5" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#standard-form"><i class="fa fa-check"></i><b>3.4.5</b> Standard Form</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#vector-and-matrix-forms-of-lps"><i class="fa fa-check"></i><b>3.5</b> Vector and Matrix Forms of LPs</a></li>
+<li class="chapter" data-level="3.6" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#exercises-1"><i class="fa fa-check"></i><b>3.6</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html"><i class="fa fa-check"></i><b>4</b> Sensitivity Analysis</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#base-case"><i class="fa fa-check"></i><b>4.1</b> Base Case</a></li>
+<li class="chapter" data-level="4.2" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#shadow-prices"><i class="fa fa-check"></i><b>4.2</b> Shadow Prices</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#extraction-and-interpretation"><i class="fa fa-check"></i><b>4.2.1</b> Extraction and Interpretation</a></li>
+<li class="chapter" data-level="4.2.2" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#example-of-adding-an-hour-to-assembly"><i class="fa fa-check"></i><b>4.2.2</b> Example of Adding an Hour to Assembly</a></li>
+<li class="chapter" data-level="4.2.3" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#shadow-prices-of-underutilized-resources"><i class="fa fa-check"></i><b>4.2.3</b> Shadow Prices of Underutilized Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#reduced-costs-of-variables"><i class="fa fa-check"></i><b>4.3</b> Reduced Costs of Variables</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#reduced-cost-of-ants"><i class="fa fa-check"></i><b>4.3.1</b> Reduced Cost of Ants</a></li>
+<li class="chapter" data-level="4.3.2" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#reduced-price-of-bats"><i class="fa fa-check"></i><b>4.3.2</b> Reduced Price of Bats</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#using-sensitivity-analysis-to-evaluate-a-new-product"><i class="fa fa-check"></i><b>4.4</b> Using Sensitivity Analysis to Evaluate a New Product</a></li>
+<li class="chapter" data-level="4.5" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#exercises-2"><i class="fa fa-check"></i><b>4.5</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html"><i class="fa fa-check"></i><b>5</b> Data Envelopment Analysis</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#introduction-1"><i class="fa fa-check"></i><b>5.1</b> Introduction</a></li>
+<li class="chapter" data-level="5.2" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#creating-the-data"><i class="fa fa-check"></i><b>5.2</b> Creating the Data</a></li>
+<li class="chapter" data-level="5.3" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#graphical-analysis"><i class="fa fa-check"></i><b>5.3</b> Graphical Analysis</a></li>
+<li class="chapter" data-level="5.4" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#the-linear-programs-for-dea"><i class="fa fa-check"></i><b>5.4</b> The Linear Programs for DEA</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#an-explicit-linear-program-for-dea"><i class="fa fa-check"></i><b>5.4.1</b> An Explicit Linear Program for DEA</a></li>
+<li class="chapter" data-level="5.4.2" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#a-generalized-linear-program-for-dea"><i class="fa fa-check"></i><b>5.4.2</b> A Generalized Linear Program for DEA</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#creating-the-lp---the-algebraic-approach"><i class="fa fa-check"></i><b>5.5</b> Creating the LP - The Algebraic Approach</a></li>
+<li class="chapter" data-level="5.6" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#returns-to-scale"><i class="fa fa-check"></i><b>5.6</b> Returns to Scale</a></li>
+<li class="chapter" data-level="5.7" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#multiple-inputs-and-multiple-outputs"><i class="fa fa-check"></i><b>5.7</b> Multiple Inputs and Multiple Outputs</a></li>
+<li class="chapter" data-level="5.8" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#extracting-multiplier-weights-from-sensitivity-analysis"><i class="fa fa-check"></i><b>5.8</b> Extracting Multiplier Weights from Sensitivity Analysis</a></li>
+<li class="chapter" data-level="5.9" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#slack-maximization"><i class="fa fa-check"></i><b>5.9</b> Slack Maximization</a></li>
+<li class="chapter" data-level="5.10" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#dea-packages"><i class="fa fa-check"></i><b>5.10</b> DEA Packages</a></li>
+<li class="chapter" data-level="5.11" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#dea-model-building"><i class="fa fa-check"></i><b>5.11</b> DEA Model Building</a>
+<ul>
+<li class="chapter" data-level="5.11.1" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#selection-of-inputs-and-outputs"><i class="fa fa-check"></i><b>5.11.1</b> Selection of Inputs and Outputs</a></li>
+<li class="chapter" data-level="5.11.2" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#model-choices"><i class="fa fa-check"></i><b>5.11.2</b> Model Choices</a></li>
+<li class="chapter" data-level="5.11.3" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#application-area-expertise"><i class="fa fa-check"></i><b>5.11.3</b> Application Area Expertise</a></li>
+</ul></li>
+<li class="chapter" data-level="5.12" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#further-reading"><i class="fa fa-check"></i><b>5.12</b> Further Reading</a></li>
+<li class="chapter" data-level="5.13" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#exercises-3"><i class="fa fa-check"></i><b>5.13</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html"><i class="fa fa-check"></i><b>6</b> Mixed Integer Optimization</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#example-of-minor-integrality-impact"><i class="fa fa-check"></i><b>6.1</b> Example of Minor Integrality Impact</a></li>
+<li class="chapter" data-level="6.2" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#example-of-major-integality-impact"><i class="fa fa-check"></i><b>6.2</b> Example of Major Integality Impact</a></li>
+<li class="chapter" data-level="6.3" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#the-branch-and-bound-algorithm"><i class="fa fa-check"></i><b>6.3</b> The Branch and Bound Algorithm</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#the-lp-relaxation"><i class="fa fa-check"></i><b>6.3.1</b> The LP Relaxation</a></li>
+<li class="chapter" data-level="6.3.2" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-i"><i class="fa fa-check"></i><b>6.3.2</b> Subproblem I</a></li>
+<li class="chapter" data-level="6.3.3" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-iii"><i class="fa fa-check"></i><b>6.3.3</b> Subproblem III</a></li>
+<li class="chapter" data-level="6.3.4" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-iv"><i class="fa fa-check"></i><b>6.3.4</b> Subproblem IV</a></li>
+<li class="chapter" data-level="6.3.5" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-v"><i class="fa fa-check"></i><b>6.3.5</b> Subproblem V</a></li>
+<li class="chapter" data-level="6.3.6" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-vi"><i class="fa fa-check"></i><b>6.3.6</b> Subproblem VI</a></li>
+<li class="chapter" data-level="6.3.7" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-vii"><i class="fa fa-check"></i><b>6.3.7</b> Subproblem VII</a></li>
+<li class="chapter" data-level="6.3.8" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-viii"><i class="fa fa-check"></i><b>6.3.8</b> Subproblem VIII</a></li>
+<li class="chapter" data-level="6.3.9" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-ii"><i class="fa fa-check"></i><b>6.3.9</b> Subproblem II</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#computational-complexity"><i class="fa fa-check"></i><b>6.4</b> Computational Complexity</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#full-enumeration"><i class="fa fa-check"></i><b>6.4.1</b> Full Enumeration</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#binary-variables-and-logical-relations"><i class="fa fa-check"></i><b>6.5</b> Binary Variables and Logical Relations</a></li>
+<li class="chapter" data-level="6.6" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#fixed-charge-models"><i class="fa fa-check"></i><b>6.6</b> Fixed Charge Models</a>
+<ul>
+<li class="chapter" data-level="6.6.1" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#fixed-charge-example-introduction"><i class="fa fa-check"></i><b>6.6.1</b> Fixed Charge Example-Introduction</a></li>
+<li class="chapter" data-level="6.6.2" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#linking-constraints-with-big-m"><i class="fa fa-check"></i><b>6.6.2</b> Linking Constraints with “Big M”</a></li>
+<li class="chapter" data-level="6.6.3" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#fixed-charge-implementation"><i class="fa fa-check"></i><b>6.6.3</b> Fixed Charge Implementation</a></li>
+</ul></li>
+<li class="chapter" data-level="6.7" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#model-results-and-interpretation"><i class="fa fa-check"></i><b>6.7</b> Model Results and Interpretation</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html"><i class="fa fa-check"></i><b>7</b> More Integer Programming Models</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#overview"><i class="fa fa-check"></i><b>7.1</b> Overview</a></li>
+<li class="chapter" data-level="7.2" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#revisiting-the-warehouse-location-problem"><i class="fa fa-check"></i><b>7.2</b> Revisiting the Warehouse Location Problem</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#implementing-the-warehouse-model"><i class="fa fa-check"></i><b>7.2.1</b> Implementing the Warehouse Model</a></li>
+<li class="chapter" data-level="7.2.2" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#solving-the-warehouse-location-problem"><i class="fa fa-check"></i><b>7.2.2</b> Solving the Warehouse Location Problem</a></li>
+<li class="chapter" data-level="7.2.3" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#warehouse-discussion"><i class="fa fa-check"></i><b>7.2.3</b> Warehouse Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#solving-mips-with-different-solvers"><i class="fa fa-check"></i><b>7.3</b> Solving MIPs with Different Solvers</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#performance-of-glpk"><i class="fa fa-check"></i><b>7.3.1</b> Performance of <code>glpk</code></a></li>
+<li class="chapter" data-level="7.3.2" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#performance-of-symphony"><i class="fa fa-check"></i><b>7.3.2</b> Performance of <code>symphony</code></a></li>
+<li class="chapter" data-level="7.3.3" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#performance-of-lpsolve"><i class="fa fa-check"></i><b>7.3.3</b> Performance of <code>lpsolve</code></a></li>
+<li class="chapter" data-level="7.3.4" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#performance-of-gurobi"><i class="fa fa-check"></i><b>7.3.4</b> Performance of <code>gurobi</code></a></li>
+<li class="chapter" data-level="7.3.5" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#comparing-results-across-solvers"><i class="fa fa-check"></i><b>7.3.5</b> Comparing Results across Solvers</a></li>
+<li class="chapter" data-level="7.3.6" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#popularity-of-lp-solvers"><i class="fa fa-check"></i><b>7.3.6</b> Popularity of LP Solvers</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#solving-sudoku-puzzles-using-optimization"><i class="fa fa-check"></i><b>7.4</b> Solving Sudoku Puzzles using Optimization</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#introduction-to-sudoku-and-optimization"><i class="fa fa-check"></i><b>7.4.1</b> Introduction to Sudoku and Optimization</a></li>
+<li class="chapter" data-level="7.4.2" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#formulating-the-sudoku-problem"><i class="fa fa-check"></i><b>7.4.2</b> Formulating the Sudoku Problem</a></li>
+<li class="chapter" data-level="7.4.3" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#implementing-sudoku-in-ompr"><i class="fa fa-check"></i><b>7.4.3</b> Implementing Sudoku in ompr</a></li>
+<li class="chapter" data-level="7.4.4" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#sudoku-discussion"><i class="fa fa-check"></i><b>7.4.4</b> Sudoku Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#exercises-4"><i class="fa fa-check"></i><b>7.5</b> Exercises</a></li>
+<li class="chapter" data-level="7.6" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#production-planning-over-time"><i class="fa fa-check"></i><b>7.6</b> Production Planning over Time</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#implementing-the-model-1"><i class="fa fa-check"></i><b>7.6.1</b> Implementing the Model</a></li>
+</ul></li>
+<li class="chapter" data-level="7.7" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#additional-exercises"><i class="fa fa-check"></i><b>7.7</b> Additional Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="goal-programming.html"><a href="goal-programming.html"><i class="fa fa-check"></i><b>8</b> Goal Programming</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="goal-programming.html"><a href="goal-programming.html#introduction-2"><i class="fa fa-check"></i><b>8.1</b> Introduction</a></li>
+<li class="chapter" data-level="8.2" data-path="goal-programming.html"><a href="goal-programming.html#preemptive-goal-programming"><i class="fa fa-check"></i><b>8.2</b> Preemptive Goal Programming</a></li>
+<li class="chapter" data-level="8.3" data-path="goal-programming.html"><a href="goal-programming.html#policies-for-houselessness"><i class="fa fa-check"></i><b>8.3</b> Policies for Houselessness</a></li>
+<li class="chapter" data-level="8.4" data-path="goal-programming.html"><a href="goal-programming.html#mass-mailings"><i class="fa fa-check"></i><b>8.4</b> Mass Mailings</a>
+<ul>
+<li class="chapter" data-level="8.4.1" data-path="goal-programming.html"><a href="goal-programming.html#formulating-the-state-mailing-model"><i class="fa fa-check"></i><b>8.4.1</b> Formulating the State Mailing Model</a></li>
+<li class="chapter" data-level="8.4.2" data-path="goal-programming.html"><a href="goal-programming.html#implementing-the-state-mailing-model"><i class="fa fa-check"></i><b>8.4.2</b> Implementing the State Mailing Model</a></li>
+<li class="chapter" data-level="8.4.3" data-path="goal-programming.html"><a href="goal-programming.html#frontloading-the-work"><i class="fa fa-check"></i><b>8.4.3</b> Frontloading the Work</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="goal-programming.html"><a href="goal-programming.html#exercises-5"><i class="fa fa-check"></i><b>8.5</b> Exercises</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="a-very-brief-introduction-to-r.html"><a href="a-very-brief-introduction-to-r.html"><i class="fa fa-check"></i><b>A</b> A Very Brief Introduction to R</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="a-very-brief-introduction-to-r.html"><a href="a-very-brief-introduction-to-r.html#purpose"><i class="fa fa-check"></i><b>A.1</b> Purpose</a></li>
+<li class="chapter" data-level="A.2" data-path="a-very-brief-introduction-to-r.html"><a href="a-very-brief-introduction-to-r.html#getting-started-with-r"><i class="fa fa-check"></i><b>A.2</b> Getting Started with R</a></li>
+<li class="chapter" data-level="A.3" data-path="a-very-brief-introduction-to-r.html"><a href="a-very-brief-introduction-to-r.html#exercises-6"><i class="fa fa-check"></i><b>A.3</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html"><i class="fa fa-check"></i><b>B</b> Introduction to Math Notation</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#purpose-1"><i class="fa fa-check"></i><b>B.1</b> Purpose</a></li>
+<li class="chapter" data-level="B.2" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#basic-summation-notation"><i class="fa fa-check"></i><b>B.2</b> Basic Summation Notation</a></li>
+<li class="chapter" data-level="B.3" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#using-latex-in-rmarkdown"><i class="fa fa-check"></i><b>B.3</b> Using LaTeX in RMarkdown</a></li>
+<li class="chapter" data-level="B.4" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#inline-notation"><i class="fa fa-check"></i><b>B.4</b> Inline Notation</a></li>
+<li class="chapter" data-level="B.5" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#sums"><i class="fa fa-check"></i><b>B.5</b> Sums</a></li>
+<li class="chapter" data-level="B.6" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#delimiters"><i class="fa fa-check"></i><b>B.6</b> Delimiters</a></li>
+<li class="chapter" data-level="B.7" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#summary-of-mathematical-notations"><i class="fa fa-check"></i><b>B.7</b> Summary of Mathematical Notations</a></li>
+<li class="chapter" data-level="B.8" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#sequences-and-summation-notation"><i class="fa fa-check"></i><b>B.8</b> Sequences and Summation Notation</a></li>
+<li class="chapter" data-level="B.9" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#applications-of-summation"><i class="fa fa-check"></i><b>B.9</b> Applications of Summation</a></li>
+<li class="chapter" data-level="B.10" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#double-summation"><i class="fa fa-check"></i><b>B.10</b> Double Summation</a></li>
+<li class="chapter" data-level="B.11" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#applications-of-double-summation"><i class="fa fa-check"></i><b>B.11</b> Applications of Double Summation</a></li>
+<li class="chapter" data-level="B.12" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#exercises-7"><i class="fa fa-check"></i><b>B.12</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="troubleshooting.html"><a href="troubleshooting.html"><i class="fa fa-check"></i><b>C</b> Troubleshooting</a>
+<ul>
+<li class="chapter" data-level="C.1" data-path="troubleshooting.html"><a href="troubleshooting.html#overview-1"><i class="fa fa-check"></i><b>C.1</b> Overview</a></li>
+<li class="chapter" data-level="C.2" data-path="troubleshooting.html"><a href="troubleshooting.html#model-building"><i class="fa fa-check"></i><b>C.2</b> Model Building</a>
+<ul>
+<li class="chapter" data-level="C.2.1" data-path="troubleshooting.html"><a href="troubleshooting.html#define-and-formulate-before-implementing"><i class="fa fa-check"></i><b>C.2.1</b> Define and Formulate before Implementing</a></li>
+<li class="chapter" data-level="C.2.2" data-path="troubleshooting.html"><a href="troubleshooting.html#failing-to-look-for-past-optimization-models"><i class="fa fa-check"></i><b>C.2.2</b> Failing to Look for Past Optimization Models</a></li>
+<li class="chapter" data-level="C.2.3" data-path="troubleshooting.html"><a href="troubleshooting.html#misrendering-of-pdf"><i class="fa fa-check"></i><b>C.2.3</b> Misrendering of PDF</a></li>
+<li class="chapter" data-level="C.2.4" data-path="troubleshooting.html"><a href="troubleshooting.html#blank-lines-in-latex"><i class="fa fa-check"></i><b>C.2.4</b> Blank Lines in LaTeX</a></li>
+<li class="chapter" data-level="C.2.5" data-path="troubleshooting.html"><a href="troubleshooting.html#problems-with-pdf-creation"><i class="fa fa-check"></i><b>C.2.5</b> Problems with PDF Creation</a></li>
+</ul></li>
+<li class="chapter" data-level="C.3" data-path="troubleshooting.html"><a href="troubleshooting.html#implementation-troubleshooting"><i class="fa fa-check"></i><b>C.3</b> Implementation Troubleshooting</a>
+<ul>
+<li class="chapter" data-level="C.3.1" data-path="troubleshooting.html"><a href="troubleshooting.html#errors-in-a-piped-model"><i class="fa fa-check"></i><b>C.3.1</b> Errors in a Piped Model</a></li>
+<li class="chapter" data-level="C.3.2" data-path="troubleshooting.html"><a href="troubleshooting.html#undefined-object-in-ompr"><i class="fa fa-check"></i><b>C.3.2</b> Undefined Object in <code>ompr</code></a></li>
+<li class="chapter" data-level="C.3.3" data-path="troubleshooting.html"><a href="troubleshooting.html#unexpected-symbol-in-ompr"><i class="fa fa-check"></i><b>C.3.3</b> Unexpected Symbol in <code>ompr</code></a></li>
+<li class="chapter" data-level="C.3.4" data-path="troubleshooting.html"><a href="troubleshooting.html#name-conflicts-between-r-and-ompr"><i class="fa fa-check"></i><b>C.3.4</b> Name Conflicts between R and <code>ompr</code></a></li>
+<li class="chapter" data-level="C.3.5" data-path="troubleshooting.html"><a href="troubleshooting.html#blindly-reusing-code"><i class="fa fa-check"></i><b>C.3.5</b> Blindly Reusing Code</a></li>
+</ul></li>
+<li class="chapter" data-level="C.4" data-path="troubleshooting.html"><a href="troubleshooting.html#general-debugging-tips"><i class="fa fa-check"></i><b>C.4</b> General Debugging Tips</a></li>
+<li class="chapter" data-level="C.5" data-path="troubleshooting.html"><a href="troubleshooting.html#getting-help"><i class="fa fa-check"></i><b>C.5</b> Getting Help</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="making-good-tables.html"><a href="making-good-tables.html"><i class="fa fa-check"></i><b>D</b> Making Good Tables</a>
+<ul>
+<li class="chapter" data-level="D.1" data-path="making-good-tables.html"><a href="making-good-tables.html#importance-of-tables-in-modeling"><i class="fa fa-check"></i><b>D.1</b> Importance of Tables in Modeling</a></li>
+<li class="chapter" data-level="D.2" data-path="making-good-tables.html"><a href="making-good-tables.html#kable-vs.-kbl"><i class="fa fa-check"></i><b>D.2</b> Kable vs. Kbl</a></li>
+<li class="chapter" data-level="D.3" data-path="making-good-tables.html"><a href="making-good-tables.html#table-footnotes-with-kable"><i class="fa fa-check"></i><b>D.3</b> Table Footnotes with Kable</a></li>
+<li class="chapter" data-level="D.4" data-path="making-good-tables.html"><a href="making-good-tables.html#setting-row-and-column-names-in-kable"><i class="fa fa-check"></i><b>D.4</b> Setting Row and Column Names in Kable</a></li>
+<li class="chapter" data-level="D.5" data-path="making-good-tables.html"><a href="making-good-tables.html#booktabs-vs.-default"><i class="fa fa-check"></i><b>D.5</b> Booktabs vs. Default</a></li>
+<li class="chapter" data-level="D.6" data-path="making-good-tables.html"><a href="making-good-tables.html#using-latex-in-kable-column-names"><i class="fa fa-check"></i><b>D.6</b> Using LaTeX in Kable Column Names</a></li>
+<li class="chapter" data-level="D.7" data-path="making-good-tables.html"><a href="making-good-tables.html#fitting-tables-to-page-width"><i class="fa fa-check"></i><b>D.7</b> Fitting Tables to Page Width</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Optimization Modeling Using R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="goal-programming" class="section level1" number="8">
+<h1><span class="header-section-number">Chapter 8</span> Goal Programming</h1>
+<div id="introduction-2" class="section level2" number="8.1">
+<h2><span class="header-section-number">8.1</span> Introduction</h2>
+<p>Up until this point, we assumed that there would be a single, clear objective function. Often we have more complex situations where there are multiple conflicting objectives. In our earlier production planning case, we might have additional objectives besides maximizing profit such as minimizing environmental waste or longer term strategic positioning. In the case of our capital budgeting problem, we can envision a range of additional considerations beyond simple expected net present value maximization. In the warehouse site selection problem from Chapter 7, we can envision other considerations such as political placement in certain states, being prepared for future varying growth levels in different regions, and other issues which could further influence a simple minimum cost solution.</p>
+</div>
+<div id="preemptive-goal-programming" class="section level2" number="8.2">
+<h2><span class="header-section-number">8.2</span> Preemptive Goal Programming</h2>
+<p>Let’s begin with a simple example. Recall the example of multiple optima from Chapter 2. We had adjusted the characteristics of <em>Cats</em> so that there were multiple optima with different mixes of <em>Ants</em> and <em>Cats</em>. The LP solver found an initial solution that only produced Ants and we had to force the LP solver to find the <em>Cats</em> oriented production.   </p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{Max  }  &amp; 7\cdot Ants +12 \cdot Bats +\textcolor{red}{14}\cdot Cats \\
+    \text{s.t.: } &amp; 1\cdot Ants + 4 \cdot Bats  +\textcolor{red}{2}\cdot Cats \leq 800 \\
+                  &amp; 3\cdot Ants + 6 \cdot Bats  +\textcolor{red}{6}\cdot Cats \leq 900 \\
+                  &amp; 2\cdot Ants + 2 \cdot Bats  +\textcolor{red}{4}\cdot Cats \leq 480 \\
+                  &amp; 2\cdot Ants + 10 \cdot Bats  +\textcolor{red}{4}\cdot Cats \leq 1200 \\
+                  &amp; Ants, \; Bats, \; Cats \geq 0  
+\end{aligned}
+\end{split}
+\]</span></p>
+<p>Let’s reframe this problem where the company’s primary goal is to maximize profit but the Cat product is more prestigious than the Ant product and emphasizing it will benefit the company in long term market positioning. The company doesn’t want to hurt profit but holding everything else equal, wants to then maximize Cat production.</p>
+<p>The first step is to make the primary goal more direct. The objective function is now a fourth variable, <em>Profit</em> that is a direct function of the other three variables. The following formulation would then be considered the first phase.</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{Max   } &amp; \textcolor{red}{Profit}\\  
+    \text{s.t.: } &amp; \textcolor{red}{Profit=7\cdot Ants +12 \cdot Bats +14\cdot Cats} \\
+                  &amp; 1\cdot Ants + 4 \cdot Bats  +2\cdot Cats \leq 800 \\
+                  &amp; 3\cdot Ants + 6 \cdot Bats  +6\cdot Cats \leq 900 \\
+                  &amp; 2\cdot Ants + 2 \cdot Bats  +4\cdot Cats \leq 480 \\
+                  &amp; 2\cdot Ants + 10 \cdot Bats  +4\cdot Cats \leq 1200 \\
+                  &amp; Ants, \; Bats, \; Cats \geq 0  
+\end{aligned}
+\end{split}
+\]</span></p>
+<p>The optimal objective function value from this LP is 1980 as shown in Chapter 2. Now we modify the above formulation to keep the <em>Profit</em> fixed at 1980 and maximize the production of <em>Cats.</em></p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{Max   } &amp; \textcolor{red}{Cats}\\  
+    \text{s.t.: } &amp; Profit=7\cdot Ants +12 \cdot Bats +14\cdot Cats \\
+                  &amp; 1\cdot Ants + 4 \cdot Bats  +2\cdot Cats \leq 800 \\
+                  &amp; 3\cdot Ants + 6 \cdot Bats  +6\cdot Cats \leq 900 \\
+                  &amp; 2\cdot Ants + 2 \cdot Bats  +4\cdot Cats \leq 480 \\
+                  &amp; 2\cdot Ants + 10 \cdot Bats  +4\cdot Cats \leq 1200 \\
+                  &amp; \textcolor{red}{Profit=1980}\\
+                  &amp; Ants, \; Bats, \; Cats \geq 0  
+\end{aligned}
+\end{split}
+\]</span>
+Rather than directly stating the solution value of 1980, a more general approach would use the term, <span class="math inline">\(Profit^*\)</span> to denote the optimal solution from the first Phase and the new Phase 2 constraint would then be <span class="math inline">\(Profit=Profit^*\)</span>. This would then give a revised solution that emphasizes Cat production in so far as it doesn’t detract from Profit. In other words, maximizing Profit preempts maximizing Cat production.</p>
+</div>
+<div id="policies-for-houselessness" class="section level2" number="8.3">
+<h2><span class="header-section-number">8.3</span> Policies for Houselessness</h2>
+<p>Let’s use an example that is a pressing issue for many cities - homelessness. Note that is often better characterized as houselesness and the term will be used interchangeably for the sake of this illustration.</p>
+<p>The City of Bartland has a problem with houselessness. Two ideas have been proposed for dealing with the houselessness problem. The first option is to build new, government subsidized tiny homes for annual cost of <span class="math inline">\(\$10K\)</span> which would serve one adult 90% of the time and a parent with a child 10% of the time. Another option is to create a rental subsidy program which costs <span class="math inline">\(\$25K\)</span> per year per unit which typically serves a single adult (15%), two adults (20%), an adult with one child (30%), an adult with two children (20%), two adults with one child (10%), and two adults with two children (5%).</p>
+<p>Bartland’s official Chief Economist has estimated that this subsidy program would tend to increase housing prices in a very tight housing market by an average of 0.001%. The Bartland City Council has <span class="math inline">\(\$1000K\)</span> available to reappropriate from elsewhere in the budget and would like to find the <em>best</em> way to use this budget to help with the houselessness problem. Both programs require staff support - in particular 10% of a full time equivalent staff member to process paperwork, conduct visits, and other service related activities. There are seven staff members available to work on these activities.</p>
+<p>Let’s summarize the data for two programs. Let’s focus on expected numbers of people served for each policy intervention.<br />
+</p>
+<table>
+<caption>Policy Options for Addressing Houselessness</caption>
+<thead>
+<tr class="header">
+<th align="right">Per unit</th>
+<th align="center">Tiny Homes (H)</th>
+<th align="center">Rent Subsidy (R)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1 adult</td>
+<td align="center">90%</td>
+<td align="center">15%</td>
+</tr>
+<tr class="even">
+<td align="right">1 adult, 1 child</td>
+<td align="center">10%</td>
+<td align="center">30%</td>
+</tr>
+<tr class="odd">
+<td align="right">1 adult, 2 children</td>
+<td align="center">0%</td>
+<td align="center">20%</td>
+</tr>
+<tr class="even">
+<td align="right">2 adults</td>
+<td align="center">0%</td>
+<td align="center">20%</td>
+</tr>
+<tr class="odd">
+<td align="right">2 adults, 1 child</td>
+<td align="center">0%</td>
+<td align="center">10%</td>
+</tr>
+<tr class="even">
+<td align="right">2 adults, 2 children</td>
+<td align="center">0%</td>
+<td align="center">5%</td>
+</tr>
+<tr class="odd">
+<td align="right">Expected children served</td>
+<td align="center">0.1</td>
+<td align="center">0.9</td>
+</tr>
+<tr class="even">
+<td align="right">Expected adults served</td>
+<td align="center">1.0</td>
+<td align="center">1.35</td>
+</tr>
+<tr class="odd">
+<td align="right">Expected total people served</td>
+<td align="center">1.1</td>
+<td align="center">2.25</td>
+</tr>
+<tr class="even">
+<td align="right">Cost per unit (<span class="math inline">\(\$K\)</span>)</td>
+<td align="center"><span class="math inline">\(\$10\)</span></td>
+<td align="center"><span class="math inline">\(\$25\)</span></td>
+</tr>
+<tr class="odd">
+<td align="right">Staff support per unit</td>
+<td align="center">0.1</td>
+<td align="center">0.1</td>
+</tr>
+</tbody>
+</table>
+<p>One group on the city council wants to serve as many people (both children and adults) as possible while keeping under the total budget limit.</p>
+<p>The second group feels that adults are responsible for their own situation but wants to save as many children from houselessness as possible within budget limits.</p>
+<p>As usual, start by thinking of the decision variables. In this case, let’s define <em>H</em> to be number of tiny homes to be built and <em>R</em> to be the rental housing subsidies provided. Of course these should be non-negative variables. We could use integer variables or continuous variables.</p>
+<p>Next let’s look at our constraints and formulate them in terms of the decision variables. We have two constraints. The first one for the budget is simply: <span class="math inline">\(10 \cdot H+ 25\cdot R \leq 1000\)</span>. The second is to ensure we have sufficient staff support, <span class="math inline">\(0.1 \cdot H+ 0.1\cdot R \leq 7\)</span>.</p>
+<p>Now, let’s think about our objectives. The first group wants to serve as many people as possible so the objective function is <span class="math inline">\(\text {max } 1.1 \cdot H + 2.25 \cdot R\)</span>.</p>
+<p>Similarly, since the second group is focused on children, their objective function is <span class="math display">\[\text {max } 0.1\cdot H + 0.9\cdot R\]</span>.</p>
+<p>Let’s put this all together in a formulation.</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{max   } &amp; 1.1 \cdot H + 2.25 \cdot R \\
+    \text{max   } &amp; 0.1 \cdot H + 0.9  \cdot R \\
+    \text{s.t.  } &amp;  10 \cdot H + 25   \cdot R \leq 1000 \\
+                  &amp; 0.1 \cdot H + 0.1  \cdot R \leq 7 \\
+    \ &amp; H, \; R \; \in \{0, 1, 2,  \ldots \}
+  \end{aligned}
+  \end{split}
+\]</span></p>
+<p>Alas, linear programming models and the Simplex method  only allows for a single objective function. Let’s start by solving from the perspective of the first group.</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{max   } &amp; 1.1 \cdot H + 2.25 \cdot R \\
+    \text{s.t.  } &amp;  10 \cdot H + 25   \cdot R \leq 1000 \\
+                  &amp; 0.1 \cdot H + 0.1  \cdot R \leq 7 \\
+    \ &amp; H, \; R \; \in \{0, 1, 2,  \ldots \}
+  \end{aligned}
+  \end{split}
+\]</span></p>
+<div class="sourceCode" id="cb260"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb260-1"><a href="goal-programming.html#cb260-1" aria-hidden="true" tabindex="-1"></a>Home1Model <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">|&gt;</span></span>
+<span id="cb260-2"><a href="goal-programming.html#cb260-2" aria-hidden="true" tabindex="-1"></a> <span class="co"># Avoid name space conflicts by using a prefix of V</span></span>
+<span id="cb260-3"><a href="goal-programming.html#cb260-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(VH, <span class="at">type =</span> <span class="st">&quot;integer&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb260-4"><a href="goal-programming.html#cb260-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(VR, <span class="at">type =</span> <span class="st">&quot;integer&quot;</span>,<span class="at">lb =</span> <span class="dv">0</span>)  <span class="sc">|&gt;</span></span>
+<span id="cb260-5"><a href="goal-programming.html#cb260-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_objective</span>(<span class="fl">1.1</span><span class="sc">*</span>VH <span class="sc">+</span> <span class="fl">2.25</span><span class="sc">*</span>VR,<span class="st">&quot;max&quot;</span>)      <span class="sc">|&gt;</span></span>
+<span id="cb260-6"><a href="goal-programming.html#cb260-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">10</span><span class="sc">*</span>VH <span class="sc">+</span> <span class="dv">25</span><span class="sc">*</span>VR <span class="sc">&lt;=</span> <span class="dv">1000</span>)      <span class="sc">|&gt;</span> </span>
+<span id="cb260-7"><a href="goal-programming.html#cb260-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="fl">0.1</span><span class="sc">*</span>VH <span class="sc">+</span> <span class="fl">0.1</span><span class="sc">*</span>VR <span class="sc">&lt;=</span> <span class="dv">7</span>) </span>
+<span id="cb260-8"><a href="goal-programming.html#cb260-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb260-9"><a href="goal-programming.html#cb260-9" aria-hidden="true" tabindex="-1"></a>res_Home1 <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(Home1Model, </span>
+<span id="cb260-10"><a href="goal-programming.html#cb260-10" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
+<span id="cb260-11"><a href="goal-programming.html#cb260-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb260-12"><a href="goal-programming.html#cb260-12" aria-hidden="true" tabindex="-1"></a>H  <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (res_Home1 , VH)</span>
+<span id="cb260-13"><a href="goal-programming.html#cb260-13" aria-hidden="true" tabindex="-1"></a>R  <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (res_Home1 , VR)</span>
+<span id="cb260-14"><a href="goal-programming.html#cb260-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb260-15"><a href="goal-programming.html#cb260-15" aria-hidden="true" tabindex="-1"></a>sum_Home1           <span class="ot">&lt;-</span> <span class="fu">cbind</span>(res_Home1<span class="sc">$</span>objective_value,H, R)</span>
+<span id="cb260-16"><a href="goal-programming.html#cb260-16" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(sum_Home1) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Obj. Func. Val.&quot;</span>, <span class="st">&quot;H&quot;</span>, <span class="st">&quot;R&quot;</span>)</span>
+<span id="cb260-17"><a href="goal-programming.html#cb260-17" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(sum_Home1) <span class="ot">&lt;-</span> <span class="st">&quot;Group 1: Max People&quot;</span></span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-60">TABLE 8.1: </span>Group 1’s Ideal Solution.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Obj. Func. Val.
+</th>
+<th style="text-align:right;">
+H
+</th>
+<th style="text-align:right;">
+R
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Group 1: Max People
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+20
+</td>
+</tr>
+</tbody>
+</table>
+<p>Now, let’s examine the second group’s model that has an objective of maximizing the expected number of children served.</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{max   } &amp; 0.1 \cdot H + 0.9  \cdot R \\
+    \text{s.t.  } &amp;  10 \cdot H + 25   \cdot R \leq 1000 \\
+                  &amp; 0.1 \cdot H + 0.1  \cdot R \leq 7 \\
+    \ &amp; H, \; R \; \in \{0, 1, 2,  \ldots \}
+  \end{aligned}
+  \end{split}
+\]</span></p>
+<div class="sourceCode" id="cb261"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb261-1"><a href="goal-programming.html#cb261-1" aria-hidden="true" tabindex="-1"></a>Home2Model <span class="ot">&lt;-</span> <span class="fu">set_objective</span>(Home1Model, </span>
+<span id="cb261-2"><a href="goal-programming.html#cb261-2" aria-hidden="true" tabindex="-1"></a>                            <span class="fl">0.1</span><span class="sc">*</span>VH <span class="sc">+</span> <span class="fl">0.9</span><span class="sc">*</span>VR,<span class="st">&quot;max&quot;</span>)</span>
+<span id="cb261-3"><a href="goal-programming.html#cb261-3" aria-hidden="true" tabindex="-1"></a>  res_Home2 <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(Home2Model, </span>
+<span id="cb261-4"><a href="goal-programming.html#cb261-4" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
+<span id="cb261-5"><a href="goal-programming.html#cb261-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb261-6"><a href="goal-programming.html#cb261-6" aria-hidden="true" tabindex="-1"></a>H  <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (res_Home2 , VH)</span>
+<span id="cb261-7"><a href="goal-programming.html#cb261-7" aria-hidden="true" tabindex="-1"></a>R  <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (res_Home2 , VR)</span>
+<span id="cb261-8"><a href="goal-programming.html#cb261-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb261-9"><a href="goal-programming.html#cb261-9" aria-hidden="true" tabindex="-1"></a>sum_Home2           <span class="ot">&lt;-</span> <span class="fu">cbind</span>(res_Home2<span class="sc">$</span>objective_value,H, R)</span>
+<span id="cb261-10"><a href="goal-programming.html#cb261-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(sum_Home2) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Obj. Func. Val.&quot;</span>, <span class="st">&quot;H&quot;</span>, <span class="st">&quot;R&quot;</span>)</span>
+<span id="cb261-11"><a href="goal-programming.html#cb261-11" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(sum_Home2) <span class="ot">&lt;-</span> <span class="st">&quot;Group 2: Max Children&quot;</span></span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-62">TABLE 8.2: </span>Comparing Homelessness Solutions.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Obj. Func. Val.
+</th>
+<th style="text-align:right;">
+H
+</th>
+<th style="text-align:right;">
+R
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Group 1: Max People
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+20
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Group 2: Max Children
+</td>
+<td style="text-align:right;">
+36
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+40
+</td>
+</tr>
+</tbody>
+</table>
+<p>So which group has the <em>better</em> model? The objective function value for group 1’s model is higher but it is in different units (people served) versus group 2’s model of children served.</p>
+<p>Both group’s have admirable objectives. We can view this as a case of goal programming. By definition, we know that these are the best values that can be achieved in terms of that objective function. Let’s treat these optimal values as targets to strive for and measure the amount by which fail to achieve these targets. We’ll define target <span class="math inline">\(T_1 =\)</span> 100 and <span class="math inline">\(T_2 =\)</span> 36.</p>
+<p>In order to do this, we need to use deviational variables.  These are like slack variables from the standard form of linear programs. Since the deviations can only be one sided in this case, we only need to have deviations in one direction. We will define <span class="math inline">\(d_1\)</span> as the deviation in goal 1 (Maximizing people served) and <span class="math inline">\(d_2\)</span> as the deviation in goal 2 (Maximizing children served).</p>
+<p>Let’s now create the modified formulation.</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{min   } &amp; d_1 + d_2 \\
+    \text{s.t.  } &amp; 10 \cdot H + 25   \cdot R \leq 1000 \\
+                  &amp; 0.1 \cdot H + 0.1  \cdot R \leq 7 \\
+                  &amp;  1.1 \cdot H + 2.25 \cdot R + d_1 = T_1 = 100 \\
+                  &amp; 0.1 \cdot H + 0.9  \cdot R + d_2 = T_2 = 36 \\
+                      \ &amp; H, \; R \; \in \{0, 1, 2,  \ldots \} \\
+    \ &amp; d_1, \; d_2 \geq 0
+  \end{aligned}
+  \end{split}
+\]</span></p>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-63">TABLE 8.3: </span>Solution by Minimizing Sum of Deviations
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Obj. Func. Val.
+</th>
+<th style="text-align:right;">
+H
+</th>
+<th style="text-align:right;">
+R
+</th>
+<th style="text-align:right;">
+d1
+</th>
+<th style="text-align:right;">
+d1%
+</th>
+<th style="text-align:right;">
+d2
+</th>
+<th style="text-align:right;">
+d2%
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Min sum of deviations
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0.1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+<p>The deviation variables have different units though. One way to accommodate this would be to minimize the sum of percentages missed.</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{min   } &amp; \frac {d_1} {T_1} + \frac {d_2} {T_2} \\
+    \text{s.t.  } &amp; 10 \cdot H + 25    \cdot R \leq 1000 \\
+                  &amp; 0.1 \cdot H + 0.1  \cdot R \leq 7 \\
+                  &amp;  1.1 \cdot H + 2.25 \cdot R + d_1 = T_1 \\
+                  &amp; 0.1 \cdot H + 0.9  \cdot R + d_2 = T_2  \\
+    \ &amp; H, \; R \; \in \{0, 1, 2,  \ldots \} \\
+    \ &amp; d_1, \; d_2 \geq 0
+  \end{aligned}
+  \end{split}
+\]</span></p>
+<pre><code>## Status: optimal
+## Objective value: 0.1</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-64">TABLE 8.4: </span>Solution by Minimizing Sum of Percentage Deviations
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Obj. Func. Val.
+</th>
+<th style="text-align:right;">
+H
+</th>
+<th style="text-align:right;">
+R
+</th>
+<th style="text-align:right;">
+d1
+</th>
+<th style="text-align:right;">
+d1%
+</th>
+<th style="text-align:right;">
+d2
+</th>
+<th style="text-align:right;">
+d2%
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Min sum of deviation %s
+</td>
+<td style="text-align:right;">
+0.1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0.1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+<p>Another approach is to minimize the maximum deviation. This is often abbreviated as a <em>minimax</em>.  This is essentially the same as the expression, “a chain is only as strong as its weakest link.” In Japan, there is an expression that the “the nail that sticks up, gets pounded down” and in China, “the tallest blade of grass gets cut down.” We can implement the same idea here by introducing a new variable, <em>Q</em> that must be at least as large as the largest miss.
+<span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{min   } &amp; Q \\
+    \text{s.t.  } &amp; 10 \cdot H + 25  \cdot R \leq 1000 \\
+                  &amp; 0.1 \cdot H + 0.1  \cdot R \leq 7 \\
+                  &amp; 1.1 \cdot H + 2.25 \cdot R + d_1 = T_1 \\
+                  &amp; 0.1 \cdot H + 0.9  \cdot R + d_2 = T_2  \\
+                  &amp; Q \geq \frac {d_1} {T_1} \\
+                  &amp; Q \geq \frac {d_2} {T_2} \\
+                    \ &amp; H, \; R \; \in \{0, 1, 2,  \ldots \} \\
+    \ &amp; d_1, \; d_2 \geq 0
+  \end{aligned}
+  \end{split}
+\]</span></p>
+<p>Let’s show the full R implementation of our minimax model.<br />
+</p>
+<div class="sourceCode" id="cb263"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb263-1"><a href="goal-programming.html#cb263-1" aria-hidden="true" tabindex="-1"></a>Home5Model <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">|&gt;</span></span>
+<span id="cb263-2"><a href="goal-programming.html#cb263-2" aria-hidden="true" tabindex="-1"></a> <span class="co"># To avoid name space conflicts, using a prefix of V</span></span>
+<span id="cb263-3"><a href="goal-programming.html#cb263-3" aria-hidden="true" tabindex="-1"></a> <span class="co">#    for ompr variables.</span></span>
+<span id="cb263-4"><a href="goal-programming.html#cb263-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(VQ, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>)         <span class="sc">|&gt;</span></span>
+<span id="cb263-5"><a href="goal-programming.html#cb263-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(VH, <span class="at">type =</span> <span class="st">&quot;integer&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>)    <span class="sc">|&gt;</span></span>
+<span id="cb263-6"><a href="goal-programming.html#cb263-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(VR, <span class="at">type =</span> <span class="st">&quot;integer&quot;</span>,<span class="at">lb =</span> <span class="dv">0</span>)     <span class="sc">|&gt;</span></span>
+<span id="cb263-7"><a href="goal-programming.html#cb263-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Vd1, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>,<span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb263-8"><a href="goal-programming.html#cb263-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Vd2, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>,<span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb263-9"><a href="goal-programming.html#cb263-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_objective</span>(VQ ,<span class="st">&quot;min&quot;</span>)                      <span class="sc">|&gt;</span></span>
+<span id="cb263-10"><a href="goal-programming.html#cb263-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(VQ<span class="sc">&gt;=</span>Vd1<span class="sc">/</span>T1)                    <span class="sc">|&gt;</span></span>
+<span id="cb263-11"><a href="goal-programming.html#cb263-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(VQ<span class="sc">&gt;=</span>Vd2<span class="sc">/</span>T2)                    <span class="sc">|&gt;</span></span>
+<span id="cb263-12"><a href="goal-programming.html#cb263-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="fl">1.1</span><span class="sc">*</span>VH <span class="sc">+</span> <span class="fl">2.25</span><span class="sc">*</span>VR <span class="sc">+</span> Vd1 <span class="sc">==</span> T1)  <span class="sc">|&gt;</span></span>
+<span id="cb263-13"><a href="goal-programming.html#cb263-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="fl">0.1</span><span class="sc">*</span>VH <span class="sc">+</span> <span class="fl">0.9</span><span class="sc">*</span>VR <span class="sc">+</span> Vd2 <span class="sc">==</span> T2)   <span class="sc">|&gt;</span></span>
+<span id="cb263-14"><a href="goal-programming.html#cb263-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">10</span><span class="sc">*</span>VH <span class="sc">+</span> <span class="dv">25</span><span class="sc">*</span>VR <span class="sc">&lt;=</span> <span class="dv">1000</span>)         <span class="sc">|&gt;</span> </span>
+<span id="cb263-15"><a href="goal-programming.html#cb263-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="fl">0.1</span><span class="sc">*</span>VH <span class="sc">+</span> <span class="fl">0.1</span><span class="sc">*</span>VR <span class="sc">&lt;=</span> <span class="dv">7</span>) </span>
+<span id="cb263-16"><a href="goal-programming.html#cb263-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb263-17"><a href="goal-programming.html#cb263-17" aria-hidden="true" tabindex="-1"></a>res_Home5 <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(Home5Model, </span>
+<span id="cb263-18"><a href="goal-programming.html#cb263-18" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
+<span id="cb263-19"><a href="goal-programming.html#cb263-19" aria-hidden="true" tabindex="-1"></a>res_Home5</span></code></pre></div>
+<pre><code>## Status: optimal
+## Objective value: 0.08</code></pre>
+<div class="sourceCode" id="cb265"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb265-1"><a href="goal-programming.html#cb265-1" aria-hidden="true" tabindex="-1"></a>H  <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (res_Home5, VH)</span>
+<span id="cb265-2"><a href="goal-programming.html#cb265-2" aria-hidden="true" tabindex="-1"></a>R  <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (res_Home5, VR)</span>
+<span id="cb265-3"><a href="goal-programming.html#cb265-3" aria-hidden="true" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (res_Home5, Vd1)</span>
+<span id="cb265-4"><a href="goal-programming.html#cb265-4" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (res_Home5, Vd2)</span>
+<span id="cb265-5"><a href="goal-programming.html#cb265-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb265-6"><a href="goal-programming.html#cb265-6" aria-hidden="true" tabindex="-1"></a>sum_Home5  <span class="ot">&lt;-</span> <span class="fu">cbind</span>(</span>
+<span id="cb265-7"><a href="goal-programming.html#cb265-7" aria-hidden="true" tabindex="-1"></a>  res_Home5<span class="sc">$</span>objective_value, H, R, </span>
+<span id="cb265-8"><a href="goal-programming.html#cb265-8" aria-hidden="true" tabindex="-1"></a>  d1, d1<span class="sc">/</span>T1, d2, d2<span class="sc">/</span>T2)</span>
+<span id="cb265-9"><a href="goal-programming.html#cb265-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(sum_Home5) <span class="ot">&lt;-</span> </span>
+<span id="cb265-10"><a href="goal-programming.html#cb265-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">&quot;Obj. Func. Val.&quot;</span>, <span class="st">&quot;H&quot;</span>, <span class="st">&quot;R&quot;</span>, <span class="st">&quot;d1&quot;</span>, <span class="st">&quot;d1%&quot;</span>, <span class="st">&quot;d2&quot;</span>, <span class="st">&quot;d2%&quot;</span>)</span>
+<span id="cb265-11"><a href="goal-programming.html#cb265-11" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(sum_Home5) <span class="ot">&lt;-</span> <span class="st">&quot;Minimax&quot;</span></span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-65">TABLE 8.5: </span>Minimax Solution.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Obj. Func. Val.
+</th>
+<th style="text-align:right;">
+H
+</th>
+<th style="text-align:right;">
+R
+</th>
+<th style="text-align:right;">
+d1
+</th>
+<th style="text-align:right;">
+d1%
+</th>
+<th style="text-align:right;">
+d2
+</th>
+<th style="text-align:right;">
+d2%
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Min sum of deviations
+</td>
+<td style="text-align:right;">
+10.00
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0.10
+</td>
+<td style="text-align:right;">
+0.0
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Min sum of deviation %s
+</td>
+<td style="text-align:right;">
+0.10
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0.10
+</td>
+<td style="text-align:right;">
+0.0
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Minimax
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+36
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+2.6
+</td>
+<td style="text-align:right;">
+0.0722222
+</td>
+</tr>
+</tbody>
+</table>
+<p>The minimax solution finds an alternative that is still Pareto optimal. </p>
+<p>Careful readers may note that children are effectively double counted between the two objective functions when deviations are added.</p>
+<p>This example can be expanded much further in the future with additional policy interventions, other stakeholders, and other characteristics, such as policies on drug addiction treatment, policing practices, and more. We did not factor in the Chief Economist’s impact on housing prices. We’ll leave these issues to future work.</p>
+</div>
+<div id="mass-mailings" class="section level2" number="8.4">
+<h2><span class="header-section-number">8.4</span> Mass Mailings</h2>
+<p>Let’s take a look at another example. We have a mailing outreach campaign across the fifty states to do in the next eight weeks. You have <span class="math inline">\(C_s\)</span> customers in each state. Since the statewide campaign needs to be coordinated, each state should be done in a single week but different states can be done in different weeks. You want to create a model to have the workload, in terms of numbers of customers, to be as balanced as possible across the eight weeks.</p>
+<p>As an exercise, pause to think of how you would set this up.<br />
+</p>
+<p>What are your decision variables?<br />
+</p>
+<p>What are your constraints?<br />
+</p>
+<p>What is the objective function?
+</p>
+<p>Try to give some thoughts as to how to set this up before moving on to seeing our formulation. </p>
+<p>To provide some space before we discuss the formulation, let’s show the data. Rather than providing a data table that must be retyped, let’s use a dataset already available in R so you can simply load the state data. Note that you can grab the population in 1977 in terms of thousands. </p>
+<div class="sourceCode" id="cb266"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb266-1"><a href="goal-programming.html#cb266-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(state)</span>
+<span id="cb266-2"><a href="goal-programming.html#cb266-2" aria-hidden="true" tabindex="-1"></a>Customers <span class="ot">&lt;-</span> state.x77[,<span class="dv">1</span>]</span>
+<span id="cb266-3"><a href="goal-programming.html#cb266-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">head</span> (Customers), <span class="at">booktabs=</span>T,</span>
+<span id="cb266-4"><a href="goal-programming.html#cb266-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption=</span><span class="st">&quot;Number of Customers for First Six States.&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb266-5"><a href="goal-programming.html#cb266-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:loading-mailing-data">TABLE 8.6: </span>Number of Customers for First Six States.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+x
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Alabama
+</td>
+<td style="text-align:right;">
+3615
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alaska
+</td>
+<td style="text-align:right;">
+365
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Arizona
+</td>
+<td style="text-align:right;">
+2212
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Arkansas
+</td>
+<td style="text-align:right;">
+2110
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+California
+</td>
+<td style="text-align:right;">
+21198
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Colorado
+</td>
+<td style="text-align:right;">
+2541
+</td>
+</tr>
+</tbody>
+</table>
+<div id="formulating-the-state-mailing-model" class="section level3" number="8.4.1">
+<h3><span class="header-section-number">8.4.1</span> Formulating the State Mailing Model</h3>
+<p>Presumably you have created your own formulation. If so, your model will likely differ from what follows in some ways such as naming conventions for variables or subscripts. That is fine. The process of trying to build a model is important.<br />
+</p>
+<p>Let’s start by defining our decision variables, <span class="math inline">\(x_{s,w}\)</span> as a binary variable to indicate whether we are going to send a mailing to state <em>s</em> in week <em>w</em>.<br />
+</p>
+<p>Now, we need to ensure that every state is mailed to in one of the eight weeks. We simply need to add up the variable for each state’s decision to mail in week 1, 2, 3, …, up to 8. Mathematically, this would be <span class="math inline">\(\sum\limits_{w=1}^{8} x_{s,w} = 1, \; \forall \; s\)</span>.<br />
+</p>
+<p>It is useful to take a moment to reflect on why <span class="math inline">\(\sum\limits_{s=1}^{50} \sum\limits_{w=1}^{8} x_{s,w} = 50\)</span> is not sufficient to ensure that all 50 states get mailed to during the eight week planning period.<br />
+</p>
+<p>Combined with the variable <span class="math inline">\(x_{s,w}\)</span> being defined to be binary, this is sufficient to ensure that we have a <em>feasible</em> answer but not necessarily a well-balanced solution across the eight weeks.<br />
+</p>
+<p>We could easily calculate the amount of material to mail each as a function of <span class="math inline">\(x_s,w\)</span> and <span class="math inline">\(C_s\)</span>. For week 1, it would be <span class="math inline">\(\sum\limits_{s=1}^{50} C_s \cdot x_{s,1}\)</span> For week 2, it would be <span class="math inline">\(\sum\limits_{s=1}^{50} C_s \cdot x_{s,2}\)</span>, and so on. This could be generalized as <span class="math inline">\(\sum\limits_{s=1}^{50} C_s \cdot x_{s,w} \; \forall \; w\)</span>.<br />
+</p>
+<p>Creating a balanced schedule can be done in multiple ways. Let’s start by using the <em>minimax</em> approach discussed earlier.  To do this, we add a new variable <em>Q</em> and constrain it to be at least as large as each week. Therefore, for week 1, <span class="math inline">\(Q \geq \sum\limits_{s=1}^{50} C_s \cdot x_{s,1}\)</span> and for week 2, <span class="math inline">\(Q \geq \sum\limits_{s=1}^{50} C_s \cdot x_{s,2}\)</span>. Again, to generalize for all eight weeks, we could write <span class="math inline">\(Q \geq \sum\limits_{s=1}^{50} C_s \cdot x_{s,w} \; \forall \; w\)</span>.<br />
+</p>
+<p>we can then use our minimax objective function of simply minimizing <em>Q</em>.<br />
+</p>
+<p>We’ll summarize our formulation now.</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{min   } &amp; Q \\
+    \text{s.t.  } &amp; \sum\limits_{w=1}^{8}   x_{s,w} = 1, \; \forall \; s \\
+                  &amp; Q \geq \sum\limits_{s=1}^{50}   C_s \cdot x_{s,w} \; \forall \; w \\
+                    \ &amp; x_{s,w} \; \in \{0, 1 \} \; \forall \; s, \;w  \\
+  \end{aligned}
+  \end{split}
+\]</span></p>
+</div>
+<div id="implementing-the-state-mailing-model" class="section level3" number="8.4.2">
+<h3><span class="header-section-number">8.4.2</span> Implementing the State Mailing Model</h3>
+<p>Let’s now move on to implement this model in R.</p>
+<div class="sourceCode" id="cb267"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb267-1"><a href="goal-programming.html#cb267-1" aria-hidden="true" tabindex="-1"></a>States <span class="ot">&lt;-</span> <span class="dv">50</span>  <span class="co"># Options to shrink problem for testing</span></span>
+<span id="cb267-2"><a href="goal-programming.html#cb267-2" aria-hidden="true" tabindex="-1"></a>Weeks <span class="ot">&lt;-</span> <span class="dv">8</span></span>
+<span id="cb267-3"><a href="goal-programming.html#cb267-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb267-4"><a href="goal-programming.html#cb267-4" aria-hidden="true" tabindex="-1"></a>Mail1 <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>()</span>
+<span id="cb267-5"><a href="goal-programming.html#cb267-5" aria-hidden="true" tabindex="-1"></a>     <span class="co"># 1 iff state s gets assigned to week w</span></span>
+<span id="cb267-6"><a href="goal-programming.html#cb267-6" aria-hidden="true" tabindex="-1"></a>Mail1 <span class="ot">&lt;-</span> <span class="fu">add_variable</span>(Mail1, Vx[s, w], </span>
+<span id="cb267-7"><a href="goal-programming.html#cb267-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">s=</span><span class="dv">1</span><span class="sc">:</span>States, <span class="at">w=</span><span class="dv">1</span><span class="sc">:</span>Weeks, <span class="at">type=</span><span class="st">&quot;binary&quot;</span>) </span>
+<span id="cb267-8"><a href="goal-programming.html#cb267-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb267-9"><a href="goal-programming.html#cb267-9" aria-hidden="true" tabindex="-1"></a>Mail1 <span class="ot">&lt;-</span> <span class="fu">add_variable</span>(Mail1, VQ, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>)</span>
+<span id="cb267-10"><a href="goal-programming.html#cb267-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb267-11"><a href="goal-programming.html#cb267-11" aria-hidden="true" tabindex="-1"></a>Mail1 <span class="ot">&lt;-</span> <span class="fu">set_objective</span>(Mail1, VQ, <span class="st">&quot;min&quot;</span>)</span>
+<span id="cb267-12"><a href="goal-programming.html#cb267-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb267-13"><a href="goal-programming.html#cb267-13" aria-hidden="true" tabindex="-1"></a><span class="co"># every state  needs to be assigned to a week</span></span>
+<span id="cb267-14"><a href="goal-programming.html#cb267-14" aria-hidden="true" tabindex="-1"></a>Mail1 <span class="ot">&lt;-</span> <span class="fu">add_constraint</span>(Mail1, <span class="fu">sum_expr</span>(Vx[s, w], </span>
+<span id="cb267-15"><a href="goal-programming.html#cb267-15" aria-hidden="true" tabindex="-1"></a>                          <span class="at">w=</span><span class="dv">1</span><span class="sc">:</span>Weeks)<span class="sc">==</span><span class="dv">1</span>, <span class="at">s=</span><span class="dv">1</span><span class="sc">:</span>States) </span>
+<span id="cb267-16"><a href="goal-programming.html#cb267-16" aria-hidden="true" tabindex="-1"></a>Mail1 <span class="ot">&lt;-</span> <span class="fu">add_constraint</span>(Mail1, VQ <span class="sc">&gt;=</span> </span>
+<span id="cb267-17"><a href="goal-programming.html#cb267-17" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">sum_expr</span>(Customers [s]<span class="sc">*</span>Vx[s, w], </span>
+<span id="cb267-18"><a href="goal-programming.html#cb267-18" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">s=</span><span class="dv">1</span><span class="sc">:</span>States), <span class="at">w =</span> <span class="dv">1</span><span class="sc">:</span>Weeks) </span>
+<span id="cb267-19"><a href="goal-programming.html#cb267-19" aria-hidden="true" tabindex="-1"></a>Mail1</span></code></pre></div>
+<pre><code>## Mixed integer linear optimization problem
+## Variables:
+##   Continuous: 1 
+##   Integer: 0 
+##   Binary: 400 
+## Model sense: minimize 
+## Constraints: 58</code></pre>
+<div class="sourceCode" id="cb269"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb269-1"><a href="goal-programming.html#cb269-1" aria-hidden="true" tabindex="-1"></a>res_Mail1 <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(Mail1, </span>
+<span id="cb269-2"><a href="goal-programming.html#cb269-2" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;symphony&quot;</span>,</span>
+<span id="cb269-3"><a href="goal-programming.html#cb269-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">verbosity=</span><span class="sc">-</span><span class="dv">1</span>, <span class="at">gap_limit=</span><span class="fl">1.5</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb270"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb270-1"><a href="goal-programming.html#cb270-1" aria-hidden="true" tabindex="-1"></a>res_Mail1</span></code></pre></div>
+<pre><code>## Status: infeasible
+## Objective value: 26834</code></pre>
+<p>Note that the the messages from Symphony indicate that the solution found was feasible while <code>ompr</code> interprets the status as <code>infeasible.</code> This is a bug that we have discussed earlier. Turning on an option for more messages from the solver such as <code>verbose=TRUE</code> for <code>verbose=TRUE</code> or <code>verbosity=0</code> for <code>symphony</code> can give confirmation that the final status is <em>not</em> infeasible.</p>
+<p>Another useful to thing to note is that solving this problem to optimality can take a long time despite having fewer binary variables than some of our earlier examples. Using <code>glpk</code> with <code>verbose=FALSE</code> means that the MIP is solved with no progress information displayed and makes it look like the solver is hung. Turning on more information (increasing the verbosity) helps explain that the Solver is working, it is just taking a while, on my computer I let it run 20 minutes without making further progress than a feasible solution it had found quickly.</p>
+<p>In fact, I realized that the feasible solution found was very close to the best remaining branches so perhaps this solution was optimal but it was taking a very long time to prove that it was optimal. In any case, it is probably good enough. Often data may only be accurate to <span class="math inline">\(\pm5\%\)</span> so spending extensive time trying to get significantly more accurate results is not very productive. This suggests setting stopping options such as a time limit, number of LPs, or a <em>good enough</em> setting. For this problem, I chose the latter option.</p>
+<p>We solved this with a mixed integer programming problem gap limit of <span class="math inline">\(1.5\%\)</span> meaning that while we have not <em>proven</em> this solution to be optimal, we do know that it is impossible to find a solution more than 1.5% better. From a branch and bound algorithm perspective, this means that while we have not searched down fully or pruned every branch, we know that no branch has the potential of being more than <span class="math inline">\(1.5\%\)</span> better than the feasible solution that we have already found.</p>
+<p>Now let’s move on to discussing the results. We will start with filtering out all the variables that have zero values so we can focus on the ones of interest - the states that are assigned to each week. Also, notice that a <code>dplyr</code> function was used to add state names to the data frame.</p>
+<div class="sourceCode" id="cb272"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb272-1"><a href="goal-programming.html#cb272-1" aria-hidden="true" tabindex="-1"></a>assigned1a <span class="ot">&lt;-</span> res_Mail1 <span class="sc">|&gt;</span> </span>
+<span id="cb272-2"><a href="goal-programming.html#cb272-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">get_solution</span>(Vx[s,w]) <span class="sc">|&gt;</span></span>
+<span id="cb272-3"><a href="goal-programming.html#cb272-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">filter</span>(value <span class="sc">&gt;</span>.<span class="dv">9</span>) <span class="sc">|&gt;</span></span>
+<span id="cb272-4"><a href="goal-programming.html#cb272-4" aria-hidden="true" tabindex="-1"></a> <span class="fu">select</span> (s,w)</span>
+<span id="cb272-5"><a href="goal-programming.html#cb272-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(assigned1a)<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="fu">names</span>(Customers[assigned1a[,<span class="dv">1</span>]]))</span>
+<span id="cb272-6"><a href="goal-programming.html#cb272-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb272-7"><a href="goal-programming.html#cb272-7" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">head</span>(assigned1a), <span class="at">booktabs=</span>T,</span>
+<span id="cb272-8"><a href="goal-programming.html#cb272-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption=</span><span class="st">&quot;Example of some states assigned to week 1&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb272-9"><a href="goal-programming.html#cb272-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:Sample-of-States-Week1">TABLE 8.7: </span>Example of some states assigned to week 1
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+s
+</th>
+<th style="text-align:right;">
+w
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Indiana
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Maryland
+</td>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Minnesota
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Nevada
+</td>
+<td style="text-align:right;">
+28
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+North Carolina
+</td>
+<td style="text-align:right;">
+33
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+South Carolina
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+</tbody>
+</table>
+<p>That is just for six states in the first week though.<br />
+</p>
+<div class="sourceCode" id="cb273"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb273-1"><a href="goal-programming.html#cb273-1" aria-hidden="true" tabindex="-1"></a>assigned1b <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(assigned1a)</span>
+<span id="cb273-2"><a href="goal-programming.html#cb273-2" aria-hidden="true" tabindex="-1"></a>table_results1<span class="ot">&lt;-</span><span class="fu">c</span>() <span class="co"># Prepare a new table of results</span></span>
+<span id="cb273-3"><a href="goal-programming.html#cb273-3" aria-hidden="true" tabindex="-1"></a>cols_list<span class="ot">&lt;-</span><span class="fu">c</span>()      <span class="co"># Prepare column list</span></span>
+<span id="cb273-4"><a href="goal-programming.html#cb273-4" aria-hidden="true" tabindex="-1"></a>weeksmail<span class="ot">&lt;-</span><span class="st">&quot;&quot;</span></span>
+<span id="cb273-5"><a href="goal-programming.html#cb273-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb273-6"><a href="goal-programming.html#cb273-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (week_counter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>Weeks) {</span>
+<span id="cb273-7"><a href="goal-programming.html#cb273-7" aria-hidden="true" tabindex="-1"></a>  weeksmail1a<span class="ot">&lt;-</span> assigned1b <span class="sc">|&gt;</span></span>
+<span id="cb273-8"><a href="goal-programming.html#cb273-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(w<span class="sc">==</span>week_counter) <span class="sc">|&gt;</span></span>
+<span id="cb273-9"><a href="goal-programming.html#cb273-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(rowname)</span>
+<span id="cb273-10"><a href="goal-programming.html#cb273-10" aria-hidden="true" tabindex="-1"></a>  cols_list <span class="ot">&lt;-</span> <span class="fu">append</span>(cols_list, <span class="fu">paste0</span>(<span class="st">&quot;Week &quot;</span>, week_counter))</span>
+<span id="cb273-11"><a href="goal-programming.html#cb273-11" aria-hidden="true" tabindex="-1"></a>  table_results1 <span class="ot">&lt;-</span> <span class="fu">append</span>(table_results1,</span>
+<span id="cb273-12"><a href="goal-programming.html#cb273-12" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">paste</span>(weeksmail1a<span class="sc">$</span>rowname, </span>
+<span id="cb273-13"><a href="goal-programming.html#cb273-13" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">collapse =</span> <span class="st">&quot;, &quot;</span>))}</span>
+<span id="cb273-14"><a href="goal-programming.html#cb273-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb273-15"><a href="goal-programming.html#cb273-15" aria-hidden="true" tabindex="-1"></a>text_tbl <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Weeks =</span> cols_list,<span class="at">States =</span> table_results1)</span></code></pre></div>
+<div class="sourceCode" id="cb274"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb274-1"><a href="goal-programming.html#cb274-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(text_tbl, <span class="at">booktabs=</span>T,</span>
+<span id="cb274-2"><a href="goal-programming.html#cb274-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption=</span><span class="st">&quot;Display of States by Week&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb274-3"><a href="goal-programming.html#cb274-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="fu">c</span>(<span class="st">&quot;hold_position&quot;</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb274-4"><a href="goal-programming.html#cb274-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_spec</span>(<span class="dv">1</span>, <span class="at">bold =</span> T) <span class="sc">%&gt;%</span></span>
+<span id="cb274-5"><a href="goal-programming.html#cb274-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_spec</span>(<span class="dv">2</span>, <span class="at">width =</span> <span class="st">&quot;30em&quot;</span>)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:Display-weekly-Mailings">TABLE 8.8: </span>Display of States by Week
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Weeks
+</th>
+<th style="text-align:left;">
+States
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Week 1
+</td>
+<td style="text-align:left;width: 30em; ">
+Indiana, Maryland, Minnesota, Nevada, North Carolina, South Carolina, Tennessee
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Week 2
+</td>
+<td style="text-align:left;width: 30em; ">
+Alabama, Arkansas, Delaware, Iowa, Montana, South Dakota, Texas, Washington
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Week 3
+</td>
+<td style="text-align:left;width: 30em; ">
+Alaska, Massachusetts, Missouri, Oregon, Pennsylvania, Utah, Vermont
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Week 4
+</td>
+<td style="text-align:left;width: 30em; ">
+Arizona, Hawaii, Idaho, Illinois, Kentucky, Maine, New Hampshire, West Virginia, Wisconsin
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Week 5
+</td>
+<td style="text-align:left;width: 30em; ">
+Colorado, Georgia, Ohio, Oklahoma, Rhode Island, Virginia
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Week 6
+</td>
+<td style="text-align:left;width: 30em; ">
+Florida, New York, Wyoming
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Week 7
+</td>
+<td style="text-align:left;width: 30em; ">
+California, Louisiana, New Mexico
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Week 8
+</td>
+<td style="text-align:left;width: 30em; ">
+Connecticut, Kansas, Michigan, Mississippi, Nebraska, New Jersey, North Dakota
+</td>
+</tr>
+</tbody>
+</table>
+<p>Since this is state level data, let’s look at a map of the schedule.<br />
+</p>
+<div class="sourceCode" id="cb275"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb275-1"><a href="goal-programming.html#cb275-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span> (ggplot2)</span>
+<span id="cb275-2"><a href="goal-programming.html#cb275-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span> (maps)</span>
+<span id="cb275-3"><a href="goal-programming.html#cb275-3" aria-hidden="true" tabindex="-1"></a>mapx <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">region=</span><span class="fu">tolower</span>(<span class="fu">rownames</span>(assigned1a)), </span>
+<span id="cb275-4"><a href="goal-programming.html#cb275-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">week=</span>assigned1a[,<span class="st">&quot;w&quot;</span>], </span>
+<span id="cb275-5"><a href="goal-programming.html#cb275-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">stringsAsFactors=</span>F)</span>
+<span id="cb275-6"><a href="goal-programming.html#cb275-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb275-7"><a href="goal-programming.html#cb275-7" aria-hidden="true" tabindex="-1"></a>states_map <span class="ot">&lt;-</span> <span class="fu">map_data</span>(<span class="st">&quot;state&quot;</span>)</span>
+<span id="cb275-8"><a href="goal-programming.html#cb275-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mapx, <span class="fu">aes</span>(<span class="at">map_id =</span> region)) <span class="sc">+</span> </span>
+<span id="cb275-9"><a href="goal-programming.html#cb275-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_map</span>(<span class="fu">aes</span>(<span class="at">fill =</span> week, <span class="at">colour =</span> <span class="st">&quot;white&quot;</span>), </span>
+<span id="cb275-10"><a href="goal-programming.html#cb275-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">map =</span> states_map) <span class="sc">+</span></span>
+<span id="cb275-11"><a href="goal-programming.html#cb275-11" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_fill_viridis_c</span>(<span class="at">option =</span> <span class="st">&quot;C&quot;</span>) <span class="sc">+</span></span>
+<span id="cb275-12"><a href="goal-programming.html#cb275-12" aria-hidden="true" tabindex="-1"></a><span class="fu">expand_limits</span>(<span class="at">x =</span> states_map<span class="sc">$</span>long, <span class="at">y =</span> states_map<span class="sc">$</span>lat)</span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:Map-of-Mailing-Results"></span>
+<img src="OMUR_files/figure-html/Map-of-Mailing-Results-1.png" alt="Map of Mailing Results" width="100%" />
+<p class="caption">
+FIGURE 8.1: Map of Mailing Results
+</p>
+</div>
+<p>Note that this leaves off Alaska and Hawaii for visualization. For completeness, Alaska is in week 3 and Hawaii is in week 4.</p>
+</div>
+<div id="frontloading-the-work" class="section level3" number="8.4.3">
+<h3><span class="header-section-number">8.4.3</span> Frontloading the Work</h3>
+<p>This formulation generates solutions that have high symmetry. Essentially it would be feasible and have the same objective function value if we simply swap any two weeks of assignments. For example, if we swap all of the states assigned to week 1 and week 2, it would still be feasible and have exactly the same objective function value. This would result in a high number of alternate optimal solutions. The numbering by week is essentially arbitrary since the weeks don’t make a difference.</p>
+<p>When there exists a high degree of symmetry, it may be useful to implement one or more constraints to <em>break</em> the symmetry by differentiating between solutions. One approach to doing this is to require a particular ordering of weeks. For example, we could require that weeks get progressively lighter in terms of workload. In fact, this might be a managerial preference to ensure that if problems develop, there is some organizational slack later to deal with this.</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \sum\limits_{s=1}^{50}   C_s \cdot x_{s,w-1} \geq \sum\limits_{s=1}^{50}   C_s \cdot x_{s,w} , \; w \in \{2, \ldots ,8 \}
+  \end{aligned}
+  \end{split}
+\]</span></p>
+<p>We could then extend our <code>ompr</code> model, <code>Mail1</code> with the additional constraints.<br />
+</p>
+<div class="sourceCode" id="cb276"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb276-1"><a href="goal-programming.html#cb276-1" aria-hidden="true" tabindex="-1"></a>Mail2 <span class="ot">&lt;-</span> <span class="fu">add_constraint</span>(Mail1, </span>
+<span id="cb276-2"><a href="goal-programming.html#cb276-2" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">sum_expr</span>(Customers [s]<span class="sc">*</span>Vx[s, w<span class="dv">-1</span>], </span>
+<span id="cb276-3"><a href="goal-programming.html#cb276-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">s=</span><span class="dv">1</span><span class="sc">:</span>States) <span class="sc">&gt;=</span></span>
+<span id="cb276-4"><a href="goal-programming.html#cb276-4" aria-hidden="true" tabindex="-1"></a>               <span class="fu">sum_expr</span>(Customers [s]<span class="sc">*</span>Vx[s, w], </span>
+<span id="cb276-5"><a href="goal-programming.html#cb276-5" aria-hidden="true" tabindex="-1"></a>                              <span class="at">s=</span><span class="dv">1</span><span class="sc">:</span>States), </span>
+<span id="cb276-6"><a href="goal-programming.html#cb276-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">w =</span> <span class="dv">2</span><span class="sc">:</span>Weeks)</span></code></pre></div>
+<p>While it might be thought that adding constraints limits the search space of possible solutions and might speed up solution, in this case it slows down solving speed tremendously. Despite having having less than half the binary variables of applications from Chapter 8 and the same number the earlier mail problem, this problem turns out to be most computationally demanding so far. The branch and bound process from symphony takes hours to solve.</p>
+<div class="sourceCode" id="cb277"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb277-1"><a href="goal-programming.html#cb277-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(<span class="fu">as.matrix</span>(table_results1[<span class="sc">-</span><span class="dv">1</span>]), <span class="at">booktabs=</span>T, <span class="at">caption=</span></span>
+<span id="cb277-2"><a href="goal-programming.html#cb277-2" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Solution with Symmetry Breaking&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb277-3"><a href="goal-programming.html#cb277-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<p>The solving time using this modification to the LP changed tremendously. On an Intel i7 mobile CPU and R 4.1.1. the following results were obtained before terminating the solver after nearly four hours. Within 6 seconds it found a feasible solution as demonstrated by the Lower Bound of 26,540 but the upper bound of what could still be undiscovered was 29,602. This gives a possible suboptimality gap of 10.34%. Over the next half hour the Solver did not find a better solution (Lower Bound stays unchanged) but is able to reduce the Upper Bound. At this point I terminated the solver. There had been modest improvement in the search process in the first 30 minutes with two and a half million iterations (linear programming subproblems) but then no change for the three and half hours and almost six million more iterations.</p>
+<table>
+<caption>Solving Progress for Modified Mailing Model.</caption>
+<thead>
+<tr class="header">
+<th align="right">Seconds</th>
+<th align="right">Iterations</th>
+<th align="right">Lower Bound</th>
+<th align="right">Upper Bound</th>
+<th align="right">Gap (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">6</td>
+<td align="right">9,397</td>
+<td align="right">26540.12</td>
+<td align="right">29602.00</td>
+<td align="right">10.34</td>
+</tr>
+<tr class="even">
+<td align="right">1291</td>
+<td align="right">2,015,431</td>
+<td align="right">26540.12</td>
+<td align="right"><strong>28940.00</strong></td>
+<td align="right">8.24</td>
+</tr>
+<tr class="odd">
+<td align="right">1711</td>
+<td align="right">2,508,415</td>
+<td align="right">26540.12</td>
+<td align="right"><strong>28510.00</strong></td>
+<td align="right">6.91</td>
+</tr>
+<tr class="even">
+<td align="right">14311</td>
+<td align="right">8,391,692</td>
+<td align="right">26540.12</td>
+<td align="right">28510.00</td>
+<td align="right">6.91</td>
+</tr>
+</tbody>
+</table>
+<p>This highlights that large or complex optimization problems may take extra effort and attention. Analysts can make judicious tradeoffs of potentially suboptimal results, solving time, and data accuracy. For our purpose, to speed up the solution time, you could do an early termination option such as setting the <code>gap_limit</code> to <span class="math inline">\(15\%\)</span> by adding <code>gap_limit=15</code>. Setting an appropriate termination parameter based on gap, number of iterations, or time can be particularly helpful while developing a model. It also underscores that the benefits of implementing and testing algebraic models with smaller sized problems before expanding to the full sized problems. By separating the data from the model, we can easily just shrink or expand the problem without affecting the formulation or the implementation. In this case, we could shrink the problem by using fewer weeks and states by changing the upper limits (<code>Weeks&lt;-10; States&lt;-10</code>) used in the model, resulting in 30 binary variables instead of 400.</p>
+<p>We could further modify the model to eliminate <em>Q</em> since the workload in week 1 would essentially be the heaviest workload (tallest nail.) This highlights that in optimization and particularly integer programming, there are often many different ways to implement models for the same application. This underscores the importance of clearly defining the elements of the formulation.<br />
+</p>
+<p>This application and model can be adjusted to fit a wide variety of other situations such as:</p>
+<ul>
+<li>Setting a maximum or minimum number of states per week</li>
+<li>Having a maximum and/or minimum number of customers to mail per week.</li>
+<li>Incorporating a secondary goal of finishing the mailing in as few weeks as possible.</li>
+<li>Applying this approach to other applications such as assigning customers to salespeople.</li>
+</ul>
+</div>
+</div>
+<div id="exercises-5" class="section level2" number="8.5">
+<h2><span class="header-section-number">8.5</span> Exercises</h2>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-53" class="exercise"><strong>Exercise 8.1  (Adjustments to Houselessness Policies) </strong></span>From the houselessness problem given in chapter, make changes as given below:
+First option is to build new, government subsidized tiny homes for
+annual cost of $15K which would serve one adult 85% of the time and
+a parent with a child 15% of the time. Another option is to create
+a rental subsidy program which costs $35K per year per unit which
+typically serves a single adult (15%), two adults (15%), an adult with
+one child (35%), an adult with two children (20%), two adults with
+one child (10%), and two adults with two children (5%).</p>
+<p>Solve the problem and Discuss how the solution has changed.</p>
+</div>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-54" class="exercise"><strong>Exercise 8.2  (Adjustments to Houselessness Policies) </strong></span>Create and justify your own third policy option to enhance the original exercise in the book. Describe the policy in the context of the application. Formulate, implement, and solve the revised version.</p>
+<p>Does the revised solution match your expected result?</p>
+</div>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-55" class="exercise"><strong>Exercise 8.3  (Extending State Mailing) </strong></span>The mailing by state example in chapter 8 is just another example of mixed integer programming.</p>
+<ol style="list-style-type: lower-alpha">
+<li>Write the optimization model using LaTeX to ensure that no week has more than 8 states assigned to the week.</li>
+<li>Write a constraint or set of constraints using LaTeX that would ensure state 3 is done before state 7.</li>
+<li>Write a constraint or set of constraints to ensure that state 9 and 24 are done in the same week.</li>
+<li>Given the minimax objective function, how do you think the above requirements will affect the solution in terms of an objective function and characteristics of managerial interest?</li>
+</ol>
+</div>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-56" class="exercise"><strong>Exercise 8.4  (Experimenting with State Mailing) </strong></span>In the mailing by state example in chapter, there is a change discovered that Week 4 is going to be during a Holiday week and the Mailing Center will be closed for whole week. Make appropriate changes to the model in example presented in the chapter to reflect these changes.</p>
+<ol style="list-style-type: lower-alpha">
+<li>Write the optimization model using LaTeX to ensure that no week has more than 8 states assigned to the week.</li>
+<li>Write a constraint or set of constraints using LaTeX that would ensure state 4 is done before state 6.</li>
+<li>Write a constraint or set of constraints to ensure that state 5 and 9 are done in the same week.</li>
+<li>Write a constraint or set of constraints to ensure that the states of Oregon and California are done before holiday week.</li>
+<li>After solving above, compare the results with exercise 8.1 and discuss.</li>
+</ol>
+</div>
+<p></p>
+
+</div>
+</div>
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="more-integer-programming-models.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="a-very-brief-introduction-to-r.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

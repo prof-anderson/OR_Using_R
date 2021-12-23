@@ -1,0 +1,2280 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 6 Mixed Integer Optimization | Optimization Modeling Using R</title>
+  <meta name="description" content="This book introduces optimization using R." />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 6 Mixed Integer Optimization | Optimization Modeling Using R" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This book introduces optimization using R." />
+  <meta name="github-repo" content="prof-anderson/OR_Using_R" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 6 Mixed Integer Optimization | Optimization Modeling Using R" />
+  
+  <meta name="twitter:description" content="This book introduces optimization using R." />
+  
+
+<meta name="author" content="Timothy R. Anderson" />
+
+
+<meta name="date" content="2021-12-22" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="data-envelopment-analysis.html"/>
+<link rel="next" href="more-integer-programming-models.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Optimization Modeling Using R</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#intended-audience"><i class="fa fa-check"></i>Intended Audience</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#features-of-this-book"><i class="fa fa-check"></i>Features of this Book</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#instructor-notes"><i class="fa fa-check"></i>Instructor Notes</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#acknowldegements"><i class="fa fa-check"></i>Acknowldegements</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="about-the-author.html"><a href="about-the-author.html"><i class="fa fa-check"></i>About the Author</a></li>
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#what-is-operations-research"><i class="fa fa-check"></i><b>1.1</b> What is Operations Research</a></li>
+<li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#purpose-of-this-book"><i class="fa fa-check"></i><b>1.2</b> Purpose of this Book</a></li>
+<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#range-of-operations-research-techniques"><i class="fa fa-check"></i><b>1.3</b> Range of Operations Research Techniques</a></li>
+<li class="chapter" data-level="1.4" data-path="introduction.html"><a href="introduction.html#relationship-between-operations-research-and-analytics"><i class="fa fa-check"></i><b>1.4</b> Relationship between Operations Research and Analytics</a></li>
+<li class="chapter" data-level="1.5" data-path="introduction.html"><a href="introduction.html#importance-of-optimization"><i class="fa fa-check"></i><b>1.5</b> Importance of Optimization</a></li>
+<li class="chapter" data-level="1.6" data-path="introduction.html"><a href="introduction.html#why-r"><i class="fa fa-check"></i><b>1.6</b> Why R?</a></li>
+<li class="chapter" data-level="1.7" data-path="introduction.html"><a href="introduction.html#conventions-used-in-this-book"><i class="fa fa-check"></i><b>1.7</b> Conventions Used in this Book</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html"><i class="fa fa-check"></i><b>2</b> Introduction to Linear Programming</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#what-is-linear-programming"><i class="fa fa-check"></i><b>2.1</b> What is Linear Programming</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#two-variable-base-case"><i class="fa fa-check"></i><b>2.2</b> Two Variable Base Case</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#graphically-solving-a-linear-program"><i class="fa fa-check"></i><b>2.3</b> Graphically Solving a Linear Program</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#implementing-and-solving-with-ompr"><i class="fa fa-check"></i><b>2.4</b> Implementing and Solving with <code>ompr</code></a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#preparing-to-implement-the-linear-program"><i class="fa fa-check"></i><b>2.4.1</b> Preparing to Implement the Linear Program</a></li>
+<li class="chapter" data-level="2.4.2" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#implementing-the-base-case-with-piping"><i class="fa fa-check"></i><b>2.4.2</b> Implementing the Base Case with Piping</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#adding-a-third-product-variable"><i class="fa fa-check"></i><b>2.5</b> Adding a Third Product (Variable)</a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#three-variable-base-case-formulation"><i class="fa fa-check"></i><b>2.5.1</b> Three Variable Base Case Formulation</a></li>
+<li class="chapter" data-level="2.5.2" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#three-variable-base-case-implementation"><i class="fa fa-check"></i><b>2.5.2</b> Three Variable Base Case Implementation</a></li>
+<li class="chapter" data-level="2.5.3" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#three-variable-case-results-and-interpretation"><i class="fa fa-check"></i><b>2.5.3</b> Three Variable Case Results and Interpretation</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#linear-programming-special-cases"><i class="fa fa-check"></i><b>2.6</b> Linear Programming Special Cases</a>
+<ul>
+<li class="chapter" data-level="2.6.1" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#case-1-no-feasible-solution"><i class="fa fa-check"></i><b>2.6.1</b> Case 1: No Feasible Solution</a></li>
+<li class="chapter" data-level="2.6.2" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#case-2-multiple-optima"><i class="fa fa-check"></i><b>2.6.2</b> Case 2: Multiple Optima</a></li>
+<li class="chapter" data-level="2.6.3" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#case-3-redundant-constraint"><i class="fa fa-check"></i><b>2.6.3</b> Case 3: Redundant Constraint</a></li>
+<li class="chapter" data-level="2.6.4" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#case-4-unbounded-solution"><i class="fa fa-check"></i><b>2.6.4</b> Case 4: Unbounded Solution</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#abstracting-the-production-planning-model"><i class="fa fa-check"></i><b>2.7</b> Abstracting the Production Planning Model</a></li>
+<li class="chapter" data-level="2.8" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#methods-of-solving-linear-programs"><i class="fa fa-check"></i><b>2.8</b> Methods of Solving Linear Programs</a></li>
+<li class="chapter" data-level="2.9" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#exercises"><i class="fa fa-check"></i><b>2.9</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html"><i class="fa fa-check"></i><b>3</b> More Linear Programming Models</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#types-of-lp-models"><i class="fa fa-check"></i><b>3.1</b> Types of LP Models</a></li>
+<li class="chapter" data-level="3.2" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#the-algebraic-model"><i class="fa fa-check"></i><b>3.2</b> The Algebraic Model</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#tips-and-conventions-for-algebraic-models"><i class="fa fa-check"></i><b>3.2.1</b> Tips and Conventions for Algebraic Models</a></li>
+<li class="chapter" data-level="3.2.2" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#building-the-generalized-model-in-r"><i class="fa fa-check"></i><b>3.2.2</b> Building the Generalized Model in R</a></li>
+<li class="chapter" data-level="3.2.3" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#examining-the-results"><i class="fa fa-check"></i><b>3.2.3</b> Examining the Results</a></li>
+<li class="chapter" data-level="3.2.4" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#changing-the-model"><i class="fa fa-check"></i><b>3.2.4</b> Changing the Model</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#common-linear-programming-applications"><i class="fa fa-check"></i><b>3.3</b> Common Linear Programming Applications</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#blending-problems"><i class="fa fa-check"></i><b>3.3.1</b> Blending Problems</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#allocation-models"><i class="fa fa-check"></i><b>3.4</b> Allocation Models</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#covering-models"><i class="fa fa-check"></i><b>3.4.1</b> Covering Models</a></li>
+<li class="chapter" data-level="3.4.2" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#transportation-models"><i class="fa fa-check"></i><b>3.4.2</b> Transportation Models</a></li>
+<li class="chapter" data-level="3.4.3" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#transshipment-models"><i class="fa fa-check"></i><b>3.4.3</b> Transshipment Models</a></li>
+<li class="chapter" data-level="3.4.4" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#production-and-inventory-planning"><i class="fa fa-check"></i><b>3.4.4</b> Production and Inventory Planning</a></li>
+<li class="chapter" data-level="3.4.5" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#standard-form"><i class="fa fa-check"></i><b>3.4.5</b> Standard Form</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#vector-and-matrix-forms-of-lps"><i class="fa fa-check"></i><b>3.5</b> Vector and Matrix Forms of LPs</a></li>
+<li class="chapter" data-level="3.6" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#exercises-1"><i class="fa fa-check"></i><b>3.6</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html"><i class="fa fa-check"></i><b>4</b> Sensitivity Analysis</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#base-case"><i class="fa fa-check"></i><b>4.1</b> Base Case</a></li>
+<li class="chapter" data-level="4.2" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#shadow-prices"><i class="fa fa-check"></i><b>4.2</b> Shadow Prices</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#extraction-and-interpretation"><i class="fa fa-check"></i><b>4.2.1</b> Extraction and Interpretation</a></li>
+<li class="chapter" data-level="4.2.2" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#example-of-adding-an-hour-to-assembly"><i class="fa fa-check"></i><b>4.2.2</b> Example of Adding an Hour to Assembly</a></li>
+<li class="chapter" data-level="4.2.3" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#shadow-prices-of-underutilized-resources"><i class="fa fa-check"></i><b>4.2.3</b> Shadow Prices of Underutilized Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#reduced-costs-of-variables"><i class="fa fa-check"></i><b>4.3</b> Reduced Costs of Variables</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#reduced-cost-of-ants"><i class="fa fa-check"></i><b>4.3.1</b> Reduced Cost of Ants</a></li>
+<li class="chapter" data-level="4.3.2" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#reduced-price-of-bats"><i class="fa fa-check"></i><b>4.3.2</b> Reduced Price of Bats</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#using-sensitivity-analysis-to-evaluate-a-new-product"><i class="fa fa-check"></i><b>4.4</b> Using Sensitivity Analysis to Evaluate a New Product</a></li>
+<li class="chapter" data-level="4.5" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#exercises-2"><i class="fa fa-check"></i><b>4.5</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html"><i class="fa fa-check"></i><b>5</b> Data Envelopment Analysis</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#introduction-1"><i class="fa fa-check"></i><b>5.1</b> Introduction</a></li>
+<li class="chapter" data-level="5.2" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#creating-the-data"><i class="fa fa-check"></i><b>5.2</b> Creating the Data</a></li>
+<li class="chapter" data-level="5.3" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#graphical-analysis"><i class="fa fa-check"></i><b>5.3</b> Graphical Analysis</a></li>
+<li class="chapter" data-level="5.4" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#the-linear-programs-for-dea"><i class="fa fa-check"></i><b>5.4</b> The Linear Programs for DEA</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#an-explicit-linear-program-for-dea"><i class="fa fa-check"></i><b>5.4.1</b> An Explicit Linear Program for DEA</a></li>
+<li class="chapter" data-level="5.4.2" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#a-generalized-linear-program-for-dea"><i class="fa fa-check"></i><b>5.4.2</b> A Generalized Linear Program for DEA</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#creating-the-lp---the-algebraic-approach"><i class="fa fa-check"></i><b>5.5</b> Creating the LP - The Algebraic Approach</a></li>
+<li class="chapter" data-level="5.6" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#returns-to-scale"><i class="fa fa-check"></i><b>5.6</b> Returns to Scale</a></li>
+<li class="chapter" data-level="5.7" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#multiple-inputs-and-multiple-outputs"><i class="fa fa-check"></i><b>5.7</b> Multiple Inputs and Multiple Outputs</a></li>
+<li class="chapter" data-level="5.8" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#extracting-multiplier-weights-from-sensitivity-analysis"><i class="fa fa-check"></i><b>5.8</b> Extracting Multiplier Weights from Sensitivity Analysis</a></li>
+<li class="chapter" data-level="5.9" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#slack-maximization"><i class="fa fa-check"></i><b>5.9</b> Slack Maximization</a></li>
+<li class="chapter" data-level="5.10" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#dea-packages"><i class="fa fa-check"></i><b>5.10</b> DEA Packages</a></li>
+<li class="chapter" data-level="5.11" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#dea-model-building"><i class="fa fa-check"></i><b>5.11</b> DEA Model Building</a>
+<ul>
+<li class="chapter" data-level="5.11.1" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#selection-of-inputs-and-outputs"><i class="fa fa-check"></i><b>5.11.1</b> Selection of Inputs and Outputs</a></li>
+<li class="chapter" data-level="5.11.2" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#model-choices"><i class="fa fa-check"></i><b>5.11.2</b> Model Choices</a></li>
+<li class="chapter" data-level="5.11.3" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#application-area-expertise"><i class="fa fa-check"></i><b>5.11.3</b> Application Area Expertise</a></li>
+</ul></li>
+<li class="chapter" data-level="5.12" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#further-reading"><i class="fa fa-check"></i><b>5.12</b> Further Reading</a></li>
+<li class="chapter" data-level="5.13" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#exercises-3"><i class="fa fa-check"></i><b>5.13</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html"><i class="fa fa-check"></i><b>6</b> Mixed Integer Optimization</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#example-of-minor-integrality-impact"><i class="fa fa-check"></i><b>6.1</b> Example of Minor Integrality Impact</a></li>
+<li class="chapter" data-level="6.2" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#example-of-major-integality-impact"><i class="fa fa-check"></i><b>6.2</b> Example of Major Integality Impact</a></li>
+<li class="chapter" data-level="6.3" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#the-branch-and-bound-algorithm"><i class="fa fa-check"></i><b>6.3</b> The Branch and Bound Algorithm</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#the-lp-relaxation"><i class="fa fa-check"></i><b>6.3.1</b> The LP Relaxation</a></li>
+<li class="chapter" data-level="6.3.2" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-i"><i class="fa fa-check"></i><b>6.3.2</b> Subproblem I</a></li>
+<li class="chapter" data-level="6.3.3" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-iii"><i class="fa fa-check"></i><b>6.3.3</b> Subproblem III</a></li>
+<li class="chapter" data-level="6.3.4" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-iv"><i class="fa fa-check"></i><b>6.3.4</b> Subproblem IV</a></li>
+<li class="chapter" data-level="6.3.5" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-v"><i class="fa fa-check"></i><b>6.3.5</b> Subproblem V</a></li>
+<li class="chapter" data-level="6.3.6" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-vi"><i class="fa fa-check"></i><b>6.3.6</b> Subproblem VI</a></li>
+<li class="chapter" data-level="6.3.7" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-vii"><i class="fa fa-check"></i><b>6.3.7</b> Subproblem VII</a></li>
+<li class="chapter" data-level="6.3.8" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-viii"><i class="fa fa-check"></i><b>6.3.8</b> Subproblem VIII</a></li>
+<li class="chapter" data-level="6.3.9" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-ii"><i class="fa fa-check"></i><b>6.3.9</b> Subproblem II</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#computational-complexity"><i class="fa fa-check"></i><b>6.4</b> Computational Complexity</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#full-enumeration"><i class="fa fa-check"></i><b>6.4.1</b> Full Enumeration</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#binary-variables-and-logical-relations"><i class="fa fa-check"></i><b>6.5</b> Binary Variables and Logical Relations</a></li>
+<li class="chapter" data-level="6.6" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#fixed-charge-models"><i class="fa fa-check"></i><b>6.6</b> Fixed Charge Models</a>
+<ul>
+<li class="chapter" data-level="6.6.1" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#fixed-charge-example-introduction"><i class="fa fa-check"></i><b>6.6.1</b> Fixed Charge Example-Introduction</a></li>
+<li class="chapter" data-level="6.6.2" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#linking-constraints-with-big-m"><i class="fa fa-check"></i><b>6.6.2</b> Linking Constraints with “Big M”</a></li>
+<li class="chapter" data-level="6.6.3" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#fixed-charge-implementation"><i class="fa fa-check"></i><b>6.6.3</b> Fixed Charge Implementation</a></li>
+</ul></li>
+<li class="chapter" data-level="6.7" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#model-results-and-interpretation"><i class="fa fa-check"></i><b>6.7</b> Model Results and Interpretation</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html"><i class="fa fa-check"></i><b>7</b> More Integer Programming Models</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#overview"><i class="fa fa-check"></i><b>7.1</b> Overview</a></li>
+<li class="chapter" data-level="7.2" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#revisiting-the-warehouse-location-problem"><i class="fa fa-check"></i><b>7.2</b> Revisiting the Warehouse Location Problem</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#implementing-the-warehouse-model"><i class="fa fa-check"></i><b>7.2.1</b> Implementing the Warehouse Model</a></li>
+<li class="chapter" data-level="7.2.2" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#solving-the-warehouse-location-problem"><i class="fa fa-check"></i><b>7.2.2</b> Solving the Warehouse Location Problem</a></li>
+<li class="chapter" data-level="7.2.3" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#warehouse-discussion"><i class="fa fa-check"></i><b>7.2.3</b> Warehouse Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#solving-mips-with-different-solvers"><i class="fa fa-check"></i><b>7.3</b> Solving MIPs with Different Solvers</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#performance-of-glpk"><i class="fa fa-check"></i><b>7.3.1</b> Performance of <code>glpk</code></a></li>
+<li class="chapter" data-level="7.3.2" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#performance-of-symphony"><i class="fa fa-check"></i><b>7.3.2</b> Performance of <code>symphony</code></a></li>
+<li class="chapter" data-level="7.3.3" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#performance-of-lpsolve"><i class="fa fa-check"></i><b>7.3.3</b> Performance of <code>lpsolve</code></a></li>
+<li class="chapter" data-level="7.3.4" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#performance-of-gurobi"><i class="fa fa-check"></i><b>7.3.4</b> Performance of <code>gurobi</code></a></li>
+<li class="chapter" data-level="7.3.5" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#comparing-results-across-solvers"><i class="fa fa-check"></i><b>7.3.5</b> Comparing Results across Solvers</a></li>
+<li class="chapter" data-level="7.3.6" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#popularity-of-lp-solvers"><i class="fa fa-check"></i><b>7.3.6</b> Popularity of LP Solvers</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#solving-sudoku-puzzles-using-optimization"><i class="fa fa-check"></i><b>7.4</b> Solving Sudoku Puzzles using Optimization</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#introduction-to-sudoku-and-optimization"><i class="fa fa-check"></i><b>7.4.1</b> Introduction to Sudoku and Optimization</a></li>
+<li class="chapter" data-level="7.4.2" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#formulating-the-sudoku-problem"><i class="fa fa-check"></i><b>7.4.2</b> Formulating the Sudoku Problem</a></li>
+<li class="chapter" data-level="7.4.3" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#implementing-sudoku-in-ompr"><i class="fa fa-check"></i><b>7.4.3</b> Implementing Sudoku in ompr</a></li>
+<li class="chapter" data-level="7.4.4" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#sudoku-discussion"><i class="fa fa-check"></i><b>7.4.4</b> Sudoku Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#exercises-4"><i class="fa fa-check"></i><b>7.5</b> Exercises</a></li>
+<li class="chapter" data-level="7.6" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#production-planning-over-time"><i class="fa fa-check"></i><b>7.6</b> Production Planning over Time</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#implementing-the-model-1"><i class="fa fa-check"></i><b>7.6.1</b> Implementing the Model</a></li>
+</ul></li>
+<li class="chapter" data-level="7.7" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#additional-exercises"><i class="fa fa-check"></i><b>7.7</b> Additional Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="goal-programming.html"><a href="goal-programming.html"><i class="fa fa-check"></i><b>8</b> Goal Programming</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="goal-programming.html"><a href="goal-programming.html#introduction-2"><i class="fa fa-check"></i><b>8.1</b> Introduction</a></li>
+<li class="chapter" data-level="8.2" data-path="goal-programming.html"><a href="goal-programming.html#preemptive-goal-programming"><i class="fa fa-check"></i><b>8.2</b> Preemptive Goal Programming</a></li>
+<li class="chapter" data-level="8.3" data-path="goal-programming.html"><a href="goal-programming.html#policies-for-houselessness"><i class="fa fa-check"></i><b>8.3</b> Policies for Houselessness</a></li>
+<li class="chapter" data-level="8.4" data-path="goal-programming.html"><a href="goal-programming.html#mass-mailings"><i class="fa fa-check"></i><b>8.4</b> Mass Mailings</a>
+<ul>
+<li class="chapter" data-level="8.4.1" data-path="goal-programming.html"><a href="goal-programming.html#formulating-the-state-mailing-model"><i class="fa fa-check"></i><b>8.4.1</b> Formulating the State Mailing Model</a></li>
+<li class="chapter" data-level="8.4.2" data-path="goal-programming.html"><a href="goal-programming.html#implementing-the-state-mailing-model"><i class="fa fa-check"></i><b>8.4.2</b> Implementing the State Mailing Model</a></li>
+<li class="chapter" data-level="8.4.3" data-path="goal-programming.html"><a href="goal-programming.html#frontloading-the-work"><i class="fa fa-check"></i><b>8.4.3</b> Frontloading the Work</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="goal-programming.html"><a href="goal-programming.html#exercises-5"><i class="fa fa-check"></i><b>8.5</b> Exercises</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="a-very-brief-introduction-to-r.html"><a href="a-very-brief-introduction-to-r.html"><i class="fa fa-check"></i><b>A</b> A Very Brief Introduction to R</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="a-very-brief-introduction-to-r.html"><a href="a-very-brief-introduction-to-r.html#purpose"><i class="fa fa-check"></i><b>A.1</b> Purpose</a></li>
+<li class="chapter" data-level="A.2" data-path="a-very-brief-introduction-to-r.html"><a href="a-very-brief-introduction-to-r.html#getting-started-with-r"><i class="fa fa-check"></i><b>A.2</b> Getting Started with R</a></li>
+<li class="chapter" data-level="A.3" data-path="a-very-brief-introduction-to-r.html"><a href="a-very-brief-introduction-to-r.html#exercises-6"><i class="fa fa-check"></i><b>A.3</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html"><i class="fa fa-check"></i><b>B</b> Introduction to Math Notation</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#purpose-1"><i class="fa fa-check"></i><b>B.1</b> Purpose</a></li>
+<li class="chapter" data-level="B.2" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#basic-summation-notation"><i class="fa fa-check"></i><b>B.2</b> Basic Summation Notation</a></li>
+<li class="chapter" data-level="B.3" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#using-latex-in-rmarkdown"><i class="fa fa-check"></i><b>B.3</b> Using LaTeX in RMarkdown</a></li>
+<li class="chapter" data-level="B.4" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#inline-notation"><i class="fa fa-check"></i><b>B.4</b> Inline Notation</a></li>
+<li class="chapter" data-level="B.5" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#sums"><i class="fa fa-check"></i><b>B.5</b> Sums</a></li>
+<li class="chapter" data-level="B.6" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#delimiters"><i class="fa fa-check"></i><b>B.6</b> Delimiters</a></li>
+<li class="chapter" data-level="B.7" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#summary-of-mathematical-notations"><i class="fa fa-check"></i><b>B.7</b> Summary of Mathematical Notations</a></li>
+<li class="chapter" data-level="B.8" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#sequences-and-summation-notation"><i class="fa fa-check"></i><b>B.8</b> Sequences and Summation Notation</a></li>
+<li class="chapter" data-level="B.9" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#applications-of-summation"><i class="fa fa-check"></i><b>B.9</b> Applications of Summation</a></li>
+<li class="chapter" data-level="B.10" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#double-summation"><i class="fa fa-check"></i><b>B.10</b> Double Summation</a></li>
+<li class="chapter" data-level="B.11" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#applications-of-double-summation"><i class="fa fa-check"></i><b>B.11</b> Applications of Double Summation</a></li>
+<li class="chapter" data-level="B.12" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#exercises-7"><i class="fa fa-check"></i><b>B.12</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="troubleshooting.html"><a href="troubleshooting.html"><i class="fa fa-check"></i><b>C</b> Troubleshooting</a>
+<ul>
+<li class="chapter" data-level="C.1" data-path="troubleshooting.html"><a href="troubleshooting.html#overview-1"><i class="fa fa-check"></i><b>C.1</b> Overview</a></li>
+<li class="chapter" data-level="C.2" data-path="troubleshooting.html"><a href="troubleshooting.html#model-building"><i class="fa fa-check"></i><b>C.2</b> Model Building</a>
+<ul>
+<li class="chapter" data-level="C.2.1" data-path="troubleshooting.html"><a href="troubleshooting.html#define-and-formulate-before-implementing"><i class="fa fa-check"></i><b>C.2.1</b> Define and Formulate before Implementing</a></li>
+<li class="chapter" data-level="C.2.2" data-path="troubleshooting.html"><a href="troubleshooting.html#failing-to-look-for-past-optimization-models"><i class="fa fa-check"></i><b>C.2.2</b> Failing to Look for Past Optimization Models</a></li>
+<li class="chapter" data-level="C.2.3" data-path="troubleshooting.html"><a href="troubleshooting.html#misrendering-of-pdf"><i class="fa fa-check"></i><b>C.2.3</b> Misrendering of PDF</a></li>
+<li class="chapter" data-level="C.2.4" data-path="troubleshooting.html"><a href="troubleshooting.html#blank-lines-in-latex"><i class="fa fa-check"></i><b>C.2.4</b> Blank Lines in LaTeX</a></li>
+<li class="chapter" data-level="C.2.5" data-path="troubleshooting.html"><a href="troubleshooting.html#problems-with-pdf-creation"><i class="fa fa-check"></i><b>C.2.5</b> Problems with PDF Creation</a></li>
+</ul></li>
+<li class="chapter" data-level="C.3" data-path="troubleshooting.html"><a href="troubleshooting.html#implementation-troubleshooting"><i class="fa fa-check"></i><b>C.3</b> Implementation Troubleshooting</a>
+<ul>
+<li class="chapter" data-level="C.3.1" data-path="troubleshooting.html"><a href="troubleshooting.html#errors-in-a-piped-model"><i class="fa fa-check"></i><b>C.3.1</b> Errors in a Piped Model</a></li>
+<li class="chapter" data-level="C.3.2" data-path="troubleshooting.html"><a href="troubleshooting.html#undefined-object-in-ompr"><i class="fa fa-check"></i><b>C.3.2</b> Undefined Object in <code>ompr</code></a></li>
+<li class="chapter" data-level="C.3.3" data-path="troubleshooting.html"><a href="troubleshooting.html#unexpected-symbol-in-ompr"><i class="fa fa-check"></i><b>C.3.3</b> Unexpected Symbol in <code>ompr</code></a></li>
+<li class="chapter" data-level="C.3.4" data-path="troubleshooting.html"><a href="troubleshooting.html#name-conflicts-between-r-and-ompr"><i class="fa fa-check"></i><b>C.3.4</b> Name Conflicts between R and <code>ompr</code></a></li>
+<li class="chapter" data-level="C.3.5" data-path="troubleshooting.html"><a href="troubleshooting.html#blindly-reusing-code"><i class="fa fa-check"></i><b>C.3.5</b> Blindly Reusing Code</a></li>
+</ul></li>
+<li class="chapter" data-level="C.4" data-path="troubleshooting.html"><a href="troubleshooting.html#general-debugging-tips"><i class="fa fa-check"></i><b>C.4</b> General Debugging Tips</a></li>
+<li class="chapter" data-level="C.5" data-path="troubleshooting.html"><a href="troubleshooting.html#getting-help"><i class="fa fa-check"></i><b>C.5</b> Getting Help</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="making-good-tables.html"><a href="making-good-tables.html"><i class="fa fa-check"></i><b>D</b> Making Good Tables</a>
+<ul>
+<li class="chapter" data-level="D.1" data-path="making-good-tables.html"><a href="making-good-tables.html#importance-of-tables-in-modeling"><i class="fa fa-check"></i><b>D.1</b> Importance of Tables in Modeling</a></li>
+<li class="chapter" data-level="D.2" data-path="making-good-tables.html"><a href="making-good-tables.html#kable-vs.-kbl"><i class="fa fa-check"></i><b>D.2</b> Kable vs. Kbl</a></li>
+<li class="chapter" data-level="D.3" data-path="making-good-tables.html"><a href="making-good-tables.html#table-footnotes-with-kable"><i class="fa fa-check"></i><b>D.3</b> Table Footnotes with Kable</a></li>
+<li class="chapter" data-level="D.4" data-path="making-good-tables.html"><a href="making-good-tables.html#setting-row-and-column-names-in-kable"><i class="fa fa-check"></i><b>D.4</b> Setting Row and Column Names in Kable</a></li>
+<li class="chapter" data-level="D.5" data-path="making-good-tables.html"><a href="making-good-tables.html#booktabs-vs.-default"><i class="fa fa-check"></i><b>D.5</b> Booktabs vs. Default</a></li>
+<li class="chapter" data-level="D.6" data-path="making-good-tables.html"><a href="making-good-tables.html#using-latex-in-kable-column-names"><i class="fa fa-check"></i><b>D.6</b> Using LaTeX in Kable Column Names</a></li>
+<li class="chapter" data-level="D.7" data-path="making-good-tables.html"><a href="making-good-tables.html#fitting-tables-to-page-width"><i class="fa fa-check"></i><b>D.7</b> Fitting Tables to Page Width</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Optimization Modeling Using R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="mixed-integer-optimization" class="section level1" number="6">
+<h1><span class="header-section-number">Chapter 6</span> Mixed Integer Optimization</h1>
+<p>Up until this point, we have always assumed that variables could take on fractional (or non-integer) values. In other words, they were continuous variables. Sometimes the values conveniently turned out to be integer-valued, in other cases, we would brush off the non-integer values of the results.</p>
+<p>Allowing for integer values opens up many more important areas of applications as we will see. Let’s look at two numerical examples. The first shows a case where integrality makes little difference, the second where it has a major impact.</p>
+<p>Unfortunately, there is no such thing as a free lunch-adding and integrality can make problems much more computationally demanding. We will go through an example of how many optimization routines do integer optimization to demonstrate why it can be more difficult algorithmically even if looks trivially easy from the perspective of the change in the <code>ompr</code>function.</p>
+<div id="example-of-minor-integrality-impact" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> Example of Minor Integrality Impact</h2>
+<p>Let’s revisit the earlier example of producing drones with one additional hour in assembly as we did in Chapter 4. As a reminder, the LP is the same three variable case we have been using with a change of 901 instead of 900 for the second constraint’s right hand side.</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{Max    } &amp; 7\cdot Ants +12 \cdot Bats +5\cdot Cats \\
+    \text{s.t.:  } &amp; 1\cdot Ants + 4\cdot Bats +2\cdot Cats \leq 800 \\
+                   &amp; 3\cdot Ants + 6\cdot Bats +2\cdot Cats \leq 
+                          \textcolor{red}{901} \\
+                   &amp; 2\cdot Ants + 2\cdot Bats +1\cdot Cats \leq 480 \\
+                   &amp; 2\cdot Ants + 10\cdot Bats +2\cdot Cats \leq 1200 \\
+                   &amp; Ants, Bats, Cats \geq 0  
+  \end{aligned}
+  \end{split}
+\]</span></p>
+<p>We use the following implementation.</p>
+<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb151-1"><a href="mixed-integer-optimization.html#cb151-1" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">|&gt;</span></span>
+<span id="cb151-2"><a href="mixed-integer-optimization.html#cb151-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Ants, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb151-3"><a href="mixed-integer-optimization.html#cb151-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Bats, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb151-4"><a href="mixed-integer-optimization.html#cb151-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Cats, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb151-5"><a href="mixed-integer-optimization.html#cb151-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb151-6"><a href="mixed-integer-optimization.html#cb151-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_objective</span>(<span class="dv">7</span><span class="sc">*</span>Ants <span class="sc">+</span> <span class="dv">12</span><span class="sc">*</span>Bats <span class="sc">+</span> <span class="dv">5</span><span class="sc">*</span>Cats,<span class="st">&quot;max&quot;</span>)  <span class="sc">|&gt;</span></span>
+<span id="cb151-7"><a href="mixed-integer-optimization.html#cb151-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb151-8"><a href="mixed-integer-optimization.html#cb151-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">1</span><span class="sc">*</span>Ants <span class="sc">+</span> <span class="dv">4</span><span class="sc">*</span>Bats <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>Cats<span class="sc">&lt;=</span><span class="dv">800</span>)   <span class="sc">|&gt;</span> <span class="co"># machining</span></span>
+<span id="cb151-9"><a href="mixed-integer-optimization.html#cb151-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">3</span><span class="sc">*</span>Ants <span class="sc">+</span> <span class="dv">6</span><span class="sc">*</span>Bats <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>Cats<span class="sc">&lt;=</span><span class="dv">901</span>)   <span class="sc">|&gt;</span> <span class="co"># assembly</span></span>
+<span id="cb151-10"><a href="mixed-integer-optimization.html#cb151-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">2</span><span class="sc">*</span>Ants <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>Bats <span class="sc">+</span> <span class="dv">1</span><span class="sc">*</span>Cats<span class="sc">&lt;=</span><span class="dv">480</span>)   <span class="sc">|&gt;</span> <span class="co"># testing</span></span>
+<span id="cb151-11"><a href="mixed-integer-optimization.html#cb151-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">2</span><span class="sc">*</span>Ants <span class="sc">+</span> <span class="dv">10</span><span class="sc">*</span>Bats <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>Cats<span class="sc">&lt;=</span><span class="dv">1200</span>)    <span class="co"># sensors</span></span>
+<span id="cb151-12"><a href="mixed-integer-optimization.html#cb151-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb151-13"><a href="mixed-integer-optimization.html#cb151-13" aria-hidden="true" tabindex="-1"></a>result1 <span class="ot">&lt;-</span>  <span class="fu">solve_model</span>(model1, <span class="fu">with_ROI</span>(<span class="at">solver=</span><span class="st">&quot;glpk&quot;</span>))</span>
+<span id="cb151-14"><a href="mixed-integer-optimization.html#cb151-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb151-15"><a href="mixed-integer-optimization.html#cb151-15" aria-hidden="true" tabindex="-1"></a>inc_as_res <span class="ot">&lt;-</span> <span class="fu">cbind</span> (result1<span class="sc">$</span>objective_value, </span>
+<span id="cb151-16"><a href="mixed-integer-optimization.html#cb151-16" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">t</span>(result1<span class="sc">$</span>solution))</span>
+<span id="cb151-17"><a href="mixed-integer-optimization.html#cb151-17" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(inc_as_res)<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&quot;Profit&quot;</span>, <span class="st">&quot;Ants&quot;</span>, <span class="st">&quot;Bats&quot;</span>, <span class="st">&quot;Cats&quot;</span>)</span>
+<span id="cb151-18"><a href="mixed-integer-optimization.html#cb151-18" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (inc_as_res, <span class="at">digits=</span><span class="dv">6</span>, <span class="at">booktabs=</span>T,</span>
+<span id="cb151-19"><a href="mixed-integer-optimization.html#cb151-19" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption=</span><span class="st">&quot;Production Plan with Continuous Variables&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb151-20"><a href="mixed-integer-optimization.html#cb151-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:base-case-3varB">TABLE 6.1: </span>Production Plan with Continuous Variables
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+Profit
+</th>
+<th style="text-align:right;">
+Ants
+</th>
+<th style="text-align:right;">
+Bats
+</th>
+<th style="text-align:right;">
+Cats
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+2227.25
+</td>
+<td style="text-align:right;">
+50.5
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+374.75
+</td>
+</tr>
+</tbody>
+</table>
+<p>In this case, the fractional value of <em>Cats</em> would be only somewhat concerning. We wouldn’t actually ship an 80% complete Cat drone to a customer-at least I hope not. The difference between 374 and 375 is relatively small over a month of production. This is a difference of much less than 1% and none of the numbers specified in the model appear to be reported to more than two significant digits or this level of precision. The result is that we could specify the answer as 374.8 and be satisfied that while it is our actual best guess or might reflect a chair half finished for the next month, it isn’t a major concern.<br />
+</p>
+<p>For the sake of illustration, let’s show how we would modify the model to be integers. If we had wanted to modify the problem to force the amount of each item to be produced to be an integer value, we can modify our formulation and the implementation with only a few small changes.<br />
+</p>
+<p>In the formulation, we can replace the non-negativity requirement with a restriction that the variables are drawn from the set of non-negative integers.<br />
+</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{Max    } &amp; 7\cdot Ants +12 \cdot Bats +5\cdot Cats \\
+    \text{s.t.:  } &amp; 1\cdot Ants + 4\cdot Bats +2\cdot Cats \leq 800 \\
+                   &amp; 3\cdot Ants + 6\cdot Bats +2\cdot Cats \leq 901\\
+                   &amp; 2\cdot Ants + 2\cdot Bats +1\cdot Cats \leq 480 \\
+                   &amp; 2\cdot Ants + 10\cdot Bats +2\cdot Cats \leq 1200 \\
+                   &amp; Ants, \; Bats, \; Cats \; \textcolor{red} { \in \{0,1,2,3, \ldots \} }   
+  \end{aligned}
+  \end{split}
+\]</span></p>
+<p>The <code>ompr</code> implementation has a similar, straightforward change. In the declaration of variables (<code>add_variable</code> function), we simply set the type to be <code>integer</code> rather than <code>continuous</code>. Since nothing else is changing in the model, we can simply re-add the variables to redefine them from being continuous to be integer.<br />
+</p>
+<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb152-1"><a href="mixed-integer-optimization.html#cb152-1" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">add_variable</span>(model1, Ants, <span class="at">type =</span> <span class="st">&quot;integer&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>)</span>
+<span id="cb152-2"><a href="mixed-integer-optimization.html#cb152-2" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">add_variable</span>(model1, Bats, <span class="at">type =</span> <span class="st">&quot;integer&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>)</span>
+<span id="cb152-3"><a href="mixed-integer-optimization.html#cb152-3" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">add_variable</span>(model1, Cats, <span class="at">type =</span> <span class="st">&quot;integer&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>)</span></code></pre></div>
+<p>Let’s confirm that the implemented model is of the form desired.</p>
+<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="mixed-integer-optimization.html#cb153-1" aria-hidden="true" tabindex="-1"></a>model1</span></code></pre></div>
+<pre><code>## Mixed integer linear optimization problem
+## Variables:
+##   Continuous: 0 
+##   Integer: 3 
+##   Binary: 0 
+## Model sense: maximize 
+## Constraints: 4</code></pre>
+<p>We can see that it now has three integer variables replacing the variables of the same name that were continuous so let’s move on to solving it and comparing our results.</p>
+<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="mixed-integer-optimization.html#cb155-1" aria-hidden="true" tabindex="-1"></a>result1 <span class="ot">&lt;-</span>  <span class="fu">solve_model</span>(model1, <span class="fu">with_ROI</span>(<span class="at">solver=</span><span class="st">&quot;glpk&quot;</span>))</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-28">TABLE 6.2: </span>Production Plans based on Variable Type.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Profit
+</th>
+<th style="text-align:right;">
+Ants
+</th>
+<th style="text-align:right;">
+Bats
+</th>
+<th style="text-align:right;">
+Cats
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Continuous
+</td>
+<td style="text-align:right;">
+2227.25
+</td>
+<td style="text-align:right;">
+50.5
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+374.75
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Integer
+</td>
+<td style="text-align:right;">
+2227.00
+</td>
+<td style="text-align:right;">
+51.0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+374.00
+</td>
+</tr>
+</tbody>
+</table>
+<p>Notice that in this case, there was a small adjustment to the production plan and a small decrease to the optimal objective function value. This is not always the case, sometimes the result can be unchanged. In other cases, it may be changed in a very large way. In still others, the problem may in fact even become infeasible.</p>
+</div>
+<div id="example-of-major-integality-impact" class="section level2" number="6.2">
+<h2><span class="header-section-number">6.2</span> Example of Major Integality Impact</h2>
+<p>Let’s take a look at another example. Acme makes two products, let’s refer to them as product 1 and 2. Product 1 generates a profit of $2000 per product, requires three liters of surfactant for cleaning, and eight kilograms of high grade steel.</p>
+<p>In contrast, each unit of Product 2 produced generates a higher profit of $3000 per product, requires eight liters of surfactant, and three kilograms of high grade steel. Acme has 31 liters of surfactant and 26 kilograms of high grade steel.</p>
+<p>Only completed products are sellable, what should be Acme’s production plan?</p>
+<p>Formulating the optimization problem is similar to our earliest production planning problems. Let’s define <span class="math inline">\(x_1\)</span> to be the amount of product 1 to produce and <span class="math inline">\(x_2\)</span> to be the amount of product 2 to produce.</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{Max   } &amp; 2 x_1 + 3 x_2 \\
+    \text{s.t.  } &amp; 3 x_1 + 9 x_2 \leq 31 &amp; \text{[Surfactant]}\\
+                  &amp; 8 x_1 + 3 x_2 \leq 26 &amp; \text{[Steel]}\\
+                  &amp; x_1,  \; x_2  \in \{0,1,2,3,...\}
+  \end{aligned}
+  \end{split}
+\]</span>
+At first glance, this looks the same as our earlier drone eample but the last constraint cannot be solved directly strictly using linear programming. It is instead referred to as an integer linear program or ILP.</p>
+<p>Again, we could try solving it with and without the imposition of the integrality constraint.</p>
+<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb156-1"><a href="mixed-integer-optimization.html#cb156-1" aria-hidden="true" tabindex="-1"></a>LPRmod <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">|&gt;</span></span>
+<span id="cb156-2"><a href="mixed-integer-optimization.html#cb156-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Vx1, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb156-3"><a href="mixed-integer-optimization.html#cb156-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Vx2, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb156-4"><a href="mixed-integer-optimization.html#cb156-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_objective</span>(<span class="dv">2</span><span class="sc">*</span>Vx1 <span class="sc">+</span> <span class="dv">3</span><span class="sc">*</span>Vx2, <span class="st">&quot;max&quot;</span>)         <span class="sc">|&gt;</span></span>
+<span id="cb156-5"><a href="mixed-integer-optimization.html#cb156-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="fl">3.0</span><span class="sc">*</span>Vx1 <span class="sc">+</span> <span class="fl">9.0</span><span class="sc">*</span>Vx2 <span class="sc">&lt;=</span> <span class="dv">31</span>)     <span class="sc">|&gt;</span> <span class="co"># Surfactant</span></span>
+<span id="cb156-6"><a href="mixed-integer-optimization.html#cb156-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="fl">8.0</span><span class="sc">*</span>Vx1 <span class="sc">+</span> <span class="fl">3.0</span><span class="sc">*</span>Vx2 <span class="sc">&lt;=</span> <span class="dv">26</span>)        <span class="co"># Steel</span></span>
+<span id="cb156-7"><a href="mixed-integer-optimization.html#cb156-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb156-8"><a href="mixed-integer-optimization.html#cb156-8" aria-hidden="true" tabindex="-1"></a>LPSolR <span class="ot">&lt;-</span>  <span class="fu">solve_model</span>(LPRmod, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
+<span id="cb156-9"><a href="mixed-integer-optimization.html#cb156-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb156-10"><a href="mixed-integer-optimization.html#cb156-10" aria-hidden="true" tabindex="-1"></a>obj_val <span class="ot">&lt;-</span> <span class="fu">objective_value</span>(LPSolR)</span>
+<span id="cb156-11"><a href="mixed-integer-optimization.html#cb156-11" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (LPSolR, <span class="st">&#39;Vx1&#39;</span>)</span>
+<span id="cb156-12"><a href="mixed-integer-optimization.html#cb156-12" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (LPSolR, <span class="st">&#39;Vx2&#39;</span>)</span>
+<span id="cb156-13"><a href="mixed-integer-optimization.html#cb156-13" aria-hidden="true" tabindex="-1"></a>acme_res_lp  <span class="ot">&lt;-</span> <span class="fu">cbind</span>(x1,x2,obj_val)</span>
+<span id="cb156-14"><a href="mixed-integer-optimization.html#cb156-14" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(acme_res_lp) <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">&quot;x1&quot;</span>, <span class="st">&quot;x2&quot;</span>, <span class="st">&quot;Profit&quot;</span>)</span>
+<span id="cb156-15"><a href="mixed-integer-optimization.html#cb156-15" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(acme_res_lp) <span class="ot">&lt;-</span> <span class="st">&quot;LP Solution&quot;</span></span></code></pre></div>
+<p>All we need to do is repeat the same process with changing the variable type to <code>integer</code> instead of <code>continuous</code>.</p>
+<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb157-1"><a href="mixed-integer-optimization.html#cb157-1" aria-hidden="true" tabindex="-1"></a>IPmod <span class="ot">&lt;-</span> <span class="fu">add_variable</span>(LPRmod, Vx1, <span class="at">type =</span> <span class="st">&quot;integer&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb157-2"><a href="mixed-integer-optimization.html#cb157-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Vx2, <span class="at">type =</span> <span class="st">&quot;integer&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>)</span>
+<span id="cb157-3"><a href="mixed-integer-optimization.html#cb157-3" aria-hidden="true" tabindex="-1"></a>IPSolR <span class="ot">&lt;-</span>  <span class="fu">solve_model</span> (IPmod, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
+<span id="cb157-4"><a href="mixed-integer-optimization.html#cb157-4" aria-hidden="true" tabindex="-1"></a>obj_val <span class="ot">&lt;-</span> <span class="fu">objective_value</span>(IPSolR)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:Fig-LP-Feasible-Region"></span>
+<img src="images/BB01.PNG" alt="LP Region and 10 IP Feasible Solutions" width="45%" /><img src="images/BB03.PNG" alt="LP Region and 10 IP Feasible Solutions" width="45%" />
+<p class="caption">
+FIGURE 6.1: LP Region and 10 IP Feasible Solutions
+</p>
+</div>
+<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb158-1"><a href="mixed-integer-optimization.html#cb158-1" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (IPSolR, <span class="st">&#39;Vx1&#39;</span>)</span>
+<span id="cb158-2"><a href="mixed-integer-optimization.html#cb158-2" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (IPSolR, <span class="st">&#39;Vx2&#39;</span>)</span>
+<span id="cb158-3"><a href="mixed-integer-optimization.html#cb158-3" aria-hidden="true" tabindex="-1"></a>acme_res_ip  <span class="ot">&lt;-</span> <span class="fu">cbind</span>(x1,x2,obj_val)</span>
+<span id="cb158-4"><a href="mixed-integer-optimization.html#cb158-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb158-5"><a href="mixed-integer-optimization.html#cb158-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(acme_res_ip) <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">&quot;x1&quot;</span>, <span class="st">&quot;x2&quot;</span>, <span class="st">&quot;Profit&quot;</span>)</span>
+<span id="cb158-6"><a href="mixed-integer-optimization.html#cb158-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(acme_res_ip) <span class="ot">&lt;-</span> <span class="st">&quot;IP Solution&quot;</span></span>
+<span id="cb158-7"><a href="mixed-integer-optimization.html#cb158-7" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">rbind</span>(acme_res_lp,acme_res_ip), <span class="at">booktabs=</span>T, <span class="at">digits=</span><span class="dv">3</span>,</span>
+<span id="cb158-8"><a href="mixed-integer-optimization.html#cb158-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption=</span><span class="st">&quot;Production Plan-Continuous vs. Integer&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb158-9"><a href="mixed-integer-optimization.html#cb158-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-29">TABLE 6.3: </span>Production Plan-Continuous vs. Integer
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+x1
+</th>
+<th style="text-align:right;">
+x2
+</th>
+<th style="text-align:right;">
+Profit
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+LP Solution
+</td>
+<td style="text-align:right;">
+2.238
+</td>
+<td style="text-align:right;">
+2.698
+</td>
+<td style="text-align:right;">
+12.571
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+IP Solution
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+<td style="text-align:right;">
+3.000
+</td>
+<td style="text-align:right;">
+11.000
+</td>
+</tr>
+</tbody>
+</table>
+<p>Simply rounding down did not yield an optimal solution. Notice that production of product 1 went down while product 2 went up. The net impact was a profit reduction of almost <em>10%</em>.</p>
+</div>
+<div id="the-branch-and-bound-algorithm" class="section level2" number="6.3">
+<h2><span class="header-section-number">6.3</span> The Branch and Bound Algorithm</h2>
+<p>The simplicity of making the change in the model from continuous to integer variables hides or understates the complexity of what needs to be done computationally to solve the optimization problem. This small change can have major impacts on the computational effort needed to solve a problem. Solving linear programs with tens of thousands of continuous variables is very quick and easy computationally. Changing those same variables to general integers can make it <em>very</em> difficult. Why is this the case?</p>
+<p>At its core, the basic problem is that the Simplex method  and linear programming solves a system of equations and unknowns (or variables). It is trivial to solve one equation with one unknown such as <span class="math inline">\(5x=7\)</span>. It is only slightly harder to solve a system of two equations and two unknowns. Doing three equations and three unknowns requires some careful algebra but is not hard. In general, solving <em>n</em> equations and <em>n</em> unknowns is readily solvable. On the other hand, none of this algebraic work of solving for unknown variables can require that the variables take on integer values. Even with only one equation (say <span class="math inline">\(C\cdot x=12\)</span>), one unknown variable (<span class="math inline">\(x\)</span>), and one constant (<span class="math inline">\(C\)</span>), <em>x</em> will only be integer for certain combinations of numbers in the above equation. It gets even less likely to have an all integer solution as the number of equations and unknowns increase.</p>
+<p>Another way to visualize integer solutions for general systems of inequalities is to think of the case with two equations and two unknowns (<em>x</em> and <em>y</em>). Finding a solution is the same as finding where two lines intersect in two dimensional space. The odds of getting lucky and having the two lines intersect at an integer solution is small. Even if we limit ourselves to <em>x</em> and <em>y</em> ranging from 0 to 10, this means that there are <span class="math inline">\(11^2=121\)</span> possible integer valued points in this space such as (0,0), (0,3), and (10,10). In contrast, the set of all points, including non-integers, in this region includes all of the above points as well as (0,0.347) and (4.712, 7.891) among infinitely more. The result is that if you think of this as a target shooting, the probability of finding an integer solution by blind luck is <span class="math inline">\(\frac{121}{\infty}\approx 0\)</span>.</p>
+<p>What we need is an algorithm around the Simplex method to accomplish this. A basic and common and approach often used for solving integer variable linear programming problems is called Branch and Bound. We start with a solution that has presumably continuous valued variables. We then branch (create subproblems) off of this result for variables that have fractional values but should be integers and add bounds (additional constraints) to rule out the fractional value of that variable.  </p>
+<p>Given the importance of integer programming and the impact on solving speed, we’ll demonstrate the process by showing the steps graphically and in R.</p>
+<div id="the-lp-relaxation" class="section level3" number="6.3.1">
+<h3><span class="header-section-number">6.3.1</span> The LP Relaxation</h3>
+<p>To solve this using branch and bound, we <em>relax</em> the integrality requirements and solve what is called the LP Relaxation. To do this, we simply remove the integrality requirement.<br />
+</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{Max   } &amp; 2 x_1 + 3 x_2 \\
+    \text{s.t.  } &amp; 3 x_1 + 9 x_2 \leq 31 &amp; \text{[Surfactant]}\\
+                  &amp; 8 x_1 + 3 x_2 \leq 26 &amp; \text{[Steel]}\\
+                  &amp; x_1,  \; x_2  \geq 0 
+  \end{aligned}
+  \end{split}
+\]</span></p>
+<p>Unlike requiring the variables to be integer valued, this is a problem that we <strong>can</strong> solve using linear programming so let’s go ahead do it! Well, we already did so let’s just review the results for what is now called the LP Relaxation because we are <em>relaxing</em> the integrality requirements.</p>
+<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb159-1"><a href="mixed-integer-optimization.html#cb159-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (acme_res_lp, <span class="at">booktabs=</span>T, <span class="at">digits=</span><span class="dv">3</span>,</span>
+<span id="cb159-2"><a href="mixed-integer-optimization.html#cb159-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption=</span><span class="st">&quot;Acme&#39;s Production Plan based on the LP Relaxation&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb159-3"><a href="mixed-integer-optimization.html#cb159-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:SolveLPRelaxation">TABLE 6.4: </span>Acme’s Production Plan based on the LP Relaxation
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+x1
+</th>
+<th style="text-align:right;">
+x2
+</th>
+<th style="text-align:right;">
+Profit
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+LP Solution
+</td>
+<td style="text-align:right;">
+2.238
+</td>
+<td style="text-align:right;">
+2.698
+</td>
+<td style="text-align:right;">
+12.571
+</td>
+</tr>
+</tbody>
+</table>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:Fig-LPRelaxation"></span>
+<img src="images/BB02.PNG" alt="LP Relaxation" width="45%" /><img src="images/BB04.PNG" alt="LP Relaxation" width="45%" />
+<p class="caption">
+FIGURE 6.2: LP Relaxation
+</p>
+</div>
+</div>
+<div id="subproblem-i" class="section level3" number="6.3.2">
+<h3><span class="header-section-number">6.3.2</span> Subproblem I</h3>
+<p>Alas, this production plan from the LP Relaxation is not feasible from the perspective of the original integer problem because it produces <em>2.238</em> of product 1 and <em>2.698</em> of product 2. If both of these variables had been integer we could have declared victory and been satisfied that we had easily (<em>luckily?</em>) found the optimal solution to the original integer programming problem so quickly.</p>
+<p>Instead, we will need to proceed with the branch and bound process. Since both of the variables in the LP relaxation have fractional values, we need to start by choosing which variable to use for branching first. Algorithmic researchers would focus on how to best pick a branch but for our purposes to improve solution speed but it doesn’t really matter for illustration so let’s arbitrarily choose to branch on <span class="math inline">\(x_1\)</span>.</p>
+<p>For the branch and bound algorithm, we want to include two subproblems that exclude the <em>illegal</em> value of <span class="math inline">\(x_1=2.238\)</span> as well as everything else between 2 and 3. We say that we are <em>branching</em> on <span class="math inline">\(x_1\)</span> to create two subproblems. The first subproblem (I) has an added constraint of <span class="math inline">\(x_1\le 2.0\)</span> and the other subproblem (II) has an added constraint of <span class="math inline">\(x_1\ge 3.0\)</span>.</p>
+<p><span class="math display" id="eq:Sub1">\[
+ \begin{split}
+ \begin{aligned}
+    \text{Max  }   &amp; 2 x_1 + 3 x_2 \\
+    \text{subject to } &amp; 3 x_1 + 9 x_2 \leq 31 \\
+                       &amp; 8 x_1 + 3 x_2 \leq 26 \\
+                       &amp; \textcolor{red} {x_1 \leq 2.0} &amp;text{[Bound for Subproblem I]}\\
+                       &amp; x_1,  \; x_2 \geq 0  \\
+  \end{aligned}
+  \end{split}
+  \tag{6.1}
+\]</span></p>
+<p>Since this is just a bound on the decision variable, we can implement it by just modifying the LP Relaxation’s model <code>LPRmod</code> that we created earlier by redefining the <span class="math inline">\(x_1\)</span> variable (<code>Vx1</code>).</p>
+<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="mixed-integer-optimization.html#cb160-1" aria-hidden="true" tabindex="-1"></a>LPSubI <span class="ot">&lt;-</span> <span class="fu">add_variable</span>(LPRmod, Vx1, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, </span>
+<span id="cb160-2"><a href="mixed-integer-optimization.html#cb160-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">lb =</span> <span class="dv">0</span>, <span class="at">ub=</span><span class="fl">2.0</span>) </span>
+<span id="cb160-3"><a href="mixed-integer-optimization.html#cb160-3" aria-hidden="true" tabindex="-1"></a>LPSubI <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(LPSubI, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
+<span id="cb160-4"><a href="mixed-integer-optimization.html#cb160-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb160-5"><a href="mixed-integer-optimization.html#cb160-5" aria-hidden="true" tabindex="-1"></a>obj_val <span class="ot">&lt;-</span> <span class="fu">objective_value</span>(LPSubI)</span>
+<span id="cb160-6"><a href="mixed-integer-optimization.html#cb160-6" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (LPSubI, <span class="st">&#39;Vx1&#39;</span>)</span>
+<span id="cb160-7"><a href="mixed-integer-optimization.html#cb160-7" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (LPSubI, <span class="st">&#39;Vx2&#39;</span>)</span>
+<span id="cb160-8"><a href="mixed-integer-optimization.html#cb160-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb160-9"><a href="mixed-integer-optimization.html#cb160-9" aria-hidden="true" tabindex="-1"></a>LPSubI_res  <span class="ot">&lt;-</span> <span class="fu">cbind</span>(x1,x2,obj_val)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-30">TABLE 6.5: </span>Production Plan based on Subproblem I
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+x1
+</th>
+<th style="text-align:right;">
+x2
+</th>
+<th style="text-align:right;">
+obj_val
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+2.778
+</td>
+<td style="text-align:right;">
+12.333
+</td>
+</tr>
+</tbody>
+</table>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:Fig-Subproblem-I"></span>
+<img src="images/BB05.PNG" alt="Subproblem I" width="45%" /><img src="images/BB06.PNG" alt="Subproblem I" width="45%" />
+<p class="caption">
+FIGURE 6.3: Subproblem I
+</p>
+</div>
+<p>Looking over the results, we now get an integer value for <span class="math inline">\(x_1\)</span> but not for <span class="math inline">\(x_2\)</span>. We repeat the same process by creating subproblems from Subproblem I by branching off of <span class="math inline">\(x_2\)</span>.</p>
+</div>
+<div id="subproblem-iii" class="section level3" number="6.3.3">
+<h3><span class="header-section-number">6.3.3</span> Subproblem III</h3>
+<p>Choosing which subproblem to examine next is one of the areas that large scale integer programming software and algorithms specialize in and provide options. One way to think of it is to focus on searching down a branch and bound tree deeply or to search across the breadth of the tree. For this example, let’s go deep which means jumping ahead to Subproblem III but we’ll return to Subproblem II later.</p>
+<p>Since <span class="math inline">\(x_2\)</span> is now a non-integer solution, we will create branches with bounds (or constraints) on <span class="math inline">\(x_2\)</span> in the same manner as before. Subproblem III has an added constraint of <span class="math inline">\(x_2 \le2.0\)</span> and Subproblem IV has <span class="math inline">\(x_2 \ge3.0\)</span>.<br />
+</p>
+<p>To simplify the implementation, I can simply change the upper and lower bounds on variables rather than adding separate variables.</p>
+<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb161-1"><a href="mixed-integer-optimization.html#cb161-1" aria-hidden="true" tabindex="-1"></a>LPSubIII <span class="ot">&lt;-</span> LPRmod <span class="sc">|&gt;</span></span>
+<span id="cb161-2"><a href="mixed-integer-optimization.html#cb161-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Vx1, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>, <span class="at">ub =</span> <span class="dv">2</span>) <span class="sc">|&gt;</span></span>
+<span id="cb161-3"><a href="mixed-integer-optimization.html#cb161-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Vx2, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>, <span class="at">ub =</span> <span class="dv">2</span>) <span class="sc">|&gt;</span></span>
+<span id="cb161-4"><a href="mixed-integer-optimization.html#cb161-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">solve_model</span>(<span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-31">TABLE 6.6: </span>Integer Valued Production Plan based on Subproblem III
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+x1
+</th>
+<th style="text-align:right;">
+x2
+</th>
+<th style="text-align:right;">
+obj_val
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+</tbody>
+</table>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:Fig-Subproblem-III-and-II"></span>
+<img src="images/BB07.PNG" alt="Subproblem III-An IP Feasible Solution" width="45%" />
+<p class="caption">
+FIGURE 6.4: Subproblem III-An IP Feasible Solution
+</p>
+</div>
+<p>This results in integer values for both <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span> so it is feasible with respect to integrality in addition to of course satisfying the production constraints. It does generate less profit than the LP relaxation. While it is feasible, it doesn’t prove that it is optimal though. We need to explore the other potential branches.</p>
+</div>
+<div id="subproblem-iv" class="section level3" number="6.3.4">
+<h3><span class="header-section-number">6.3.4</span> Subproblem IV</h3>
+<p>Next, let’s look at Subproblem IV. This problem adds the bound of <span class="math inline">\(x_2\ge3.0\)</span> to Subproblem I. Notice that in the <code>MIPModel</code> implementation the variable for <span class="math inline">\(x_1\)</span> (<code>Vx1</code>) has an upperbound of 2, (<code>ub=2</code>) in order to implement the bounding constraint for Subproblem I and the lower bound on <span class="math inline">\(x_2\)</span> of 3 in the variable declarations. Notice from the earlier graphical examples, there is no feasible region (blue area) that has <span class="math inline">\(x_2\geq3\)</span>. By visual inspection, we expect this to be an infeasible subproblem but let’s confirm it.</p>
+<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="mixed-integer-optimization.html#cb162-1" aria-hidden="true" tabindex="-1"></a>LPSubIV <span class="ot">&lt;-</span> <span class="fu">add_variable</span>(LPRmod, Vx1, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, </span>
+<span id="cb162-2"><a href="mixed-integer-optimization.html#cb162-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">lb =</span> <span class="dv">0</span>, <span class="at">ub =</span> <span class="dv">2</span>) </span>
+<span id="cb162-3"><a href="mixed-integer-optimization.html#cb162-3" aria-hidden="true" tabindex="-1"></a>LPSubIV <span class="ot">&lt;-</span> <span class="fu">add_variable</span>(LPSubIV, Vx2, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>,<span class="at">lb =</span> <span class="dv">3</span>) </span>
+<span id="cb162-4"><a href="mixed-integer-optimization.html#cb162-4" aria-hidden="true" tabindex="-1"></a>LPSubIV <span class="ot">&lt;-</span>  <span class="fu">solve_model</span>(LPSubIV, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-32">TABLE 6.7: </span>Production Plan based on Subproblem IV
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+x1
+</th>
+<th style="text-align:right;">
+x2
+</th>
+<th style="text-align:right;">
+obj_val
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1.333
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+11.667
+</td>
+</tr>
+</tbody>
+</table>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:Fig-Subproblem-IV"></span>
+<img src="images/BB08.PNG" alt="Subproblem IV" width="45%" /><img src="images/BB09.PNG" alt="Subproblem IV" width="45%" />
+<p class="caption">
+FIGURE 6.5: Subproblem IV
+</p>
+</div>
+<p>While <span class="math inline">\(x_2\)</span> is now integer valued, <span class="math inline">\(x_1=1.333\)</span> so it is no longer integer valued. We need to repeat the process of branching on <span class="math inline">\(x_1\)</span> again for Subproblems V and VI.</p>
+</div>
+<div id="subproblem-v" class="section level3" number="6.3.5">
+<h3><span class="header-section-number">6.3.5</span> Subproblem V</h3>
+<p>For Subproblem V, use a constraint of <span class="math inline">\(x_1\leq 1\)</span>. We’ll continue with adjusting the bounds of the variables to do the branch and bound.</p>
+<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="mixed-integer-optimization.html#cb163-1" aria-hidden="true" tabindex="-1"></a>LPSubV <span class="ot">&lt;-</span> <span class="fu">add_variable</span>(LPRmod, Vx1, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, </span>
+<span id="cb163-2"><a href="mixed-integer-optimization.html#cb163-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">lb =</span> <span class="dv">0</span>, <span class="at">ub =</span> <span class="dv">1</span>) </span>
+<span id="cb163-3"><a href="mixed-integer-optimization.html#cb163-3" aria-hidden="true" tabindex="-1"></a>LPSubV <span class="ot">&lt;-</span> <span class="fu">add_variable</span>(LPSubV, Vx2, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>,<span class="at">lb =</span> <span class="dv">3</span>) </span>
+<span id="cb163-4"><a href="mixed-integer-optimization.html#cb163-4" aria-hidden="true" tabindex="-1"></a>LPSubV <span class="ot">&lt;-</span>  <span class="fu">solve_model</span>(LPSubV, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-33">TABLE 6.8: </span>Production Plan based on Subproblem V
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+x1
+</th>
+<th style="text-align:right;">
+x2
+</th>
+<th style="text-align:right;">
+obj_val
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.111
+</td>
+<td style="text-align:right;">
+11.333
+</td>
+</tr>
+</tbody>
+</table>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:Fig-Subproblem-V"></span>
+<img src="images/BB10.PNG" alt="Subproblems V and VI" width="45%" /><img src="images/BB11.PNG" alt="Subproblems V and VI" width="45%" />
+<p class="caption">
+FIGURE 6.6: Subproblems V and VI
+</p>
+</div>
+<p>Unfortunately the solution to Subproblem V now has <span class="math inline">\(x_2=3.111\)</span> so we will need to repeat this branch and bound for Subproblems VII and VIII. Before we do that, let’s consider Subproblem VI.</p>
+</div>
+<div id="subproblem-vi" class="section level3" number="6.3.6">
+<h3><span class="header-section-number">6.3.6</span> Subproblem VI</h3>
+<p>In this case, we our retaining our previous bounds from Subproblems I and IV while adding a bound for <span class="math inline">\(x_1\)</span>. The result is that our bounds on <span class="math inline">\(x_1\)</span> is <span class="math inline">\(2\leq x_1\leq 2\)</span> or in other words, <span class="math inline">\(x_1=2\)</span> while <span class="math inline">\(x_2\geq3\)</span>. A careful look at the previous figure suggest there is no feasible solution in this situation but let’s solve the corresponding LP to confirm this.</p>
+<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb164-1"><a href="mixed-integer-optimization.html#cb164-1" aria-hidden="true" tabindex="-1"></a>LPSubVI <span class="ot">&lt;-</span> <span class="fu">add_variable</span>(LPRmod, Vx1, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, </span>
+<span id="cb164-2"><a href="mixed-integer-optimization.html#cb164-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">lb =</span> <span class="dv">2</span>, <span class="at">ub =</span> <span class="dv">2</span>) </span>
+<span id="cb164-3"><a href="mixed-integer-optimization.html#cb164-3" aria-hidden="true" tabindex="-1"></a>LPSubVI <span class="ot">&lt;-</span> <span class="fu">add_variable</span>(LPSubVI, Vx2, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>,</span>
+<span id="cb164-4"><a href="mixed-integer-optimization.html#cb164-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">lb =</span> <span class="dv">3</span>) </span>
+<span id="cb164-5"><a href="mixed-integer-optimization.html#cb164-5" aria-hidden="true" tabindex="-1"></a>LPSubVI <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(LPSubVI, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
+<span id="cb164-6"><a href="mixed-integer-optimization.html#cb164-6" aria-hidden="true" tabindex="-1"></a>LPSubVI<span class="sc">$</span>status</span></code></pre></div>
+<pre><code>## [1] &quot;infeasible&quot;</code></pre>
+<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb166-1"><a href="mixed-integer-optimization.html#cb166-1" aria-hidden="true" tabindex="-1"></a>obj_val <span class="ot">&lt;-</span> <span class="fu">objective_value</span>(LPSubVI )</span>
+<span id="cb166-2"><a href="mixed-integer-optimization.html#cb166-2" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (LPSubVI , <span class="st">&#39;Vx1&#39;</span>)</span>
+<span id="cb166-3"><a href="mixed-integer-optimization.html#cb166-3" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (LPSubVI , <span class="st">&#39;Vx2&#39;</span>)</span>
+<span id="cb166-4"><a href="mixed-integer-optimization.html#cb166-4" aria-hidden="true" tabindex="-1"></a>LPSubVI_res  <span class="ot">&lt;-</span> <span class="fu">cbind</span>(x1,x2,obj_val)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-34">TABLE 6.9: </span>Infeasible Production Plan based on Subproblem VI
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+x1
+</th>
+<th style="text-align:right;">
+x2
+</th>
+<th style="text-align:right;">
+obj_val
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+13
+</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>ompr</code> status value of this solved LP indicates that Subproblem VI is <em>infeasible.</em> It still returned values that were used when it determined that the problem was infeasible which is why it gave the results in the previous table. From here on out, it is a good reminder to check the status. Note that it can be used as an in-line evaluated expression to simply say was it feasible or not? Yes, it was infeasible.</p>
+</div>
+<div id="subproblem-vii" class="section level3" number="6.3.7">
+<h3><span class="header-section-number">6.3.7</span> Subproblem VII</h3>
+<p>Let’s return to branching off of Subproblem V to examine Subproblems VII and VIII.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:Fig-Subproblem-V-Excluding-Region"></span>
+<img src="images/BB12.PNG" alt="Subproblem VI" width="45%" />
+<p class="caption">
+FIGURE 6.7: Subproblem VI
+</p>
+</div>
+<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="mixed-integer-optimization.html#cb167-1" aria-hidden="true" tabindex="-1"></a>LPSubVII <span class="ot">&lt;-</span> <span class="fu">add_variable</span>(LPRmod, Vx1, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, </span>
+<span id="cb167-2"><a href="mixed-integer-optimization.html#cb167-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">lb =</span> <span class="dv">0</span>, <span class="at">ub =</span> <span class="dv">1</span>) </span>
+<span id="cb167-3"><a href="mixed-integer-optimization.html#cb167-3" aria-hidden="true" tabindex="-1"></a>LPSubVII <span class="ot">&lt;-</span> <span class="fu">add_variable</span>(LPSubVII, Vx2, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, </span>
+<span id="cb167-4"><a href="mixed-integer-optimization.html#cb167-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">lb=</span><span class="dv">0</span>, <span class="at">ub=</span><span class="dv">3</span>) </span>
+<span id="cb167-5"><a href="mixed-integer-optimization.html#cb167-5" aria-hidden="true" tabindex="-1"></a>LPSubVII <span class="ot">&lt;-</span>  <span class="fu">solve_model</span>(LPSubVII, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-35">TABLE 6.10: </span>Integer Valued Production Plan based on Subproblem VII
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+x1
+</th>
+<th style="text-align:right;">
+x2
+</th>
+<th style="text-align:right;">
+obj_val
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+11
+</td>
+</tr>
+</tbody>
+</table>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:Fig-Subproblem-VII"></span>
+<img src="images/BB13.PNG" alt="Subproblem VII" width="45%" />
+<p class="caption">
+FIGURE 6.8: Subproblem VII
+</p>
+</div>
+<p>This solution is all integer valued and the objective function is better than our previous integer valued solution. The result is that we have a new candidate optimal solution. Since there are still branches to explore, we can’t declare victory.</p>
+</div>
+<div id="subproblem-viii" class="section level3" number="6.3.8">
+<h3><span class="header-section-number">6.3.8</span> Subproblem VIII</h3>
+<p>Setting a lower bound of <span class="math inline">\(x_2\geq 4\)</span> makes the problem infeasible. We can see from the drawings of the feasible region that the feasible region does not extend to that height at all regardless of what <span class="math inline">\(x_1\)</span> is. We can confirm by solving Subproblem VIII though since we don’t generally have the luxury of looking at the feasible region. Again, the results table highlights that care must be taken to not give credence to values returned from an infeasible solution.</p>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="mixed-integer-optimization.html#cb168-1" aria-hidden="true" tabindex="-1"></a>LPSubVIII <span class="ot">&lt;-</span> <span class="fu">add_variable</span>(LPRmod, Vx1, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">1</span>,) </span>
+<span id="cb168-2"><a href="mixed-integer-optimization.html#cb168-2" aria-hidden="true" tabindex="-1"></a>LPSubVIII <span class="ot">&lt;-</span> <span class="fu">add_variable</span>(LPSubVIII, Vx2, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">4</span>) </span>
+<span id="cb168-3"><a href="mixed-integer-optimization.html#cb168-3" aria-hidden="true" tabindex="-1"></a>LPSubVIII <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(LPSubVIII, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
+<span id="cb168-4"><a href="mixed-integer-optimization.html#cb168-4" aria-hidden="true" tabindex="-1"></a>LPSubVIII<span class="sc">$</span>status</span></code></pre></div>
+<pre><code>## [1] &quot;infeasible&quot;</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-36">TABLE 6.11: </span>Infeasible Production Plan based on Subproblem VIII
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+x1
+</th>
+<th style="text-align:right;">
+x2
+</th>
+<th style="text-align:right;">
+obj_val
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="subproblem-ii" class="section level3" number="6.3.9">
+<h3><span class="header-section-number">6.3.9</span> Subproblem II</h3>
+<p>Now, we have searched down all branches or subproblems descending from Subproblem I so we can return to Subproblem II. Let’s go back and do that problem. We do that by simply adding one new bound to the LP Relaxation. That is <span class="math inline">\(x_1\geq 3.0\)</span>.</p>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="mixed-integer-optimization.html#cb170-1" aria-hidden="true" tabindex="-1"></a>LPSubII <span class="ot">&lt;-</span> LPRmod <span class="sc">|&gt;</span></span>
+<span id="cb170-2"><a href="mixed-integer-optimization.html#cb170-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Vx1, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
+<span id="cb170-3"><a href="mixed-integer-optimization.html#cb170-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Vx2, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb170-4"><a href="mixed-integer-optimization.html#cb170-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">solve_model</span>(<span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
+<span id="cb170-5"><a href="mixed-integer-optimization.html#cb170-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Status of Subproblem II:&quot;</span>,LPSubII<span class="sc">$</span>status)</span></code></pre></div>
+<pre><code>## Status of Subproblem II: optimal</code></pre>
+<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="mixed-integer-optimization.html#cb172-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(LPSubII_res) <span class="ot">&lt;-</span> <span class="st">&quot;&quot;</span></span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-37">TABLE 6.12: </span>Production Plan based on LP Subproblem II
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+x1
+</th>
+<th style="text-align:right;">
+x2
+</th>
+<th style="text-align:right;">
+obj_val
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Vx1
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0.667
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+</tbody>
+</table>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:Fig-Subproblem-II"></span>
+<img src="images/BB12.PNG" alt="Subproblems VI and VII" width="45%" /><img src="images/BB13.PNG" alt="Subproblems VI and VII" width="45%" />
+<p class="caption">
+FIGURE 6.9: Subproblems VI and VII
+</p>
+</div>
+<p>At this point, our first reaction may be to breathe deeply and do the same branch and bound off of <span class="math inline">\(x_2\)</span>. On the other hand, if we step back and take note that the objective function value is 10.0, while optimal for Subproblem II, it is less than what we found from a feasible, fully integer-valued solution to Subproblem III and the even better Subproblem VII. Given that adding constraints can’t improve an objective function value, we can safely trim all branches below Subproblem II.</p>
+<p>Given that we no longer have any branches to explore, we can declare that we have found the optimal solution. The optimal solution can now be definitively stated to be what we found from Subproblem VII.</p>
+<table>
+<caption>
+<span id="tab:create-table-subproblem-VII">TABLE 6.13: </span>Acme’s Integer Optimal Production Plan based on Subproblem VII
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+x1
+</th>
+<th style="text-align:right;">
+x2
+</th>
+<th style="text-align:right;">
+obj_val
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+11
+</td>
+</tr>
+</tbody>
+</table>
+<p>Before this, we could only say that it was feasible solution and candidate to be optimal since no better integer feasible solution had been found.</p>
+<p>Let’s summarize the results of the series of LPs solved. In this branch and bound tree</p>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:create-table-of-subproblem-results">TABLE 6.14: </span>Branch and Bound’s Sequence of LPs
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+x1
+</th>
+<th style="text-align:left;">
+x2
+</th>
+<th style="text-align:left;">
+Profit
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+LP Relaxation
+</td>
+<td style="text-align:left;">
+2.238
+</td>
+<td style="text-align:left;">
+2.698
+</td>
+<td style="text-align:left;">
+12.571
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Subproblem I
+</td>
+<td style="text-align:left;">
+2.000
+</td>
+<td style="text-align:left;">
+2.778
+</td>
+<td style="text-align:left;">
+12.333
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Subproblem III
+</td>
+<td style="text-align:left;">
+2.000
+</td>
+<td style="text-align:left;">
+2.000
+</td>
+<td style="text-align:left;">
+10.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Subproblem IV
+</td>
+<td style="text-align:left;">
+1.333
+</td>
+<td style="text-align:left;">
+3.000
+</td>
+<td style="text-align:left;">
+11.667
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Subproblem V
+</td>
+<td style="text-align:left;">
+1.000
+</td>
+<td style="text-align:left;">
+3.111
+</td>
+<td style="text-align:left;">
+11.333
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Subproblem VI
+</td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+Infeasible
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Subproblem VII
+</td>
+<td style="text-align:left;">
+1.000
+</td>
+<td style="text-align:left;">
+3.000
+</td>
+<td style="text-align:left;">
+11.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Subproblem VIII
+</td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+Infeasible
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Subproblem II
+</td>
+<td style="text-align:left;">
+3.000
+</td>
+<td style="text-align:left;">
+0.667
+</td>
+<td style="text-align:left;">
+8.000
+</td>
+</tr>
+</tbody>
+</table></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+<p>The Branch and Bound process is often characterized as a tree.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:Fig-B-and-B-Summary"></span>
+<img src="images/BB16.PNG" alt="Branch and Bound Tree" width="4in" />
+<p class="caption">
+FIGURE 6.10: Branch and Bound Tree
+</p>
+</div>
+</div>
+</div>
+<div id="computational-complexity" class="section level2" number="6.4">
+<h2><span class="header-section-number">6.4</span> Computational Complexity</h2>
+<p>As for computational complexity, this was a small problem with only two integer variables but it still required solving the LP Relaxation and four separate LP subproblems for a total of five linear programs in all. As the number of variables and constraints increases, so do the number of LPs needed to typically find a solution using branch and bound. Small and medium size problems can generally be solved quickly but worst case scenarios have a combinatorial explosion.</p>
+<div id="full-enumeration" class="section level3" number="6.4.1">
+<h3><span class="header-section-number">6.4.1</span> Full Enumeration</h3>
+<p>Another approach to integer programming is full enumeration which means listing out all possible solutions and then determining if that solution is feasible and if so, what the objective function value is. Alas, this can result in a combinatorial explosion. For example, if a problem has 1,000 non-negative integer variables each of which can range from zero to nine, full enumeration would require listing <span class="math inline">\(10^{1000}\)</span> possible solutions. This is far larger than the number of grains of sand on Earth (~<span class="math inline">\(10^{19}\)</span>) or the number of stars in the universe (~<span class="math inline">\(10^{19}\)</span>). In fact this is much larger than the number of atoms in the universe (~<span class="math inline">\(10^{80}\)</span>). Needless to say explicit enumeration for large problems is not an option.</p>
+<p>The Branch and Bound algorithm has the benefit that it will find the optimal solution. Sometimes it will find it quickly, other times it may take a very long time.</p>
+<p>Worst case scenarios for Branch and Bound may approach that of full enumeration but in practice performs much better. A variety of sophisticated algorithmic extensions have been added by researchers over the years but solving large scale integer programming problems can still be quite difficult.</p>
+<p>One option to deal with long solving times is to set early termination conditions such as running for a certain number of seconds. If it is terminated early, it may report the best feasible solution found so far and a precise bound as to how much better an as yet unfound solution might be based on the best remaining open branch. This difference between the best feasible solution found so far and the theoretically possible best solution to be found gives a gap that an analyst can set. This acceptable gap is sometimes referred to as a suboptimality tolerance factor. In other words, what percentage of suboptimality is the analyst willing to accept for getting a solution more quickly. For example, a suboptimality tolerance factor of 10% would tell the software to terminate the branch and bound algorithm if a feasible solution is found and it is certain that regardless of how much more time is spent solving, it is impossible to improve upon this solution by more than 10%.</p>
+<p>In practice, even small suboptimality tolerance factors like 1% can allow big problems to be solved quickly and are often well within the margin of error for model data. In other cases, organizations may be interested in finding <em>any</em> feasible solution to large, vexing problems.</p>
+<p>Note that our Acme example only specified two digits of accuracy for resource usage and may have only one digit of accuracy for profitability per product.</p>
+<p>Note that in our earlier example, if we had a wide enough suboptimality tolerance, say 30% and followed the branch for <span class="math inline">\(x_1\ge3.0\)</span> first rather than <span class="math inline">\(x_1\le2.0\)</span>, we might have terminated with a suboptimal solution.</p>
+</div>
+</div>
+<div id="binary-variables-and-logical-relations" class="section level2" number="6.5">
+<h2><span class="header-section-number">6.5</span> Binary Variables and Logical Relations</h2>
+<p>Binary variables are a special case of general integer variables. Rather than variables taking on values such as 46 and 973, acceptable values are limited to just 0 and 1. This greatly reduces the possible search space for branch and bound since you know that in any branch, you will never branch on a single variable more than once. On the other hand, with a large number of variables, the search space can still be very large. If the previous case with 1000 variables were binary, a full enumeration list would rely on a list of <span class="math inline">\(2^{1000}\)</span> or one followed by about 300 zeros) possible solutions. While better than the case of integers, it is still vastly more than the number of atoms in the universe.  <br />
+</p>
+<p>The important thing is is that binary variables give us a lot of rich opportunities to model complex, real world situations.<br />
+Examples include assigning people to projects, go-no go decisions on projects, and much more.<br />
+</p>
+<p>Let’s explore the impact of binary restrictions with another example. The world famous semiconductor company, Outtel has a choice of five major R&amp;D projects:</p>
+<ol style="list-style-type: decimal">
+<li>Develop processor architecture for autonomous vehicles</li>
+<li>Next generation microprocessor architecture</li>
+<li>Next generation process technology</li>
+<li>New fabrication facility</li>
+<li>New interconnect technology</li>
+</ol>
+<p>The key data is described as follows. <em>NPV</em> is Net Present Value of the project factoring in costs. <em>Inv</em> is the capital expenditures or investment required for each project. The company has $40 Billion in capital available to fund a portfolio of projects. Let’s set up the data as matrices in R.</p>
+<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="mixed-integer-optimization.html#cb173-1" aria-hidden="true" tabindex="-1"></a>I <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">12</span>,<span class="dv">24</span>,<span class="dv">20</span>,<span class="dv">8</span>, <span class="dv">16</span>), <span class="at">ncol=</span><span class="dv">1</span>, </span>
+<span id="cb173-2"><a href="mixed-integer-optimization.html#cb173-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">dimnames=</span><span class="fu">list</span>(LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>],<span class="st">&quot;Inv&quot;</span>))</span>
+<span id="cb173-3"><a href="mixed-integer-optimization.html#cb173-3" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fl">2.0</span>, <span class="fl">3.6</span>, <span class="fl">3.2</span>, <span class="fl">1.6</span>, <span class="fl">2.8</span>), <span class="at">ncol=</span><span class="dv">1</span>,</span>
+<span id="cb173-4"><a href="mixed-integer-optimization.html#cb173-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">dimnames=</span><span class="fu">list</span>(LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>],<span class="st">&quot;NPV&quot;</span>))</span>
+<span id="cb173-5"><a href="mixed-integer-optimization.html#cb173-5" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">cbind</span>(I,N), <span class="at">booktabs=</span>T, </span>
+<span id="cb173-6"><a href="mixed-integer-optimization.html#cb173-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption=</span><span class="st">&quot;Data for the Outtel Example&quot;</span>)</span></code></pre></div>
+<table>
+<caption>
+<span id="tab:capital-budgeting-data">TABLE 6.15: </span>Data for the Outtel Example
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Inv
+</th>
+<th style="text-align:right;">
+NPV
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+2.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+B
+</td>
+<td style="text-align:right;">
+24
+</td>
+<td style="text-align:right;">
+3.6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+C
+</td>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+D
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+1.6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+E
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+</tr>
+</tbody>
+</table>
+<p>These projects all carry their own expenses and engineering support. There are limits to both the capital investment and engineering resources available. To start, consider all of these project to be independent.</p>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-25" class="exercise"><strong>Exercise 6.1  (Create and Solve Model) </strong></span>Formulate and solve a basic, naive model that allows projects to repeated and partially completed. Implement and solve your model. (Hint: You don’t need binary variables yet.) What is the optimal decision? Is this result surprising? Does this make sense in terms of the application?</p>
+</div>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-26" class="exercise"><strong>Exercise 6.2  (No Project is Repeated) </strong></span>Now, let’s explore one aspect of moving towards binary variables. What constraint or constraints are needed to ensure no project is done more than once while allowing partial projects to still be funded and incur both proportionate costs and benefits. How does this solution compare to that of above?</p>
+</div>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-27" class="exercise"><strong>Exercise 6.3  (No Partial Projects) </strong></span>What change is needed to prevent partial funding of projects. How does this solution compare to that of above? Can you envision a situation where it might make sense to have partially funded projects? Could this be similar to corporate joint ventures where investments and benefits are shared across multiple entities?</p>
+</div>
+<p>Now that you have binary constraints, let’s explore the impact of logical restrictions with a series of separate scenarios. In each of these cases, make sure that you implement the relationship as a linear relationship. This means that you cannot use a function such as an “If-then,” “OR,” “Exclusive OR,” or other relationship. Furthermore, you can’t multiply variables together or divide variables into variables.</p>
+<p>Let’s assume that projects A and B require the focused effort of Outtel’s top chip architects and Outtel has decided therefore that it is not possible to do both projects.</p>
+<p>Therefore, they want to ensure that at most one of the two projects can be pursued. What needs to be added to enforce this situation?</p>
+<p>Let’s start with a truth table summarizing the interaction between projects (variable values) and the “Top Chip Architects” relationship.</p>
+<table>
+<caption>Relationships between Projects A, B, and the Need for Chip Architects.</caption>
+<colgroup>
+<col width="18%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"><p>Project A</p>
+<span class="math inline">\(y_A\)</span></th>
+<th align="center"><p>Project B</p>
+<span class="math inline">\(y_B\)</span></th>
+<th align="center">Violates “Top Chip Architects” Relationship</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">No</td>
+</tr>
+<tr class="even">
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">No</td>
+</tr>
+<tr class="odd">
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">No</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>1</strong></td>
+<td align="center"><strong>1</strong></td>
+<td align="center"><strong>Yes</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Now we need to create a constraint that blocks the situations that violate the relationship (<span class="math inline">\(y_A=y_B=1\)</span> ) but allows the other situations to be unblocked. Recall that you want to have a linear constraint or constraints that would be added to the model. In this case, we can use <span class="math inline">\(y_A+y_B\leq1\)</span>. It is a good exercise to check this relationship against the truth table.<br />
+</p>
+<p>Note that we cannot use <span class="math inline">\(y_{A}\cdot y_{B}=0\)</span> because it is a nonlinear constraint when we multiply two variables together. Sometimes trial and error is needed to verify that a constraint enforces the needed situation. In these case, it can be helpful to draw up a truth table with values for the associated variables and see whether the satisfies the requirement.<br />
+</p>
+<p>In each of the following sections create a linear relationship that models this situation.<br />
+</p>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-28" class="exercise"><strong>Exercise 6.4  (Interconnects Need Something to Connect) </strong></span>Instead of the constraint on chip architects, let’s consider the situation of the interconnect technology. Assume that project E on interconnect technology would only provide strong benefit if a new architecture is also developed. In other words, E can only be done if A or B is done. Note that if both A and B are done, E will certainly have a use!</p>
+</div>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-29" class="exercise"><strong>Exercise 6.5  (Manufacturing) </strong></span>Outtel knows that staying aggressive in manufacturing is important in this competitive industry but that it is too risky to do too much at once from manufacturing perspective. The result is that Outtel want to ensure that exactly one major manufacturing initiative (C or D) must be done. In other words, project C or project D must be done but not both.</p>
+</div>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-30" class="exercise"><strong>Exercise 6.6  (Solving Each Case) </strong></span>Solve for the base case and then show the results of just each constraint at once. Combine the results into a single, well-formatted table. Discuss the results.</p>
+</div>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-31" class="exercise"><strong>Exercise 6.7  (Full Enumeration) </strong></span>When projects can be neither partially funded nor repeated, how many candidate solutions would there be by full enumeration? List them.</p>
+</div>
+</div>
+<div id="fixed-charge-models" class="section level2" number="6.6">
+<h2><span class="header-section-number">6.6</span> Fixed Charge Models</h2>
+<p>Fixed charge models are a special case of integer programming models where situations where product cost has a fixed cost component and a marginal (per unit) cost component. A common example of this is when a machine must be setup before any production can occur.</p>
+<div id="fixed-charge-example-introduction" class="section level3" number="6.6.1">
+<h3><span class="header-section-number">6.6.1</span> Fixed Charge Example-Introduction</h3>
+<p>In our example, we need to connect or <em>link</em> the two decision variables of how much to produce and whether to produce for each of the products.<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a></p>
+<p>Let’s explore an example of a fixed charge problem. Widget Inc. is re-evaluating their product production mix. As the plant manager, you are responsible for determining what products the company should manufacture. Since the company is leasing equipment, there are setup costs for each product. You need to determine the mix that will maximize profit for the company.  <br />
+</p>
+<p>The profit for each Widget is shown below, as well as the setup costs (if you decide to produce any of that that Widget). The materials you have sourced allow you to only produce each Widget up to its capacity.</p>
+<table>
+<caption>Widget Characteristics.</caption>
+<thead>
+<tr class="header">
+<th align="right">Product</th>
+<th align="center">Profit</th>
+<th align="center">Setup Cost</th>
+<th align="center">Capacity</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">Widget 1</td>
+<td align="center">$15</td>
+<td align="center">$1000</td>
+<td align="center">500</td>
+</tr>
+<tr class="even">
+<td align="right">Widget 2</td>
+<td align="center">$10</td>
+<td align="center">$1500</td>
+<td align="center">1000</td>
+</tr>
+<tr class="odd">
+<td align="right">Widget 3</td>
+<td align="center">$25</td>
+<td align="center">$2000</td>
+<td align="center">750</td>
+</tr>
+</tbody>
+</table>
+<p>To produce each Widget, the hours required at each step of the manufacturing process are shown below. Also shown are the availability (in hours) of the equipment at each step.</p>
+<table>
+<caption>Widget Production Requirements.</caption>
+<thead>
+<tr class="header">
+<th align="right">Production</th>
+<th align="center">Widget 1</th>
+<th align="center">Widget 2</th>
+<th align="center">Widget 3</th>
+<th align="center">Available</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">Pre-process</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">1000</td>
+</tr>
+<tr class="even">
+<td align="right">Machining</td>
+<td align="center">1</td>
+<td align="center">5</td>
+<td align="center">2</td>
+<td align="center">2000</td>
+</tr>
+<tr class="odd">
+<td align="right">Assembly</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1000</td>
+</tr>
+<tr class="even">
+<td align="right">Quality Assurance</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">1500</td>
+</tr>
+</tbody>
+</table>
+<p>In order to develop our optimization model, we determine the objective function (goal), decision variables (decisions) and constraints (limitations).<br />
+</p>
+<p><strong>Objective Function:</strong> Maximize net profit<br />
+</p>
+<p><strong>Decision Variables:</strong></p>
+<ul>
+<li><span class="math inline">\(W_1\)</span> = Number of Widget 1 to produce<br />
+</li>
+<li><span class="math inline">\(W_2\)</span> = Number of Widget 2 to produce</li>
+<li><span class="math inline">\(W_3\)</span> = Number of Widget 3 to produce<br />
+</li>
+<li><span class="math inline">\(Y_1\)</span> = 1 if you choose to produce Widget 1; 0 otherwise</li>
+<li><span class="math inline">\(Y_2\)</span> = 1 if you choose to produce Widget 2; 0 otherwise</li>
+<li><span class="math inline">\(Y_3\)</span> = 1 if you choose to produce Widget 3; 0 otherwise</li>
+</ul>
+<p><strong>Constraints:</strong></p>
+<ol style="list-style-type: decimal">
+<li>Using no more than 1000 hours of Pre-process</li>
+<li>Using no more than 2000 hours of Machining</li>
+<li>Using no more than 1000 hours of Assembly</li>
+<li>Using no more than 1500 hours of Quality Assurance</li>
+<li>Producing no more than 500 of Widget 1</li>
+<li>Producing no more than 1000 of Widget 2</li>
+<li>Producing no more than 750 of Widget 3</li>
+</ol>
+<p>We can then write this as the following formulation.</p>
+<p><span class="math display" id="eq:FixedChargeBase">\[
+ \begin{split}
+ \begin{aligned}
+    \text{Max    } &amp; 15W_1+10W_2+25W_3 - 1000Y_1 - 1500Y_2 - 2000Y_3 \\
+    \text{s.t.:  } &amp; 2W_1+1W_2+3W_3 \leq 1000 \\
+                   &amp; 1W_1+5W_2+2W_3 \leq 2000 \\
+                   &amp; 2W_1+1W_2+1W_3 \leq 1000 \\
+                   &amp; 3W_1+2W_2+1W_3 \leq 1500 \\
+                   &amp; W_1 \leq 500 \\
+                   &amp; W_2 \leq 1000 \\
+                   &amp; W_3 \leq 750 \\
+                   &amp; W_1, \; W_2, \; W_3 \geq 0 \\
+                   &amp; Y_1, \; Y_2, \; Y_3 \; \in \{0,1\}  \\
+  \end{aligned}
+  \end{split}
+  \tag{6.2}
+\]</span></p>
+<p>Let’s examine the results if we run this model.</p>
+<p>For fixed charge problems, we need to link our Widget production volume to our decision on whether or not we produce the Widget (and its associated setup costs). We do this what is called the “Big M” method and the aptly named <em>linking constraint</em>.   <br />
+</p>
+<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="mixed-integer-optimization.html#cb174-1" aria-hidden="true" tabindex="-1"></a>fc_base_model <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">|&gt;</span></span>
+<span id="cb174-2"><a href="mixed-integer-optimization.html#cb174-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">add_variable</span>(Vw1, <span class="at">type=</span><span class="st">&quot;integer&quot;</span>, <span class="at">lb=</span><span class="dv">0</span>, <span class="at">ub=</span><span class="dv">500</span>)  <span class="sc">|&gt;</span> </span>
+<span id="cb174-3"><a href="mixed-integer-optimization.html#cb174-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">add_variable</span>(Vw2, <span class="at">type=</span><span class="st">&quot;integer&quot;</span>, <span class="at">lb=</span><span class="dv">0</span>, <span class="at">ub=</span><span class="dv">1000</span>) <span class="sc">|&gt;</span></span>
+<span id="cb174-4"><a href="mixed-integer-optimization.html#cb174-4" aria-hidden="true" tabindex="-1"></a> <span class="fu">add_variable</span>(Vw3, <span class="at">type=</span><span class="st">&quot;integer&quot;</span>, <span class="at">lb=</span><span class="dv">0</span>, <span class="at">ub=</span><span class="dv">750</span>)  <span class="sc">|&gt;</span></span>
+<span id="cb174-5"><a href="mixed-integer-optimization.html#cb174-5" aria-hidden="true" tabindex="-1"></a> <span class="fu">add_variable</span>(Vy1, <span class="at">type=</span><span class="st">&quot;binary&quot;</span>)                 <span class="sc">|&gt;</span> </span>
+<span id="cb174-6"><a href="mixed-integer-optimization.html#cb174-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Binary Decision for Widget 1 Setup</span></span>
+<span id="cb174-7"><a href="mixed-integer-optimization.html#cb174-7" aria-hidden="true" tabindex="-1"></a> <span class="fu">add_variable</span>(Vy2, <span class="at">type =</span> <span class="st">&quot;binary&quot;</span>)               <span class="sc">|&gt;</span> </span>
+<span id="cb174-8"><a href="mixed-integer-optimization.html#cb174-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Binary Decision for Widget 2 Setup</span></span>
+<span id="cb174-9"><a href="mixed-integer-optimization.html#cb174-9" aria-hidden="true" tabindex="-1"></a> <span class="fu">add_variable</span>(Vy3, <span class="at">type =</span> <span class="st">&quot;binary&quot;</span>)               <span class="sc">|&gt;</span> </span>
+<span id="cb174-10"><a href="mixed-integer-optimization.html#cb174-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Binary Decision for Widget 3 Setup</span></span>
+<span id="cb174-11"><a href="mixed-integer-optimization.html#cb174-11" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb174-12"><a href="mixed-integer-optimization.html#cb174-12" aria-hidden="true" tabindex="-1"></a> <span class="fu">set_objective</span>(<span class="dv">15</span><span class="sc">*</span>Vw1 <span class="sc">+</span> <span class="dv">10</span><span class="sc">*</span>Vw2 <span class="sc">+</span> <span class="dv">25</span><span class="sc">*</span>Vw3 </span>
+<span id="cb174-13"><a href="mixed-integer-optimization.html#cb174-13" aria-hidden="true" tabindex="-1"></a>               <span class="sc">-</span> <span class="dv">1000</span><span class="sc">*</span>Vy1 <span class="sc">-</span> <span class="dv">1500</span><span class="sc">*</span>Vy2 <span class="sc">-</span> <span class="dv">2000</span><span class="sc">*</span>Vy3, </span>
+<span id="cb174-14"><a href="mixed-integer-optimization.html#cb174-14" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;max&quot;</span>)                          <span class="sc">|&gt;</span></span>
+<span id="cb174-15"><a href="mixed-integer-optimization.html#cb174-15" aria-hidden="true" tabindex="-1"></a> <span class="fu">add_constraint</span>(<span class="dv">2</span><span class="sc">*</span>Vw1 <span class="sc">+</span> <span class="dv">1</span><span class="sc">*</span>Vw2 <span class="sc">+</span> <span class="dv">3</span><span class="sc">*</span>Vw3 <span class="sc">&lt;=</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span> <span class="co"># Pre-process </span></span>
+<span id="cb174-16"><a href="mixed-integer-optimization.html#cb174-16" aria-hidden="true" tabindex="-1"></a> <span class="fu">add_constraint</span>(<span class="dv">1</span><span class="sc">*</span>Vw1 <span class="sc">+</span> <span class="dv">5</span><span class="sc">*</span>Vw2 <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>Vw3 <span class="sc">&lt;=</span> <span class="dv">2000</span>) <span class="sc">|&gt;</span> <span class="co"># Machining  </span></span>
+<span id="cb174-17"><a href="mixed-integer-optimization.html#cb174-17" aria-hidden="true" tabindex="-1"></a> <span class="fu">add_constraint</span>(<span class="dv">2</span><span class="sc">*</span>Vw1 <span class="sc">+</span> <span class="dv">1</span><span class="sc">*</span>Vw2 <span class="sc">+</span> <span class="dv">1</span><span class="sc">*</span>Vw3 <span class="sc">&lt;=</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span> <span class="co"># Assembly  </span></span>
+<span id="cb174-18"><a href="mixed-integer-optimization.html#cb174-18" aria-hidden="true" tabindex="-1"></a> <span class="fu">add_constraint</span>(<span class="dv">3</span><span class="sc">*</span>Vw1 <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>Vw2 <span class="sc">+</span> <span class="dv">1</span><span class="sc">*</span>Vw3 <span class="sc">&lt;=</span> <span class="dv">1500</span>)    <span class="co"># Quality  </span></span>
+<span id="cb174-19"><a href="mixed-integer-optimization.html#cb174-19" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb174-20"><a href="mixed-integer-optimization.html#cb174-20" aria-hidden="true" tabindex="-1"></a>fc_base_res <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(fc_base_model, </span>
+<span id="cb174-21"><a href="mixed-integer-optimization.html#cb174-21" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
+<span id="cb174-22"><a href="mixed-integer-optimization.html#cb174-22" aria-hidden="true" tabindex="-1"></a>fc_base_res</span></code></pre></div>
+<pre><code>## Status: optimal
+## Objective value: 8845</code></pre>
+<p>Our analysis found an optimal solution with a profit of 8845. At first glance, this may look good but let’s examine the results in more detail.</p>
+<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="mixed-integer-optimization.html#cb176-1" aria-hidden="true" tabindex="-1"></a>fc_base_summary <span class="ot">&lt;-</span> </span>
+<span id="cb176-2"><a href="mixed-integer-optimization.html#cb176-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(fc_base_res<span class="sc">$</span>objective_value,</span>
+<span id="cb176-3"><a href="mixed-integer-optimization.html#cb176-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">t</span>(<span class="fu">as.matrix</span>(fc_base_res<span class="sc">$</span>solution)))</span>
+<span id="cb176-4"><a href="mixed-integer-optimization.html#cb176-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(fc_base_summary)<span class="ot">&lt;-</span></span>
+<span id="cb176-5"><a href="mixed-integer-optimization.html#cb176-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">&quot;Net Profit&quot;</span>, <span class="st">&quot;$w_1$&quot;</span>,<span class="st">&quot;$w_2$&quot;</span>,<span class="st">&quot;$w_3$&quot;</span>,</span>
+<span id="cb176-6"><a href="mixed-integer-optimization.html#cb176-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;$y_1$&quot;</span>,<span class="st">&quot;$y_2$&quot;</span>,<span class="st">&quot;$y_3$&quot;</span>)</span>
+<span id="cb176-7"><a href="mixed-integer-optimization.html#cb176-7" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (fc_base_summary, <span class="at">booktabs=</span>T, <span class="at">escape=</span>F, </span>
+<span id="cb176-8"><a href="mixed-integer-optimization.html#cb176-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption =</span> <span class="st">&quot;Base Case Solution for Fixed Charge Problem&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb176-9"><a href="mixed-integer-optimization.html#cb176-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb176-10"><a href="mixed-integer-optimization.html#cb176-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">footnote</span> (<span class="st">&quot;Note that no setups are incurred.&quot;</span>)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;border-bottom: 0;">
+<caption>
+<span id="tab:reviewing-base-case-results">TABLE 6.16: </span>Base Case Solution for Fixed Charge Problem
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+Net Profit
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(w_1\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(w_2\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(w_3\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(y_1\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(y_2\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(y_3\)</span>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+8845
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+307
+</td>
+<td style="text-align:right;">
+231
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<span style="font-style: italic;">Note: </span>
+</td>
+</tr>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> Note that no setups are incurred.
+</td>
+</tr>
+</tfoot>
+</table>
+<p>We are producing a mix two products <span class="math inline">\(w_2\)</span> and <span class="math inline">\(w_3\)</span> are positive but <span class="math inline">\(y_2=y_3=0\)</span>. This is a nice, very high profit situation because we are not paying for the production setups. It may not be surprising that the optimization model chooses to avoid “paying” the fixed charge for production. This is a “penalty” in the objective function. What we need is a way of connecting the amount to produce of a widget and the decision to produce any of that widget. In reality, it would be necessary to pay the setup costs for the second and third products (<span class="math inline">\(1500+2500\)</span>) bringing the total profit down to 5345. Since the model is not factoring in the production setup cost, perhaps a higher net profit could be found if we could directly account this in our product offerings.</p>
+<p>What we need is a way to connect, associate, or dare I say “link” each production decision, <span class="math inline">\(w\)</span>, with its setup decision, <span class="math inline">\(y\)</span>. In fact, this connection is called a <em>linking constraint</em> and is quite common in mixed integer programming problems.</p>
+<p>Let’s return to the idea of the truth table - let’s focus on widget 2.</p>
+<table>
+<caption>Truth Table for Widget 2 Variables</caption>
+<colgroup>
+<col width="15%" />
+<col width="16%" />
+<col width="67%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Amount to Produce <span class="math inline">\(w_2\)</span></th>
+<th align="center">Decision to Produce <span class="math inline">\(y_2\)</span></th>
+<th align="left">Interpretation of situation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="left">OK - choosing to do nothing</td>
+</tr>
+<tr class="even">
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="left">OK - perhaps not a “smart” option but not impossible or unheard of</td>
+</tr>
+<tr class="odd">
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="left"><strong>impossible</strong> - can’t produce even a single sellable product without doing a setup</td>
+</tr>
+<tr class="even">
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="left">OK</td>
+</tr>
+<tr class="odd">
+<td align="center">42</td>
+<td align="center">0</td>
+<td align="left"><strong>impossible</strong></td>
+</tr>
+<tr class="even">
+<td align="center">42</td>
+<td align="center">1</td>
+<td align="left">OK</td>
+</tr>
+</tbody>
+</table>
+<p>For illustration purposes, I pick three different widget 2 production values (<span class="math inline">\(w_2\)</span>). The value of <span class="math inline">\(w_2=0\)</span> means that we aren’t actually producing anything. In this case, it doesn’t matter whether we do a setup (<span class="math inline">\(y_2=1\)</span>) or not (<span class="math inline">\(y_2=0\)</span>). Some people might be offended by a situation of not producing anything but paying for a setup. The objective function will discourage this situation from happening so as to avoid paying for a setup but it is possible that there might be other relationships between products. In addition, we are all probably familiar with organizations that have invested in a product, only to never put it in service. We don’t need to make the constraint enforce smart operations.</p>
+<p>To demonstrate the relationship between the decisions for widget 2, it is also helpful to look at the small volume case of producing just 1 product (<span class="math inline">\(w_2=1\)</span> ). The key situation here is to ensure that if we even make a single product, must not allow the optimization model to avoid doing a setup. Along the way, it is good to make sure that the relationship allows the solution of <span class="math inline">\(w_2=1\)</span> and <span class="math inline">\(y_2=1\)</span> to be considered feasible.</p>
+<p>Lastly, I like to include a larger production volume to ensure that the constraint is properly enforcing this relationship. The value, 42, is just an arbitrary one and could be any other moderately large value.</p>
+</div>
+<div id="linking-constraints-with-big-m" class="section level3" number="6.6.2">
+<h3><span class="header-section-number">6.6.2</span> Linking Constraints with “Big M”</h3>
+<p>The linking constraint as the following: <span class="math inline">\(w_1 \leq M \cdot y_1\)</span> The value <span class="math inline">\(M\)</span> is a big value that is so large that it does not prematurely limit the production for widget 1. Whatever value of <span class="math inline">\(M\)</span> is used, <span class="math inline">\(w_1\)</span> can never exceed that value.</p>
+<p>Our linking constraints force our new values to be 0 or 1. If <span class="math inline">\(w_1 &gt; 0\)</span>, then this constraint forces the associated <span class="math inline">\(y_1\)</span> to be equal to 1. If <span class="math inline">\(w_1 = 0\)</span>, then this constraint allows <span class="math inline">\(y_1\)</span> to be either 0 or 1. However, our objective function will cause Solver to avoid paying a setup by setting <span class="math inline">\(y_1=0\)</span>.</p>
+<p>It might be tempting to select a very large number such as a billion <span class="math inline">\(10^{10}\)</span> but picking excessively large numbers, can result in poor computational performance. As we’ve discussed large, real-world optimization problems are hard enough, let’s not make it any harder. Albert Einstein once said “A model should be as simple as possible, but no simpler.” Essentially, a value for M should be as small as possible, but no smaller.</p>
+<p>Since <span class="math inline">\(M\)</span> serves to impose an upper bound on <span class="math inline">\(w_1\)</span>, this might suggest how we can use this information to pick an appropriate value for M and that we can do so for each product separately, using a separate value <span class="math inline">\(M_i\)</span> for each widget.</p>
+<p>Let’s examine the constraints for the production plan in the situation gives all resources to the production of Widget 1 and nothing to Widget 2 and Widget 3.</p>
+<p>More formally, using the non-negative lower bounds on widget production, we can set <span class="math inline">\(w_2=w_3 = 0\)</span> and substitute into the constraints of the optimization model. The constraints now look like the following:</p>
+<p><span class="math display" id="eq:FixedChargeW1Only1">\[
+ \begin{split}
+ \begin{aligned}
+      2 \cdot w_1+1 \cdot 0+3 \cdot 0 \leq 1000 \\
+      1 \cdot w_1+5 \cdot 0+2 \cdot 0 \leq 2000 \\
+      2 \cdot w_1+1 \cdot 0+1 \cdot 0 \leq 1000 \\
+      3 \cdot w_1+2 \cdot 0+1 \cdot 0 \leq 1500 \\
+      w_1 \leq 500 \\
+      0 \leq 1000 \\
+      0 \leq 750 \\
+  \end{aligned}
+  \end{split}
+  \tag{6.3}
+\]</span></p>
+<p>This can be further simplified as the following.<br />
+</p>
+<p><span class="math display" id="eq:FixedChargeW1Only2">\[
+ \begin{split}
+ \begin{aligned}
+      2 \cdot w_1 \leq 1000 \\
+      1 \cdot w_1 \leq 2000 \\
+      2 \cdot w_1 \leq 1000 \\
+      3 \cdot w_1 \leq 1500 \\
+      w_1 \leq 500 \\
+  \end{aligned}
+  \end{split}
+  \tag{6.4}
+\]</span></p>
+<p>It can be further simplified as the following:</p>
+<p><span class="math display" id="eq:FixedChargeW1Only3">\[
+ \begin{split}
+ \begin{aligned}
+      w_1 \leq \frac{1000}{2} = 500 \\
+      w_1 \leq 2000 \\
+      w_1 \leq \frac{1000}{2} = 500 \\
+      w_1 \leq \frac{1500}{3} = 500 \\
+      w_1 \leq 500 \\
+  \end{aligned}
+  \end{split}
+  \tag{6.5}
+\]</span></p>
+<p>Since all constraints need to be satisfied, we can represent this to mean that Widget 1 manufacturing could never be higher than the smallest (most restrictive) of these constraints.<br />
+</p>
+<p>Therefore, <span class="math display">\[w_1 \leq min \{ \frac{1000}{2}, \frac{2000}{1}, \frac{1000}{2}, \frac{1500}{3}, 500 \}\]</span></p>
+<p>or <span class="math display">\[w_1 \leq min \{ 500, 2000, 500, 500, 500 \} = 500\]</span> Therefore, we know that Widget 1 production can never exceed 500 units regardless of the amount of other Widgets (<span class="math inline">\(w_2\)</span> and <span class="math inline">\(w_3\)</span>) produced. We can then safely set the Big M value for Widget 1 to be 500. In other words, <span class="math inline">\(M_1=500\)</span>.<br />
+</p>
+<p>We can follow the same process for setting Big M values for widget 2. We start by setting <span class="math inline">\(w_1=w_3 = 0\)</span>. We know that <span class="math inline">\(w_2\)</span> must be no larger than the most restrict constraint. I’ll skip rewriting the constraints and jump a little ahead.<br />
+</p>
+<p><span class="math display">\[W_2 \leq min \{ \frac{1000}{1}, \frac{2000}{5}, \frac{1000}{1}, \frac{1500}{2}, 1000 \}=400\]</span></p>
+<p>Therefore, we can safely use a Big M value for <span class="math inline">\(w_2\)</span> of <span class="math inline">\(M_2=400\)</span>. </p>
+<p>Again we can follow the same process for <span class="math inline">\(w_3\)</span> to find a small Big M value.</p>
+<p><span class="math display">\[w_3 \leq min \{ \frac{1000}{3}, \frac{2000}{2}, \frac{1000}{1}, \frac{1500}{1}, 750 \}=333.33\]</span>  Since the Big M value is setting a lower bound, in this way, we can round up from 333.33 to 334. Our updated model with “Big M”:</p>
+<p><span class="math display" id="eq:FC-BigM">\[
+ \begin{split}
+ \begin{aligned}
+    \text{Max    } &amp; 15w_1+10w_2+25w_3 - 1000y_1 - 1500y_2 - 2000y_3 \\
+    \text{s.t.:  } &amp; 2w_1+1w_2+3w_3 \leq 1000 \\
+                   &amp; 1w_1+5w_2+2w_3 \leq 2000 \\
+                   &amp; 2w_1+1w_2+1w_3 \leq 1000 \\
+                   &amp; 3w_1+2w_2+1w_3 \leq 1500 \\
+                   &amp; w_1 \leq 500 \\
+                   &amp; w_2 \leq 1000 \\
+                   &amp; w_3 \leq 750 \\
+                   &amp; \textcolor{red}{w_1 - 500y_1 \leq 0} \\
+                   &amp; \textcolor{red}{w_2 - 400y_2 \leq 0} \\
+                   &amp; \textcolor{red}{w_3 - 334y_3 \leq 0} \\
+                   &amp; w_1, w_2, w_3 \geq 0 \\
+                   &amp; y_1, y_2, y_3 \in \{0,1\}  \\
+  \end{aligned}
+  \end{split}
+  \tag{6.6}
+\]</span></p>
+<p>We could optionally delete the production capacity such as <span class="math inline">\(w_1 \leq 500\)</span> as they are now redundant constraints because the fixed charge constraints also reflect these upper limits on production capacity.</p>
+</div>
+<div id="fixed-charge-implementation" class="section level3" number="6.6.3">
+<h3><span class="header-section-number">6.6.3</span> Fixed Charge Implementation</h3>
+<p>Given that we have already created a model without the Big M constraints, we can simply add the constraints to the model. We’ll skip the piping operator and just add the constraint directly to the previous model, <code>fc_base_model</code>.</p>
+<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="mixed-integer-optimization.html#cb177-1" aria-hidden="true" tabindex="-1"></a>fc_bigM_model <span class="ot">&lt;-</span> <span class="fu">add_constraint</span>(fc_base_model, </span>
+<span id="cb177-2"><a href="mixed-integer-optimization.html#cb177-2" aria-hidden="true" tabindex="-1"></a>                                Vw1 <span class="sc">-</span> <span class="dv">500</span><span class="sc">*</span>Vy1 <span class="sc">&lt;=</span> <span class="dv">0</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb177-3"><a href="mixed-integer-optimization.html#cb177-3" aria-hidden="true" tabindex="-1"></a>              <span class="co"># W1&#39;s Big M linking constraint </span></span>
+<span id="cb177-4"><a href="mixed-integer-optimization.html#cb177-4" aria-hidden="true" tabindex="-1"></a> <span class="fu">add_constraint</span>(Vw2 <span class="sc">-</span> <span class="dv">400</span><span class="sc">*</span>Vy2 <span class="sc">&lt;=</span> <span class="dv">0</span>)                 <span class="sc">|&gt;</span>  </span>
+<span id="cb177-5"><a href="mixed-integer-optimization.html#cb177-5" aria-hidden="true" tabindex="-1"></a>              <span class="co"># W2&#39;s Big M linking constraint </span></span>
+<span id="cb177-6"><a href="mixed-integer-optimization.html#cb177-6" aria-hidden="true" tabindex="-1"></a> <span class="fu">add_constraint</span>(Vw3 <span class="sc">-</span> <span class="dv">334</span><span class="sc">*</span>Vy3 <span class="sc">&lt;=</span> <span class="dv">0</span>)  </span>
+<span id="cb177-7"><a href="mixed-integer-optimization.html#cb177-7" aria-hidden="true" tabindex="-1"></a>              <span class="co"># W3&#39;s Big M linking constraint</span></span>
+<span id="cb177-8"><a href="mixed-integer-optimization.html#cb177-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb177-9"><a href="mixed-integer-optimization.html#cb177-9" aria-hidden="true" tabindex="-1"></a>fc_bigM_res <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(fc_bigM_model, </span>
+<span id="cb177-10"><a href="mixed-integer-optimization.html#cb177-10" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
+<span id="cb177-11"><a href="mixed-integer-optimization.html#cb177-11" aria-hidden="true" tabindex="-1"></a>fc_bigM_res</span></code></pre></div>
+<pre><code>## Status: optimal
+## Objective value: 6500</code></pre>
+<p>Our model was able to find an optimal solution with an objective value of 6500. Our optimal production plan is shown below. As we can see, our model returned a production plan with only one model of widget being produced.</p>
+<p>Interesting—the objective function value has gone down significantly. Let’s look this over in more detail and compare it to the results that we had when we avoided paying for setups.</p>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:reviewing-bigM-case-results">TABLE 6.17: </span>Fixed Charge Problem
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Net Profit
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(w_1\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(w_2\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(w_3\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(y_1\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(y_2\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(y_3\)</span>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Base Case w/o Setup
+</td>
+<td style="text-align:right;">
+8845
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+307
+</td>
+<td style="text-align:right;">
+231
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Base Case with Setup
+</td>
+<td style="text-align:right;">
+5345
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+307
+</td>
+<td style="text-align:right;">
+231
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Optimal Fixed Charge
+</td>
+<td style="text-align:right;">
+6500
+</td>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+<p>Notice that the the high setup costs have caused us to focus our production planning decisions. Rather than spreading ourselves across three different product lines, we are producing as many of widget 1 as we can.</p>
+</div>
+</div>
+<div id="model-results-and-interpretation" class="section level2" number="6.7">
+<h2><span class="header-section-number">6.7</span> Model Results and Interpretation</h2>
+<p>We can also calculate our resource usage.</p>
+<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb179-1"><a href="mixed-integer-optimization.html#cb179-1" aria-hidden="true" tabindex="-1"></a>fc_bigM_res.W1 <span class="ot">&lt;-</span> <span class="fu">get_solution</span>(fc_bigM_res, Vw1) </span>
+<span id="cb179-2"><a href="mixed-integer-optimization.html#cb179-2" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Extract solution value for decision variable, W1</span></span>
+<span id="cb179-3"><a href="mixed-integer-optimization.html#cb179-3" aria-hidden="true" tabindex="-1"></a>fc_bigM_res.W2 <span class="ot">&lt;-</span> <span class="fu">get_solution</span>(fc_bigM_res, Vw2) </span>
+<span id="cb179-4"><a href="mixed-integer-optimization.html#cb179-4" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Extract solution value for decision variable, W2</span></span>
+<span id="cb179-5"><a href="mixed-integer-optimization.html#cb179-5" aria-hidden="true" tabindex="-1"></a>fc_bigM_res.W3 <span class="ot">&lt;-</span> <span class="fu">get_solution</span>(fc_bigM_res, Vw3) </span>
+<span id="cb179-6"><a href="mixed-integer-optimization.html#cb179-6" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Extract solution value for decision variable, W3</span></span>
+<span id="cb179-7"><a href="mixed-integer-optimization.html#cb179-7" aria-hidden="true" tabindex="-1"></a>fc_bigM_res.df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">c</span>(fc_bigM_res.W1,</span>
+<span id="cb179-8"><a href="mixed-integer-optimization.html#cb179-8" aria-hidden="true" tabindex="-1"></a>                               fc_bigM_res.W2,</span>
+<span id="cb179-9"><a href="mixed-integer-optimization.html#cb179-9" aria-hidden="true" tabindex="-1"></a>                               fc_bigM_res.W3)) </span>
+<span id="cb179-10"><a href="mixed-integer-optimization.html#cb179-10" aria-hidden="true" tabindex="-1"></a>fc_bigM_res.r1 <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">data.frame</span>(<span class="fu">c</span>(fc_bigM_res.W1<span class="sc">*</span><span class="dv">2</span>,</span>
+<span id="cb179-11"><a href="mixed-integer-optimization.html#cb179-11" aria-hidden="true" tabindex="-1"></a>                                 fc_bigM_res.W2<span class="sc">*</span><span class="dv">1</span>,</span>
+<span id="cb179-12"><a href="mixed-integer-optimization.html#cb179-12" aria-hidden="true" tabindex="-1"></a>                                 fc_bigM_res.W3<span class="sc">*</span><span class="dv">3</span>)))</span>
+<span id="cb179-13"><a href="mixed-integer-optimization.html#cb179-13" aria-hidden="true" tabindex="-1"></a>               <span class="co">#multiply results with hours used</span></span>
+<span id="cb179-14"><a href="mixed-integer-optimization.html#cb179-14" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(fc_bigM_res.r1) <span class="ot">&lt;-</span> <span class="st">&quot;Pre-process&quot;</span></span>
+<span id="cb179-15"><a href="mixed-integer-optimization.html#cb179-15" aria-hidden="true" tabindex="-1"></a>fc_bigM_res.r2 <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">data.frame</span>(<span class="fu">c</span>(fc_bigM_res.W1<span class="sc">*</span><span class="dv">1</span>,</span>
+<span id="cb179-16"><a href="mixed-integer-optimization.html#cb179-16" aria-hidden="true" tabindex="-1"></a>                                 fc_bigM_res.W2<span class="sc">*</span><span class="dv">5</span>,</span>
+<span id="cb179-17"><a href="mixed-integer-optimization.html#cb179-17" aria-hidden="true" tabindex="-1"></a>                                 fc_bigM_res.W3<span class="sc">*</span><span class="dv">2</span>)))</span>
+<span id="cb179-18"><a href="mixed-integer-optimization.html#cb179-18" aria-hidden="true" tabindex="-1"></a>               <span class="co">#multiply results with hours used</span></span>
+<span id="cb179-19"><a href="mixed-integer-optimization.html#cb179-19" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(fc_bigM_res.r2) <span class="ot">&lt;-</span> <span class="st">&quot;Machining&quot;</span></span>
+<span id="cb179-20"><a href="mixed-integer-optimization.html#cb179-20" aria-hidden="true" tabindex="-1"></a>fc_bigM_res.r3 <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">data.frame</span>(<span class="fu">c</span>(fc_bigM_res.W1<span class="sc">*</span><span class="dv">2</span>,</span>
+<span id="cb179-21"><a href="mixed-integer-optimization.html#cb179-21" aria-hidden="true" tabindex="-1"></a>                                 fc_bigM_res.W2<span class="sc">*</span><span class="dv">1</span>,</span>
+<span id="cb179-22"><a href="mixed-integer-optimization.html#cb179-22" aria-hidden="true" tabindex="-1"></a>                                 fc_bigM_res.W3<span class="sc">*</span><span class="dv">1</span>)))</span>
+<span id="cb179-23"><a href="mixed-integer-optimization.html#cb179-23" aria-hidden="true" tabindex="-1"></a>               <span class="co">#multiply results with hours used</span></span>
+<span id="cb179-24"><a href="mixed-integer-optimization.html#cb179-24" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(fc_bigM_res.r3) <span class="ot">&lt;-</span> <span class="st">&quot;Assembly&quot;</span></span>
+<span id="cb179-25"><a href="mixed-integer-optimization.html#cb179-25" aria-hidden="true" tabindex="-1"></a>fc_bigM_res.r4 <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">data.frame</span>(<span class="fu">c</span>(fc_bigM_res.W1<span class="sc">*</span><span class="dv">3</span>,</span>
+<span id="cb179-26"><a href="mixed-integer-optimization.html#cb179-26" aria-hidden="true" tabindex="-1"></a>                                 fc_bigM_res.W2<span class="sc">*</span><span class="dv">2</span>,</span>
+<span id="cb179-27"><a href="mixed-integer-optimization.html#cb179-27" aria-hidden="true" tabindex="-1"></a>                                 fc_bigM_res.W3<span class="sc">*</span><span class="dv">1</span>)))</span>
+<span id="cb179-28"><a href="mixed-integer-optimization.html#cb179-28" aria-hidden="true" tabindex="-1"></a>               <span class="co">#multiply results with hours used</span></span>
+<span id="cb179-29"><a href="mixed-integer-optimization.html#cb179-29" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(fc_bigM_res.r4) <span class="ot">&lt;-</span> <span class="st">&quot;Quality Assurance&quot;</span></span>
+<span id="cb179-30"><a href="mixed-integer-optimization.html#cb179-30" aria-hidden="true" tabindex="-1"></a>fc_bigM_res.tot <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">c</span>(<span class="fu">sum</span>(fc_bigM_res.r1),</span>
+<span id="cb179-31"><a href="mixed-integer-optimization.html#cb179-31" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">sum</span>(fc_bigM_res.r2),</span>
+<span id="cb179-32"><a href="mixed-integer-optimization.html#cb179-32" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">sum</span>(fc_bigM_res.r3),</span>
+<span id="cb179-33"><a href="mixed-integer-optimization.html#cb179-33" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">sum</span>(fc_bigM_res.r4)))</span>
+<span id="cb179-34"><a href="mixed-integer-optimization.html#cb179-34" aria-hidden="true" tabindex="-1"></a>               <span class="co">#sum each step</span></span>
+<span id="cb179-35"><a href="mixed-integer-optimization.html#cb179-35" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(fc_bigM_res.tot) <span class="ot">&lt;-</span> <span class="st">&quot;Total Used&quot;</span></span>
+<span id="cb179-36"><a href="mixed-integer-optimization.html#cb179-36" aria-hidden="true" tabindex="-1"></a>fc_bigM_res.avail <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb179-37"><a href="mixed-integer-optimization.html#cb179-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">&quot;1000&quot;</span>,<span class="st">&quot;2000&quot;</span>,<span class="st">&quot;1000&quot;</span>,<span class="st">&quot;1500&quot;</span>))</span>
+<span id="cb179-38"><a href="mixed-integer-optimization.html#cb179-38" aria-hidden="true" tabindex="-1"></a>               <span class="co">#print available hours for each step</span></span>
+<span id="cb179-39"><a href="mixed-integer-optimization.html#cb179-39" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(fc_bigM_res.avail) <span class="ot">&lt;-</span> <span class="st">&quot;Available&quot;</span></span>
+<span id="cb179-40"><a href="mixed-integer-optimization.html#cb179-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb179-41"><a href="mixed-integer-optimization.html#cb179-41" aria-hidden="true" tabindex="-1"></a>Res_Usage <span class="ot">&lt;-</span> <span class="fu">cbind</span>(fc_bigM_res.tot, fc_bigM_res.avail)</span>
+<span id="cb179-42"><a href="mixed-integer-optimization.html#cb179-42" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(Res_Usage)<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&quot;Pre-process&quot;</span>, <span class="st">&quot;Machining&quot;</span>,</span>
+<span id="cb179-43"><a href="mixed-integer-optimization.html#cb179-43" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&quot;Assembly&quot;</span>, <span class="st">&quot;Quality Assurance&quot;</span>)</span>
+<span id="cb179-44"><a href="mixed-integer-optimization.html#cb179-44" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">cbind</span>(Res_Usage),</span>
+<span id="cb179-45"><a href="mixed-integer-optimization.html#cb179-45" aria-hidden="true" tabindex="-1"></a>     <span class="at">booktabs=</span>T, <span class="at">caption =</span> </span>
+<span id="cb179-46"><a href="mixed-integer-optimization.html#cb179-46" aria-hidden="true" tabindex="-1"></a>       <span class="st">&quot;Manufacturing Resource Usage&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb179-47"><a href="mixed-integer-optimization.html#cb179-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:fixed-charge-usage">TABLE 6.18: </span>Manufacturing Resource Usage
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Total Used
+</th>
+<th style="text-align:left;">
+Available
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Pre-process
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+1000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Machining
+</td>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:left;">
+2000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Assembly
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+1000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Quality Assurance
+</td>
+<td style="text-align:right;">
+1500
+</td>
+<td style="text-align:left;">
+1500
+</td>
+</tr>
+</tbody>
+</table>
+<p>As can be seen, we used all of our Pre-processing hours, Assembly hours, and Quality Assurance hours. There is a significant amount of time available in Machining though.</p>
+<p>Further analysis could examine alternatives such as redesigning widget 2 and 3 to be less resource intensive in production to see at what point we would choose to produce them.</p>
+<p></p>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-32" class="exercise"><strong>Exercise 6.8  (Redesign Widget 3) </strong></span>The design team has an idea of how to use a previous manufacturing fixture which could eliminate the setup cost for Widget 3. How much would you produce of Widget 3 if there were no setup (fixed) cost for production of Widget 3? Of course this still keeps a cost for Widgets 1 and 2. Experiment with the above model to find the lowest setup cost for Widget 3 where you still choose to not produce any of Widget 3.</p>
+</div>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-33" class="exercise"><strong>Exercise 6.9  (Reducing Fixed Costs) </strong></span>How would production change if the setup costs were cut in half due to implementing lean production approaches?</p>
+</div>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-34" class="exercise"><strong>Exercise 6.10  (Adding a Fourth Widget) </strong></span>Consider adding a new widget 4 which needs 4, 3, 2, and 5 hours for Pre-processing,
+Machining, Assembly, and Quality Assurance respectively. Widget 4 uses the same setup as Widget 3 which means no repeated setup cost for Widget 4 if widget 3 is already being produced.</p>
+<p>Solve the model to obtain the production plan where both Widget 3 and Widget 4 are produced.</p>
+</div>
+
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="5">
+<li id="fn5"><p>This example is based on an example from Thanh Thuy Nguyen.<a href="mixed-integer-optimization.html#fnref5" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="data-envelopment-analysis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="more-integer-programming-models.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

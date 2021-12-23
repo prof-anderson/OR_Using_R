@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 4 Sensitivity Analysis | Optimization Modeling Using R</title>
+  <meta name="description" content="This book introduces optimization using R." />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 4 Sensitivity Analysis | Optimization Modeling Using R" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This book introduces optimization using R." />
+  <meta name="github-repo" content="prof-anderson/OR_Using_R" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 4 Sensitivity Analysis | Optimization Modeling Using R" />
+  
+  <meta name="twitter:description" content="This book introduces optimization using R." />
+  
+
+<meta name="author" content="Timothy R. Anderson" />
+
+
+<meta name="date" content="2021-12-22" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="more-linear-programming-models.html"/>
+<link rel="next" href="data-envelopment-analysis.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Optimization Modeling Using R</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#intended-audience"><i class="fa fa-check"></i>Intended Audience</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#features-of-this-book"><i class="fa fa-check"></i>Features of this Book</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#instructor-notes"><i class="fa fa-check"></i>Instructor Notes</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#acknowldegements"><i class="fa fa-check"></i>Acknowldegements</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="about-the-author.html"><a href="about-the-author.html"><i class="fa fa-check"></i>About the Author</a></li>
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#what-is-operations-research"><i class="fa fa-check"></i><b>1.1</b> What is Operations Research</a></li>
+<li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#purpose-of-this-book"><i class="fa fa-check"></i><b>1.2</b> Purpose of this Book</a></li>
+<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#range-of-operations-research-techniques"><i class="fa fa-check"></i><b>1.3</b> Range of Operations Research Techniques</a></li>
+<li class="chapter" data-level="1.4" data-path="introduction.html"><a href="introduction.html#relationship-between-operations-research-and-analytics"><i class="fa fa-check"></i><b>1.4</b> Relationship between Operations Research and Analytics</a></li>
+<li class="chapter" data-level="1.5" data-path="introduction.html"><a href="introduction.html#importance-of-optimization"><i class="fa fa-check"></i><b>1.5</b> Importance of Optimization</a></li>
+<li class="chapter" data-level="1.6" data-path="introduction.html"><a href="introduction.html#why-r"><i class="fa fa-check"></i><b>1.6</b> Why R?</a></li>
+<li class="chapter" data-level="1.7" data-path="introduction.html"><a href="introduction.html#conventions-used-in-this-book"><i class="fa fa-check"></i><b>1.7</b> Conventions Used in this Book</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html"><i class="fa fa-check"></i><b>2</b> Introduction to Linear Programming</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#what-is-linear-programming"><i class="fa fa-check"></i><b>2.1</b> What is Linear Programming</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#two-variable-base-case"><i class="fa fa-check"></i><b>2.2</b> Two Variable Base Case</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#graphically-solving-a-linear-program"><i class="fa fa-check"></i><b>2.3</b> Graphically Solving a Linear Program</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#implementing-and-solving-with-ompr"><i class="fa fa-check"></i><b>2.4</b> Implementing and Solving with <code>ompr</code></a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#preparing-to-implement-the-linear-program"><i class="fa fa-check"></i><b>2.4.1</b> Preparing to Implement the Linear Program</a></li>
+<li class="chapter" data-level="2.4.2" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#implementing-the-base-case-with-piping"><i class="fa fa-check"></i><b>2.4.2</b> Implementing the Base Case with Piping</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#adding-a-third-product-variable"><i class="fa fa-check"></i><b>2.5</b> Adding a Third Product (Variable)</a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#three-variable-base-case-formulation"><i class="fa fa-check"></i><b>2.5.1</b> Three Variable Base Case Formulation</a></li>
+<li class="chapter" data-level="2.5.2" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#three-variable-base-case-implementation"><i class="fa fa-check"></i><b>2.5.2</b> Three Variable Base Case Implementation</a></li>
+<li class="chapter" data-level="2.5.3" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#three-variable-case-results-and-interpretation"><i class="fa fa-check"></i><b>2.5.3</b> Three Variable Case Results and Interpretation</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#linear-programming-special-cases"><i class="fa fa-check"></i><b>2.6</b> Linear Programming Special Cases</a>
+<ul>
+<li class="chapter" data-level="2.6.1" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#case-1-no-feasible-solution"><i class="fa fa-check"></i><b>2.6.1</b> Case 1: No Feasible Solution</a></li>
+<li class="chapter" data-level="2.6.2" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#case-2-multiple-optima"><i class="fa fa-check"></i><b>2.6.2</b> Case 2: Multiple Optima</a></li>
+<li class="chapter" data-level="2.6.3" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#case-3-redundant-constraint"><i class="fa fa-check"></i><b>2.6.3</b> Case 3: Redundant Constraint</a></li>
+<li class="chapter" data-level="2.6.4" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#case-4-unbounded-solution"><i class="fa fa-check"></i><b>2.6.4</b> Case 4: Unbounded Solution</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#abstracting-the-production-planning-model"><i class="fa fa-check"></i><b>2.7</b> Abstracting the Production Planning Model</a></li>
+<li class="chapter" data-level="2.8" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#methods-of-solving-linear-programs"><i class="fa fa-check"></i><b>2.8</b> Methods of Solving Linear Programs</a></li>
+<li class="chapter" data-level="2.9" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#exercises"><i class="fa fa-check"></i><b>2.9</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html"><i class="fa fa-check"></i><b>3</b> More Linear Programming Models</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#types-of-lp-models"><i class="fa fa-check"></i><b>3.1</b> Types of LP Models</a></li>
+<li class="chapter" data-level="3.2" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#the-algebraic-model"><i class="fa fa-check"></i><b>3.2</b> The Algebraic Model</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#tips-and-conventions-for-algebraic-models"><i class="fa fa-check"></i><b>3.2.1</b> Tips and Conventions for Algebraic Models</a></li>
+<li class="chapter" data-level="3.2.2" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#building-the-generalized-model-in-r"><i class="fa fa-check"></i><b>3.2.2</b> Building the Generalized Model in R</a></li>
+<li class="chapter" data-level="3.2.3" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#examining-the-results"><i class="fa fa-check"></i><b>3.2.3</b> Examining the Results</a></li>
+<li class="chapter" data-level="3.2.4" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#changing-the-model"><i class="fa fa-check"></i><b>3.2.4</b> Changing the Model</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#common-linear-programming-applications"><i class="fa fa-check"></i><b>3.3</b> Common Linear Programming Applications</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#blending-problems"><i class="fa fa-check"></i><b>3.3.1</b> Blending Problems</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#allocation-models"><i class="fa fa-check"></i><b>3.4</b> Allocation Models</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#covering-models"><i class="fa fa-check"></i><b>3.4.1</b> Covering Models</a></li>
+<li class="chapter" data-level="3.4.2" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#transportation-models"><i class="fa fa-check"></i><b>3.4.2</b> Transportation Models</a></li>
+<li class="chapter" data-level="3.4.3" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#transshipment-models"><i class="fa fa-check"></i><b>3.4.3</b> Transshipment Models</a></li>
+<li class="chapter" data-level="3.4.4" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#production-and-inventory-planning"><i class="fa fa-check"></i><b>3.4.4</b> Production and Inventory Planning</a></li>
+<li class="chapter" data-level="3.4.5" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#standard-form"><i class="fa fa-check"></i><b>3.4.5</b> Standard Form</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#vector-and-matrix-forms-of-lps"><i class="fa fa-check"></i><b>3.5</b> Vector and Matrix Forms of LPs</a></li>
+<li class="chapter" data-level="3.6" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#exercises-1"><i class="fa fa-check"></i><b>3.6</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html"><i class="fa fa-check"></i><b>4</b> Sensitivity Analysis</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#base-case"><i class="fa fa-check"></i><b>4.1</b> Base Case</a></li>
+<li class="chapter" data-level="4.2" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#shadow-prices"><i class="fa fa-check"></i><b>4.2</b> Shadow Prices</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#extraction-and-interpretation"><i class="fa fa-check"></i><b>4.2.1</b> Extraction and Interpretation</a></li>
+<li class="chapter" data-level="4.2.2" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#example-of-adding-an-hour-to-assembly"><i class="fa fa-check"></i><b>4.2.2</b> Example of Adding an Hour to Assembly</a></li>
+<li class="chapter" data-level="4.2.3" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#shadow-prices-of-underutilized-resources"><i class="fa fa-check"></i><b>4.2.3</b> Shadow Prices of Underutilized Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#reduced-costs-of-variables"><i class="fa fa-check"></i><b>4.3</b> Reduced Costs of Variables</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#reduced-cost-of-ants"><i class="fa fa-check"></i><b>4.3.1</b> Reduced Cost of Ants</a></li>
+<li class="chapter" data-level="4.3.2" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#reduced-price-of-bats"><i class="fa fa-check"></i><b>4.3.2</b> Reduced Price of Bats</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#using-sensitivity-analysis-to-evaluate-a-new-product"><i class="fa fa-check"></i><b>4.4</b> Using Sensitivity Analysis to Evaluate a New Product</a></li>
+<li class="chapter" data-level="4.5" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#exercises-2"><i class="fa fa-check"></i><b>4.5</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html"><i class="fa fa-check"></i><b>5</b> Data Envelopment Analysis</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#introduction-1"><i class="fa fa-check"></i><b>5.1</b> Introduction</a></li>
+<li class="chapter" data-level="5.2" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#creating-the-data"><i class="fa fa-check"></i><b>5.2</b> Creating the Data</a></li>
+<li class="chapter" data-level="5.3" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#graphical-analysis"><i class="fa fa-check"></i><b>5.3</b> Graphical Analysis</a></li>
+<li class="chapter" data-level="5.4" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#the-linear-programs-for-dea"><i class="fa fa-check"></i><b>5.4</b> The Linear Programs for DEA</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#an-explicit-linear-program-for-dea"><i class="fa fa-check"></i><b>5.4.1</b> An Explicit Linear Program for DEA</a></li>
+<li class="chapter" data-level="5.4.2" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#a-generalized-linear-program-for-dea"><i class="fa fa-check"></i><b>5.4.2</b> A Generalized Linear Program for DEA</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#creating-the-lp---the-algebraic-approach"><i class="fa fa-check"></i><b>5.5</b> Creating the LP - The Algebraic Approach</a></li>
+<li class="chapter" data-level="5.6" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#returns-to-scale"><i class="fa fa-check"></i><b>5.6</b> Returns to Scale</a></li>
+<li class="chapter" data-level="5.7" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#multiple-inputs-and-multiple-outputs"><i class="fa fa-check"></i><b>5.7</b> Multiple Inputs and Multiple Outputs</a></li>
+<li class="chapter" data-level="5.8" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#extracting-multiplier-weights-from-sensitivity-analysis"><i class="fa fa-check"></i><b>5.8</b> Extracting Multiplier Weights from Sensitivity Analysis</a></li>
+<li class="chapter" data-level="5.9" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#slack-maximization"><i class="fa fa-check"></i><b>5.9</b> Slack Maximization</a></li>
+<li class="chapter" data-level="5.10" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#dea-packages"><i class="fa fa-check"></i><b>5.10</b> DEA Packages</a></li>
+<li class="chapter" data-level="5.11" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#dea-model-building"><i class="fa fa-check"></i><b>5.11</b> DEA Model Building</a>
+<ul>
+<li class="chapter" data-level="5.11.1" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#selection-of-inputs-and-outputs"><i class="fa fa-check"></i><b>5.11.1</b> Selection of Inputs and Outputs</a></li>
+<li class="chapter" data-level="5.11.2" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#model-choices"><i class="fa fa-check"></i><b>5.11.2</b> Model Choices</a></li>
+<li class="chapter" data-level="5.11.3" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#application-area-expertise"><i class="fa fa-check"></i><b>5.11.3</b> Application Area Expertise</a></li>
+</ul></li>
+<li class="chapter" data-level="5.12" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#further-reading"><i class="fa fa-check"></i><b>5.12</b> Further Reading</a></li>
+<li class="chapter" data-level="5.13" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#exercises-3"><i class="fa fa-check"></i><b>5.13</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html"><i class="fa fa-check"></i><b>6</b> Mixed Integer Optimization</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#example-of-minor-integrality-impact"><i class="fa fa-check"></i><b>6.1</b> Example of Minor Integrality Impact</a></li>
+<li class="chapter" data-level="6.2" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#example-of-major-integality-impact"><i class="fa fa-check"></i><b>6.2</b> Example of Major Integality Impact</a></li>
+<li class="chapter" data-level="6.3" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#the-branch-and-bound-algorithm"><i class="fa fa-check"></i><b>6.3</b> The Branch and Bound Algorithm</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#the-lp-relaxation"><i class="fa fa-check"></i><b>6.3.1</b> The LP Relaxation</a></li>
+<li class="chapter" data-level="6.3.2" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-i"><i class="fa fa-check"></i><b>6.3.2</b> Subproblem I</a></li>
+<li class="chapter" data-level="6.3.3" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-iii"><i class="fa fa-check"></i><b>6.3.3</b> Subproblem III</a></li>
+<li class="chapter" data-level="6.3.4" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-iv"><i class="fa fa-check"></i><b>6.3.4</b> Subproblem IV</a></li>
+<li class="chapter" data-level="6.3.5" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-v"><i class="fa fa-check"></i><b>6.3.5</b> Subproblem V</a></li>
+<li class="chapter" data-level="6.3.6" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-vi"><i class="fa fa-check"></i><b>6.3.6</b> Subproblem VI</a></li>
+<li class="chapter" data-level="6.3.7" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-vii"><i class="fa fa-check"></i><b>6.3.7</b> Subproblem VII</a></li>
+<li class="chapter" data-level="6.3.8" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-viii"><i class="fa fa-check"></i><b>6.3.8</b> Subproblem VIII</a></li>
+<li class="chapter" data-level="6.3.9" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-ii"><i class="fa fa-check"></i><b>6.3.9</b> Subproblem II</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#computational-complexity"><i class="fa fa-check"></i><b>6.4</b> Computational Complexity</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#full-enumeration"><i class="fa fa-check"></i><b>6.4.1</b> Full Enumeration</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#binary-variables-and-logical-relations"><i class="fa fa-check"></i><b>6.5</b> Binary Variables and Logical Relations</a></li>
+<li class="chapter" data-level="6.6" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#fixed-charge-models"><i class="fa fa-check"></i><b>6.6</b> Fixed Charge Models</a>
+<ul>
+<li class="chapter" data-level="6.6.1" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#fixed-charge-example-introduction"><i class="fa fa-check"></i><b>6.6.1</b> Fixed Charge Example-Introduction</a></li>
+<li class="chapter" data-level="6.6.2" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#linking-constraints-with-big-m"><i class="fa fa-check"></i><b>6.6.2</b> Linking Constraints with “Big M”</a></li>
+<li class="chapter" data-level="6.6.3" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#fixed-charge-implementation"><i class="fa fa-check"></i><b>6.6.3</b> Fixed Charge Implementation</a></li>
+</ul></li>
+<li class="chapter" data-level="6.7" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#model-results-and-interpretation"><i class="fa fa-check"></i><b>6.7</b> Model Results and Interpretation</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html"><i class="fa fa-check"></i><b>7</b> More Integer Programming Models</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#overview"><i class="fa fa-check"></i><b>7.1</b> Overview</a></li>
+<li class="chapter" data-level="7.2" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#revisiting-the-warehouse-location-problem"><i class="fa fa-check"></i><b>7.2</b> Revisiting the Warehouse Location Problem</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#implementing-the-warehouse-model"><i class="fa fa-check"></i><b>7.2.1</b> Implementing the Warehouse Model</a></li>
+<li class="chapter" data-level="7.2.2" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#solving-the-warehouse-location-problem"><i class="fa fa-check"></i><b>7.2.2</b> Solving the Warehouse Location Problem</a></li>
+<li class="chapter" data-level="7.2.3" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#warehouse-discussion"><i class="fa fa-check"></i><b>7.2.3</b> Warehouse Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#solving-mips-with-different-solvers"><i class="fa fa-check"></i><b>7.3</b> Solving MIPs with Different Solvers</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#performance-of-glpk"><i class="fa fa-check"></i><b>7.3.1</b> Performance of <code>glpk</code></a></li>
+<li class="chapter" data-level="7.3.2" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#performance-of-symphony"><i class="fa fa-check"></i><b>7.3.2</b> Performance of <code>symphony</code></a></li>
+<li class="chapter" data-level="7.3.3" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#performance-of-lpsolve"><i class="fa fa-check"></i><b>7.3.3</b> Performance of <code>lpsolve</code></a></li>
+<li class="chapter" data-level="7.3.4" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#performance-of-gurobi"><i class="fa fa-check"></i><b>7.3.4</b> Performance of <code>gurobi</code></a></li>
+<li class="chapter" data-level="7.3.5" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#comparing-results-across-solvers"><i class="fa fa-check"></i><b>7.3.5</b> Comparing Results across Solvers</a></li>
+<li class="chapter" data-level="7.3.6" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#popularity-of-lp-solvers"><i class="fa fa-check"></i><b>7.3.6</b> Popularity of LP Solvers</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#solving-sudoku-puzzles-using-optimization"><i class="fa fa-check"></i><b>7.4</b> Solving Sudoku Puzzles using Optimization</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#introduction-to-sudoku-and-optimization"><i class="fa fa-check"></i><b>7.4.1</b> Introduction to Sudoku and Optimization</a></li>
+<li class="chapter" data-level="7.4.2" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#formulating-the-sudoku-problem"><i class="fa fa-check"></i><b>7.4.2</b> Formulating the Sudoku Problem</a></li>
+<li class="chapter" data-level="7.4.3" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#implementing-sudoku-in-ompr"><i class="fa fa-check"></i><b>7.4.3</b> Implementing Sudoku in ompr</a></li>
+<li class="chapter" data-level="7.4.4" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#sudoku-discussion"><i class="fa fa-check"></i><b>7.4.4</b> Sudoku Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#exercises-4"><i class="fa fa-check"></i><b>7.5</b> Exercises</a></li>
+<li class="chapter" data-level="7.6" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#production-planning-over-time"><i class="fa fa-check"></i><b>7.6</b> Production Planning over Time</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#implementing-the-model-1"><i class="fa fa-check"></i><b>7.6.1</b> Implementing the Model</a></li>
+</ul></li>
+<li class="chapter" data-level="7.7" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#additional-exercises"><i class="fa fa-check"></i><b>7.7</b> Additional Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="goal-programming.html"><a href="goal-programming.html"><i class="fa fa-check"></i><b>8</b> Goal Programming</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="goal-programming.html"><a href="goal-programming.html#introduction-2"><i class="fa fa-check"></i><b>8.1</b> Introduction</a></li>
+<li class="chapter" data-level="8.2" data-path="goal-programming.html"><a href="goal-programming.html#preemptive-goal-programming"><i class="fa fa-check"></i><b>8.2</b> Preemptive Goal Programming</a></li>
+<li class="chapter" data-level="8.3" data-path="goal-programming.html"><a href="goal-programming.html#policies-for-houselessness"><i class="fa fa-check"></i><b>8.3</b> Policies for Houselessness</a></li>
+<li class="chapter" data-level="8.4" data-path="goal-programming.html"><a href="goal-programming.html#mass-mailings"><i class="fa fa-check"></i><b>8.4</b> Mass Mailings</a>
+<ul>
+<li class="chapter" data-level="8.4.1" data-path="goal-programming.html"><a href="goal-programming.html#formulating-the-state-mailing-model"><i class="fa fa-check"></i><b>8.4.1</b> Formulating the State Mailing Model</a></li>
+<li class="chapter" data-level="8.4.2" data-path="goal-programming.html"><a href="goal-programming.html#implementing-the-state-mailing-model"><i class="fa fa-check"></i><b>8.4.2</b> Implementing the State Mailing Model</a></li>
+<li class="chapter" data-level="8.4.3" data-path="goal-programming.html"><a href="goal-programming.html#frontloading-the-work"><i class="fa fa-check"></i><b>8.4.3</b> Frontloading the Work</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="goal-programming.html"><a href="goal-programming.html#exercises-5"><i class="fa fa-check"></i><b>8.5</b> Exercises</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="a-very-brief-introduction-to-r.html"><a href="a-very-brief-introduction-to-r.html"><i class="fa fa-check"></i><b>A</b> A Very Brief Introduction to R</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="a-very-brief-introduction-to-r.html"><a href="a-very-brief-introduction-to-r.html#purpose"><i class="fa fa-check"></i><b>A.1</b> Purpose</a></li>
+<li class="chapter" data-level="A.2" data-path="a-very-brief-introduction-to-r.html"><a href="a-very-brief-introduction-to-r.html#getting-started-with-r"><i class="fa fa-check"></i><b>A.2</b> Getting Started with R</a></li>
+<li class="chapter" data-level="A.3" data-path="a-very-brief-introduction-to-r.html"><a href="a-very-brief-introduction-to-r.html#exercises-6"><i class="fa fa-check"></i><b>A.3</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html"><i class="fa fa-check"></i><b>B</b> Introduction to Math Notation</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#purpose-1"><i class="fa fa-check"></i><b>B.1</b> Purpose</a></li>
+<li class="chapter" data-level="B.2" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#basic-summation-notation"><i class="fa fa-check"></i><b>B.2</b> Basic Summation Notation</a></li>
+<li class="chapter" data-level="B.3" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#using-latex-in-rmarkdown"><i class="fa fa-check"></i><b>B.3</b> Using LaTeX in RMarkdown</a></li>
+<li class="chapter" data-level="B.4" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#inline-notation"><i class="fa fa-check"></i><b>B.4</b> Inline Notation</a></li>
+<li class="chapter" data-level="B.5" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#sums"><i class="fa fa-check"></i><b>B.5</b> Sums</a></li>
+<li class="chapter" data-level="B.6" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#delimiters"><i class="fa fa-check"></i><b>B.6</b> Delimiters</a></li>
+<li class="chapter" data-level="B.7" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#summary-of-mathematical-notations"><i class="fa fa-check"></i><b>B.7</b> Summary of Mathematical Notations</a></li>
+<li class="chapter" data-level="B.8" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#sequences-and-summation-notation"><i class="fa fa-check"></i><b>B.8</b> Sequences and Summation Notation</a></li>
+<li class="chapter" data-level="B.9" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#applications-of-summation"><i class="fa fa-check"></i><b>B.9</b> Applications of Summation</a></li>
+<li class="chapter" data-level="B.10" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#double-summation"><i class="fa fa-check"></i><b>B.10</b> Double Summation</a></li>
+<li class="chapter" data-level="B.11" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#applications-of-double-summation"><i class="fa fa-check"></i><b>B.11</b> Applications of Double Summation</a></li>
+<li class="chapter" data-level="B.12" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#exercises-7"><i class="fa fa-check"></i><b>B.12</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="troubleshooting.html"><a href="troubleshooting.html"><i class="fa fa-check"></i><b>C</b> Troubleshooting</a>
+<ul>
+<li class="chapter" data-level="C.1" data-path="troubleshooting.html"><a href="troubleshooting.html#overview-1"><i class="fa fa-check"></i><b>C.1</b> Overview</a></li>
+<li class="chapter" data-level="C.2" data-path="troubleshooting.html"><a href="troubleshooting.html#model-building"><i class="fa fa-check"></i><b>C.2</b> Model Building</a>
+<ul>
+<li class="chapter" data-level="C.2.1" data-path="troubleshooting.html"><a href="troubleshooting.html#define-and-formulate-before-implementing"><i class="fa fa-check"></i><b>C.2.1</b> Define and Formulate before Implementing</a></li>
+<li class="chapter" data-level="C.2.2" data-path="troubleshooting.html"><a href="troubleshooting.html#failing-to-look-for-past-optimization-models"><i class="fa fa-check"></i><b>C.2.2</b> Failing to Look for Past Optimization Models</a></li>
+<li class="chapter" data-level="C.2.3" data-path="troubleshooting.html"><a href="troubleshooting.html#misrendering-of-pdf"><i class="fa fa-check"></i><b>C.2.3</b> Misrendering of PDF</a></li>
+<li class="chapter" data-level="C.2.4" data-path="troubleshooting.html"><a href="troubleshooting.html#blank-lines-in-latex"><i class="fa fa-check"></i><b>C.2.4</b> Blank Lines in LaTeX</a></li>
+<li class="chapter" data-level="C.2.5" data-path="troubleshooting.html"><a href="troubleshooting.html#problems-with-pdf-creation"><i class="fa fa-check"></i><b>C.2.5</b> Problems with PDF Creation</a></li>
+</ul></li>
+<li class="chapter" data-level="C.3" data-path="troubleshooting.html"><a href="troubleshooting.html#implementation-troubleshooting"><i class="fa fa-check"></i><b>C.3</b> Implementation Troubleshooting</a>
+<ul>
+<li class="chapter" data-level="C.3.1" data-path="troubleshooting.html"><a href="troubleshooting.html#errors-in-a-piped-model"><i class="fa fa-check"></i><b>C.3.1</b> Errors in a Piped Model</a></li>
+<li class="chapter" data-level="C.3.2" data-path="troubleshooting.html"><a href="troubleshooting.html#undefined-object-in-ompr"><i class="fa fa-check"></i><b>C.3.2</b> Undefined Object in <code>ompr</code></a></li>
+<li class="chapter" data-level="C.3.3" data-path="troubleshooting.html"><a href="troubleshooting.html#unexpected-symbol-in-ompr"><i class="fa fa-check"></i><b>C.3.3</b> Unexpected Symbol in <code>ompr</code></a></li>
+<li class="chapter" data-level="C.3.4" data-path="troubleshooting.html"><a href="troubleshooting.html#name-conflicts-between-r-and-ompr"><i class="fa fa-check"></i><b>C.3.4</b> Name Conflicts between R and <code>ompr</code></a></li>
+<li class="chapter" data-level="C.3.5" data-path="troubleshooting.html"><a href="troubleshooting.html#blindly-reusing-code"><i class="fa fa-check"></i><b>C.3.5</b> Blindly Reusing Code</a></li>
+</ul></li>
+<li class="chapter" data-level="C.4" data-path="troubleshooting.html"><a href="troubleshooting.html#general-debugging-tips"><i class="fa fa-check"></i><b>C.4</b> General Debugging Tips</a></li>
+<li class="chapter" data-level="C.5" data-path="troubleshooting.html"><a href="troubleshooting.html#getting-help"><i class="fa fa-check"></i><b>C.5</b> Getting Help</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="making-good-tables.html"><a href="making-good-tables.html"><i class="fa fa-check"></i><b>D</b> Making Good Tables</a>
+<ul>
+<li class="chapter" data-level="D.1" data-path="making-good-tables.html"><a href="making-good-tables.html#importance-of-tables-in-modeling"><i class="fa fa-check"></i><b>D.1</b> Importance of Tables in Modeling</a></li>
+<li class="chapter" data-level="D.2" data-path="making-good-tables.html"><a href="making-good-tables.html#kable-vs.-kbl"><i class="fa fa-check"></i><b>D.2</b> Kable vs. Kbl</a></li>
+<li class="chapter" data-level="D.3" data-path="making-good-tables.html"><a href="making-good-tables.html#table-footnotes-with-kable"><i class="fa fa-check"></i><b>D.3</b> Table Footnotes with Kable</a></li>
+<li class="chapter" data-level="D.4" data-path="making-good-tables.html"><a href="making-good-tables.html#setting-row-and-column-names-in-kable"><i class="fa fa-check"></i><b>D.4</b> Setting Row and Column Names in Kable</a></li>
+<li class="chapter" data-level="D.5" data-path="making-good-tables.html"><a href="making-good-tables.html#booktabs-vs.-default"><i class="fa fa-check"></i><b>D.5</b> Booktabs vs. Default</a></li>
+<li class="chapter" data-level="D.6" data-path="making-good-tables.html"><a href="making-good-tables.html#using-latex-in-kable-column-names"><i class="fa fa-check"></i><b>D.6</b> Using LaTeX in Kable Column Names</a></li>
+<li class="chapter" data-level="D.7" data-path="making-good-tables.html"><a href="making-good-tables.html#fitting-tables-to-page-width"><i class="fa fa-check"></i><b>D.7</b> Fitting Tables to Page Width</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Optimization Modeling Using R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="sensitivity-analysis" class="section level1" number="4">
+<h1><span class="header-section-number">Chapter 4</span> Sensitivity Analysis</h1>
+<p>We can get a lot more than just the objective function value and the decision variable values from a solved linear program. In particular, we can potentially explore the impact of changes in constrained resources, changes in the objective function, forced changes in decision variables, and the introduction of additional decision variables.</p>
+<div id="base-case" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> Base Case</h2>
+<p>To demonstrate this, let’s revisit our explicit model of production planning. We will use the explicit version for the sake of clarity and simplicity but the same techniques could be used for the generalized model or other linear programs.</p>
+<p>Recall the three variable explicit production planning problem from Chapter 2.</p>
+<p><span class="math display" id="eq:base3varmodela">\[
+ \begin{split}
+ \begin{aligned}
+    \text{Max    } &amp; 7\cdot Ants +12 \cdot Bats +5\cdot Cats \\
+    \text{s.t.:  } &amp; 1\cdot Ants + 4\cdot Bats +2\cdot Cats \leq 800 \\
+                   &amp; 3\cdot Ants + 6\cdot Bats +2\cdot Cats \leq 900 \\
+                   &amp; 2\cdot Ants + 2\cdot Bats +1\cdot Cats \leq 480 \\
+                   &amp; 2\cdot Ants + 10\cdot Bats +2\cdot Cats \leq 1200 \\
+                   &amp; Ants, Bats, Cats \geq 0  
+  \end{aligned}
+  \tag{4.1}
+  \end{split}
+\]</span></p>
+<p>The implementation that we did earlier for production planning was straightforward.<br />
+</p>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="sensitivity-analysis.html#cb110-1" aria-hidden="true" tabindex="-1"></a>Base3VarModel <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">|&gt;</span></span>
+<span id="cb110-2"><a href="sensitivity-analysis.html#cb110-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Ants, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb110-3"><a href="sensitivity-analysis.html#cb110-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Bats, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb110-4"><a href="sensitivity-analysis.html#cb110-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Cats, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb110-5"><a href="sensitivity-analysis.html#cb110-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb110-6"><a href="sensitivity-analysis.html#cb110-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_objective</span>(<span class="dv">7</span><span class="sc">*</span>Ants <span class="sc">+</span> <span class="dv">12</span><span class="sc">*</span>Bats <span class="sc">+</span> <span class="dv">5</span><span class="sc">*</span>Cats,<span class="st">&quot;max&quot;</span>)  <span class="sc">|&gt;</span></span>
+<span id="cb110-7"><a href="sensitivity-analysis.html#cb110-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb110-8"><a href="sensitivity-analysis.html#cb110-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">1</span><span class="sc">*</span>Ants <span class="sc">+</span> <span class="dv">4</span><span class="sc">*</span>Bats <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>Cats<span class="sc">&lt;=</span><span class="dv">800</span>)   <span class="sc">|&gt;</span> </span>
+<span id="cb110-9"><a href="sensitivity-analysis.html#cb110-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">3</span><span class="sc">*</span>Ants <span class="sc">+</span> <span class="dv">6</span><span class="sc">*</span>Bats <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>Cats<span class="sc">&lt;=</span><span class="dv">900</span>)   <span class="sc">|&gt;</span> </span>
+<span id="cb110-10"><a href="sensitivity-analysis.html#cb110-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">2</span><span class="sc">*</span>Ants <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>Bats <span class="sc">+</span> <span class="dv">1</span><span class="sc">*</span>Cats<span class="sc">&lt;=</span><span class="dv">480</span>)   <span class="sc">|&gt;</span> </span>
+<span id="cb110-11"><a href="sensitivity-analysis.html#cb110-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">2</span><span class="sc">*</span>Ants <span class="sc">+</span> <span class="dv">10</span><span class="sc">*</span>Bats <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>Cats<span class="sc">&lt;=</span><span class="dv">1200</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb110-12"><a href="sensitivity-analysis.html#cb110-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">solve_model</span>(<span class="fu">with_ROI</span>(<span class="at">solver=</span><span class="st">&quot;glpk&quot;</span>))</span>
+<span id="cb110-13"><a href="sensitivity-analysis.html#cb110-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb110-14"><a href="sensitivity-analysis.html#cb110-14" aria-hidden="true" tabindex="-1"></a>base_case_res <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">objective_value</span>(Base3VarModel),</span>
+<span id="cb110-15"><a href="sensitivity-analysis.html#cb110-15" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">get_solution</span>(Base3VarModel, Ants),</span>
+<span id="cb110-16"><a href="sensitivity-analysis.html#cb110-16" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">get_solution</span>(Base3VarModel, Bats),</span>
+<span id="cb110-17"><a href="sensitivity-analysis.html#cb110-17" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">get_solution</span>(Base3VarModel, Cats))</span>
+<span id="cb110-18"><a href="sensitivity-analysis.html#cb110-18" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(base_case_res)<span class="ot">&lt;-</span><span class="fu">list</span>(<span class="st">&quot;Profit&quot;</span>, <span class="st">&quot;Ants&quot;</span>, </span>
+<span id="cb110-19"><a href="sensitivity-analysis.html#cb110-19" aria-hidden="true" tabindex="-1"></a>                              <span class="st">&quot;Bats&quot;</span>, <span class="st">&quot;Cats&quot;</span>)</span>
+<span id="cb110-20"><a href="sensitivity-analysis.html#cb110-20" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(base_case_res)<span class="ot">&lt;-</span><span class="fu">list</span>(<span class="st">&quot;Base Case&quot;</span>)</span>
+<span id="cb110-21"><a href="sensitivity-analysis.html#cb110-21" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(base_case_res, <span class="at">booktabs=</span>T,</span>
+<span id="cb110-22"><a href="sensitivity-analysis.html#cb110-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption=</span><span class="st">&quot;Base Case Production Plan&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb110-23"><a href="sensitivity-analysis.html#cb110-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:Base3VarModelA">TABLE 4.1: </span>Base Case Production Plan
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Profit
+</th>
+<th style="text-align:right;">
+Ants
+</th>
+<th style="text-align:right;">
+Bats
+</th>
+<th style="text-align:right;">
+Cats
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Base Case
+</td>
+<td style="text-align:right;">
+2225
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+375
+</td>
+</tr>
+</tbody>
+</table>
+<p>In the base case, we are producing Ants and Cats but not Bats to generate a total profit of <span class="math inline">\(\$2225\)</span>.</p>
+</div>
+<div id="shadow-prices" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Shadow Prices</h2>
+<div id="extraction-and-interpretation" class="section level3" number="4.2.1">
+<h3><span class="header-section-number">4.2.1</span> Extraction and Interpretation</h3>
+<p>There are many resources, some are fully used while some are not fully utilized. How do we prioritize the importance of each resource? For example, if the factory manager could add a worker to one department, which should it be? Conversely, if an outside task came up where should she draw the time from? We could modify the model and rerun. For complex situations, this may be necessary. On the other hand, we could also use sensitivity analysis to explore the relative value of the resources.</p>
+<p>Let’s begin by examining the row duals, also known as shadow prices.  </p>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="sensitivity-analysis.html#cb111-1" aria-hidden="true" tabindex="-1"></a>rduals1 <span class="ot">&lt;-</span><span class="fu">as.matrix</span>(<span class="fu">get_row_duals</span>(Base3VarModel))</span>
+<span id="cb111-2"><a href="sensitivity-analysis.html#cb111-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dimnames</span>(rduals1)<span class="ot">&lt;-</span><span class="fu">list</span>(<span class="fu">c</span>(<span class="st">&quot;Machining&quot;</span>, <span class="st">&quot;Assembly&quot;</span>, </span>
+<span id="cb111-3"><a href="sensitivity-analysis.html#cb111-3" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&quot;Testing&quot;</span>, <span class="st">&quot;Sensors&quot;</span>), </span>
+<span id="cb111-4"><a href="sensitivity-analysis.html#cb111-4" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">c</span>(<span class="st">&quot;Row Duals&quot;</span>))</span>
+<span id="cb111-5"><a href="sensitivity-analysis.html#cb111-5" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(<span class="fu">format</span>(rduals1,<span class="at">digits=</span><span class="dv">4</span>), <span class="at">booktabs=</span>T,</span>
+<span id="cb111-6"><a href="sensitivity-analysis.html#cb111-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption=</span><span class="st">&quot;Shadow Prices of Constrained Resources&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb111-7"><a href="sensitivity-analysis.html#cb111-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:rduals-3var">TABLE 4.2: </span>Shadow Prices of Constrained Resources
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+Row Duals
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Machining
+</td>
+<td style="text-align:left;">
+0.25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Assembly
+</td>
+<td style="text-align:left;">
+2.25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Testing
+</td>
+<td style="text-align:left;">
+0.00
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sensors
+</td>
+<td style="text-align:left;">
+0.00
+</td>
+</tr>
+</tbody>
+</table>
+<p>The row duals or shadow prices for testing is zero. This means that the marginal value of one additional hour of testing labor time is <span class="math inline">\(\$0\)</span>. This makes sense if you examine the amount of testing time used and realize that the company is not using all of the 480 hours available. Therefore adding more testing hours certainly can’t help improve the production plan.<br />
+</p>
+<p>On the other hand, all of the assembly time (resource) is used in the optimal solution. The shadow price of an hour of assembly time is <span class="math inline">\(\$2.25\)</span>. This means that for every hour of additional assembly time within certain limits, the objective function will increase by <span class="math inline">\(\$2.25\)</span> also. </p>
+<p>All of the 900 hours of labor available in the assembly center are consumed by the optimal production plan. Increasing the assembly hours available may allow the company to change the production plan and increase the profit. While you could rerun the model with increased assembly hours to determine the new optimal production plan but if you only want to know the change in the optimal objective function value, you can determine that from the shadow price of the assembly constraint. Each additional hour (within a certain range) will increase the profit by <span class="math inline">\(\$2.25\)</span>.<br />
+</p>
+<p>This potential for increased profit can’t be achieved by simply increasing the resource - it requires a modified production plan to utilize this increased resource. To find the production plan that creates this increased profit, let’s solve a modified linear program.</p>
+</div>
+<div id="example-of-adding-an-hour-to-assembly" class="section level3" number="4.2.2">
+<h3><span class="header-section-number">4.2.2</span> Example of Adding an Hour to Assembly</h3>
+<p>Let’s test the numerical results from the Shadow Price table by adding an hour of labor to the assembly department. The model is represented in the following formulation.</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{Max:  } &amp; 7\cdot Ants+12\cdot  Bats+5\cdot Cats \\
+    \text{s.t.  } &amp; 1\cdot Ants+4\cdot Bats+2\cdot Cats \leq 800 \\
+                  &amp; 3\cdot Ants+6\cdot Bats+2\cdot Cats \leq 
+                        \textcolor{red}{901}  \\
+                  &amp; 2\cdot Ants+2\cdot Bats+1\cdot Cats \leq 480\\
+                  &amp; 2\cdot Ants+10\cdot Bats+2\cdot Cats \leq 1200 \\
+                  &amp; Ants,  \; Bats, \; Cats \geq 0  
+  \end{aligned}
+  \end{split}
+\]</span></p>
+<p>The code implements the revised model.</p>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="sensitivity-analysis.html#cb112-1" aria-hidden="true" tabindex="-1"></a>IncAssemHrs <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">|&gt;</span></span>
+<span id="cb112-2"><a href="sensitivity-analysis.html#cb112-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Ants, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>)  <span class="sc">|&gt;</span></span>
+<span id="cb112-3"><a href="sensitivity-analysis.html#cb112-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Bats, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>)  <span class="sc">|&gt;</span></span>
+<span id="cb112-4"><a href="sensitivity-analysis.html#cb112-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Cats, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>)  <span class="sc">|&gt;</span></span>
+<span id="cb112-5"><a href="sensitivity-analysis.html#cb112-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb112-6"><a href="sensitivity-analysis.html#cb112-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_objective</span>(<span class="dv">7</span><span class="sc">*</span>Ants <span class="sc">+</span> <span class="dv">12</span><span class="sc">*</span>Bats <span class="sc">+</span> <span class="dv">5</span><span class="sc">*</span>Cats,<span class="st">&quot;max&quot;</span>)   <span class="sc">|&gt;</span></span>
+<span id="cb112-7"><a href="sensitivity-analysis.html#cb112-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb112-8"><a href="sensitivity-analysis.html#cb112-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">1</span><span class="sc">*</span>Ants <span class="sc">+</span> <span class="dv">4</span><span class="sc">*</span>Bats <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>Cats<span class="sc">&lt;=</span> <span class="dv">800</span>)   <span class="sc">|&gt;</span> </span>
+<span id="cb112-9"><a href="sensitivity-analysis.html#cb112-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">3</span><span class="sc">*</span>Ants <span class="sc">+</span> <span class="dv">6</span><span class="sc">*</span>Bats <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>Cats<span class="sc">&lt;=</span> <span class="dv">901</span>)   <span class="sc">|&gt;</span> </span>
+<span id="cb112-10"><a href="sensitivity-analysis.html#cb112-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">2</span><span class="sc">*</span>Ants <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>Bats <span class="sc">+</span> <span class="dv">1</span><span class="sc">*</span>Cats<span class="sc">&lt;=</span> <span class="dv">480</span>)   <span class="sc">|&gt;</span> </span>
+<span id="cb112-11"><a href="sensitivity-analysis.html#cb112-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">2</span><span class="sc">*</span>Ants <span class="sc">+</span> <span class="dv">10</span><span class="sc">*</span>Bats <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>Cats<span class="sc">&lt;=</span> <span class="dv">1200</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb112-12"><a href="sensitivity-analysis.html#cb112-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-13"><a href="sensitivity-analysis.html#cb112-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">solve_model</span>(<span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
+<span id="cb112-14"><a href="sensitivity-analysis.html#cb112-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-15"><a href="sensitivity-analysis.html#cb112-15" aria-hidden="true" tabindex="-1"></a>inc_assem_res  <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">objective_value</span>(IncAssemHrs),</span>
+<span id="cb112-16"><a href="sensitivity-analysis.html#cb112-16" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">get_solution</span>(IncAssemHrs, Ants),</span>
+<span id="cb112-17"><a href="sensitivity-analysis.html#cb112-17" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">get_solution</span>(IncAssemHrs, Bats),</span>
+<span id="cb112-18"><a href="sensitivity-analysis.html#cb112-18" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">get_solution</span>(IncAssemHrs, Cats))</span>
+<span id="cb112-19"><a href="sensitivity-analysis.html#cb112-19" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(inc_assem_res)<span class="ot">&lt;-</span><span class="fu">list</span>(<span class="st">&quot;Profit&quot;</span>, </span>
+<span id="cb112-20"><a href="sensitivity-analysis.html#cb112-20" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;Ants&quot;</span>, </span>
+<span id="cb112-21"><a href="sensitivity-analysis.html#cb112-21" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;Bats&quot;</span>, </span>
+<span id="cb112-22"><a href="sensitivity-analysis.html#cb112-22" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;Cats&quot;</span>)</span>
+<span id="cb112-23"><a href="sensitivity-analysis.html#cb112-23" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(inc_assem_res)<span class="ot">&lt;-</span><span class="fu">list</span>(<span class="st">&quot;+1 Assembly Hr&quot;</span>)</span>
+<span id="cb112-24"><a href="sensitivity-analysis.html#cb112-24" aria-hidden="true" tabindex="-1"></a>temp1 <span class="ot">&lt;-</span> <span class="fu">rbind</span>(base_case_res, inc_assem_res)</span>
+<span id="cb112-25"><a href="sensitivity-analysis.html#cb112-25" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(temp1, <span class="at">booktabs=</span>T,</span>
+<span id="cb112-26"><a href="sensitivity-analysis.html#cb112-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption=</span><span class="st">&quot;Production Plan with One Additional Assembly Hour&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb112-27"><a href="sensitivity-analysis.html#cb112-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:IncAssemHrs">TABLE 4.3: </span>Production Plan with One Additional Assembly Hour
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Profit
+</th>
+<th style="text-align:right;">
+Ants
+</th>
+<th style="text-align:right;">
+Bats
+</th>
+<th style="text-align:right;">
+Cats
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Base Case
+</td>
+<td style="text-align:right;">
+2225.00
+</td>
+<td style="text-align:right;">
+50.0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+375.00
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
++1 Assembly Hr
+</td>
+<td style="text-align:right;">
+2227.25
+</td>
+<td style="text-align:right;">
+50.5
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+374.75
+</td>
+</tr>
+</tbody>
+</table>
+<p>These results confirmed that adding one hour of Testing time results in a <em>new</em> production plan that generates an increased profit of <span class="math inline">\(\$2.25\)</span>, exactly as expected.</p>
+<p>While it is easy to look at an individual resource when we are looking at problems with only a couple of constraints, the shadow prices can be very helpful in larger problems with dozens, hundreds, or thousands of resources where questions might come up of trying to evaluate or prioritize limited resources.</p>
+</div>
+<div id="shadow-prices-of-underutilized-resources" class="section level3" number="4.2.3">
+<h3><span class="header-section-number">4.2.3</span> Shadow Prices of Underutilized Resources</h3>
+<p>The shadow price on sensors is zero (as was also the case for testing hours). This means that even a large increase in the number of sensors would not affect the maximum profit or the optimal production plan. Essentially there is plenty of sensors available, having more would not allow a better profit plan to be possible. Let’s confirm this as well with a numerical example by adding <em>10,000</em> more sensors.</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{Max:  } &amp; 7\cdot Ants+12\cdot Bats+5\cdot Cats \\
+    \text{s.t.  } &amp; 1\cdot Ants+4\cdot Bats+2\cdot Cats \leq 800 \\
+        &amp; 3\cdot Ants+6\cdot Bats+2\cdot Cats \leq 900 \\
+        &amp; 2\cdot Ants+2\cdot Bats+1\cdot Cats \leq 480 \\
+        &amp; 2\cdot Ants+10\cdot Bats+2\cdot Cats \leq 
+                        \textcolor{red}{11200} \\
+        &amp; Ants,  \; Bats, \; Cats \geq 0  
+  \end{aligned}
+  \end{split}
+\]</span></p>
+<p>In the same way that it was done for adjusting assembly hours earlier, the next chunk shows how to examine the case of a huge increase in the number of sensors.</p>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="sensitivity-analysis.html#cb113-1" aria-hidden="true" tabindex="-1"></a>IncSensor<span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">|&gt;</span></span>
+<span id="cb113-2"><a href="sensitivity-analysis.html#cb113-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Ants, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb113-3"><a href="sensitivity-analysis.html#cb113-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Bats, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb113-4"><a href="sensitivity-analysis.html#cb113-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Cats, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb113-5"><a href="sensitivity-analysis.html#cb113-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb113-6"><a href="sensitivity-analysis.html#cb113-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_objective</span>(<span class="dv">7</span><span class="sc">*</span>Ants <span class="sc">+</span> <span class="dv">12</span><span class="sc">*</span>Bats <span class="sc">+</span> <span class="dv">5</span><span class="sc">*</span>Cats,<span class="st">&quot;max&quot;</span>)  <span class="sc">|&gt;</span></span>
+<span id="cb113-7"><a href="sensitivity-analysis.html#cb113-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-8"><a href="sensitivity-analysis.html#cb113-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">1</span><span class="sc">*</span>Ants<span class="sc">+</span><span class="dv">4</span><span class="sc">*</span>Bats <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>Cats<span class="sc">&lt;=</span> <span class="dv">800</span>)    <span class="sc">|&gt;</span> </span>
+<span id="cb113-9"><a href="sensitivity-analysis.html#cb113-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">3</span><span class="sc">*</span>Ants<span class="sc">+</span><span class="dv">6</span><span class="sc">*</span>Bats <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>Cats<span class="sc">&lt;=</span><span class="dv">900</span>)     <span class="sc">|&gt;</span> </span>
+<span id="cb113-10"><a href="sensitivity-analysis.html#cb113-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">2</span><span class="sc">*</span>Ants<span class="sc">+</span><span class="dv">2</span><span class="sc">*</span>Bats<span class="sc">+</span><span class="dv">1</span><span class="sc">*</span>Cats<span class="sc">&lt;=</span><span class="dv">480</span>)       <span class="sc">|&gt;</span> </span>
+<span id="cb113-11"><a href="sensitivity-analysis.html#cb113-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">2</span><span class="sc">*</span>Ants<span class="sc">+</span><span class="dv">10</span><span class="sc">*</span>Bats<span class="sc">+</span><span class="dv">2</span><span class="sc">*</span>Cats<span class="sc">&lt;=</span><span class="dv">11200</span>)    <span class="sc">|&gt;</span> </span>
+<span id="cb113-12"><a href="sensitivity-analysis.html#cb113-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">solve_model</span>(<span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
+<span id="cb113-13"><a href="sensitivity-analysis.html#cb113-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-14"><a href="sensitivity-analysis.html#cb113-14" aria-hidden="true" tabindex="-1"></a>inc_sensor_res  <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">objective_value</span>(IncSensor),</span>
+<span id="cb113-15"><a href="sensitivity-analysis.html#cb113-15" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">get_solution</span> (IncSensor, Ants),</span>
+<span id="cb113-16"><a href="sensitivity-analysis.html#cb113-16" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">get_solution</span> (IncSensor, Bats),</span>
+<span id="cb113-17"><a href="sensitivity-analysis.html#cb113-17" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">get_solution</span> (IncSensor, Cats))</span>
+<span id="cb113-18"><a href="sensitivity-analysis.html#cb113-18" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(inc_sensor_res)<span class="ot">&lt;-</span><span class="fu">list</span>(<span class="st">&quot;Profit&quot;</span>, </span>
+<span id="cb113-19"><a href="sensitivity-analysis.html#cb113-19" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;Ants&quot;</span>, </span>
+<span id="cb113-20"><a href="sensitivity-analysis.html#cb113-20" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;Bats&quot;</span>, </span>
+<span id="cb113-21"><a href="sensitivity-analysis.html#cb113-21" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;Cats&quot;</span>)</span>
+<span id="cb113-22"><a href="sensitivity-analysis.html#cb113-22" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(inc_sensor_res)<span class="ot">&lt;-</span><span class="fu">list</span>(<span class="st">&quot;Increased Sensors&quot;</span>)</span>
+<span id="cb113-23"><a href="sensitivity-analysis.html#cb113-23" aria-hidden="true" tabindex="-1"></a>temp2 <span class="ot">&lt;-</span> <span class="fu">rbind</span>(base_case_res, inc_assem_res, inc_sensor_res)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-16">TABLE 4.4: </span>Production Plan with 10,000 More Sensors.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Profit
+</th>
+<th style="text-align:right;">
+Ants
+</th>
+<th style="text-align:right;">
+Bats
+</th>
+<th style="text-align:right;">
+Cats
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Base Case
+</td>
+<td style="text-align:right;">
+2225.00
+</td>
+<td style="text-align:right;">
+50.0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+375.00
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
++1 Assembly Hr
+</td>
+<td style="text-align:right;">
+2227.25
+</td>
+<td style="text-align:right;">
+50.5
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+374.75
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Increased Sensors
+</td>
+<td style="text-align:right;">
+2225.00
+</td>
+<td style="text-align:right;">
+50.0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+375.00
+</td>
+</tr>
+</tbody>
+</table>
+<p>Even this massive increase of sensors does not result in any increase in profit or change the production plan.</p>
+</div>
+</div>
+<div id="reduced-costs-of-variables" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> Reduced Costs of Variables</h2>
+<p>Next, we move on to the <em>reduced costs</em> of variables. The reduced cost for a variable is the per unit marginal profit (objective function coefficient) minus the per unit value (in terms of shadow prices) of the resources used by a unit in production. The reduced costs is also often referred to as the column duals.   The concept and use of reduced costs frequently may require rereading several times. The mathematical details rely on the structure of linear programming and the Simplex method.  We won’t go into detail on the origin of this mathematically in detail here.</p>
+<div id="reduced-cost-of-ants" class="section level3" number="4.3.1">
+<h3><span class="header-section-number">4.3.1</span> Reduced Cost of Ants</h3>
+<p>Let’s start by examining the Ants. The reduced cost for <em>Ants</em> is the per unit marginal profit minus the per unit value (in terms of shadow prices) of the resources used by a unit in production.<br />
+</p>
+<p>Let’s extract the reduced costs from the results just as we did for the shadow prices. Note that the reduced costs are referred to as column duals in <code>ompr</code>.</p>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="sensitivity-analysis.html#cb114-1" aria-hidden="true" tabindex="-1"></a>cduals1 <span class="ot">&lt;-</span><span class="fu">as.matrix</span>(<span class="fu">get_column_duals</span>(Base3VarModel) )</span>
+<span id="cb114-2"><a href="sensitivity-analysis.html#cb114-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dimnames</span>(cduals1)<span class="ot">&lt;-</span><span class="fu">list</span>(<span class="fu">c</span>(<span class="st">&quot;Ants&quot;</span>, <span class="st">&quot;Bats&quot;</span>, <span class="st">&quot;Cats&quot;</span>), </span>
+<span id="cb114-3"><a href="sensitivity-analysis.html#cb114-3" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">c</span>(<span class="st">&quot;Column Duals&quot;</span>))</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-17">TABLE 4.5: </span>Reduced Costs of Variables
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+Column Duals
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Ants
+</td>
+<td style="text-align:left;">
+0.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Bats
+</td>
+<td style="text-align:left;">
+-2.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Cats
+</td>
+<td style="text-align:left;">
+0.0
+</td>
+</tr>
+</tbody>
+</table>
+<p>These results are interesting. The reduced costs of variables that are between simple upper and lower bounds will be zero. Again, the reduced cost of a variable is the difference between the value of the resources consumed by the product and the value of the product in the objective function. All of our product’s variables have simple lower bounds of zero and no upper bounds. Ants and Cats have zero reduced cost while Bats have a negative reduced cost. Let’s see if this is consistent with the interpretation of reduced costs.</p>
+<p>Let’s start by examining the shadow prices of the resources along with the number of each resource used in the production of a single Ant.</p>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="sensitivity-analysis.html#cb115-1" aria-hidden="true" tabindex="-1"></a>ant_res_used<span class="ot">&lt;-</span><span class="fu">cbind</span>(rduals1,<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb115-2"><a href="sensitivity-analysis.html#cb115-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(ant_res_used)<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&quot;Row Duals&quot;</span>, <span class="st">&quot;Resources Used&quot;</span>)</span>
+<span id="cb115-3"><a href="sensitivity-analysis.html#cb115-3" aria-hidden="true" tabindex="-1"></a>ant_res_used <span class="ot">&lt;-</span> <span class="fu">rbind</span>(ant_res_used,</span>
+<span id="cb115-4"><a href="sensitivity-analysis.html#cb115-4" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">c</span>(<span class="st">&quot;TOTAL&quot;</span>,<span class="fu">t</span>(rduals1)<span class="sc">%*%</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">2</span>)))</span>
+<span id="cb115-5"><a href="sensitivity-analysis.html#cb115-5" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(<span class="fu">format</span>(ant_res_used, <span class="at">digits=</span><span class="dv">4</span>), <span class="at">booktabs=</span>T,</span>
+<span id="cb115-6"><a href="sensitivity-analysis.html#cb115-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption=</span><span class="st">&quot;Resources Used by an Ant and shadow prices of resources&quot;</span>)</span></code></pre></div>
+<table>
+<caption>
+<span id="tab:Shadow-Price-Single-Ant">TABLE 4.6: </span>Resources Used by an Ant and shadow prices of resources
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+Row Duals
+</th>
+<th style="text-align:left;">
+Resources Used
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Machining
+</td>
+<td style="text-align:left;">
+0.25
+</td>
+<td style="text-align:left;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Assembly
+</td>
+<td style="text-align:left;">
+2.25
+</td>
+<td style="text-align:left;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Testing
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sensors
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+TOTAL
+</td>
+<td style="text-align:left;">
+7
+</td>
+</tr>
+</tbody>
+</table>
+<p>Taking the product in each row and adding them up will give the marginal value of the resources consumed by an incremental change in production of Ants. In this case, the marginal value is <span class="math inline">\(1\cdot 0.25+3\cdot2.25+2\cdot0+2\cdot0=7\)</span>. Since the profit per Ant (from the objective function coefficient on Ants) is also <span class="math inline">\(\$ 7\)</span>, they are in balance and the difference between them is zero which is why the reduced cost for Ants is zero. This can be thought of saying that the marginal benefit is equal to the marginal cost of a very small forced change in the value of the Ants variable. The value of the resources used in producing an Ant equals that of the profit of an Ant at the optimal solution.<br />
+</p>
+<p>We can repeat the same process and calculations for Cats</p>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="sensitivity-analysis.html#cb116-1" aria-hidden="true" tabindex="-1"></a>cat_res_used<span class="ot">&lt;-</span><span class="fu">cbind</span>(rduals1,<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb116-2"><a href="sensitivity-analysis.html#cb116-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(cat_res_used)<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&quot;Row Duals&quot;</span>, <span class="st">&quot;Resources Used&quot;</span>)</span>
+<span id="cb116-3"><a href="sensitivity-analysis.html#cb116-3" aria-hidden="true" tabindex="-1"></a>cat_res_used <span class="ot">&lt;-</span> <span class="fu">rbind</span>(cat_res_used,</span>
+<span id="cb116-4"><a href="sensitivity-analysis.html#cb116-4" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">c</span>(<span class="st">&quot;TOTAL&quot;</span>,<span class="fu">t</span>(rduals1)<span class="sc">%*%</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">2</span>)))</span>
+<span id="cb116-5"><a href="sensitivity-analysis.html#cb116-5" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(<span class="fu">format</span>(cat_res_used, <span class="at">digits=</span><span class="dv">4</span>), <span class="at">booktabs=</span>T,</span>
+<span id="cb116-6"><a href="sensitivity-analysis.html#cb116-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption=</span><span class="st">&quot;Resources Used by a Cat and their Shadow Prices&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb116-7"><a href="sensitivity-analysis.html#cb116-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:Shadow-Price-Bats">TABLE 4.7: </span>Resources Used by a Cat and their Shadow Prices
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+Row Duals
+</th>
+<th style="text-align:left;">
+Resources Used
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Machining
+</td>
+<td style="text-align:left;">
+0.25
+</td>
+<td style="text-align:left;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Assembly
+</td>
+<td style="text-align:left;">
+2.25
+</td>
+<td style="text-align:left;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Testing
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sensors
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+TOTAL
+</td>
+<td style="text-align:left;">
+5
+</td>
+</tr>
+</tbody>
+</table>
+<p>In this case, using the columns from Table 4.6 we can calculate the marginal value as <span class="math inline">\(2\cdot 0.25+2\cdot2.25+1\cdot0+2\cdot0=5\)</span>. Since the profit per Cat (from the objective function coefficient on Cats) is also <span class="math inline">\(\$ 5\)</span>, they are in balance and the difference between them is zero which is why the reduced cost for the <em>Cats</em> variable is also zero.</p>
+</div>
+<div id="reduced-price-of-bats" class="section level3" number="4.3.2">
+<h3><span class="header-section-number">4.3.2</span> Reduced Price of Bats</h3>
+<p>The situation is more interesting for Bats. The production plan does not call for producing any Bats. This means that it is sitting right at the lower bound of zero Bats. This hints that perhaps we would like to make even less than zero Bats if we could and that being <em>forced</em> to make even one Bat would be costly. A reduced cost of <span class="math inline">\(\$-2.5\)</span> means that the opportunity cost of resources used in producing a Bat is <span class="math inline">\(\$2.5\)</span> more than the profit of producing a single Bat In other words, we would expect that if we force the production of a single Bat, the over all production plan’s profit will go down by <span class="math inline">\(\$2.5\)</span>.</p>
+<p>Let’s go ahead and test this interpretation by again looking at the value of the resources consumed in the production of a Bat and the amount of each resource used.<br />
+</p>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="sensitivity-analysis.html#cb117-1" aria-hidden="true" tabindex="-1"></a>bat_res_used<span class="ot">&lt;-</span><span class="fu">cbind</span>(rduals1,<span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">2</span>,<span class="dv">10</span>))</span>
+<span id="cb117-2"><a href="sensitivity-analysis.html#cb117-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(bat_res_used)<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&quot;Row Duals&quot;</span>, <span class="st">&quot;Resources Used&quot;</span>)</span>
+<span id="cb117-3"><a href="sensitivity-analysis.html#cb117-3" aria-hidden="true" tabindex="-1"></a>bat_res_used <span class="ot">&lt;-</span> <span class="fu">rbind</span>(bat_res_used,</span>
+<span id="cb117-4"><a href="sensitivity-analysis.html#cb117-4" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">c</span>(<span class="st">&quot;TOTAL&quot;</span>,<span class="fu">t</span>(rduals1)<span class="sc">%*%</span><span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">2</span>,<span class="dv">10</span>)))</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-18">TABLE 4.8: </span>Resources Used by a Bat and their Shadow Prices
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+Row Duals
+</th>
+<th style="text-align:left;">
+Resources Used
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Machining
+</td>
+<td style="text-align:left;">
+0.25
+</td>
+<td style="text-align:left;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Assembly
+</td>
+<td style="text-align:left;">
+2.25
+</td>
+<td style="text-align:left;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Testing
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sensors
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+TOTAL
+</td>
+<td style="text-align:left;">
+14.5
+</td>
+</tr>
+</tbody>
+</table>
+<p>Notice that the values based on shadow prices of the resources used by a Bat are <span class="math inline">\(4\cdot 0.25+6\cdot2.25+2\cdot0+10\cdot0=14.5\)</span>. Alas, the profit for each Bat is just <span class="math inline">\(\$12\)</span> which means that forcing the production of a single Bat will decrease the production plan’s profit by <span class="math inline">\(\$12-14.5=-2.5\)</span>. In other words, the impact on the objective function is <span class="math inline">\(\$-2.5\)</span> which is the same as the reduced price of Bats.</p>
+<p>Now let’s test it. We will modify the formulation to set a lower bound on the number of Bats to be 1. Note that we do this in case by setting the <code>lb</code> option in the <code>add_variable</code> to be 1. Also, if we had a demand constraint for Bats, we could also be accommodated this by setting the upper bound (<code>ub</code>).</p>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="sensitivity-analysis.html#cb118-1" aria-hidden="true" tabindex="-1"></a>Bat1Model <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">|&gt;</span></span>
+<span id="cb118-2"><a href="sensitivity-analysis.html#cb118-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Ants, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb118-3"><a href="sensitivity-analysis.html#cb118-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Bats, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb118-4"><a href="sensitivity-analysis.html#cb118-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Cats, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb118-5"><a href="sensitivity-analysis.html#cb118-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb118-6"><a href="sensitivity-analysis.html#cb118-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_objective</span>(<span class="dv">7</span><span class="sc">*</span>Ants <span class="sc">+</span> <span class="dv">12</span><span class="sc">*</span>Bats <span class="sc">+</span> <span class="dv">5</span><span class="sc">*</span>Cats,<span class="st">&quot;max&quot;</span>)  <span class="sc">|&gt;</span></span>
+<span id="cb118-7"><a href="sensitivity-analysis.html#cb118-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb118-8"><a href="sensitivity-analysis.html#cb118-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">1</span><span class="sc">*</span>Ants<span class="sc">+</span><span class="dv">4</span><span class="sc">*</span>Bats<span class="sc">+</span><span class="dv">2</span><span class="sc">*</span>Cats<span class="sc">&lt;=</span><span class="dv">800</span>)       <span class="sc">|&gt;</span> </span>
+<span id="cb118-9"><a href="sensitivity-analysis.html#cb118-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">3</span><span class="sc">*</span>Ants<span class="sc">+</span><span class="dv">6</span><span class="sc">*</span>Bats<span class="sc">+</span><span class="dv">2</span><span class="sc">*</span>Cats<span class="sc">&lt;=</span><span class="dv">900</span>)       <span class="sc">|&gt;</span> </span>
+<span id="cb118-10"><a href="sensitivity-analysis.html#cb118-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">2</span><span class="sc">*</span>Ants<span class="sc">+</span><span class="dv">2</span><span class="sc">*</span>Bats<span class="sc">+</span><span class="dv">1</span><span class="sc">*</span>Cats<span class="sc">&lt;=</span><span class="dv">480</span>)       <span class="sc">|&gt;</span> </span>
+<span id="cb118-11"><a href="sensitivity-analysis.html#cb118-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">2</span><span class="sc">*</span>Ants<span class="sc">+</span><span class="dv">10</span><span class="sc">*</span>Bats<span class="sc">+</span><span class="dv">2</span><span class="sc">*</span>Cats<span class="sc">&lt;=</span><span class="dv">1200</span>)     <span class="sc">|&gt;</span> </span>
+<span id="cb118-12"><a href="sensitivity-analysis.html#cb118-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb118-13"><a href="sensitivity-analysis.html#cb118-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">solve_model</span>(<span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
+<span id="cb118-14"><a href="sensitivity-analysis.html#cb118-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb118-15"><a href="sensitivity-analysis.html#cb118-15" aria-hidden="true" tabindex="-1"></a>  Bat1_case_res <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">objective_value</span>(Bat1Model),</span>
+<span id="cb118-16"><a href="sensitivity-analysis.html#cb118-16" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">get_solution</span> (Bat1Model, Ants),</span>
+<span id="cb118-17"><a href="sensitivity-analysis.html#cb118-17" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">get_solution</span> (Bat1Model, Bats),</span>
+<span id="cb118-18"><a href="sensitivity-analysis.html#cb118-18" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">get_solution</span> (Bat1Model, Cats))</span></code></pre></div>
+<p>Let’s compare the results for the new production plan and the original base case looking at the Table 4.9.<br />
+</p>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="sensitivity-analysis.html#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(base_case_res) <span class="ot">&lt;-</span> <span class="st">&quot;Base Case&quot;</span></span>
+<span id="cb119-2"><a href="sensitivity-analysis.html#cb119-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(Bat1_case_res) <span class="ot">&lt;-</span> <span class="st">&quot;Force one Bat&quot;</span></span>
+<span id="cb119-3"><a href="sensitivity-analysis.html#cb119-3" aria-hidden="true" tabindex="-1"></a>temp3 <span class="ot">&lt;-</span><span class="fu">rbind</span>(base_case_res,Bat1_case_res)</span>
+<span id="cb119-4"><a href="sensitivity-analysis.html#cb119-4" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(temp3, <span class="at">booktabs=</span>T, </span>
+<span id="cb119-5"><a href="sensitivity-analysis.html#cb119-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption=</span><span class="st">&quot;Impact of a Forced Change in Bats&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb119-6"><a href="sensitivity-analysis.html#cb119-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:Base-vs-Forced-Cat">TABLE 4.9: </span>Impact of a Forced Change in Bats
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Profit
+</th>
+<th style="text-align:right;">
+Ants
+</th>
+<th style="text-align:right;">
+Bats
+</th>
+<th style="text-align:right;">
+Cats
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Base Case
+</td>
+<td style="text-align:right;">
+2225.0
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+375.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Force one Bat
+</td>
+<td style="text-align:right;">
+2222.5
+</td>
+<td style="text-align:right;">
+49
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+373.5
+</td>
+</tr>
+</tbody>
+</table>
+<p>As we expected, the forced change of making one additional Bat resulted in a decrease of the overall profit from <span class="math inline">\(\$2225\)</span> to <span class="math inline">\(\$2222.5\)</span>. This occurred because making one Bat meant that we had fewer of the precious, limited resources, decreasing overall profit due to limiting our possible production of Ants and Cats.</p>
+<p>This meant that the number of Ants and Cats were changed resulting in a lower total profit even though a Bat is on its own profitable.</p>
+<p>Another way to view the reduced costs for Bats is to think of it as an opportunity cost for not being able to further change the production of Bats due the simple bound. Think of it as a cost for being pinned at the simple upper or lower bound (often 0). A non-zero reduced cost means that the optimizer would like to relax or loosen the lower bound and the value is how much better the objective would be with a unit change of one relaxing the bound. For example, in our case, with bats being pinned at zero at the optimal solution and a reduced cost of bats of -2.5, this means that if we relaxed the non-negativity from <span class="math inline">\(Bats\geq0\)</span> to instead be <span class="math inline">\(Bats\geq-1\)</span> and re-solve, then the objective function would improve by 2.5. In other words, relaxing the simple lower bound would change the production plan to enable profit to increase by 2.5.<br />
+</p>
+</div>
+</div>
+<div id="using-sensitivity-analysis-to-evaluate-a-new-product" class="section level2" number="4.4">
+<h2><span class="header-section-number">4.4</span> Using Sensitivity Analysis to Evaluate a New Product</h2>
+<p>Let’s consider a design proposal for a Dog drone. The Dog has a projected profit of <span class="math inline">\(\$20\)</span> each and uses 8 hours of machining time, 12 of assembly, and 4 of testing. Each dog drone also uses 4 sensors.</p>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="sensitivity-analysis.html#cb120-1" aria-hidden="true" tabindex="-1"></a>dog_res_used<span class="ot">&lt;-</span><span class="fu">cbind</span>(rduals1,<span class="fu">c</span>(<span class="dv">8</span>,<span class="dv">12</span>,<span class="dv">4</span>,<span class="dv">4</span>))</span>
+<span id="cb120-2"><a href="sensitivity-analysis.html#cb120-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(dog_res_used)<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&quot;Row Duals&quot;</span>, <span class="st">&quot;Resources Used&quot;</span>)</span>
+<span id="cb120-3"><a href="sensitivity-analysis.html#cb120-3" aria-hidden="true" tabindex="-1"></a>dog_res_used <span class="ot">&lt;-</span> <span class="fu">rbind</span>(dog_res_used,</span>
+<span id="cb120-4"><a href="sensitivity-analysis.html#cb120-4" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">c</span>(<span class="st">&quot;TOTAL&quot;</span>,<span class="fu">t</span>(rduals1)<span class="sc">%*%</span><span class="fu">c</span>(<span class="dv">8</span>,<span class="dv">12</span>,<span class="dv">4</span>,<span class="dv">4</span>)))</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-19">TABLE 4.10: </span>Resources Used by a Dog and their Shadow Prices
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+Row Duals
+</th>
+<th style="text-align:left;">
+Resources Used
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Machining
+</td>
+<td style="text-align:left;">
+0.25
+</td>
+<td style="text-align:left;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Assembly
+</td>
+<td style="text-align:left;">
+2.25
+</td>
+<td style="text-align:left;">
+12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Testing
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sensors
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+TOTAL
+</td>
+<td style="text-align:left;">
+29
+</td>
+</tr>
+</tbody>
+</table>
+<p>Even without adding it to the model, we can check to see if it is worthwhile to consider seriously. The opportunity cost of producing one Dog drone would result in the <span class="math inline">\(\$20-(8\cdot 0.25+12\cdot2.25+4\cdot0+4\cdot0)=-9.0\)</span>. In other words, even though a Dog drone has a much higher profit than the other products, producing one would cost the company nine dollars of overall profit in terms of the opportunity cost in lost profit of other production.<br />
+We could interpret this as a simple hard stop on the decision to produce Dogs but we could go one step further by setting a target for redesigning the product or its production process. If the assembly time could be reduced by four hours to just eight hours, then the value of the resources consumed would be equal to the profit and we would be indifferent to producing some Dog drones.<br />
+</p>
+</div>
+<div id="exercises-2" class="section level2" number="4.5">
+<h2><span class="header-section-number">4.5</span> Exercises</h2>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-13" class="exercise"><strong>Exercise 4.1  (Adding Eels) </strong></span>Your company has extended production to allow for producing aquatic Eels and is now including a finishing department that primes and paints the drones.</p>
+<table>
+<caption>Adding Eels</caption>
+<thead>
+<tr class="header">
+<th align="right">Characteristic</th>
+<th align="center">Ants</th>
+<th align="center">Bats</th>
+<th align="center">Cats</th>
+<th align="center">Eels</th>
+<th align="center">Available</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">Profit</td>
+<td align="center">$7</td>
+<td align="center">$12</td>
+<td align="center">$5</td>
+<td align="center">$22</td>
+<td align="center"></td>
+</tr>
+<tr class="even">
+<td align="right">Machining</td>
+<td align="center">1</td>
+<td align="center">4</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">800</td>
+</tr>
+<tr class="odd">
+<td align="right">Assembly</td>
+<td align="center">3</td>
+<td align="center">6</td>
+<td align="center">2</td>
+<td align="center">8</td>
+<td align="center">900</td>
+</tr>
+<tr class="even">
+<td align="right">Testing</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">25</td>
+<td align="center">480</td>
+</tr>
+<tr class="odd">
+<td align="right">Sensor</td>
+<td align="center">2</td>
+<td align="center">10</td>
+<td align="center">2</td>
+<td align="center">16</td>
+<td align="center">1200</td>
+</tr>
+<tr class="even">
+<td align="right">Painting</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">12</td>
+<td align="center">500</td>
+</tr>
+</tbody>
+</table>
+<ol style="list-style-type: lower-alpha">
+<li>Use R Markdown to create your own description of the model.</li>
+<li>Extend the R Markdown to show your LP Model. Be sure to define models.</li>
+<li>Solve the model in R.</li>
+<li>Interpret and discuss the model in R Markdown.</li>
+<li>Examine and reflect upon the reduced costs and shadow prices from the context of which products to produce and not produce.</li>
+<li>Using the results from e), (i.e. reduced cost and shadow prices) make one change to the base model’s <strong>objective function</strong> that will change the production plan. Rerun and discuss the new results.</li>
+<li>Using the results from e), (i.e. reduced cost and shadow prices) make one change to the base model’s <strong>resource usage values</strong> that will change the production plan. Rerun and discuss the new results.</li>
+<li>Using the results from e), (i.e. reduced cost and shadow prices) make one change to the base model’s <strong>available resource values</strong> that will change the production plan. Rerun and discuss the new results.</li>
+<li>Combine the results of the base case e), as well as the variations f) through h) into a single table and discuss the results.</li>
+</ol>
+</div>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-14" class="exercise"><strong>Exercise 4.2  (Revisiting Transportation) </strong></span>Using sensitivity analysis, revisit the transportation exercise from chapter 3.</p>
+<ol style="list-style-type: lower-alpha">
+<li>If one more unit of supply was available, where would it be prioritized and why?</li>
+<li>If demand could be increased by one unit, would it affect the result and at which destination node it be preferred and why?</li>
+</ol>
+</div>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-15" class="exercise"><strong>Exercise 4.3  (Identifying Hidden Costs) </strong></span>In a TcDonald’s restaurant, given below is the data for staff time in minutes
+to perform different steps in order to make Burgers, Coffee, Ice cream and Fries.
+These steps include: Order receiving, Processing, Preparing, Packaging, and
+Delivery.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Time (Mins.)</th>
+<th align="center">Burger</th>
+<th align="center">Coffee</th>
+<th align="center">Ice cream</th>
+<th align="center">Fries</th>
+<th align="center">Available Minutes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">Profit</td>
+<td align="center">$2</td>
+<td align="center">$2</td>
+<td align="center">$3</td>
+<td align="center">$1</td>
+<td align="center"></td>
+</tr>
+<tr class="even">
+<td align="right">Order receiving</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">5</td>
+<td align="center">1</td>
+<td align="center">1200</td>
+</tr>
+<tr class="odd">
+<td align="right">Processing</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1500</td>
+</tr>
+<tr class="even">
+<td align="right">Preparing</td>
+<td align="center">12</td>
+<td align="center">6</td>
+<td align="center">2</td>
+<td align="center">10</td>
+<td align="center">3000</td>
+</tr>
+<tr class="odd">
+<td align="right">Packaging</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">2</td>
+<td align="center">1800</td>
+</tr>
+<tr class="even">
+<td align="right">Delivery</td>
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1200</td>
+</tr>
+</tbody>
+</table>
+<ol style="list-style-type: lower-alpha">
+<li>Use R Markdown to create your own description of the model.</li>
+<li>Extend the R Markdown to show your LP Model. Be sure to define models.</li>
+<li>Solve the model in R (To find maximum profit).</li>
+<li>Interpret and discuss the model in R Markdown.</li>
+<li>Examine and reflect upon the reduced costs and shadow prices. Discuss which step’s available hours need to increases/decrease to make the most profit.</li>
+</ol>
+</div>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="more-linear-programming-models.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="data-envelopment-analysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

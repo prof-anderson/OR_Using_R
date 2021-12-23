@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>A A Very Brief Introduction to R | Optimization Modeling Using R</title>
+  <meta name="description" content="This book introduces optimization using R." />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="A A Very Brief Introduction to R | Optimization Modeling Using R" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This book introduces optimization using R." />
+  <meta name="github-repo" content="prof-anderson/OR_Using_R" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="A A Very Brief Introduction to R | Optimization Modeling Using R" />
+  
+  <meta name="twitter:description" content="This book introduces optimization using R." />
+  
+
+<meta name="author" content="Timothy R. Anderson" />
+
+
+<meta name="date" content="2021-12-22" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="goal-programming.html"/>
+<link rel="next" href="introduction-to-math-notation.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Optimization Modeling Using R</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#intended-audience"><i class="fa fa-check"></i>Intended Audience</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#features-of-this-book"><i class="fa fa-check"></i>Features of this Book</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#instructor-notes"><i class="fa fa-check"></i>Instructor Notes</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#acknowldegements"><i class="fa fa-check"></i>Acknowldegements</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="about-the-author.html"><a href="about-the-author.html"><i class="fa fa-check"></i>About the Author</a></li>
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#what-is-operations-research"><i class="fa fa-check"></i><b>1.1</b> What is Operations Research</a></li>
+<li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#purpose-of-this-book"><i class="fa fa-check"></i><b>1.2</b> Purpose of this Book</a></li>
+<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#range-of-operations-research-techniques"><i class="fa fa-check"></i><b>1.3</b> Range of Operations Research Techniques</a></li>
+<li class="chapter" data-level="1.4" data-path="introduction.html"><a href="introduction.html#relationship-between-operations-research-and-analytics"><i class="fa fa-check"></i><b>1.4</b> Relationship between Operations Research and Analytics</a></li>
+<li class="chapter" data-level="1.5" data-path="introduction.html"><a href="introduction.html#importance-of-optimization"><i class="fa fa-check"></i><b>1.5</b> Importance of Optimization</a></li>
+<li class="chapter" data-level="1.6" data-path="introduction.html"><a href="introduction.html#why-r"><i class="fa fa-check"></i><b>1.6</b> Why R?</a></li>
+<li class="chapter" data-level="1.7" data-path="introduction.html"><a href="introduction.html#conventions-used-in-this-book"><i class="fa fa-check"></i><b>1.7</b> Conventions Used in this Book</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html"><i class="fa fa-check"></i><b>2</b> Introduction to Linear Programming</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#what-is-linear-programming"><i class="fa fa-check"></i><b>2.1</b> What is Linear Programming</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#two-variable-base-case"><i class="fa fa-check"></i><b>2.2</b> Two Variable Base Case</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#graphically-solving-a-linear-program"><i class="fa fa-check"></i><b>2.3</b> Graphically Solving a Linear Program</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#implementing-and-solving-with-ompr"><i class="fa fa-check"></i><b>2.4</b> Implementing and Solving with <code>ompr</code></a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#preparing-to-implement-the-linear-program"><i class="fa fa-check"></i><b>2.4.1</b> Preparing to Implement the Linear Program</a></li>
+<li class="chapter" data-level="2.4.2" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#implementing-the-base-case-with-piping"><i class="fa fa-check"></i><b>2.4.2</b> Implementing the Base Case with Piping</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#adding-a-third-product-variable"><i class="fa fa-check"></i><b>2.5</b> Adding a Third Product (Variable)</a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#three-variable-base-case-formulation"><i class="fa fa-check"></i><b>2.5.1</b> Three Variable Base Case Formulation</a></li>
+<li class="chapter" data-level="2.5.2" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#three-variable-base-case-implementation"><i class="fa fa-check"></i><b>2.5.2</b> Three Variable Base Case Implementation</a></li>
+<li class="chapter" data-level="2.5.3" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#three-variable-case-results-and-interpretation"><i class="fa fa-check"></i><b>2.5.3</b> Three Variable Case Results and Interpretation</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#linear-programming-special-cases"><i class="fa fa-check"></i><b>2.6</b> Linear Programming Special Cases</a>
+<ul>
+<li class="chapter" data-level="2.6.1" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#case-1-no-feasible-solution"><i class="fa fa-check"></i><b>2.6.1</b> Case 1: No Feasible Solution</a></li>
+<li class="chapter" data-level="2.6.2" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#case-2-multiple-optima"><i class="fa fa-check"></i><b>2.6.2</b> Case 2: Multiple Optima</a></li>
+<li class="chapter" data-level="2.6.3" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#case-3-redundant-constraint"><i class="fa fa-check"></i><b>2.6.3</b> Case 3: Redundant Constraint</a></li>
+<li class="chapter" data-level="2.6.4" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#case-4-unbounded-solution"><i class="fa fa-check"></i><b>2.6.4</b> Case 4: Unbounded Solution</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#abstracting-the-production-planning-model"><i class="fa fa-check"></i><b>2.7</b> Abstracting the Production Planning Model</a></li>
+<li class="chapter" data-level="2.8" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#methods-of-solving-linear-programs"><i class="fa fa-check"></i><b>2.8</b> Methods of Solving Linear Programs</a></li>
+<li class="chapter" data-level="2.9" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#exercises"><i class="fa fa-check"></i><b>2.9</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html"><i class="fa fa-check"></i><b>3</b> More Linear Programming Models</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#types-of-lp-models"><i class="fa fa-check"></i><b>3.1</b> Types of LP Models</a></li>
+<li class="chapter" data-level="3.2" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#the-algebraic-model"><i class="fa fa-check"></i><b>3.2</b> The Algebraic Model</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#tips-and-conventions-for-algebraic-models"><i class="fa fa-check"></i><b>3.2.1</b> Tips and Conventions for Algebraic Models</a></li>
+<li class="chapter" data-level="3.2.2" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#building-the-generalized-model-in-r"><i class="fa fa-check"></i><b>3.2.2</b> Building the Generalized Model in R</a></li>
+<li class="chapter" data-level="3.2.3" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#examining-the-results"><i class="fa fa-check"></i><b>3.2.3</b> Examining the Results</a></li>
+<li class="chapter" data-level="3.2.4" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#changing-the-model"><i class="fa fa-check"></i><b>3.2.4</b> Changing the Model</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#common-linear-programming-applications"><i class="fa fa-check"></i><b>3.3</b> Common Linear Programming Applications</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#blending-problems"><i class="fa fa-check"></i><b>3.3.1</b> Blending Problems</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#allocation-models"><i class="fa fa-check"></i><b>3.4</b> Allocation Models</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#covering-models"><i class="fa fa-check"></i><b>3.4.1</b> Covering Models</a></li>
+<li class="chapter" data-level="3.4.2" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#transportation-models"><i class="fa fa-check"></i><b>3.4.2</b> Transportation Models</a></li>
+<li class="chapter" data-level="3.4.3" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#transshipment-models"><i class="fa fa-check"></i><b>3.4.3</b> Transshipment Models</a></li>
+<li class="chapter" data-level="3.4.4" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#production-and-inventory-planning"><i class="fa fa-check"></i><b>3.4.4</b> Production and Inventory Planning</a></li>
+<li class="chapter" data-level="3.4.5" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#standard-form"><i class="fa fa-check"></i><b>3.4.5</b> Standard Form</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#vector-and-matrix-forms-of-lps"><i class="fa fa-check"></i><b>3.5</b> Vector and Matrix Forms of LPs</a></li>
+<li class="chapter" data-level="3.6" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#exercises-1"><i class="fa fa-check"></i><b>3.6</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html"><i class="fa fa-check"></i><b>4</b> Sensitivity Analysis</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#base-case"><i class="fa fa-check"></i><b>4.1</b> Base Case</a></li>
+<li class="chapter" data-level="4.2" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#shadow-prices"><i class="fa fa-check"></i><b>4.2</b> Shadow Prices</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#extraction-and-interpretation"><i class="fa fa-check"></i><b>4.2.1</b> Extraction and Interpretation</a></li>
+<li class="chapter" data-level="4.2.2" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#example-of-adding-an-hour-to-assembly"><i class="fa fa-check"></i><b>4.2.2</b> Example of Adding an Hour to Assembly</a></li>
+<li class="chapter" data-level="4.2.3" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#shadow-prices-of-underutilized-resources"><i class="fa fa-check"></i><b>4.2.3</b> Shadow Prices of Underutilized Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#reduced-costs-of-variables"><i class="fa fa-check"></i><b>4.3</b> Reduced Costs of Variables</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#reduced-cost-of-ants"><i class="fa fa-check"></i><b>4.3.1</b> Reduced Cost of Ants</a></li>
+<li class="chapter" data-level="4.3.2" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#reduced-price-of-bats"><i class="fa fa-check"></i><b>4.3.2</b> Reduced Price of Bats</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#using-sensitivity-analysis-to-evaluate-a-new-product"><i class="fa fa-check"></i><b>4.4</b> Using Sensitivity Analysis to Evaluate a New Product</a></li>
+<li class="chapter" data-level="4.5" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#exercises-2"><i class="fa fa-check"></i><b>4.5</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html"><i class="fa fa-check"></i><b>5</b> Data Envelopment Analysis</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#introduction-1"><i class="fa fa-check"></i><b>5.1</b> Introduction</a></li>
+<li class="chapter" data-level="5.2" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#creating-the-data"><i class="fa fa-check"></i><b>5.2</b> Creating the Data</a></li>
+<li class="chapter" data-level="5.3" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#graphical-analysis"><i class="fa fa-check"></i><b>5.3</b> Graphical Analysis</a></li>
+<li class="chapter" data-level="5.4" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#the-linear-programs-for-dea"><i class="fa fa-check"></i><b>5.4</b> The Linear Programs for DEA</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#an-explicit-linear-program-for-dea"><i class="fa fa-check"></i><b>5.4.1</b> An Explicit Linear Program for DEA</a></li>
+<li class="chapter" data-level="5.4.2" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#a-generalized-linear-program-for-dea"><i class="fa fa-check"></i><b>5.4.2</b> A Generalized Linear Program for DEA</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#creating-the-lp---the-algebraic-approach"><i class="fa fa-check"></i><b>5.5</b> Creating the LP - The Algebraic Approach</a></li>
+<li class="chapter" data-level="5.6" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#returns-to-scale"><i class="fa fa-check"></i><b>5.6</b> Returns to Scale</a></li>
+<li class="chapter" data-level="5.7" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#multiple-inputs-and-multiple-outputs"><i class="fa fa-check"></i><b>5.7</b> Multiple Inputs and Multiple Outputs</a></li>
+<li class="chapter" data-level="5.8" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#extracting-multiplier-weights-from-sensitivity-analysis"><i class="fa fa-check"></i><b>5.8</b> Extracting Multiplier Weights from Sensitivity Analysis</a></li>
+<li class="chapter" data-level="5.9" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#slack-maximization"><i class="fa fa-check"></i><b>5.9</b> Slack Maximization</a></li>
+<li class="chapter" data-level="5.10" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#dea-packages"><i class="fa fa-check"></i><b>5.10</b> DEA Packages</a></li>
+<li class="chapter" data-level="5.11" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#dea-model-building"><i class="fa fa-check"></i><b>5.11</b> DEA Model Building</a>
+<ul>
+<li class="chapter" data-level="5.11.1" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#selection-of-inputs-and-outputs"><i class="fa fa-check"></i><b>5.11.1</b> Selection of Inputs and Outputs</a></li>
+<li class="chapter" data-level="5.11.2" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#model-choices"><i class="fa fa-check"></i><b>5.11.2</b> Model Choices</a></li>
+<li class="chapter" data-level="5.11.3" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#application-area-expertise"><i class="fa fa-check"></i><b>5.11.3</b> Application Area Expertise</a></li>
+</ul></li>
+<li class="chapter" data-level="5.12" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#further-reading"><i class="fa fa-check"></i><b>5.12</b> Further Reading</a></li>
+<li class="chapter" data-level="5.13" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#exercises-3"><i class="fa fa-check"></i><b>5.13</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html"><i class="fa fa-check"></i><b>6</b> Mixed Integer Optimization</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#example-of-minor-integrality-impact"><i class="fa fa-check"></i><b>6.1</b> Example of Minor Integrality Impact</a></li>
+<li class="chapter" data-level="6.2" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#example-of-major-integality-impact"><i class="fa fa-check"></i><b>6.2</b> Example of Major Integality Impact</a></li>
+<li class="chapter" data-level="6.3" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#the-branch-and-bound-algorithm"><i class="fa fa-check"></i><b>6.3</b> The Branch and Bound Algorithm</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#the-lp-relaxation"><i class="fa fa-check"></i><b>6.3.1</b> The LP Relaxation</a></li>
+<li class="chapter" data-level="6.3.2" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-i"><i class="fa fa-check"></i><b>6.3.2</b> Subproblem I</a></li>
+<li class="chapter" data-level="6.3.3" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-iii"><i class="fa fa-check"></i><b>6.3.3</b> Subproblem III</a></li>
+<li class="chapter" data-level="6.3.4" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-iv"><i class="fa fa-check"></i><b>6.3.4</b> Subproblem IV</a></li>
+<li class="chapter" data-level="6.3.5" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-v"><i class="fa fa-check"></i><b>6.3.5</b> Subproblem V</a></li>
+<li class="chapter" data-level="6.3.6" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-vi"><i class="fa fa-check"></i><b>6.3.6</b> Subproblem VI</a></li>
+<li class="chapter" data-level="6.3.7" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-vii"><i class="fa fa-check"></i><b>6.3.7</b> Subproblem VII</a></li>
+<li class="chapter" data-level="6.3.8" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-viii"><i class="fa fa-check"></i><b>6.3.8</b> Subproblem VIII</a></li>
+<li class="chapter" data-level="6.3.9" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-ii"><i class="fa fa-check"></i><b>6.3.9</b> Subproblem II</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#computational-complexity"><i class="fa fa-check"></i><b>6.4</b> Computational Complexity</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#full-enumeration"><i class="fa fa-check"></i><b>6.4.1</b> Full Enumeration</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#binary-variables-and-logical-relations"><i class="fa fa-check"></i><b>6.5</b> Binary Variables and Logical Relations</a></li>
+<li class="chapter" data-level="6.6" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#fixed-charge-models"><i class="fa fa-check"></i><b>6.6</b> Fixed Charge Models</a>
+<ul>
+<li class="chapter" data-level="6.6.1" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#fixed-charge-example-introduction"><i class="fa fa-check"></i><b>6.6.1</b> Fixed Charge Example-Introduction</a></li>
+<li class="chapter" data-level="6.6.2" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#linking-constraints-with-big-m"><i class="fa fa-check"></i><b>6.6.2</b> Linking Constraints with “Big M”</a></li>
+<li class="chapter" data-level="6.6.3" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#fixed-charge-implementation"><i class="fa fa-check"></i><b>6.6.3</b> Fixed Charge Implementation</a></li>
+</ul></li>
+<li class="chapter" data-level="6.7" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#model-results-and-interpretation"><i class="fa fa-check"></i><b>6.7</b> Model Results and Interpretation</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html"><i class="fa fa-check"></i><b>7</b> More Integer Programming Models</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#overview"><i class="fa fa-check"></i><b>7.1</b> Overview</a></li>
+<li class="chapter" data-level="7.2" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#revisiting-the-warehouse-location-problem"><i class="fa fa-check"></i><b>7.2</b> Revisiting the Warehouse Location Problem</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#implementing-the-warehouse-model"><i class="fa fa-check"></i><b>7.2.1</b> Implementing the Warehouse Model</a></li>
+<li class="chapter" data-level="7.2.2" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#solving-the-warehouse-location-problem"><i class="fa fa-check"></i><b>7.2.2</b> Solving the Warehouse Location Problem</a></li>
+<li class="chapter" data-level="7.2.3" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#warehouse-discussion"><i class="fa fa-check"></i><b>7.2.3</b> Warehouse Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#solving-mips-with-different-solvers"><i class="fa fa-check"></i><b>7.3</b> Solving MIPs with Different Solvers</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#performance-of-glpk"><i class="fa fa-check"></i><b>7.3.1</b> Performance of <code>glpk</code></a></li>
+<li class="chapter" data-level="7.3.2" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#performance-of-symphony"><i class="fa fa-check"></i><b>7.3.2</b> Performance of <code>symphony</code></a></li>
+<li class="chapter" data-level="7.3.3" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#performance-of-lpsolve"><i class="fa fa-check"></i><b>7.3.3</b> Performance of <code>lpsolve</code></a></li>
+<li class="chapter" data-level="7.3.4" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#performance-of-gurobi"><i class="fa fa-check"></i><b>7.3.4</b> Performance of <code>gurobi</code></a></li>
+<li class="chapter" data-level="7.3.5" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#comparing-results-across-solvers"><i class="fa fa-check"></i><b>7.3.5</b> Comparing Results across Solvers</a></li>
+<li class="chapter" data-level="7.3.6" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#popularity-of-lp-solvers"><i class="fa fa-check"></i><b>7.3.6</b> Popularity of LP Solvers</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#solving-sudoku-puzzles-using-optimization"><i class="fa fa-check"></i><b>7.4</b> Solving Sudoku Puzzles using Optimization</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#introduction-to-sudoku-and-optimization"><i class="fa fa-check"></i><b>7.4.1</b> Introduction to Sudoku and Optimization</a></li>
+<li class="chapter" data-level="7.4.2" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#formulating-the-sudoku-problem"><i class="fa fa-check"></i><b>7.4.2</b> Formulating the Sudoku Problem</a></li>
+<li class="chapter" data-level="7.4.3" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#implementing-sudoku-in-ompr"><i class="fa fa-check"></i><b>7.4.3</b> Implementing Sudoku in ompr</a></li>
+<li class="chapter" data-level="7.4.4" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#sudoku-discussion"><i class="fa fa-check"></i><b>7.4.4</b> Sudoku Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#exercises-4"><i class="fa fa-check"></i><b>7.5</b> Exercises</a></li>
+<li class="chapter" data-level="7.6" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#production-planning-over-time"><i class="fa fa-check"></i><b>7.6</b> Production Planning over Time</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#implementing-the-model-1"><i class="fa fa-check"></i><b>7.6.1</b> Implementing the Model</a></li>
+</ul></li>
+<li class="chapter" data-level="7.7" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#additional-exercises"><i class="fa fa-check"></i><b>7.7</b> Additional Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="goal-programming.html"><a href="goal-programming.html"><i class="fa fa-check"></i><b>8</b> Goal Programming</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="goal-programming.html"><a href="goal-programming.html#introduction-2"><i class="fa fa-check"></i><b>8.1</b> Introduction</a></li>
+<li class="chapter" data-level="8.2" data-path="goal-programming.html"><a href="goal-programming.html#preemptive-goal-programming"><i class="fa fa-check"></i><b>8.2</b> Preemptive Goal Programming</a></li>
+<li class="chapter" data-level="8.3" data-path="goal-programming.html"><a href="goal-programming.html#policies-for-houselessness"><i class="fa fa-check"></i><b>8.3</b> Policies for Houselessness</a></li>
+<li class="chapter" data-level="8.4" data-path="goal-programming.html"><a href="goal-programming.html#mass-mailings"><i class="fa fa-check"></i><b>8.4</b> Mass Mailings</a>
+<ul>
+<li class="chapter" data-level="8.4.1" data-path="goal-programming.html"><a href="goal-programming.html#formulating-the-state-mailing-model"><i class="fa fa-check"></i><b>8.4.1</b> Formulating the State Mailing Model</a></li>
+<li class="chapter" data-level="8.4.2" data-path="goal-programming.html"><a href="goal-programming.html#implementing-the-state-mailing-model"><i class="fa fa-check"></i><b>8.4.2</b> Implementing the State Mailing Model</a></li>
+<li class="chapter" data-level="8.4.3" data-path="goal-programming.html"><a href="goal-programming.html#frontloading-the-work"><i class="fa fa-check"></i><b>8.4.3</b> Frontloading the Work</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="goal-programming.html"><a href="goal-programming.html#exercises-5"><i class="fa fa-check"></i><b>8.5</b> Exercises</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="a-very-brief-introduction-to-r.html"><a href="a-very-brief-introduction-to-r.html"><i class="fa fa-check"></i><b>A</b> A Very Brief Introduction to R</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="a-very-brief-introduction-to-r.html"><a href="a-very-brief-introduction-to-r.html#purpose"><i class="fa fa-check"></i><b>A.1</b> Purpose</a></li>
+<li class="chapter" data-level="A.2" data-path="a-very-brief-introduction-to-r.html"><a href="a-very-brief-introduction-to-r.html#getting-started-with-r"><i class="fa fa-check"></i><b>A.2</b> Getting Started with R</a></li>
+<li class="chapter" data-level="A.3" data-path="a-very-brief-introduction-to-r.html"><a href="a-very-brief-introduction-to-r.html#exercises-6"><i class="fa fa-check"></i><b>A.3</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html"><i class="fa fa-check"></i><b>B</b> Introduction to Math Notation</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#purpose-1"><i class="fa fa-check"></i><b>B.1</b> Purpose</a></li>
+<li class="chapter" data-level="B.2" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#basic-summation-notation"><i class="fa fa-check"></i><b>B.2</b> Basic Summation Notation</a></li>
+<li class="chapter" data-level="B.3" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#using-latex-in-rmarkdown"><i class="fa fa-check"></i><b>B.3</b> Using LaTeX in RMarkdown</a></li>
+<li class="chapter" data-level="B.4" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#inline-notation"><i class="fa fa-check"></i><b>B.4</b> Inline Notation</a></li>
+<li class="chapter" data-level="B.5" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#sums"><i class="fa fa-check"></i><b>B.5</b> Sums</a></li>
+<li class="chapter" data-level="B.6" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#delimiters"><i class="fa fa-check"></i><b>B.6</b> Delimiters</a></li>
+<li class="chapter" data-level="B.7" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#summary-of-mathematical-notations"><i class="fa fa-check"></i><b>B.7</b> Summary of Mathematical Notations</a></li>
+<li class="chapter" data-level="B.8" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#sequences-and-summation-notation"><i class="fa fa-check"></i><b>B.8</b> Sequences and Summation Notation</a></li>
+<li class="chapter" data-level="B.9" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#applications-of-summation"><i class="fa fa-check"></i><b>B.9</b> Applications of Summation</a></li>
+<li class="chapter" data-level="B.10" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#double-summation"><i class="fa fa-check"></i><b>B.10</b> Double Summation</a></li>
+<li class="chapter" data-level="B.11" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#applications-of-double-summation"><i class="fa fa-check"></i><b>B.11</b> Applications of Double Summation</a></li>
+<li class="chapter" data-level="B.12" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#exercises-7"><i class="fa fa-check"></i><b>B.12</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="troubleshooting.html"><a href="troubleshooting.html"><i class="fa fa-check"></i><b>C</b> Troubleshooting</a>
+<ul>
+<li class="chapter" data-level="C.1" data-path="troubleshooting.html"><a href="troubleshooting.html#overview-1"><i class="fa fa-check"></i><b>C.1</b> Overview</a></li>
+<li class="chapter" data-level="C.2" data-path="troubleshooting.html"><a href="troubleshooting.html#model-building"><i class="fa fa-check"></i><b>C.2</b> Model Building</a>
+<ul>
+<li class="chapter" data-level="C.2.1" data-path="troubleshooting.html"><a href="troubleshooting.html#define-and-formulate-before-implementing"><i class="fa fa-check"></i><b>C.2.1</b> Define and Formulate before Implementing</a></li>
+<li class="chapter" data-level="C.2.2" data-path="troubleshooting.html"><a href="troubleshooting.html#failing-to-look-for-past-optimization-models"><i class="fa fa-check"></i><b>C.2.2</b> Failing to Look for Past Optimization Models</a></li>
+<li class="chapter" data-level="C.2.3" data-path="troubleshooting.html"><a href="troubleshooting.html#misrendering-of-pdf"><i class="fa fa-check"></i><b>C.2.3</b> Misrendering of PDF</a></li>
+<li class="chapter" data-level="C.2.4" data-path="troubleshooting.html"><a href="troubleshooting.html#blank-lines-in-latex"><i class="fa fa-check"></i><b>C.2.4</b> Blank Lines in LaTeX</a></li>
+<li class="chapter" data-level="C.2.5" data-path="troubleshooting.html"><a href="troubleshooting.html#problems-with-pdf-creation"><i class="fa fa-check"></i><b>C.2.5</b> Problems with PDF Creation</a></li>
+</ul></li>
+<li class="chapter" data-level="C.3" data-path="troubleshooting.html"><a href="troubleshooting.html#implementation-troubleshooting"><i class="fa fa-check"></i><b>C.3</b> Implementation Troubleshooting</a>
+<ul>
+<li class="chapter" data-level="C.3.1" data-path="troubleshooting.html"><a href="troubleshooting.html#errors-in-a-piped-model"><i class="fa fa-check"></i><b>C.3.1</b> Errors in a Piped Model</a></li>
+<li class="chapter" data-level="C.3.2" data-path="troubleshooting.html"><a href="troubleshooting.html#undefined-object-in-ompr"><i class="fa fa-check"></i><b>C.3.2</b> Undefined Object in <code>ompr</code></a></li>
+<li class="chapter" data-level="C.3.3" data-path="troubleshooting.html"><a href="troubleshooting.html#unexpected-symbol-in-ompr"><i class="fa fa-check"></i><b>C.3.3</b> Unexpected Symbol in <code>ompr</code></a></li>
+<li class="chapter" data-level="C.3.4" data-path="troubleshooting.html"><a href="troubleshooting.html#name-conflicts-between-r-and-ompr"><i class="fa fa-check"></i><b>C.3.4</b> Name Conflicts between R and <code>ompr</code></a></li>
+<li class="chapter" data-level="C.3.5" data-path="troubleshooting.html"><a href="troubleshooting.html#blindly-reusing-code"><i class="fa fa-check"></i><b>C.3.5</b> Blindly Reusing Code</a></li>
+</ul></li>
+<li class="chapter" data-level="C.4" data-path="troubleshooting.html"><a href="troubleshooting.html#general-debugging-tips"><i class="fa fa-check"></i><b>C.4</b> General Debugging Tips</a></li>
+<li class="chapter" data-level="C.5" data-path="troubleshooting.html"><a href="troubleshooting.html#getting-help"><i class="fa fa-check"></i><b>C.5</b> Getting Help</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="making-good-tables.html"><a href="making-good-tables.html"><i class="fa fa-check"></i><b>D</b> Making Good Tables</a>
+<ul>
+<li class="chapter" data-level="D.1" data-path="making-good-tables.html"><a href="making-good-tables.html#importance-of-tables-in-modeling"><i class="fa fa-check"></i><b>D.1</b> Importance of Tables in Modeling</a></li>
+<li class="chapter" data-level="D.2" data-path="making-good-tables.html"><a href="making-good-tables.html#kable-vs.-kbl"><i class="fa fa-check"></i><b>D.2</b> Kable vs. Kbl</a></li>
+<li class="chapter" data-level="D.3" data-path="making-good-tables.html"><a href="making-good-tables.html#table-footnotes-with-kable"><i class="fa fa-check"></i><b>D.3</b> Table Footnotes with Kable</a></li>
+<li class="chapter" data-level="D.4" data-path="making-good-tables.html"><a href="making-good-tables.html#setting-row-and-column-names-in-kable"><i class="fa fa-check"></i><b>D.4</b> Setting Row and Column Names in Kable</a></li>
+<li class="chapter" data-level="D.5" data-path="making-good-tables.html"><a href="making-good-tables.html#booktabs-vs.-default"><i class="fa fa-check"></i><b>D.5</b> Booktabs vs. Default</a></li>
+<li class="chapter" data-level="D.6" data-path="making-good-tables.html"><a href="making-good-tables.html#using-latex-in-kable-column-names"><i class="fa fa-check"></i><b>D.6</b> Using LaTeX in Kable Column Names</a></li>
+<li class="chapter" data-level="D.7" data-path="making-good-tables.html"><a href="making-good-tables.html#fitting-tables-to-page-width"><i class="fa fa-check"></i><b>D.7</b> Fitting Tables to Page Width</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Optimization Modeling Using R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="a-very-brief-introduction-to-r" class="section level1" number="9">
+<h1><span class="header-section-number">A</span> A Very Brief Introduction to R</h1>
+<div id="purpose" class="section level2" number="9.1">
+<h2><span class="header-section-number">A.1</span> Purpose</h2>
+<p>This Appendix provides a very brief introduction to the basics of R from the perspective of use for optimization modeling. This is not meant to be comprehensive R tutorial. There is an ever expanding collection of such materials available.</p>
+</div>
+<div id="getting-started-with-r" class="section level2" number="9.2">
+<h2><span class="header-section-number">A.2</span> Getting Started with R</h2>
+<p>This Appendix helps a reader new to R quickly get started. I strongly recommend using RStudio. I also like books such as <em>R in a Nutshell</em> <span class="citation">(<a href="#ref-AdlerNutshell2012" role="doc-biblioref">Adler 2012</a>)</span> or <em>R in Action</em> <span class="citation">(<a href="#ref-KabacoffActionDataAnalysis2011" role="doc-biblioref">Kabacoff 2011</a>)</span>.</p>
+<p>I usually find the best way for me to learn a new tool is to roll up my sleeves and jump right in. This book can be approached in that way - just be ready for a little more experimentation. This book is available on Github and the R Markdown files are available for use. Code fragments are shown quite liberally for demonstrating how things work. While this may be a bit verbose it is meant to enable readers to jump in at various points of the book.</p>
+<p>While code fragments can be copied from the R markdown files for this book, it is often best to physically retype many of the code fragments shown as that gives time to reflect on what each statement is doing.</p>
+<p>Let’s define some conventions to be used throughout the book. First, let me be clear, the goal of this section is not to provide a comprehensive introduction to R. Entire books are written on that subject. My goal here is to simply make sure that everyone can get started productively in the material covered later.</p>
+<p>Since this book is focused on using R for operations research, we will focus on the capabilities that are needed for this area and introduce additional features and functions as needed. If you are already comfortable with R, RStudio, and RMarkdown, you may skip the remainder of this section.</p>
+<p>Begin by ensuring that you have access to or installed R and RStudio. Both are available for Windows, Mac, and Linux operating systems as well as being available as web services.</p>
+<p>Now, let’s assume that you are running RStudio.</p>
+<p>In this book, I will frequently show code fragments called chunks to show R code. In general, these code chunks can be run by simply retyping the command(s) in the Console.</p>
+<div class="sourceCode" id="cb278"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb278-1"><a href="a-very-brief-introduction-to-r.html#cb278-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="dv">7</span></span></code></pre></div>
+<p>This command assigns the value of 7 to the variable <em>a</em>. It is standard in R to use <code>&lt;-</code> as an assignment operator rather than an equals sign. We can then use R to process this information.<br />
+</p>
+<div class="sourceCode" id="cb279"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb279-1"><a href="a-very-brief-introduction-to-r.html#cb279-1" aria-hidden="true" tabindex="-1"></a><span class="dv">6</span><span class="sc">*</span>a</span></code></pre></div>
+<pre><code>## [1] 42</code></pre>
+<p>Yes, not surprisingly, <span class="math inline">\(6*7\)</span> is <span class="math inline">\(42\)</span>. Notice that if we don’t assign that result to something, it gives an immediate result to the screen.</p>
+<p>We will often be using or defining data that has more than one element. In fact, R is designed around more complex data structures. Let’s go ahead and define a matrix of data.<br />
+</p>
+<div class="sourceCode" id="cb281"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb281-1"><a href="a-very-brief-introduction-to-r.html#cb281-1" aria-hidden="true" tabindex="-1"></a>b<span class="ot">&lt;-</span><span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>))</span></code></pre></div>
+<p>By default, it is assuming that the matrix has one column which means that every data value is in a separate row. The <code>c</code> function is a concatenate operator meaning that it combines all the following items together.</p>
+<p>Let’s look at <em>b</em> now to see what it contains.</p>
+<div class="sourceCode" id="cb282"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb282-1"><a href="a-very-brief-introduction-to-r.html#cb282-1" aria-hidden="true" tabindex="-1"></a>b</span></code></pre></div>
+<pre><code>##      [,1]
+## [1,]    1
+## [2,]    2
+## [3,]    3
+## [4,]    4
+## [5,]    5
+## [6,]    6
+## [7,]    7
+## [8,]    8</code></pre>
+<p>Let’s instead define this matrix to have four columns and two rows.</p>
+<div class="sourceCode" id="cb284"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb284-1"><a href="a-very-brief-introduction-to-r.html#cb284-1" aria-hidden="true" tabindex="-1"></a>b<span class="ot">&lt;-</span><span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>), <span class="at">ncol=</span><span class="dv">4</span>)</span>
+<span id="cb284-2"><a href="a-very-brief-introduction-to-r.html#cb284-2" aria-hidden="true" tabindex="-1"></a>b</span></code></pre></div>
+<pre><code>##      [,1] [,2] [,3] [,4]
+## [1,]    1    3    5    7
+## [2,]    2    4    6    8</code></pre>
+<p>Notice that since there are eight elements, we only needed to tell R that the matrix has four columns and it then knew that there would be only two rows. Of course we could have set the number of rows to be two for the same result.</p>
+<p>This is still a little ambiguous. Let’s give the rows and columns names. For now we will simply name them Row and Col.</p>
+<div class="sourceCode" id="cb286"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb286-1"><a href="a-very-brief-introduction-to-r.html#cb286-1" aria-hidden="true" tabindex="-1"></a>b<span class="ot">&lt;-</span><span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>), <span class="at">ncol=</span><span class="dv">4</span>, </span>
+<span id="cb286-2"><a href="a-very-brief-introduction-to-r.html#cb286-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">dimnames=</span><span class="fu">c</span>(<span class="fu">list</span>(<span class="fu">c</span>(<span class="st">&quot;Row1&quot;</span>, <span class="st">&quot;Row2&quot;</span>)),</span>
+<span id="cb286-3"><a href="a-very-brief-introduction-to-r.html#cb286-3" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">&quot;Col1&quot;</span>, <span class="st">&quot;Col2&quot;</span>,<span class="st">&quot;Col3&quot;</span>,<span class="st">&quot;Col4&quot;</span>))))</span></code></pre></div>
+<div class="remark">
+<p><span id="unlabeled-div-57" class="remark"><em>Remark</em> (RStudio Console). </span>The RStudio console can save typing by pressing the up arrow key to view previous command(s) which can then be further edited.</p>
+</div>
+<p>Okay, this command has a lot more going on. The term <code>dimnames</code>  is a parameter that contain names for rows and columns. One thing to note is that this line fills up more space than a single line so it rolls over to multiple line. The <code>dimnames</code> parameter will get get two concatenated (combined) lists. The first list is a combined list of two text strings “Row1” and “Row2.” The next line does the same for columns.<br />
+</p>
+<p>Let’s confirm that it works.<br />
+</p>
+<div class="sourceCode" id="cb287"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb287-1"><a href="a-very-brief-introduction-to-r.html#cb287-1" aria-hidden="true" tabindex="-1"></a>b</span></code></pre></div>
+<pre><code>##      Col1 Col2 Col3 Col4
+## Row1    1    3    5    7
+## Row2    2    4    6    8</code></pre>
+<p>This table is still not that “nice” looking. Let’s use a package that does a nicer job of formatting tables. To do this, we will use an extra package. Up to this point, everything that we have done just simply uses standard built in functions of R. The package that we will use is <code>kable</code>  but there are plenty of others available such as <code>pander</code>, <code>kable</code>, <code>xtable</code>, and <code>huxtable</code>. While <code>kable</code> is a function of <code>knitr</code>, it is significantly enhanced by the <code>kableExtra</code>  package. For more information on the specifics of creating rich tables, see Appendix D.</p>
+<p>Let’s start by loading the <code>kableExtra</code> package.</p>
+<div class="sourceCode" id="cb289"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb289-1"><a href="a-very-brief-introduction-to-r.html#cb289-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span> (kableExtra)</span></code></pre></div>
+<p>If R indicates that you don’t have the <code>kableExtra</code> package installed on your computer, you can press the “Install” command under the Packages tab and then type in <code>kableExtra</code> or use the <code>install.packages</code> command from RStudio. The <code>kbl</code>  is a shorthand way of entering the <code>kable</code> function that is provided by <code>kableExtra</code>. A lot of the power of <code>R</code> comes from the thousdands of packages developed by other people so you will often be installing and loading packages.</p>
+<p>Notice the hash symbol is used to mark a comment in the above code chunk. It is also used to “comment out” a command that I don’t need to use at the current time. Using comments to explain what a command is doing can be helpful to anyone that needs to revisit your code in the future, including yourself!</p>
+<div class="sourceCode" id="cb290"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb290-1"><a href="a-very-brief-introduction-to-r.html#cb290-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span> (b, <span class="at">booktabs=</span>T, </span>
+<span id="cb290-2"><a href="a-very-brief-introduction-to-r.html#cb290-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption=</span><span class="st">&quot;Example using Kable with booktabs&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb290-3"><a href="a-very-brief-introduction-to-r.html#cb290-3" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:Using-kable">TABLE A.1: </span>Example using Kable with booktabs
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Col1
+</th>
+<th style="text-align:right;">
+Col2
+</th>
+<th style="text-align:right;">
+Col3
+</th>
+<th style="text-align:right;">
+Col4
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Row1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Row2
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+</tbody>
+</table>
+<p>The table looks very nice in the book. Let’s explain in detail how the table is generated. This code chunk has a lot going and is worth a careful look.    </p>
+<ul>
+<li>The first line <code>knitr::kable</code> means that we should run the <code>kable</code> function from within <code>knitr</code>. In general, as a long as the library is loaded and the same function is not defined by two different loaded libraries, you don’t need to specify where the function is being run from.</li>
+<li>The <code>booktabs=T</code> sets a format for clean published table style by setting the option to <code>T</code> for <code>TRUE</code>.</li>
+<li>The second line provides a caption.</li>
+<li>The last part of the second line warrants a little attention. It is the new pipe operator  and requires <code>R</code> version 4.1.0 or higher. The pipe operator basically says pass this commands output into the beginning of the next command. We’ll use it a lot for table generation. Prior to R version 4.1.0, people that used pipes in R often used the <code>%&gt;%</code> operator from a separate package such as <code>magrittr</code>. For most users, including us, the built-in <code>|&gt;</code> will suffice.</li>
+<li>The last command, <code>kable_styling</code>, has an option for <code>hold_position</code> which holds the placement closer to where it is called, keeping LaTeX from second guessing where the ideal location would be for the table. Note that is also specifying its source package, in this case, <code>kableExtra</code>. There are a lot of other options in <code>kable_styling</code> that we will use in later chapters as needed.</li>
+<li>For your own use, you could shorten all of this to just <code>kable (b)</code>. On the other hand, <code>kableExtra</code> has one more small trick up its sleeve. It provides a shorter name for the <code>kable</code> function of just <code>kbl</code>. When space is at premium, this shortcut is handy. It also serves as a helpful check to ensure that <code>kableExtra</code> is loaded.</li>
+</ul>
+<p>Let’s continue experimenting with operators.</p>
+<div class="sourceCode" id="cb291"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb291-1"><a href="a-very-brief-introduction-to-r.html#cb291-1" aria-hidden="true" tabindex="-1"></a>c<span class="ot">&lt;-</span>a<span class="sc">*</span>b</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:Scalar-Multiplication">TABLE A.2: </span>Scalar Multiplication of Matrix b to Make Matrix c
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Col1
+</th>
+<th style="text-align:right;">
+Col2
+</th>
+<th style="text-align:right;">
+Col3
+</th>
+<th style="text-align:right;">
+Col4
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Row1
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+21
+</td>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+49
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Row2
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+28
+</td>
+<td style="text-align:right;">
+42
+</td>
+<td style="text-align:right;">
+56
+</td>
+</tr>
+</tbody>
+</table>
+<p>Now let’s do a transpose operation on the original matrix. What this means that it converts rows into columns and columns into rows.</p>
+<div class="sourceCode" id="cb292"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb292-1"><a href="a-very-brief-introduction-to-r.html#cb292-1" aria-hidden="true" tabindex="-1"></a>d<span class="ot">&lt;-</span><span class="fu">t</span>(b)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;border-bottom: 0;">
+<caption>
+<span id="tab:Transposing">TABLE A.3: </span>Transposition of Matrix b
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Row1
+</th>
+<th style="text-align:right;">
+Row2
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Col1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Col2
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Col3
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Col4
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<span style="font-style: italic;">Note: </span>
+</td>
+</tr>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> Row and column names were changed at the same time.
+</td>
+</tr>
+</tfoot>
+</table>
+<p>Notice that row and column names are also transposed. The result is that we now have rows labeled as columns and columns labeled as rows! This is only a problem given that we used the words rows and columns in the names. If these had been more descriptive such as weeks and product names, it would have been a good thing to change them at the same time.</p>
+<p>Now we have done some basic operations within R.</p>
+<p>We could try this but but we aren’t quite there yet.</p>
+<div class="sourceCode" id="cb293"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb293-1"><a href="a-very-brief-introduction-to-r.html#cb293-1" aria-hidden="true" tabindex="-1"></a>c</span></code></pre></div>
+<pre><code>##      Col1 Col2 Col3 Col4
+## Row1    7   21   35   49
+## Row2   14   28   42   56</code></pre>
+<div class="sourceCode" id="cb295"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb295-1"><a href="a-very-brief-introduction-to-r.html#cb295-1" aria-hidden="true" tabindex="-1"></a>d</span></code></pre></div>
+<pre><code>##      Row1 Row2
+## Col1    1    2
+## Col2    3    4
+## Col3    5    6
+## Col4    7    8</code></pre>
+<p>Try renaming the rows and columns for <code>d</code>. As a hint, you could use <code>dimnames</code> or <code>colnames</code> and <code>rownames</code>.</p>
+<p>Recall that we have created a variety of objects now: a, b, c, and d. R provides a lot of tools for slicing, dicing, and combining data.</p>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:Original-Matrix">TABLE A.4: </span>Original Matrix b
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Col1
+</th>
+<th style="text-align:right;">
+Col2
+</th>
+<th style="text-align:right;">
+Col3
+</th>
+<th style="text-align:right;">
+Col4
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Row1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Row2
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+</tbody>
+</table>
+<p>Let’s look at the original matrix, b and what we can do with it. Let’s grab the second row, third column and last element.</p>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:Extracting-Second-Row">TABLE A.5: </span>Second Row of b
+</caption>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Col1
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Col2
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Col3
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Col4
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>as.matrix</code> function is used to convert the object into a matrix so that <code>kable</code> can display it well.</p>
+<div class="sourceCode" id="cb297"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb297-1"><a href="a-very-brief-introduction-to-r.html#cb297-1" aria-hidden="true" tabindex="-1"></a>temp2 <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(b[,<span class="dv">3</span>])</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:Extracting-Third-Column">TABLE A.6: </span>Third Column of b
+</caption>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Row1
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Row2
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+</tbody>
+</table>
+<p>Grabbing the third column is not terribly interesting but operations such as this will often be quite useful.</p>
+<div class="sourceCode" id="cb298"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb298-1"><a href="a-very-brief-introduction-to-r.html#cb298-1" aria-hidden="true" tabindex="-1"></a>temp3 <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(b[<span class="dv">2</span>,<span class="dv">4</span>]) </span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:Bottom-Right-Element">TABLE A.7: </span>Last Element of b
+</caption>
+<tbody>
+<tr>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+</tbody>
+</table>
+<p>Let’s take the first row of <code>b</code> and combine it with the second row of <code>c</code> to form a new matrix, <code>e</code>. Since these are rows that are going to be combined, we will use a command, <code>rbind</code>, to bind these rows together. </p>
+<div class="sourceCode" id="cb299"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb299-1"><a href="a-very-brief-introduction-to-r.html#cb299-1" aria-hidden="true" tabindex="-1"></a>temp4 <span class="ot">&lt;-</span> <span class="fu">rbind</span>(b[<span class="dv">1</span>,],c[<span class="dv">2</span>,])</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:Combined-Matrix">TABLE A.8: </span>Combined Matrix
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+Col1
+</th>
+<th style="text-align:right;">
+Col2
+</th>
+<th style="text-align:right;">
+Col3
+</th>
+<th style="text-align:right;">
+Col4
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+28
+</td>
+<td style="text-align:right;">
+42
+</td>
+<td style="text-align:right;">
+56
+</td>
+</tr>
+</tbody>
+</table>
+<p>Notice that <em>temp4</em> has inherited the column names but lost the row names. Let’s set the row names for this matrix.</p>
+<div class="sourceCode" id="cb300"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb300-1"><a href="a-very-brief-introduction-to-r.html#cb300-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(temp4)<span class="ot">&lt;-</span><span class="fu">list</span>(<span class="st">&quot;From b&quot;</span>, <span class="st">&quot;From c&quot;</span>)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:Changing-Row-Names">TABLE A.9: </span>Combined Matrix with Explanation of Source
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Col1
+</th>
+<th style="text-align:right;">
+Col2
+</th>
+<th style="text-align:right;">
+Col3
+</th>
+<th style="text-align:right;">
+Col4
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+From b
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+From c
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+28
+</td>
+<td style="text-align:right;">
+42
+</td>
+<td style="text-align:right;">
+56
+</td>
+</tr>
+</tbody>
+</table>
+<p>We could combine all of matrix <code>b</code> and matrix <code>c</code> together using row binding or column binding. Table Let’s view the results of binding using columns (<code>cbind</code>) and rows (<code>rbind</code>). </p>
+<div class="sourceCode" id="cb301"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb301-1"><a href="a-very-brief-introduction-to-r.html#cb301-1" aria-hidden="true" tabindex="-1"></a>temp5<span class="ot">&lt;-</span> <span class="fu">cbind</span>(b,c)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-77">TABLE A.10: </span>Column Binding of Matrices b and c
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Col1
+</th>
+<th style="text-align:right;">
+Col2
+</th>
+<th style="text-align:right;">
+Col3
+</th>
+<th style="text-align:right;">
+Col4
+</th>
+<th style="text-align:right;">
+Col1
+</th>
+<th style="text-align:right;">
+Col2
+</th>
+<th style="text-align:right;">
+Col3
+</th>
+<th style="text-align:right;">
+Col4
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Row1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+21
+</td>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+49
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Row2
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+28
+</td>
+<td style="text-align:right;">
+42
+</td>
+<td style="text-align:right;">
+56
+</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb302"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb302-1"><a href="a-very-brief-introduction-to-r.html#cb302-1" aria-hidden="true" tabindex="-1"></a>temp6 <span class="ot">&lt;-</span> <span class="fu">rbind</span>(b,c)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:Row-Binding">TABLE A.11: </span>Row Binding of Matrices b and c
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Col1
+</th>
+<th style="text-align:right;">
+Col2
+</th>
+<th style="text-align:right;">
+Col3
+</th>
+<th style="text-align:right;">
+Col4
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Row1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Row2
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Row1
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+21
+</td>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+49
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Row2
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+28
+</td>
+<td style="text-align:right;">
+42
+</td>
+<td style="text-align:right;">
+56
+</td>
+</tr>
+</tbody>
+</table>
+<p>Data organizing is a less glamorous part of the job for practicing analytics professionals but can consume a majority of the workday. There is a lot more that can be said about data wrestling but scripting the data cleansing in terms R commands will make the work more repeatable, consistent, and in the end save time.<br />
+</p>
+</div>
+<div id="exercises-6" class="section level2" number="9.3">
+<h2><span class="header-section-number">A.3</span> Exercises</h2>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-58" class="exercise"><strong>Exercise A.1  (Creating a Matrix of Daily Demand for Four Weeks) </strong></span>Assume that your company’s product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday. Build a matrix of four weeks of demand where each row is a separate week. Each Monday starts over with the same demand. The rows should be named Week1, Week2, etc. The columns should have names corresponding to the day of the week.</p>
+</div>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-59" class="exercise"><strong>Exercise A.2  (Creating a Matrix of Demand for Two Products) </strong></span>Assume that your company’s product has a demand of 10 widgets on Monday, increasing by five units for every day through Sunday. Gadgets have a demand of 20 on Monday, increasing by 3 units a day through Sunday. Build a matrix showing each product as a separate row. Rows should have names for the products and columns for the days of the week.</p>
+</div>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-60" class="exercise"><strong>Exercise A.3  (Creating a Matrix of Monthly Demand) </strong></span>Consider some top selling online products for the year 2021: toys, shoes, pens and pencils, decorative bottles, drills, cutters, and GPS navigation systems. Create your own assumed starting counts per item for throughout year by increasing each item sales by 50 units per month, starting from January till December.</p>
+</div>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-61" class="exercise"><strong>Exercise A.4  (Displaying Selective Data from the Matrix) </strong></span>In the above matrix, grab the columns and rows to show the data only for pens and pencils during the months of June, August and October.</p>
+</div>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-62" class="exercise"><strong>Exercise A.5  (Creating Separate Demands for Products) </strong></span>In the above matrix, demand for toys and shoes has been increased by 20 and 10 units respectively. Create a matrix for only these products for the first 6 months. Display the matrix twice–once without formatting and a second time using an R package that provides better table formatting (<code>pander</code>, <code>kable</code> via <code>knitr</code>, <code>huxtable</code> or similar tool. Be sure to provide a table caption.)</p>
+</div>
+
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-AdlerNutshell2012" class="csl-entry">
+Adler, Joseph. 2012. <em>R in a <span>Nutshell</span></em>. Sebastopol, CA: <span>O’Reilly</span>.
+</div>
+<div id="ref-KabacoffActionDataAnalysis2011" class="csl-entry">
+Kabacoff, Robert. 2011. <em>R in <span>Action</span>: <span>Data Analysis</span> and <span>Graphics</span> with <span>R</span></em>. Shelter Island, NY; London: <span>Manning ; Pearson Education [distributor]</span>.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="goal-programming.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="introduction-to-math-notation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

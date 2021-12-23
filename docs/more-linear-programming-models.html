@@ -1,0 +1,2322 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 3 More Linear Programming Models | Optimization Modeling Using R</title>
+  <meta name="description" content="This book introduces optimization using R." />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 3 More Linear Programming Models | Optimization Modeling Using R" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This book introduces optimization using R." />
+  <meta name="github-repo" content="prof-anderson/OR_Using_R" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 3 More Linear Programming Models | Optimization Modeling Using R" />
+  
+  <meta name="twitter:description" content="This book introduces optimization using R." />
+  
+
+<meta name="author" content="Timothy R. Anderson" />
+
+
+<meta name="date" content="2021-12-22" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="introduction-to-linear-programming.html"/>
+<link rel="next" href="sensitivity-analysis.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Optimization Modeling Using R</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#intended-audience"><i class="fa fa-check"></i>Intended Audience</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#features-of-this-book"><i class="fa fa-check"></i>Features of this Book</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#instructor-notes"><i class="fa fa-check"></i>Instructor Notes</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#acknowldegements"><i class="fa fa-check"></i>Acknowldegements</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="about-the-author.html"><a href="about-the-author.html"><i class="fa fa-check"></i>About the Author</a></li>
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#what-is-operations-research"><i class="fa fa-check"></i><b>1.1</b> What is Operations Research</a></li>
+<li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#purpose-of-this-book"><i class="fa fa-check"></i><b>1.2</b> Purpose of this Book</a></li>
+<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#range-of-operations-research-techniques"><i class="fa fa-check"></i><b>1.3</b> Range of Operations Research Techniques</a></li>
+<li class="chapter" data-level="1.4" data-path="introduction.html"><a href="introduction.html#relationship-between-operations-research-and-analytics"><i class="fa fa-check"></i><b>1.4</b> Relationship between Operations Research and Analytics</a></li>
+<li class="chapter" data-level="1.5" data-path="introduction.html"><a href="introduction.html#importance-of-optimization"><i class="fa fa-check"></i><b>1.5</b> Importance of Optimization</a></li>
+<li class="chapter" data-level="1.6" data-path="introduction.html"><a href="introduction.html#why-r"><i class="fa fa-check"></i><b>1.6</b> Why R?</a></li>
+<li class="chapter" data-level="1.7" data-path="introduction.html"><a href="introduction.html#conventions-used-in-this-book"><i class="fa fa-check"></i><b>1.7</b> Conventions Used in this Book</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html"><i class="fa fa-check"></i><b>2</b> Introduction to Linear Programming</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#what-is-linear-programming"><i class="fa fa-check"></i><b>2.1</b> What is Linear Programming</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#two-variable-base-case"><i class="fa fa-check"></i><b>2.2</b> Two Variable Base Case</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#graphically-solving-a-linear-program"><i class="fa fa-check"></i><b>2.3</b> Graphically Solving a Linear Program</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#implementing-and-solving-with-ompr"><i class="fa fa-check"></i><b>2.4</b> Implementing and Solving with <code>ompr</code></a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#preparing-to-implement-the-linear-program"><i class="fa fa-check"></i><b>2.4.1</b> Preparing to Implement the Linear Program</a></li>
+<li class="chapter" data-level="2.4.2" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#implementing-the-base-case-with-piping"><i class="fa fa-check"></i><b>2.4.2</b> Implementing the Base Case with Piping</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#adding-a-third-product-variable"><i class="fa fa-check"></i><b>2.5</b> Adding a Third Product (Variable)</a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#three-variable-base-case-formulation"><i class="fa fa-check"></i><b>2.5.1</b> Three Variable Base Case Formulation</a></li>
+<li class="chapter" data-level="2.5.2" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#three-variable-base-case-implementation"><i class="fa fa-check"></i><b>2.5.2</b> Three Variable Base Case Implementation</a></li>
+<li class="chapter" data-level="2.5.3" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#three-variable-case-results-and-interpretation"><i class="fa fa-check"></i><b>2.5.3</b> Three Variable Case Results and Interpretation</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#linear-programming-special-cases"><i class="fa fa-check"></i><b>2.6</b> Linear Programming Special Cases</a>
+<ul>
+<li class="chapter" data-level="2.6.1" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#case-1-no-feasible-solution"><i class="fa fa-check"></i><b>2.6.1</b> Case 1: No Feasible Solution</a></li>
+<li class="chapter" data-level="2.6.2" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#case-2-multiple-optima"><i class="fa fa-check"></i><b>2.6.2</b> Case 2: Multiple Optima</a></li>
+<li class="chapter" data-level="2.6.3" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#case-3-redundant-constraint"><i class="fa fa-check"></i><b>2.6.3</b> Case 3: Redundant Constraint</a></li>
+<li class="chapter" data-level="2.6.4" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#case-4-unbounded-solution"><i class="fa fa-check"></i><b>2.6.4</b> Case 4: Unbounded Solution</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#abstracting-the-production-planning-model"><i class="fa fa-check"></i><b>2.7</b> Abstracting the Production Planning Model</a></li>
+<li class="chapter" data-level="2.8" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#methods-of-solving-linear-programs"><i class="fa fa-check"></i><b>2.8</b> Methods of Solving Linear Programs</a></li>
+<li class="chapter" data-level="2.9" data-path="introduction-to-linear-programming.html"><a href="introduction-to-linear-programming.html#exercises"><i class="fa fa-check"></i><b>2.9</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html"><i class="fa fa-check"></i><b>3</b> More Linear Programming Models</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#types-of-lp-models"><i class="fa fa-check"></i><b>3.1</b> Types of LP Models</a></li>
+<li class="chapter" data-level="3.2" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#the-algebraic-model"><i class="fa fa-check"></i><b>3.2</b> The Algebraic Model</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#tips-and-conventions-for-algebraic-models"><i class="fa fa-check"></i><b>3.2.1</b> Tips and Conventions for Algebraic Models</a></li>
+<li class="chapter" data-level="3.2.2" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#building-the-generalized-model-in-r"><i class="fa fa-check"></i><b>3.2.2</b> Building the Generalized Model in R</a></li>
+<li class="chapter" data-level="3.2.3" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#examining-the-results"><i class="fa fa-check"></i><b>3.2.3</b> Examining the Results</a></li>
+<li class="chapter" data-level="3.2.4" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#changing-the-model"><i class="fa fa-check"></i><b>3.2.4</b> Changing the Model</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#common-linear-programming-applications"><i class="fa fa-check"></i><b>3.3</b> Common Linear Programming Applications</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#blending-problems"><i class="fa fa-check"></i><b>3.3.1</b> Blending Problems</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#allocation-models"><i class="fa fa-check"></i><b>3.4</b> Allocation Models</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#covering-models"><i class="fa fa-check"></i><b>3.4.1</b> Covering Models</a></li>
+<li class="chapter" data-level="3.4.2" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#transportation-models"><i class="fa fa-check"></i><b>3.4.2</b> Transportation Models</a></li>
+<li class="chapter" data-level="3.4.3" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#transshipment-models"><i class="fa fa-check"></i><b>3.4.3</b> Transshipment Models</a></li>
+<li class="chapter" data-level="3.4.4" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#production-and-inventory-planning"><i class="fa fa-check"></i><b>3.4.4</b> Production and Inventory Planning</a></li>
+<li class="chapter" data-level="3.4.5" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#standard-form"><i class="fa fa-check"></i><b>3.4.5</b> Standard Form</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#vector-and-matrix-forms-of-lps"><i class="fa fa-check"></i><b>3.5</b> Vector and Matrix Forms of LPs</a></li>
+<li class="chapter" data-level="3.6" data-path="more-linear-programming-models.html"><a href="more-linear-programming-models.html#exercises-1"><i class="fa fa-check"></i><b>3.6</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html"><i class="fa fa-check"></i><b>4</b> Sensitivity Analysis</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#base-case"><i class="fa fa-check"></i><b>4.1</b> Base Case</a></li>
+<li class="chapter" data-level="4.2" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#shadow-prices"><i class="fa fa-check"></i><b>4.2</b> Shadow Prices</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#extraction-and-interpretation"><i class="fa fa-check"></i><b>4.2.1</b> Extraction and Interpretation</a></li>
+<li class="chapter" data-level="4.2.2" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#example-of-adding-an-hour-to-assembly"><i class="fa fa-check"></i><b>4.2.2</b> Example of Adding an Hour to Assembly</a></li>
+<li class="chapter" data-level="4.2.3" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#shadow-prices-of-underutilized-resources"><i class="fa fa-check"></i><b>4.2.3</b> Shadow Prices of Underutilized Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#reduced-costs-of-variables"><i class="fa fa-check"></i><b>4.3</b> Reduced Costs of Variables</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#reduced-cost-of-ants"><i class="fa fa-check"></i><b>4.3.1</b> Reduced Cost of Ants</a></li>
+<li class="chapter" data-level="4.3.2" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#reduced-price-of-bats"><i class="fa fa-check"></i><b>4.3.2</b> Reduced Price of Bats</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#using-sensitivity-analysis-to-evaluate-a-new-product"><i class="fa fa-check"></i><b>4.4</b> Using Sensitivity Analysis to Evaluate a New Product</a></li>
+<li class="chapter" data-level="4.5" data-path="sensitivity-analysis.html"><a href="sensitivity-analysis.html#exercises-2"><i class="fa fa-check"></i><b>4.5</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html"><i class="fa fa-check"></i><b>5</b> Data Envelopment Analysis</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#introduction-1"><i class="fa fa-check"></i><b>5.1</b> Introduction</a></li>
+<li class="chapter" data-level="5.2" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#creating-the-data"><i class="fa fa-check"></i><b>5.2</b> Creating the Data</a></li>
+<li class="chapter" data-level="5.3" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#graphical-analysis"><i class="fa fa-check"></i><b>5.3</b> Graphical Analysis</a></li>
+<li class="chapter" data-level="5.4" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#the-linear-programs-for-dea"><i class="fa fa-check"></i><b>5.4</b> The Linear Programs for DEA</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#an-explicit-linear-program-for-dea"><i class="fa fa-check"></i><b>5.4.1</b> An Explicit Linear Program for DEA</a></li>
+<li class="chapter" data-level="5.4.2" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#a-generalized-linear-program-for-dea"><i class="fa fa-check"></i><b>5.4.2</b> A Generalized Linear Program for DEA</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#creating-the-lp---the-algebraic-approach"><i class="fa fa-check"></i><b>5.5</b> Creating the LP - The Algebraic Approach</a></li>
+<li class="chapter" data-level="5.6" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#returns-to-scale"><i class="fa fa-check"></i><b>5.6</b> Returns to Scale</a></li>
+<li class="chapter" data-level="5.7" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#multiple-inputs-and-multiple-outputs"><i class="fa fa-check"></i><b>5.7</b> Multiple Inputs and Multiple Outputs</a></li>
+<li class="chapter" data-level="5.8" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#extracting-multiplier-weights-from-sensitivity-analysis"><i class="fa fa-check"></i><b>5.8</b> Extracting Multiplier Weights from Sensitivity Analysis</a></li>
+<li class="chapter" data-level="5.9" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#slack-maximization"><i class="fa fa-check"></i><b>5.9</b> Slack Maximization</a></li>
+<li class="chapter" data-level="5.10" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#dea-packages"><i class="fa fa-check"></i><b>5.10</b> DEA Packages</a></li>
+<li class="chapter" data-level="5.11" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#dea-model-building"><i class="fa fa-check"></i><b>5.11</b> DEA Model Building</a>
+<ul>
+<li class="chapter" data-level="5.11.1" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#selection-of-inputs-and-outputs"><i class="fa fa-check"></i><b>5.11.1</b> Selection of Inputs and Outputs</a></li>
+<li class="chapter" data-level="5.11.2" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#model-choices"><i class="fa fa-check"></i><b>5.11.2</b> Model Choices</a></li>
+<li class="chapter" data-level="5.11.3" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#application-area-expertise"><i class="fa fa-check"></i><b>5.11.3</b> Application Area Expertise</a></li>
+</ul></li>
+<li class="chapter" data-level="5.12" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#further-reading"><i class="fa fa-check"></i><b>5.12</b> Further Reading</a></li>
+<li class="chapter" data-level="5.13" data-path="data-envelopment-analysis.html"><a href="data-envelopment-analysis.html#exercises-3"><i class="fa fa-check"></i><b>5.13</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html"><i class="fa fa-check"></i><b>6</b> Mixed Integer Optimization</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#example-of-minor-integrality-impact"><i class="fa fa-check"></i><b>6.1</b> Example of Minor Integrality Impact</a></li>
+<li class="chapter" data-level="6.2" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#example-of-major-integality-impact"><i class="fa fa-check"></i><b>6.2</b> Example of Major Integality Impact</a></li>
+<li class="chapter" data-level="6.3" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#the-branch-and-bound-algorithm"><i class="fa fa-check"></i><b>6.3</b> The Branch and Bound Algorithm</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#the-lp-relaxation"><i class="fa fa-check"></i><b>6.3.1</b> The LP Relaxation</a></li>
+<li class="chapter" data-level="6.3.2" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-i"><i class="fa fa-check"></i><b>6.3.2</b> Subproblem I</a></li>
+<li class="chapter" data-level="6.3.3" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-iii"><i class="fa fa-check"></i><b>6.3.3</b> Subproblem III</a></li>
+<li class="chapter" data-level="6.3.4" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-iv"><i class="fa fa-check"></i><b>6.3.4</b> Subproblem IV</a></li>
+<li class="chapter" data-level="6.3.5" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-v"><i class="fa fa-check"></i><b>6.3.5</b> Subproblem V</a></li>
+<li class="chapter" data-level="6.3.6" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-vi"><i class="fa fa-check"></i><b>6.3.6</b> Subproblem VI</a></li>
+<li class="chapter" data-level="6.3.7" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-vii"><i class="fa fa-check"></i><b>6.3.7</b> Subproblem VII</a></li>
+<li class="chapter" data-level="6.3.8" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-viii"><i class="fa fa-check"></i><b>6.3.8</b> Subproblem VIII</a></li>
+<li class="chapter" data-level="6.3.9" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#subproblem-ii"><i class="fa fa-check"></i><b>6.3.9</b> Subproblem II</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#computational-complexity"><i class="fa fa-check"></i><b>6.4</b> Computational Complexity</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#full-enumeration"><i class="fa fa-check"></i><b>6.4.1</b> Full Enumeration</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#binary-variables-and-logical-relations"><i class="fa fa-check"></i><b>6.5</b> Binary Variables and Logical Relations</a></li>
+<li class="chapter" data-level="6.6" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#fixed-charge-models"><i class="fa fa-check"></i><b>6.6</b> Fixed Charge Models</a>
+<ul>
+<li class="chapter" data-level="6.6.1" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#fixed-charge-example-introduction"><i class="fa fa-check"></i><b>6.6.1</b> Fixed Charge Example-Introduction</a></li>
+<li class="chapter" data-level="6.6.2" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#linking-constraints-with-big-m"><i class="fa fa-check"></i><b>6.6.2</b> Linking Constraints with “Big M”</a></li>
+<li class="chapter" data-level="6.6.3" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#fixed-charge-implementation"><i class="fa fa-check"></i><b>6.6.3</b> Fixed Charge Implementation</a></li>
+</ul></li>
+<li class="chapter" data-level="6.7" data-path="mixed-integer-optimization.html"><a href="mixed-integer-optimization.html#model-results-and-interpretation"><i class="fa fa-check"></i><b>6.7</b> Model Results and Interpretation</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html"><i class="fa fa-check"></i><b>7</b> More Integer Programming Models</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#overview"><i class="fa fa-check"></i><b>7.1</b> Overview</a></li>
+<li class="chapter" data-level="7.2" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#revisiting-the-warehouse-location-problem"><i class="fa fa-check"></i><b>7.2</b> Revisiting the Warehouse Location Problem</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#implementing-the-warehouse-model"><i class="fa fa-check"></i><b>7.2.1</b> Implementing the Warehouse Model</a></li>
+<li class="chapter" data-level="7.2.2" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#solving-the-warehouse-location-problem"><i class="fa fa-check"></i><b>7.2.2</b> Solving the Warehouse Location Problem</a></li>
+<li class="chapter" data-level="7.2.3" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#warehouse-discussion"><i class="fa fa-check"></i><b>7.2.3</b> Warehouse Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#solving-mips-with-different-solvers"><i class="fa fa-check"></i><b>7.3</b> Solving MIPs with Different Solvers</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#performance-of-glpk"><i class="fa fa-check"></i><b>7.3.1</b> Performance of <code>glpk</code></a></li>
+<li class="chapter" data-level="7.3.2" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#performance-of-symphony"><i class="fa fa-check"></i><b>7.3.2</b> Performance of <code>symphony</code></a></li>
+<li class="chapter" data-level="7.3.3" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#performance-of-lpsolve"><i class="fa fa-check"></i><b>7.3.3</b> Performance of <code>lpsolve</code></a></li>
+<li class="chapter" data-level="7.3.4" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#performance-of-gurobi"><i class="fa fa-check"></i><b>7.3.4</b> Performance of <code>gurobi</code></a></li>
+<li class="chapter" data-level="7.3.5" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#comparing-results-across-solvers"><i class="fa fa-check"></i><b>7.3.5</b> Comparing Results across Solvers</a></li>
+<li class="chapter" data-level="7.3.6" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#popularity-of-lp-solvers"><i class="fa fa-check"></i><b>7.3.6</b> Popularity of LP Solvers</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#solving-sudoku-puzzles-using-optimization"><i class="fa fa-check"></i><b>7.4</b> Solving Sudoku Puzzles using Optimization</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#introduction-to-sudoku-and-optimization"><i class="fa fa-check"></i><b>7.4.1</b> Introduction to Sudoku and Optimization</a></li>
+<li class="chapter" data-level="7.4.2" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#formulating-the-sudoku-problem"><i class="fa fa-check"></i><b>7.4.2</b> Formulating the Sudoku Problem</a></li>
+<li class="chapter" data-level="7.4.3" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#implementing-sudoku-in-ompr"><i class="fa fa-check"></i><b>7.4.3</b> Implementing Sudoku in ompr</a></li>
+<li class="chapter" data-level="7.4.4" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#sudoku-discussion"><i class="fa fa-check"></i><b>7.4.4</b> Sudoku Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#exercises-4"><i class="fa fa-check"></i><b>7.5</b> Exercises</a></li>
+<li class="chapter" data-level="7.6" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#production-planning-over-time"><i class="fa fa-check"></i><b>7.6</b> Production Planning over Time</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#implementing-the-model-1"><i class="fa fa-check"></i><b>7.6.1</b> Implementing the Model</a></li>
+</ul></li>
+<li class="chapter" data-level="7.7" data-path="more-integer-programming-models.html"><a href="more-integer-programming-models.html#additional-exercises"><i class="fa fa-check"></i><b>7.7</b> Additional Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="goal-programming.html"><a href="goal-programming.html"><i class="fa fa-check"></i><b>8</b> Goal Programming</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="goal-programming.html"><a href="goal-programming.html#introduction-2"><i class="fa fa-check"></i><b>8.1</b> Introduction</a></li>
+<li class="chapter" data-level="8.2" data-path="goal-programming.html"><a href="goal-programming.html#preemptive-goal-programming"><i class="fa fa-check"></i><b>8.2</b> Preemptive Goal Programming</a></li>
+<li class="chapter" data-level="8.3" data-path="goal-programming.html"><a href="goal-programming.html#policies-for-houselessness"><i class="fa fa-check"></i><b>8.3</b> Policies for Houselessness</a></li>
+<li class="chapter" data-level="8.4" data-path="goal-programming.html"><a href="goal-programming.html#mass-mailings"><i class="fa fa-check"></i><b>8.4</b> Mass Mailings</a>
+<ul>
+<li class="chapter" data-level="8.4.1" data-path="goal-programming.html"><a href="goal-programming.html#formulating-the-state-mailing-model"><i class="fa fa-check"></i><b>8.4.1</b> Formulating the State Mailing Model</a></li>
+<li class="chapter" data-level="8.4.2" data-path="goal-programming.html"><a href="goal-programming.html#implementing-the-state-mailing-model"><i class="fa fa-check"></i><b>8.4.2</b> Implementing the State Mailing Model</a></li>
+<li class="chapter" data-level="8.4.3" data-path="goal-programming.html"><a href="goal-programming.html#frontloading-the-work"><i class="fa fa-check"></i><b>8.4.3</b> Frontloading the Work</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="goal-programming.html"><a href="goal-programming.html#exercises-5"><i class="fa fa-check"></i><b>8.5</b> Exercises</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="a-very-brief-introduction-to-r.html"><a href="a-very-brief-introduction-to-r.html"><i class="fa fa-check"></i><b>A</b> A Very Brief Introduction to R</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="a-very-brief-introduction-to-r.html"><a href="a-very-brief-introduction-to-r.html#purpose"><i class="fa fa-check"></i><b>A.1</b> Purpose</a></li>
+<li class="chapter" data-level="A.2" data-path="a-very-brief-introduction-to-r.html"><a href="a-very-brief-introduction-to-r.html#getting-started-with-r"><i class="fa fa-check"></i><b>A.2</b> Getting Started with R</a></li>
+<li class="chapter" data-level="A.3" data-path="a-very-brief-introduction-to-r.html"><a href="a-very-brief-introduction-to-r.html#exercises-6"><i class="fa fa-check"></i><b>A.3</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html"><i class="fa fa-check"></i><b>B</b> Introduction to Math Notation</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#purpose-1"><i class="fa fa-check"></i><b>B.1</b> Purpose</a></li>
+<li class="chapter" data-level="B.2" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#basic-summation-notation"><i class="fa fa-check"></i><b>B.2</b> Basic Summation Notation</a></li>
+<li class="chapter" data-level="B.3" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#using-latex-in-rmarkdown"><i class="fa fa-check"></i><b>B.3</b> Using LaTeX in RMarkdown</a></li>
+<li class="chapter" data-level="B.4" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#inline-notation"><i class="fa fa-check"></i><b>B.4</b> Inline Notation</a></li>
+<li class="chapter" data-level="B.5" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#sums"><i class="fa fa-check"></i><b>B.5</b> Sums</a></li>
+<li class="chapter" data-level="B.6" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#delimiters"><i class="fa fa-check"></i><b>B.6</b> Delimiters</a></li>
+<li class="chapter" data-level="B.7" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#summary-of-mathematical-notations"><i class="fa fa-check"></i><b>B.7</b> Summary of Mathematical Notations</a></li>
+<li class="chapter" data-level="B.8" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#sequences-and-summation-notation"><i class="fa fa-check"></i><b>B.8</b> Sequences and Summation Notation</a></li>
+<li class="chapter" data-level="B.9" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#applications-of-summation"><i class="fa fa-check"></i><b>B.9</b> Applications of Summation</a></li>
+<li class="chapter" data-level="B.10" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#double-summation"><i class="fa fa-check"></i><b>B.10</b> Double Summation</a></li>
+<li class="chapter" data-level="B.11" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#applications-of-double-summation"><i class="fa fa-check"></i><b>B.11</b> Applications of Double Summation</a></li>
+<li class="chapter" data-level="B.12" data-path="introduction-to-math-notation.html"><a href="introduction-to-math-notation.html#exercises-7"><i class="fa fa-check"></i><b>B.12</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="troubleshooting.html"><a href="troubleshooting.html"><i class="fa fa-check"></i><b>C</b> Troubleshooting</a>
+<ul>
+<li class="chapter" data-level="C.1" data-path="troubleshooting.html"><a href="troubleshooting.html#overview-1"><i class="fa fa-check"></i><b>C.1</b> Overview</a></li>
+<li class="chapter" data-level="C.2" data-path="troubleshooting.html"><a href="troubleshooting.html#model-building"><i class="fa fa-check"></i><b>C.2</b> Model Building</a>
+<ul>
+<li class="chapter" data-level="C.2.1" data-path="troubleshooting.html"><a href="troubleshooting.html#define-and-formulate-before-implementing"><i class="fa fa-check"></i><b>C.2.1</b> Define and Formulate before Implementing</a></li>
+<li class="chapter" data-level="C.2.2" data-path="troubleshooting.html"><a href="troubleshooting.html#failing-to-look-for-past-optimization-models"><i class="fa fa-check"></i><b>C.2.2</b> Failing to Look for Past Optimization Models</a></li>
+<li class="chapter" data-level="C.2.3" data-path="troubleshooting.html"><a href="troubleshooting.html#misrendering-of-pdf"><i class="fa fa-check"></i><b>C.2.3</b> Misrendering of PDF</a></li>
+<li class="chapter" data-level="C.2.4" data-path="troubleshooting.html"><a href="troubleshooting.html#blank-lines-in-latex"><i class="fa fa-check"></i><b>C.2.4</b> Blank Lines in LaTeX</a></li>
+<li class="chapter" data-level="C.2.5" data-path="troubleshooting.html"><a href="troubleshooting.html#problems-with-pdf-creation"><i class="fa fa-check"></i><b>C.2.5</b> Problems with PDF Creation</a></li>
+</ul></li>
+<li class="chapter" data-level="C.3" data-path="troubleshooting.html"><a href="troubleshooting.html#implementation-troubleshooting"><i class="fa fa-check"></i><b>C.3</b> Implementation Troubleshooting</a>
+<ul>
+<li class="chapter" data-level="C.3.1" data-path="troubleshooting.html"><a href="troubleshooting.html#errors-in-a-piped-model"><i class="fa fa-check"></i><b>C.3.1</b> Errors in a Piped Model</a></li>
+<li class="chapter" data-level="C.3.2" data-path="troubleshooting.html"><a href="troubleshooting.html#undefined-object-in-ompr"><i class="fa fa-check"></i><b>C.3.2</b> Undefined Object in <code>ompr</code></a></li>
+<li class="chapter" data-level="C.3.3" data-path="troubleshooting.html"><a href="troubleshooting.html#unexpected-symbol-in-ompr"><i class="fa fa-check"></i><b>C.3.3</b> Unexpected Symbol in <code>ompr</code></a></li>
+<li class="chapter" data-level="C.3.4" data-path="troubleshooting.html"><a href="troubleshooting.html#name-conflicts-between-r-and-ompr"><i class="fa fa-check"></i><b>C.3.4</b> Name Conflicts between R and <code>ompr</code></a></li>
+<li class="chapter" data-level="C.3.5" data-path="troubleshooting.html"><a href="troubleshooting.html#blindly-reusing-code"><i class="fa fa-check"></i><b>C.3.5</b> Blindly Reusing Code</a></li>
+</ul></li>
+<li class="chapter" data-level="C.4" data-path="troubleshooting.html"><a href="troubleshooting.html#general-debugging-tips"><i class="fa fa-check"></i><b>C.4</b> General Debugging Tips</a></li>
+<li class="chapter" data-level="C.5" data-path="troubleshooting.html"><a href="troubleshooting.html#getting-help"><i class="fa fa-check"></i><b>C.5</b> Getting Help</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="making-good-tables.html"><a href="making-good-tables.html"><i class="fa fa-check"></i><b>D</b> Making Good Tables</a>
+<ul>
+<li class="chapter" data-level="D.1" data-path="making-good-tables.html"><a href="making-good-tables.html#importance-of-tables-in-modeling"><i class="fa fa-check"></i><b>D.1</b> Importance of Tables in Modeling</a></li>
+<li class="chapter" data-level="D.2" data-path="making-good-tables.html"><a href="making-good-tables.html#kable-vs.-kbl"><i class="fa fa-check"></i><b>D.2</b> Kable vs. Kbl</a></li>
+<li class="chapter" data-level="D.3" data-path="making-good-tables.html"><a href="making-good-tables.html#table-footnotes-with-kable"><i class="fa fa-check"></i><b>D.3</b> Table Footnotes with Kable</a></li>
+<li class="chapter" data-level="D.4" data-path="making-good-tables.html"><a href="making-good-tables.html#setting-row-and-column-names-in-kable"><i class="fa fa-check"></i><b>D.4</b> Setting Row and Column Names in Kable</a></li>
+<li class="chapter" data-level="D.5" data-path="making-good-tables.html"><a href="making-good-tables.html#booktabs-vs.-default"><i class="fa fa-check"></i><b>D.5</b> Booktabs vs. Default</a></li>
+<li class="chapter" data-level="D.6" data-path="making-good-tables.html"><a href="making-good-tables.html#using-latex-in-kable-column-names"><i class="fa fa-check"></i><b>D.6</b> Using LaTeX in Kable Column Names</a></li>
+<li class="chapter" data-level="D.7" data-path="making-good-tables.html"><a href="making-good-tables.html#fitting-tables-to-page-width"><i class="fa fa-check"></i><b>D.7</b> Fitting Tables to Page Width</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Optimization Modeling Using R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="more-linear-programming-models" class="section level1" number="3">
+<h1><span class="header-section-number">Chapter 3</span> More Linear Programming Models</h1>
+<div id="types-of-lp-models" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Types of LP Models</h2>
+<p>In this chapter, we will examine a range of classic applications of linear programs.
+These applications will give ideas for how to model a variety of situations.
+In each case, try to follow along with the application.</p>
+</div>
+<div id="the-algebraic-model" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> The Algebraic Model</h2>
+<p>In the previous chapter, we examined situations with only a few products and constraints.
+In general, most companies have many more products and we won’t be wanting to name each variable explicitly and uniquely. We refer to this type of model as an <em>explicit linear program.</em> Instead, we use sets of products and resources. </p>
+<p>We could also reframe the model more algebraically. Let’s use subscripts to differentiate between products and resources. We can define to <em>i=1</em> to represent Ants, <em>i=2</em> to represent Bats, and <em>i=3</em> to represent Cats. Similarly, <em>j=1</em> represents machining, <em>j=2</em>, represents assembly, etc. </p>
+<p>Now, let’s move on to defining the data.
+Let’s define the amount to produce of each product, <em>i</em>, as <span class="math inline">\(x_i\)</span> and resource <em>j</em> consumed by product <em>i</em> as <span class="math inline">\(R_{i,j}\)</span>.
+The available resource <em>j</em> is then <span class="math inline">\(A_j\)</span>.
+The profit per product <em>i</em> is then <span class="math inline">\(P_i\)</span>.
+The LP can now be rewritten as shown below with the three products and four constraints.</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{Max   }   &amp;  \sum_{i=1}^3 P_i x_i \\
+    \text{s.t.: } &amp; \sum_{i=1}^3 R_{i,j}x_i \leq A_j, \; j=1, 2, 3, 4\\
+                       &amp; x_1, \; x_2, \;x_3 \geq 0 
+  \end{aligned}
+  \end{split}
+\]</span></p>
+<p>We could further generalize this by eliminating the hard coding of the number of products and resource constraints. Instead we define the number of products and resources as <em>NProd</em> and <em>NResources</em> respectively.</p>
+<p>Let’s introduce a very convenient shorthand symbol, <span class="math inline">\(\forall\)</span>, is read as “for all.” It can be interpreted to mean “repeat by substituting <strong>for all</strong> possible values of this subscript.” In the constraint, it means to repeat the constraint line with <span class="math inline">\(j=1\)</span>, again with <span class="math inline">\(j=2\)</span>, and so on for as many values of <em>j</em> as make sense in the model.</p>
+<p>We also will use it in the non-negativity constraint to avoid having to list out every variable, <em>x_1</em>, <em>x_2</em>, etc. In other words, given that <em>i</em> is used consistently for the three products, then <span class="math inline">\(x_i \geq 0 \; \forall \; i\)</span> is equivalent to <span class="math inline">\(x_i \geq 0 \;,i=1,2,3\)</span> or even <span class="math inline">\(x_1 \geq 0, \; x_2 \geq 0, \; x_3 \geq 0\)</span>.</p>
+<p>The payoff is modest when there are 3 products and 4 constraints but when there are hundreds of products and thousands of constraint, the benefit is tremendous. Furthermore, the generalized, algebraic model doesn’t change when a new product is added or one is discontinued, it is only a change of data that is fed into the model. The result is that the <span class="math inline">\(\forall\)</span> symbol can simplify the description of complex models when index ranges are clear.  </p>
+<p>We can then rewrite the previous formulation as the following, more general formulation.</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{Max:}  &amp;  \sum_{i=1}^{NProd} P_i x_i \\
+    \text{subject to } &amp; \sum_{i=1}^{NProd} R_{i,j}x_i \leq A_j \; \forall \; j\\
+                       &amp; x_i \geq 0  \; \forall \; i
+  \end{aligned}
+  \end{split}
+\]</span></p>
+<p>It is even more important to clearly and precisely define the meanings of variable and data element in an algebraic model than in an explicit model.</p>
+<div id="tips-and-conventions-for-algebraic-models" class="section level3" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> Tips and Conventions for Algebraic Models</h3>
+<p>Learning how to read and write mathematical models is an important skill.
+In this section we will provide a quick overview.
+More information is provided in <em>Appendix B</em>.</p>
+<p>Another good practice is to use a mnemonic to help suggest the meaning of data.
+That is why I chose “R” for Resource, “P” for Profit, and “A” for Available resources.</p>
+<p>A helpful convention is to use capital letters for data and lower case letters for variables. Some people will swap this around and use capital letters for variables and lower case letters for data - it doesn’t matter as long as a model is consistent. It gives a quick visual cue for the reader as to whether each item is a variable or constraint.</p>
+<p>More complex models often run out of letters that make sense.
+A common approach in these models is to use a superscript.<br />
+For example, perhaps labor cost for each worker, <em>w</em>, could have different values for both normal and overtime rates.
+Rather than separate data terms for such closely related concepts, we might denote regular hourly labor cost for worker <em>w</em> as <span class="math inline">\(C^R_w\)</span> and for overtime as <span class="math inline">\(C^O_w\)</span>. Another option is to use a Greek letter such as <span class="math inline">\(\theta\)</span>. We’ll see a few Greek letters used in chapter 5.</p>
+<p>Again, this highlights why it is very important to clearly define all the data and variables used in the model. Think of it as building a language for describing the particular model. It is frequently an iterative process that it is updated as the model is refined and developed. Frequently a definitions section will warrant its own section or subsection and should precede the formulation.</p>
+</div>
+<div id="building-the-generalized-model-in-r" class="section level3" number="3.2.2">
+<h3><span class="header-section-number">3.2.2</span> Building the Generalized Model in R</h3>
+<div id="preparing-the-data" class="section level4" number="3.2.2.1">
+<h4><span class="header-section-number">3.2.2.1</span> Preparing the Data</h4>
+<p>The concise, algebraic representation can be easily scaled to any number of products and resources. I’ll expand the names of data slightly for making the R code more readable but this is meant to be consistent with the above formulation.</p>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-6">TABLE 3.1: </span>Profit per product
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Prod1
+</th>
+<th style="text-align:right;">
+Prod2
+</th>
+<th style="text-align:right;">
+Prod3
+</th>
+<th style="text-align:right;">
+Prod4
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Profit
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+24
+</td>
+</tr>
+</tbody>
+</table>
+<p>Let’s implement a four product model requiring varying levels of five limited resources. We will start our implementation by creating the appropriate data structures in <code>R</code>.</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="more-linear-programming-models.html#cb64-1" aria-hidden="true" tabindex="-1"></a>NProd <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb64-2"><a href="more-linear-programming-models.html#cb64-2" aria-hidden="true" tabindex="-1"></a>NResources <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb64-3"><a href="more-linear-programming-models.html#cb64-3" aria-hidden="true" tabindex="-1"></a>ProdNames <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">list</span>(<span class="fu">rep</span>(<span class="st">&quot;Prod&quot;</span>,NProd)),paste0,<span class="dv">1</span><span class="sc">:</span>NProd) </span>
+<span id="cb64-4"><a href="more-linear-programming-models.html#cb64-4" aria-hidden="true" tabindex="-1"></a>                 <span class="co"># Product names: Prod1, Prod2, ... </span></span>
+<span id="cb64-5"><a href="more-linear-programming-models.html#cb64-5" aria-hidden="true" tabindex="-1"></a>Profit <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">14</span>, <span class="dv">3</span>, <span class="dv">16</span>), </span>
+<span id="cb64-6"><a href="more-linear-programming-models.html#cb64-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">ncol=</span>NProd,<span class="at">dimnames=</span><span class="fu">c</span>(<span class="st">&quot;Profit&quot;</span>,ProdNames))</span>
+<span id="cb64-7"><a href="more-linear-programming-models.html#cb64-7" aria-hidden="true" tabindex="-1"></a>ResNames<span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">list</span>(<span class="fu">rep</span>(<span class="st">&quot;Res&quot;</span>,NResources)),</span>
+<span id="cb64-8"><a href="more-linear-programming-models.html#cb64-8" aria-hidden="true" tabindex="-1"></a>                  paste0,<span class="dv">1</span><span class="sc">:</span>NResources) </span>
+<span id="cb64-9"><a href="more-linear-programming-models.html#cb64-9" aria-hidden="true" tabindex="-1"></a>                 <span class="co"># Resource names: Res1, Res2, ... </span></span>
+<span id="cb64-10"><a href="more-linear-programming-models.html#cb64-10" aria-hidden="true" tabindex="-1"></a>Resources <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>( <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">7</span>, </span>
+<span id="cb64-11"><a href="more-linear-programming-models.html#cb64-11" aria-hidden="true" tabindex="-1"></a>                       <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">6</span>), </span>
+<span id="cb64-12"><a href="more-linear-programming-models.html#cb64-12" aria-hidden="true" tabindex="-1"></a>              <span class="at">ncol=</span>NProd, </span>
+<span id="cb64-13"><a href="more-linear-programming-models.html#cb64-13" aria-hidden="true" tabindex="-1"></a>              <span class="at">dimnames=</span><span class="fu">c</span>(ResNames,ProdNames))</span>
+<span id="cb64-14"><a href="more-linear-programming-models.html#cb64-14" aria-hidden="true" tabindex="-1"></a>Available <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">800</span>, <span class="dv">900</span>, <span class="dv">480</span>, <span class="dv">1200</span>, <span class="dv">500</span>), </span>
+<span id="cb64-15"><a href="more-linear-programming-models.html#cb64-15" aria-hidden="true" tabindex="-1"></a>              <span class="at">ncol=</span><span class="dv">1</span>,<span class="at">dimnames=</span><span class="fu">c</span>(ResNames,<span class="st">&quot;Available&quot;</span>))</span></code></pre></div>
+<p>This should match the data that we hard coded into the R linear programming model in the previous chapter.</p>
+<p>Similarly, we can display the resources used by each product and the amount of each resource available alongside each other.</p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="more-linear-programming-models.html#cb65-1" aria-hidden="true" tabindex="-1"></a>Combined <span class="ot">&lt;-</span> <span class="fu">cbind</span>(Resources, Available) </span>
+<span id="cb65-2"><a href="more-linear-programming-models.html#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(Combined, <span class="at">booktabs=</span>T, </span>
+<span id="cb65-3"><a href="more-linear-programming-models.html#cb65-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption=</span><span class="st">&quot;Resources Used by Each Product and Amount Available&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb65-4"><a href="more-linear-programming-models.html#cb65-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:Display-Resources-Available-Combined">TABLE 3.2: </span>Resources Used by Each Product and Amount Available
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Prod1
+</th>
+<th style="text-align:right;">
+Prod2
+</th>
+<th style="text-align:right;">
+Prod3
+</th>
+<th style="text-align:right;">
+Prod4
+</th>
+<th style="text-align:right;">
+Available
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Res1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+800
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Res2
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+900
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Res3
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+480
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Res4
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+1200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Res5
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+500
+</td>
+</tr>
+</tbody>
+</table>
+<p>We have used the <code>cbind</code> function to do a column binding of the data.
+In this way the representation is more visually intuitive.</p>
+<p>To ensure that we know how to access the data, if we want to see how the amount of the first resource used by the second product, you can enter <code>Resources[1,2]</code> in R Studio’s console which is then evaluated as 3.</p>
+<p>Using inline code is a great feature of RMarkdown. In the text of your RMarkdown, anything enclosed by a pair of single tick marks will be shown as a code chunk. If it starts with the letter <code>r</code>, it will be passed instead to R for evaluation. This allows for discussing results in a reproducible manner.
+For example, rather than discussing a result giving a value of 42.00 in the text and a later rerun of the analysis has an updated table of results showing the result to be 42.42, by using inline code evaluation, it will always show the up to date result.</p>
+<p>Now, let’s begin building our optimization model.</p>
+</div>
+<div id="implementing-the-model" class="section level4" number="3.2.2.2">
+<h4><span class="header-section-number">3.2.2.2</span> Implementing the Model</h4>
+<p>First, we’ll start by loading the packages that we are using. I’ll typically do this as at the beginning of an RMarkdown document but for demonstration purposes, I’ll put it here at the beginning of our model implementation. It is important to note that when knitting an RMarkdown document, it will run as a fresh environment without having items in memory from your environment and packages loaded. When you run all code chunks, it will retain the currently loaded packages.</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="more-linear-programming-models.html#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span> (dplyr, <span class="at">quietly =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb66-2"><a href="more-linear-programming-models.html#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span> (ROI, <span class="at">quietly =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb66-3"><a href="more-linear-programming-models.html#cb66-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span> (ROI.plugin.glpk, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb66-4"><a href="more-linear-programming-models.html#cb66-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span> (ompr, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb66-5"><a href="more-linear-programming-models.html#cb66-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span> (ompr.roi, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>We will continue with the code to build the model in a generic format. Note that in my <code>ompr</code> model, I generally like to give each linear programming variable in <code>ompr</code> a <code>V</code> prefix to differentiate it from a regular <code>R</code> data object that might exist elsewhere in my <code>R</code> environment.   Conflicts between <code>R</code> objects and <code>ompr</code> variables are a common problem for modelers and this helps to avoid the problem, assuming that you don’t have a lot of other <code>R</code> objects that start with <code>V</code>. For more discussion about this issue and other common problems that are particularly common in optimization modeling using R, see Appendix C.<br />
+</p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="more-linear-programming-models.html#cb67-1" aria-hidden="true" tabindex="-1"></a>prodmodel <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>()                          <span class="sc">|&gt;</span></span>
+<span id="cb67-2"><a href="more-linear-programming-models.html#cb67-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span> (Vx[i], <span class="at">i=</span><span class="dv">1</span><span class="sc">:</span>NProd, </span>
+<span id="cb67-3"><a href="more-linear-programming-models.html#cb67-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">type=</span><span class="st">&quot;continuous&quot;</span>, <span class="at">lb=</span><span class="dv">0</span>)         <span class="sc">|&gt;</span></span>
+<span id="cb67-4"><a href="more-linear-programming-models.html#cb67-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_objective</span> (<span class="fu">sum_expr</span>(Profit[i] <span class="sc">*</span> Vx[i], </span>
+<span id="cb67-5"><a href="more-linear-programming-models.html#cb67-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">i=</span><span class="dv">1</span><span class="sc">:</span>NProd ), <span class="st">&quot;max&quot;</span>)    <span class="sc">|&gt;</span></span>
+<span id="cb67-6"><a href="more-linear-programming-models.html#cb67-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span> (<span class="fu">sum_expr</span>(Resources[j,i]<span class="sc">*</span>Vx[i], </span>
+<span id="cb67-7"><a href="more-linear-programming-models.html#cb67-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">i=</span><span class="dv">1</span><span class="sc">:</span>NProd)</span>
+<span id="cb67-8"><a href="more-linear-programming-models.html#cb67-8" aria-hidden="true" tabindex="-1"></a>                  <span class="sc">&lt;=</span> Available[j],</span>
+<span id="cb67-9"><a href="more-linear-programming-models.html#cb67-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">j=</span><span class="dv">1</span><span class="sc">:</span>NResources)                <span class="sc">|&gt;</span> </span>
+<span id="cb67-10"><a href="more-linear-programming-models.html#cb67-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb67-11"><a href="more-linear-programming-models.html#cb67-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">solve_model</span>(<span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
+<span id="cb67-12"><a href="more-linear-programming-models.html#cb67-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb67-13"><a href="more-linear-programming-models.html#cb67-13" aria-hidden="true" tabindex="-1"></a>prodmodel</span></code></pre></div>
+<pre><code>## Status: optimal
+## Objective value: 4800</code></pre>
+</div>
+</div>
+<div id="examining-the-results" class="section level3" number="3.2.3">
+<h3><span class="header-section-number">3.2.3</span> Examining the Results</h3>
+<p>Displaying the object of <code>prodmodel</code> only shows a simple summary of the results of the analysis.
+It indicates whether the model was solved to optimality (and it was!) and the objective function value (profit).<br />
+</p>
+<p>This is useful to know but we are really interested in how to generate this profit.
+To do this, we need to extract the values of the variables.<br />
+</p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="more-linear-programming-models.html#cb69-1" aria-hidden="true" tabindex="-1"></a>results.products <span class="ot">&lt;-</span> <span class="fu">matrix</span> (<span class="fu">rep</span>(<span class="sc">-</span><span class="fl">1.0</span>,NProd), </span>
+<span id="cb69-2"><a href="more-linear-programming-models.html#cb69-2" aria-hidden="true" tabindex="-1"></a>                            <span class="at">nrow =</span> NProd, <span class="at">ncol=</span><span class="dv">1</span>,</span>
+<span id="cb69-3"><a href="more-linear-programming-models.html#cb69-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">dimnames=</span><span class="fu">c</span>(ProdNames,<span class="fu">c</span>(<span class="st">&quot;x&quot;</span>)))</span>
+<span id="cb69-4"><a href="more-linear-programming-models.html#cb69-4" aria-hidden="true" tabindex="-1"></a>temp <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (prodmodel, Vx[i]) </span>
+<span id="cb69-5"><a href="more-linear-programming-models.html#cb69-5" aria-hidden="true" tabindex="-1"></a>   <span class="co"># Extracts optimal values of variables   </span></span>
+<span id="cb69-6"><a href="more-linear-programming-models.html#cb69-6" aria-hidden="true" tabindex="-1"></a>results.products <span class="ot">&lt;-</span> <span class="fu">t</span>(temp [,<span class="dv">3</span>] )      </span>
+<span id="cb69-7"><a href="more-linear-programming-models.html#cb69-7" aria-hidden="true" tabindex="-1"></a>   <span class="co">#Extracts third column</span></span>
+<span id="cb69-8"><a href="more-linear-programming-models.html#cb69-8" aria-hidden="true" tabindex="-1"></a>results.products <span class="ot">&lt;-</span> <span class="fu">matrix</span> (results.products, </span>
+<span id="cb69-9"><a href="more-linear-programming-models.html#cb69-9" aria-hidden="true" tabindex="-1"></a>                            <span class="at">nrow =</span> <span class="dv">1</span>, <span class="at">ncol=</span>NProd,</span>
+<span id="cb69-10"><a href="more-linear-programming-models.html#cb69-10" aria-hidden="true" tabindex="-1"></a>                            <span class="at">dimnames=</span><span class="fu">c</span>(<span class="fu">c</span>(<span class="st">&quot;x&quot;</span>),ProdNames))  </span>
+<span id="cb69-11"><a href="more-linear-programming-models.html#cb69-11" aria-hidden="true" tabindex="-1"></a>                            <span class="co"># Resizes and renames </span></span>
+<span id="cb69-12"><a href="more-linear-programming-models.html#cb69-12" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(<span class="fu">format</span>(<span class="fu">head</span>(results.products),<span class="at">digits=</span><span class="dv">4</span>), <span class="at">booktabs=</span>T,</span>
+<span id="cb69-13"><a href="more-linear-programming-models.html#cb69-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption=</span><span class="st">&quot;Optimal Production Plan&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb69-14"><a href="more-linear-programming-models.html#cb69-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:Display-Results">TABLE 3.3: </span>Optimal Production Plan
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+Prod1
+</th>
+<th style="text-align:left;">
+Prod2
+</th>
+<th style="text-align:left;">
+Prod3
+</th>
+<th style="text-align:left;">
+Prod4
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+x
+</td>
+<td style="text-align:left;">
+240
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+<p>The table displays the optimal production plan.</p>
+<p>Let’s examine how the resources are consumed.
+To do this, we can multiply the amount of each product by the amount of each resource used for that product.
+For the first product, this would be a term by term sum of each product resulting in 240 which is less than 800.
+We can do this manually for each product.
+Another approach is to use the command, <code>Resources[1,]%*%t(results.products)</code>.
+This command will take the first row of the Resources matrix and multiplies it by the vector of results.<br />
+</p>
+<p>Note how we used both an inline r expression and an inline executable r code chunk. Inline code chunks can be inserted into text by using a single tick at the beginning and end of the chunk instead of the triple tick mark for regular code chunks. Also, the inline r code chunk starts with the letter r to indicate that it is an r command to evaluate. A common use for this might be to show the results of an earlier analysis. <br />
+</p>
+<p>One thing to note is that the first row of <code>Resources</code> is by definition a row vector and <code>result.products</code> is also a row vector.
+What we want to do is do a row vector multiplied by a column vector.
+In order to do this, we need to convert the row vector of results into a column vector.
+This is done by doing a <em>transpose</em> which changes the row to a column.
+This is done often enough that the actual function in <code>R</code> is just a single letter, <code>t</code>.<br />
+</p>
+<p>We can go one further step now and multiply the matrix of resources by the column vector of production.</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="more-linear-programming-models.html#cb70-1" aria-hidden="true" tabindex="-1"></a>results.Resources <span class="ot">&lt;-</span> Resources[]<span class="sc">%*%</span><span class="fu">t</span>(results.products)</span>
+<span id="cb70-2"><a href="more-linear-programming-models.html#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Multiply matrix of resources by amount of products produced</span></span>
+<span id="cb70-3"><a href="more-linear-programming-models.html#cb70-3" aria-hidden="true" tabindex="-1"></a>ResourceSlacks <span class="ot">&lt;-</span> <span class="fu">cbind</span> (results.Resources,</span>
+<span id="cb70-4"><a href="more-linear-programming-models.html#cb70-4" aria-hidden="true" tabindex="-1"></a>                         Available,</span>
+<span id="cb70-5"><a href="more-linear-programming-models.html#cb70-5" aria-hidden="true" tabindex="-1"></a>                         Available<span class="sc">-</span>results.Resources)</span>
+<span id="cb70-6"><a href="more-linear-programming-models.html#cb70-6" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(ResourceSlacks)<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&quot;Used&quot;</span>, <span class="st">&quot;Available&quot;</span>, <span class="st">&quot;Slack&quot;</span>)      </span>
+<span id="cb70-7"><a href="more-linear-programming-models.html#cb70-7" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(<span class="fu">format</span>(<span class="fu">head</span>(ResourceSlacks),<span class="at">digits=</span><span class="dv">4</span>), <span class="at">booktabs=</span>T,</span>
+<span id="cb70-8"><a href="more-linear-programming-models.html#cb70-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption=</span><span class="st">&quot;Resources Used in Optimal Solution&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb70-9"><a href="more-linear-programming-models.html#cb70-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:Calculate-Resources-Used">TABLE 3.4: </span>Resources Used in Optimal Solution
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+Used
+</th>
+<th style="text-align:left;">
+Available
+</th>
+<th style="text-align:left;">
+Slack
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Res1
+</td>
+<td style="text-align:left;">
+240
+</td>
+<td style="text-align:left;">
+800
+</td>
+<td style="text-align:left;">
+560
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Res2
+</td>
+<td style="text-align:left;">
+720
+</td>
+<td style="text-align:left;">
+900
+</td>
+<td style="text-align:left;">
+180
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Res3
+</td>
+<td style="text-align:left;">
+480
+</td>
+<td style="text-align:left;">
+480
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Res4
+</td>
+<td style="text-align:left;">
+720
+</td>
+<td style="text-align:left;">
+1200
+</td>
+<td style="text-align:left;">
+480
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Res5
+</td>
+<td style="text-align:left;">
+480
+</td>
+<td style="text-align:left;">
+500
+</td>
+<td style="text-align:left;">
+20
+</td>
+</tr>
+</tbody>
+</table>
+<p>This section covered a lot of concepts including defining the data, setting names, using indices in <code>ompr</code>, building a generalized <code>ompr</code> model, extracting decision variable values, and calculating constraint right hand sides. If you find this a little uncomfortable, try doing some experimenting with the model. It may take some experimenting to get familiar and comfortable with this.</p>
+</div>
+<div id="changing-the-model" class="section level3" number="3.2.4">
+<h3><span class="header-section-number">3.2.4</span> Changing the Model</h3>
+<p>Let’s modify the above model. We can do this by simply changing the data that we pass into the model and rebuilding the model.<br />
+</p>
+<p>Let’s change the number of sensors required for an Ant to 5. Recall that this is the first product and the fourth resource. This is how we can change the value.<br />
+</p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="more-linear-programming-models.html#cb71-1" aria-hidden="true" tabindex="-1"></a>Resources[<span class="dv">4</span>,<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">5</span> </span>
+<span id="cb71-2"><a href="more-linear-programming-models.html#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Set value of the 4th row, 1st column to 5</span></span>
+<span id="cb71-3"><a href="more-linear-programming-models.html#cb71-3" aria-hidden="true" tabindex="-1"></a><span class="co"># In our example, this is the number of sensors needed per Ant</span></span></code></pre></div>
+<p>Now we will rebuild the the optimization model. Note that simply changing the data does not change the model.</p>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="more-linear-programming-models.html#cb72-1" aria-hidden="true" tabindex="-1"></a>prodmodel <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">|&gt;</span></span>
+<span id="cb72-2"><a href="more-linear-programming-models.html#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span> (Vx[i], <span class="at">i=</span><span class="dv">1</span><span class="sc">:</span>NProd, </span>
+<span id="cb72-3"><a href="more-linear-programming-models.html#cb72-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">type=</span><span class="st">&quot;continuous&quot;</span>, <span class="at">lb=</span><span class="dv">0</span>)       <span class="sc">|&gt;</span></span>
+<span id="cb72-4"><a href="more-linear-programming-models.html#cb72-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_objective</span> (<span class="fu">sum_expr</span>(Profit[i] <span class="sc">*</span> Vx[i] , </span>
+<span id="cb72-5"><a href="more-linear-programming-models.html#cb72-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">i=</span><span class="dv">1</span><span class="sc">:</span>NProd ), <span class="st">&quot;max&quot;</span>)  <span class="sc">|&gt;</span></span>
+<span id="cb72-6"><a href="more-linear-programming-models.html#cb72-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span> (<span class="fu">sum_expr</span>(Resources[j,i]<span class="sc">*</span>Vx[i], </span>
+<span id="cb72-7"><a href="more-linear-programming-models.html#cb72-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">i=</span><span class="dv">1</span><span class="sc">:</span>NProd) </span>
+<span id="cb72-8"><a href="more-linear-programming-models.html#cb72-8" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># Left hand side of constraint</span></span>
+<span id="cb72-9"><a href="more-linear-programming-models.html#cb72-9" aria-hidden="true" tabindex="-1"></a>                  <span class="sc">&lt;=</span> Available[j],    </span>
+<span id="cb72-10"><a href="more-linear-programming-models.html#cb72-10" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># Inequality and Right side of constraint</span></span>
+<span id="cb72-11"><a href="more-linear-programming-models.html#cb72-11" aria-hidden="true" tabindex="-1"></a>                  <span class="at">j=</span><span class="dv">1</span><span class="sc">:</span>NResources)              <span class="sc">|&gt;</span> </span>
+<span id="cb72-12"><a href="more-linear-programming-models.html#cb72-12" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># Repeat for each resource, j.  </span></span>
+<span id="cb72-13"><a href="more-linear-programming-models.html#cb72-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">solve_model</span>(<span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
+<span id="cb72-14"><a href="more-linear-programming-models.html#cb72-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb72-15"><a href="more-linear-programming-models.html#cb72-15" aria-hidden="true" tabindex="-1"></a>prodmodel</span></code></pre></div>
+<pre><code>## Status: optimal
+## Objective value: 4800</code></pre>
+<p>We can see that the objective function has changed.</p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="more-linear-programming-models.html#cb74-1" aria-hidden="true" tabindex="-1"></a>results.products <span class="ot">&lt;-</span> <span class="fu">matrix</span> (<span class="fu">rep</span>(<span class="sc">-</span><span class="fl">1.0</span>,NProd), </span>
+<span id="cb74-2"><a href="more-linear-programming-models.html#cb74-2" aria-hidden="true" tabindex="-1"></a>                            <span class="at">nrow =</span> NProd, </span>
+<span id="cb74-3"><a href="more-linear-programming-models.html#cb74-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">ncol=</span><span class="dv">1</span>,</span>
+<span id="cb74-4"><a href="more-linear-programming-models.html#cb74-4" aria-hidden="true" tabindex="-1"></a>                            <span class="at">dimnames=</span><span class="fu">c</span>(ProdNames,<span class="fu">c</span>(<span class="st">&quot;x&quot;</span>)))</span>
+<span id="cb74-5"><a href="more-linear-programming-models.html#cb74-5" aria-hidden="true" tabindex="-1"></a>temp <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (prodmodel, Vx[i]) <span class="co"># Extracts optimal values of variables   </span></span>
+<span id="cb74-6"><a href="more-linear-programming-models.html#cb74-6" aria-hidden="true" tabindex="-1"></a>results.products <span class="ot">&lt;-</span> <span class="fu">t</span>(temp [,<span class="dv">3</span>] )       <span class="co"># Extracts third column</span></span>
+<span id="cb74-7"><a href="more-linear-programming-models.html#cb74-7" aria-hidden="true" tabindex="-1"></a>results.products <span class="ot">&lt;-</span> <span class="fu">matrix</span> (results.products, </span>
+<span id="cb74-8"><a href="more-linear-programming-models.html#cb74-8" aria-hidden="true" tabindex="-1"></a>                            <span class="at">nrow =</span> <span class="dv">1</span>, </span>
+<span id="cb74-9"><a href="more-linear-programming-models.html#cb74-9" aria-hidden="true" tabindex="-1"></a>                            <span class="at">ncol=</span>NProd,</span>
+<span id="cb74-10"><a href="more-linear-programming-models.html#cb74-10" aria-hidden="true" tabindex="-1"></a>                            <span class="at">dimnames=</span><span class="fu">c</span>(<span class="fu">c</span>(<span class="st">&quot;x&quot;</span>),ProdNames))  </span>
+<span id="cb74-11"><a href="more-linear-programming-models.html#cb74-11" aria-hidden="true" tabindex="-1"></a>   <span class="co"># Resizes and renames</span></span>
+<span id="cb74-12"><a href="more-linear-programming-models.html#cb74-12" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(results.products, <span class="at">booktabs=</span>T,</span>
+<span id="cb74-13"><a href="more-linear-programming-models.html#cb74-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption=</span><span class="st">&quot;Revised Optimal Production Plan&quot;</span>)  <span class="sc">|&gt;</span></span>
+<span id="cb74-14"><a href="more-linear-programming-models.html#cb74-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:Examine-Results-of-Changed-Model">TABLE 3.5: </span>Revised Optimal Production Plan
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Prod1
+</th>
+<th style="text-align:right;">
+Prod2
+</th>
+<th style="text-align:right;">
+Prod3
+</th>
+<th style="text-align:right;">
+Prod4
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+x
+</td>
+<td style="text-align:right;">
+240
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+<p>The production plan has significantly changed.<br />
+</p>
+</div>
+</div>
+<div id="common-linear-programming-applications" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> Common Linear Programming Applications</h2>
+<div id="blending-problems" class="section level3" number="3.3.1">
+<h3><span class="header-section-number">3.3.1</span> Blending Problems</h3>
+<p>Specific blend limitations arise in many situations. Recall from our three variable case in Chapter 2 that the vast majority of drones produced were Cat models. Let’s assume that we can’t have more than 40% of total production made up of Cats.  Let’s start by building our original three variable model. In our original case, this would be expressed as the following.<br />
+</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{Max  }   &amp; 7\cdot Ants +12 \cdot Bats +5\cdot Cats \\
+    \text{s.t.:} &amp; \\
+                 &amp; 1\cdot Ants + 4\cdot Bats +2\cdot Cats \leq 800 \\
+                 &amp; 3\cdot Ants + 6\cdot Bats +2\cdot Cats \leq 900 \\
+                 &amp; 2\cdot Ants + 2\cdot Bats +1\cdot Cats \leq 480 \\
+                 &amp; 2\cdot Ants + 10\cdot Bats +2\cdot Cats \leq 1200 \\
+                 &amp; Ants,  \; Bats, \; Cats \geq 0  
+  \end{aligned}
+  \end{split}
+\]</span></p>
+<p>Let’s rebuild our three variable implementation and review the results to see if it is violates our blending requirement.</p>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="more-linear-programming-models.html#cb75-1" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>()                              <span class="sc">|&gt;</span></span>
+<span id="cb75-2"><a href="more-linear-programming-models.html#cb75-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Ants, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb75-3"><a href="more-linear-programming-models.html#cb75-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Bats, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb75-4"><a href="more-linear-programming-models.html#cb75-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Cats, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb75-5"><a href="more-linear-programming-models.html#cb75-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb75-6"><a href="more-linear-programming-models.html#cb75-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_objective</span>(<span class="dv">7</span><span class="sc">*</span>Ants <span class="sc">+</span> <span class="dv">12</span><span class="sc">*</span>Bats <span class="sc">+</span> <span class="dv">5</span><span class="sc">*</span>Cats,<span class="st">&quot;max&quot;</span>)  <span class="sc">|&gt;</span></span>
+<span id="cb75-7"><a href="more-linear-programming-models.html#cb75-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb75-8"><a href="more-linear-programming-models.html#cb75-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">1</span><span class="sc">*</span>Ants <span class="sc">+</span> <span class="dv">4</span><span class="sc">*</span>Bats <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>Cats<span class="sc">&lt;=</span><span class="dv">800</span>)   <span class="sc">|&gt;</span> <span class="co"># machining</span></span>
+<span id="cb75-9"><a href="more-linear-programming-models.html#cb75-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">3</span><span class="sc">*</span>Ants <span class="sc">+</span> <span class="dv">6</span><span class="sc">*</span>Bats <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>Cats<span class="sc">&lt;=</span><span class="dv">900</span>)   <span class="sc">|&gt;</span> <span class="co"># assembly</span></span>
+<span id="cb75-10"><a href="more-linear-programming-models.html#cb75-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">2</span><span class="sc">*</span>Ants <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>Bats <span class="sc">+</span> <span class="dv">1</span><span class="sc">*</span>Cats<span class="sc">&lt;=</span><span class="dv">480</span>)   <span class="sc">|&gt;</span> <span class="co"># testing</span></span>
+<span id="cb75-11"><a href="more-linear-programming-models.html#cb75-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">2</span><span class="sc">*</span>Ants <span class="sc">+</span> <span class="dv">10</span><span class="sc">*</span>Bats <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>Cats<span class="sc">&lt;=</span><span class="dv">1200</span>)    <span class="co"># sensors</span></span>
+<span id="cb75-12"><a href="more-linear-programming-models.html#cb75-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-13"><a href="more-linear-programming-models.html#cb75-13" aria-hidden="true" tabindex="-1"></a>res3base <span class="ot">&lt;-</span>  <span class="fu">solve_model</span>(model1, <span class="fu">with_ROI</span>(<span class="at">solver=</span><span class="st">&quot;glpk&quot;</span>))</span>
+<span id="cb75-14"><a href="more-linear-programming-models.html#cb75-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-15"><a href="more-linear-programming-models.html#cb75-15" aria-hidden="true" tabindex="-1"></a>xants <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (res3base, Ants)</span>
+<span id="cb75-16"><a href="more-linear-programming-models.html#cb75-16" aria-hidden="true" tabindex="-1"></a>xbats <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (res3base, Bats)</span>
+<span id="cb75-17"><a href="more-linear-programming-models.html#cb75-17" aria-hidden="true" tabindex="-1"></a>xcats <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (res3base, Cats)</span>
+<span id="cb75-18"><a href="more-linear-programming-models.html#cb75-18" aria-hidden="true" tabindex="-1"></a>base_case_res           <span class="ot">&lt;-</span> <span class="fu">cbind</span>(xants,xbats,xcats)</span>
+<span id="cb75-19"><a href="more-linear-programming-models.html#cb75-19" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span> (base_case_res) <span class="ot">&lt;-</span> <span class="st">&quot;Amount&quot;</span></span>
+<span id="cb75-20"><a href="more-linear-programming-models.html#cb75-20" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span> (base_case_res) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Ants&quot;</span>,<span class="st">&quot;Bats&quot;</span>,<span class="st">&quot;Cats&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="more-linear-programming-models.html#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(base_case_res, <span class="at">booktabs=</span>T, </span>
+<span id="cb76-2"><a href="more-linear-programming-models.html#cb76-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption=</span><span class="st">&quot;Production Plan for Base Case&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb76-3"><a href="more-linear-programming-models.html#cb76-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-8">TABLE 3.6: </span>Production Plan for Base Case
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Ants
+</th>
+<th style="text-align:right;">
+Bats
+</th>
+<th style="text-align:right;">
+Cats
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Amount
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+375
+</td>
+</tr>
+</tbody>
+</table>
+<p>These results clearly violate the required production mix for Cats. Let’s now work on adding the constraint that Cats can’t make up more than 40% of the total production.</p>
+<p><span class="math display">\[\frac{Cats}{Ants+Bats+Cats} \leq 0.4\]</span></p>
+<p>Alas, this is not a linear function since we are dividing a variable by a function of variables so we need to clear the denominator. For demonstration purposes, we will write out each step.</p>
+<p><span class="math display">\[Cats \leq 0.4 \cdot (Ants+Bats+Cats)\]</span></p>
+<p>We like to get all the variables on the left side so let’s move them over.</p>
+<p><span class="math display">\[Cats - 0.4 \cdot Ants-0.4 \cdot Bats-0.4 \cdot Cats \leq 0\]</span></p>
+<p>Let’s simplify this a little, which gives us the following:</p>
+<p><span class="math display">\[-0.4 \cdot Ants-0.4 \cdot Bats+0.6 \cdot Cats \leq 0\]</span></p>
+<p>Now we can just this to the original formulation. The result is the following formulation.</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{Max  }   &amp; 7\cdot Ants +12 \cdot Bats +5\cdot Cats \\
+    \text{s.t.:} &amp; \\
+                 &amp; 1\cdot Ants + 4\cdot Bats +2\cdot Cats \leq 800 \\
+                 &amp; 3\cdot Ants + 6\cdot Bats +2\cdot Cats \leq 900 \\
+                 &amp; 2\cdot Ants + 2\cdot Bats +1\cdot Cats \leq 480 \\
+                 &amp; 2\cdot Ants + 10\cdot Bats +2\cdot Cats \leq 1200 \\
+                 &amp; \textcolor{red}{-0.4 \cdot Ants-0.4 \cdot Bats +0.6 \cdot Cats \leq 0}\\
+                 &amp; Ants,  \; Bats, \; Cats \geq 0  
+  \end{aligned}
+  \end{split}
+\]</span></p>
+<p>We can simply add a constraint to an existing <code>ompr</code> model of our 3 variable base case and then solve again.</p>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="more-linear-programming-models.html#cb77-1" aria-hidden="true" tabindex="-1"></a>ModelBlending<span class="ot">&lt;-</span> <span class="fu">add_constraint</span>(model1,</span>
+<span id="cb77-2"><a href="more-linear-programming-models.html#cb77-2" aria-hidden="true" tabindex="-1"></a>                <span class="sc">-</span><span class="fl">0.4</span><span class="sc">*</span>Ants <span class="sc">-</span><span class="fl">0.4</span><span class="sc">*</span>Bats <span class="sc">+</span><span class="fl">0.6</span><span class="sc">*</span>Cats <span class="sc">&lt;=</span> <span class="dv">0</span>) </span>
+<span id="cb77-3"><a href="more-linear-programming-models.html#cb77-3" aria-hidden="true" tabindex="-1"></a>resBlending<span class="ot">&lt;-</span> <span class="fu">solve_model</span>(ModelBlending, </span>
+<span id="cb77-4"><a href="more-linear-programming-models.html#cb77-4" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="more-linear-programming-models.html#cb78-1" aria-hidden="true" tabindex="-1"></a>blendres<span class="ot">&lt;-</span><span class="fu">cbind</span>(<span class="fu">get_solution</span> (resBlending, Ants),</span>
+<span id="cb78-2"><a href="more-linear-programming-models.html#cb78-2" aria-hidden="true" tabindex="-1"></a>                <span class="fu">get_solution</span> (resBlending, Bats),</span>
+<span id="cb78-3"><a href="more-linear-programming-models.html#cb78-3" aria-hidden="true" tabindex="-1"></a>                <span class="fu">get_solution</span> (resBlending, Cats))</span></code></pre></div>
+<p>Okay, now let’s put both side by side in a table to show the results.<br />
+</p>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="more-linear-programming-models.html#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(base_case_res)<span class="ot">&lt;-</span><span class="st">&quot;Base Model&quot;</span></span>
+<span id="cb79-2"><a href="more-linear-programming-models.html#cb79-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(blendres)<span class="ot">&lt;-</span><span class="st">&quot;with Constraint&quot;</span></span>
+<span id="cb79-3"><a href="more-linear-programming-models.html#cb79-3" aria-hidden="true" tabindex="-1"></a>comparative <span class="ot">&lt;-</span> <span class="fu">rbind</span>(base_case_res,<span class="fu">round</span>(blendres, <span class="dv">2</span>))</span>
+<span id="cb79-4"><a href="more-linear-programming-models.html#cb79-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span> (comparative) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Ants&quot;</span>,<span class="st">&quot;Bats&quot;</span>,<span class="st">&quot;Cats&quot;</span>)</span>
+<span id="cb79-5"><a href="more-linear-programming-models.html#cb79-5" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(comparative, <span class="at">booktabs=</span>T, </span>
+<span id="cb79-6"><a href="more-linear-programming-models.html#cb79-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span></span>
+<span id="cb79-7"><a href="more-linear-programming-models.html#cb79-7" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Compare Baseline and Production Plan with Blending Constraint&quot;</span>)<span class="sc">|&gt;</span></span>
+<span id="cb79-8"><a href="more-linear-programming-models.html#cb79-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:Compare-Blending-to-Base-Results">TABLE 3.7: </span>Compare Baseline and Production Plan with Blending Constraint
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Ants
+</th>
+<th style="text-align:right;">
+Bats
+</th>
+<th style="text-align:right;">
+Cats
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Base Model
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+375
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+with Constraint
+</td>
+<td style="text-align:right;">
+140
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+120
+</td>
+</tr>
+</tbody>
+</table>
+<p>As a summary, we can see on the table on the right a comparative between the baseline case and the new production plan with the blending constraint.</p>
+</div>
+</div>
+<div id="allocation-models" class="section level2" number="3.4">
+<h2><span class="header-section-number">3.4</span> Allocation Models</h2>
+<p>An allocation model divides resources and assigns them to competing activities.  Typically it has a maximization objective with less than or equal to constraints. Note that our production planning problem from Chapter 2 is an allocation model.</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{Max:  }  &amp;  \sum_{i=1}^3 P_i x_i &amp;\text{[Maximize Profit]}\\
+    \text{s.t.  }  &amp;  \sum_{i=1}^3 R_{i,j} x_i \leq A_j \; \forall \; j &amp;\text{[Resource Limits]}\\
+                &amp; x_i \geq 0  \; \forall \; i
+  \end{aligned}
+  \end{split}
+\]</span></p>
+<div id="covering-models" class="section level3" number="3.4.1">
+<h3><span class="header-section-number">3.4.1</span> Covering Models</h3>
+<p>A covering model combines resources and coordinates activities.  A classic covering application would be what mix of ingredients “covers” the requirements at the lowest possible cost.
+Typically it has a minimization objective function and greater than or equal to constraints.</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{Min:}   &amp;  \sum_{i=1}^3 C_i x_i &amp;\text{[Minimize Cost]}\\
+    \text{S.t.} &amp; \sum_{i=1}^3 A_{i,j}x_i \geq R_j \; \forall \; j &amp;\text{[Meet Requirements]}\\
+                       &amp; x_i \geq 0  \; \forall \; i
+  \end{aligned}
+  \end{split}
+\]</span></p>
+<p>Consider the case of Trevor’s Trail Mix Company.
+Trevor creates a variety of custom trail mixes for health food fans.
+He can use a variety of ingredients displayed in the table on the right.</p>
+<table>
+<caption>Trevor Trail Mix Company Ingredients</caption>
+<thead>
+<tr class="header">
+<th align="right">Characteristic</th>
+<th align="center">Mix1</th>
+<th align="center">Mix2</th>
+<th align="center">Mix3</th>
+<th align="center">Mix4</th>
+<th align="center">Min Req.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">Cost</td>
+<td align="center">$20</td>
+<td align="center">$14</td>
+<td align="center">$3</td>
+<td align="center">$16</td>
+<td align="center"></td>
+</tr>
+<tr class="even">
+<td align="right">Calcium</td>
+<td align="center">6</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">4</td>
+<td align="center">1440</td>
+</tr>
+<tr class="odd">
+<td align="right">Protein</td>
+<td align="center">8</td>
+<td align="center">6</td>
+<td align="center">1</td>
+<td align="center">8</td>
+<td align="center">1440</td>
+</tr>
+<tr class="even">
+<td align="right">Carbohydrate</td>
+<td align="center">6</td>
+<td align="center">4</td>
+<td align="center">1</td>
+<td align="center">25</td>
+<td align="center">2000</td>
+</tr>
+<tr class="odd">
+<td align="right">Calories</td>
+<td align="center">7</td>
+<td align="center">10</td>
+<td align="center">2</td>
+<td align="center">12</td>
+<td align="center">1000</td>
+</tr>
+</tbody>
+</table>
+<p>Let’s go ahead and build a model in the same way as we had done earlier for production planning.</p>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="more-linear-programming-models.html#cb80-1" aria-hidden="true" tabindex="-1"></a>NMix <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb80-2"><a href="more-linear-programming-models.html#cb80-2" aria-hidden="true" tabindex="-1"></a>NCharacteristic <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb80-3"><a href="more-linear-programming-models.html#cb80-3" aria-hidden="true" tabindex="-1"></a>MixNames <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">list</span>(<span class="fu">rep</span>(<span class="st">&quot;Mix&quot;</span>,NMix)),paste0,<span class="dv">1</span><span class="sc">:</span>NMix) </span>
+<span id="cb80-4"><a href="more-linear-programming-models.html#cb80-4" aria-hidden="true" tabindex="-1"></a>                 <span class="co"># Mix names: Mix1, Mix2, ... </span></span>
+<span id="cb80-5"><a href="more-linear-programming-models.html#cb80-5" aria-hidden="true" tabindex="-1"></a>CharNames <span class="ot">&lt;-</span><span class="fu">lapply</span>(<span class="fu">list</span>(<span class="fu">rep</span>(<span class="st">&quot;Char&quot;</span>,NCharacteristic)),</span>
+<span id="cb80-6"><a href="more-linear-programming-models.html#cb80-6" aria-hidden="true" tabindex="-1"></a>                   paste0,<span class="dv">1</span><span class="sc">:</span>NCharacteristic)</span>
+<span id="cb80-7"><a href="more-linear-programming-models.html#cb80-7" aria-hidden="true" tabindex="-1"></a>                 <span class="co"># Characteristics of each mix</span></span>
+<span id="cb80-8"><a href="more-linear-programming-models.html#cb80-8" aria-hidden="true" tabindex="-1"></a>Cost <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">14</span>, <span class="dv">3</span>, <span class="dv">16</span>), </span>
+<span id="cb80-9"><a href="more-linear-programming-models.html#cb80-9" aria-hidden="true" tabindex="-1"></a>              <span class="at">ncol=</span>NMix,<span class="at">dimnames=</span><span class="fu">c</span>(<span class="st">&quot;Cost&quot;</span>,MixNames))</span>
+<span id="cb80-10"><a href="more-linear-programming-models.html#cb80-10" aria-hidden="true" tabindex="-1"></a>MixChar <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>( <span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">6</span>, <span class="dv">7</span>, </span>
+<span id="cb80-11"><a href="more-linear-programming-models.html#cb80-11" aria-hidden="true" tabindex="-1"></a>                     <span class="dv">2</span>, <span class="dv">6</span>, <span class="dv">4</span>, <span class="dv">10</span>, </span>
+<span id="cb80-12"><a href="more-linear-programming-models.html#cb80-12" aria-hidden="true" tabindex="-1"></a>                     <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>,</span>
+<span id="cb80-13"><a href="more-linear-programming-models.html#cb80-13" aria-hidden="true" tabindex="-1"></a>                     <span class="dv">4</span>, <span class="dv">8</span>, <span class="dv">25</span>, <span class="dv">12</span>), </span>
+<span id="cb80-14"><a href="more-linear-programming-models.html#cb80-14" aria-hidden="true" tabindex="-1"></a>              <span class="at">ncol=</span><span class="dv">4</span>, <span class="at">dimnames=</span><span class="fu">c</span>(CharNames,MixNames))</span>
+<span id="cb80-15"><a href="more-linear-programming-models.html#cb80-15" aria-hidden="true" tabindex="-1"></a>CharMin <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1440</span>, <span class="dv">1440</span>, <span class="dv">2000</span>, <span class="dv">1000</span>), </span>
+<span id="cb80-16"><a href="more-linear-programming-models.html#cb80-16" aria-hidden="true" tabindex="-1"></a>              <span class="at">ncol=</span><span class="dv">1</span>,<span class="at">dimnames=</span><span class="fu">c</span>(CharNames,<span class="st">&quot;Minimum&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="more-linear-programming-models.html#cb81-1" aria-hidden="true" tabindex="-1"></a>TTMix <span class="ot">&lt;-</span><span class="fu">cbind</span>(MixChar,CharMin)</span>
+<span id="cb81-2"><a href="more-linear-programming-models.html#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(TTMix, <span class="at">booktabs=</span>T, </span>
+<span id="cb81-3"><a href="more-linear-programming-models.html#cb81-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption=</span><span class="st">&quot;Data for Trevor Trail Mix Company&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb81-4"><a href="more-linear-programming-models.html#cb81-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:Display-Trail-Mix-Data">TABLE 3.8: </span>Data for Trevor Trail Mix Company
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Mix1
+</th>
+<th style="text-align:right;">
+Mix2
+</th>
+<th style="text-align:right;">
+Mix3
+</th>
+<th style="text-align:right;">
+Mix4
+</th>
+<th style="text-align:right;">
+Minimum
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Char1
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+1440
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Char2
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+1440
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Char3
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+25
+</td>
+<td style="text-align:right;">
+2000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Char4
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+1000
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Hint</strong>: You might need to add a total amount to make! Modify the numbers until it runs.</p>
+<p>Now let’s build our model.</p>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="more-linear-programming-models.html#cb82-1" aria-hidden="true" tabindex="-1"></a>trailmixmodel <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>()                             <span class="sc">|&gt;</span></span>
+<span id="cb82-2"><a href="more-linear-programming-models.html#cb82-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">add_variable</span>(Vx[i],<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span>NMix,<span class="at">type=</span><span class="st">&quot;continuous&quot;</span>,<span class="at">lb=</span><span class="dv">0</span>)    <span class="sc">|&gt;</span></span>
+<span id="cb82-3"><a href="more-linear-programming-models.html#cb82-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">set_objective</span>(<span class="fu">sum_expr</span>(Cost[i]<span class="sc">*</span>Vx[i],<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span>NMix ),<span class="st">&quot;min&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb82-4"><a href="more-linear-programming-models.html#cb82-4" aria-hidden="true" tabindex="-1"></a> <span class="fu">add_constraint</span>(<span class="fu">sum_expr</span>(MixChar[j,i]<span class="sc">*</span>Vx[i],<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span>NMix)  <span class="co"># LHS </span></span>
+<span id="cb82-5"><a href="more-linear-programming-models.html#cb82-5" aria-hidden="true" tabindex="-1"></a>                  <span class="sc">&gt;=</span> CharMin[j],          <span class="co"># Inequality and RHS</span></span>
+<span id="cb82-6"><a href="more-linear-programming-models.html#cb82-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">j=</span><span class="dv">1</span><span class="sc">:</span>NCharacteristic)    <span class="co"># Repeat for each resource  </span></span>
+<span id="cb82-7"><a href="more-linear-programming-models.html#cb82-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-8"><a href="more-linear-programming-models.html#cb82-8" aria-hidden="true" tabindex="-1"></a>results.trailmix <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(trailmixmodel, </span>
+<span id="cb82-9"><a href="more-linear-programming-models.html#cb82-9" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
+<span id="cb82-10"><a href="more-linear-programming-models.html#cb82-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb82-11"><a href="more-linear-programming-models.html#cb82-11" aria-hidden="true" tabindex="-1"></a>results.trailmix</span></code></pre></div>
+<pre><code>## Status: optimal
+## Objective value: 4426.667</code></pre>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="more-linear-programming-models.html#cb84-1" aria-hidden="true" tabindex="-1"></a>xvalue <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">get_solution</span>(results.trailmix, Vx[i])[,<span class="dv">3</span>])</span></code></pre></div>
+<p>We’ll leave it to the reader to clean up the output of results.</p>
+<p>Another classic example of a covering problem is a staff scheduling problem.
+In this case, a manager is trying to assign workers to cover the required demands throughout the day, week, or month.</p>
+</div>
+<div id="transportation-models" class="section level3" number="3.4.2">
+<h3><span class="header-section-number">3.4.2</span> Transportation Models</h3>
+<p>A transportation model is typically for getting material from one place to another at the lowest possible costs. 
+It has sets of source points or nodes as well as ending or destination nodes.
+The decision variables are the amount to send on each route.
+Constraints are typically based on supply from the source nodes and capacity at the destination nodes.</p>
+<p>This naturally lends itself to potential network diagrams such as the one to the right. In this case we have three warehouses (or supply points) in Minnesota (MN), Pennsylvania (PA), and Wyoming (WY), each with a supply shown to the left. On the right side, we have four customer or demand nodes: Atlanta (ATL), Boston (Bos), Chicago (Chi), and Denver (Den) with their maximum demand shown to the right of the node. We also have arcs connecting every supply node to every demand node, each labeled with a corresponding cost per unit to transport an item along that arc. The goal is to get as much shipped as possible at the lowest possible cost.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:Fig-Transportation"></span>
+<img src="images/Fig03-01-Transportation.PNG" alt="Transporation Example" width="3in" />
+<p class="caption">
+FIGURE 3.1: Transporation Example
+</p>
+</div>
+<p>Let’s start to model this now. We want to define the decision variables, in this case, <span class="math inline">\(x_{i,j}\)</span> is the amount of product to ship from node i to node j.</p>
+<p>Let’s also define the data available. The cost per unit to ship from node i to node j is <span class="math inline">\(C_{i,j}\)</span>.
+The supply available from each supply node is <span class="math inline">\(S_i\)</span> and the maximum demand that can be accommodate from each destination node is <span class="math inline">\(D_j\)</span>.<br />
+</p>
+<p>In this formulation we need to make sure that we don’t ship out more than the capacity of each supply node.</p>
+<p>Similarly, we need to ensure that we don’t take in more than demand capacity at any destination.</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{Min  } &amp;  \sum_{i} \sum_{j} C_{i,j} x_{i,j} \\
+    \text{s.t. } &amp; \sum_{i} x_{i,j} \leq D_j \; \forall \; j&amp;\text{[Demand Limits]}\\
+                 &amp; \sum_{j} x_{i,j} \leq S_i \; \forall \; i&amp;\text{[Supply Limits]}\\
+                 &amp; x_{i,j} \geq 0  \; \forall \; i,j
+  \end{aligned}
+  \end{split}
+\]</span></p>
+<p>If we simply run this model, as is, the minimum cost plan would be to just do nothing!
+The cost would be zero.
+In reality, even though we are focused on costs in this application, there is an implied revenue and therefore profit (we hope!) that we aren’t directly modeling.
+We are likely to instead be wanting to ship all of the product that we can at the lowest possible cost.
+More precisely, what we want to do is instead determine if the problem is supply limited or demand limited.
+This is a simple matter of comparing the net demand vs. the net supply and making sure that the lesser is satisfied completely.</p>
+<table>
+<caption>Demand and Supply Constrained Transportation Problems.</caption>
+<colgroup>
+<col width="28%" />
+<col width="18%" />
+<col width="26%" />
+<col width="26%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">If…</th>
+<th align="center">Then Situation is:</th>
+<th align="center">Source Constraints</th>
+<th align="center">Demand Constraints</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right"><span class="math inline">\(\sum_{i} S_i &lt; \sum_{j} D_j\)</span></td>
+<td align="center">Supply Constrained</td>
+<td align="center"><span class="math inline">\(\sum_{j} x_{i,j} = S_i\)</span></td>
+<td align="center"><span class="math inline">\(\sum_{i} x_{i,j} \leq D_j\)</span></td>
+</tr>
+<tr class="even">
+<td align="right"><span class="math inline">\(\sum_{i} S_i &gt; \sum_{j} D_j\)</span></td>
+<td align="center">Demand Constrained</td>
+<td align="center"><span class="math inline">\(\sum_{j} x_{i,j} \leq S_i\)</span></td>
+<td align="center"><span class="math inline">\(\sum_{i} x_{i,j} = D_j\)</span></td>
+</tr>
+<tr class="odd">
+<td align="right"><span class="math inline">\(\sum_{i} S_i = \sum_{j} D_j\)</span></td>
+<td align="center">Balanced</td>
+<td align="center"><span class="math inline">\(\sum_{j} x_{i,j} = S_i\)</span></td>
+<td align="center"><span class="math inline">\(\sum_{i} x_{i,j} = D_j\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>In the balanced situation, either source or demand constraints can be equalities.</p>
+<p>Similarly, if we try to use equality constraints for both the supply and demand nodes but the supply and demand are not balanced, the LP will not be feasible.</p>
+<p>In <code>ompr</code>, a double subscripted non-negative variable, <span class="math inline">\(x_{i,j}\)</span> can be defined easily as the following:
+<code>add_variable(x[i, j], type = "continuous", i = 1:10, j = 1:10, lb=0)</code>. Let’s show how to set up a basic implementation of the transportation problem in <code>ompr</code>. This demonstrates the use of double subscripted variables. Also, it should be customized for a particular application of being demand or supply constrained but it will give a good running head start.</p>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="more-linear-programming-models.html#cb85-1" aria-hidden="true" tabindex="-1"></a>NSupply <span class="ot">&lt;-</span> <span class="dv">3</span>   <span class="co"># 3 Supply nodes</span></span>
+<span id="cb85-2"><a href="more-linear-programming-models.html#cb85-2" aria-hidden="true" tabindex="-1"></a>NDest   <span class="ot">&lt;-</span> <span class="dv">4</span>   <span class="co"># 4 Destination nodes</span></span>
+<span id="cb85-3"><a href="more-linear-programming-models.html#cb85-3" aria-hidden="true" tabindex="-1"></a>snames <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">&quot;MN&quot;</span>, <span class="st">&quot;PA&quot;</span>, <span class="st">&quot;WY&quot;</span>)</span>
+<span id="cb85-4"><a href="more-linear-programming-models.html#cb85-4" aria-hidden="true" tabindex="-1"></a>dnames <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">&quot;Atl&quot;</span>, <span class="st">&quot;Bos&quot;</span>, <span class="st">&quot;Chi&quot;</span>, <span class="st">&quot;Den&quot;</span>)</span>
+<span id="cb85-5"><a href="more-linear-programming-models.html#cb85-5" aria-hidden="true" tabindex="-1"></a>Cost <span class="ot">&lt;-</span> <span class="fu">matrix</span> (<span class="fu">c</span>(<span class="dv">65</span>, <span class="dv">36</span>, <span class="dv">65</span>, <span class="dv">57</span>, <span class="dv">30</span>, <span class="dv">70</span>, </span>
+<span id="cb85-6"><a href="more-linear-programming-models.html#cb85-6" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">22</span>, <span class="dv">30</span>, <span class="dv">55</span>, <span class="dv">42</span>, <span class="dv">60</span>, <span class="dv">42</span>),</span>
+<span id="cb85-7"><a href="more-linear-programming-models.html#cb85-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">nrow =</span> NSupply,</span>
+<span id="cb85-8"><a href="more-linear-programming-models.html#cb85-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">dimnames =</span><span class="fu">list</span>(snames,dnames))</span>
+<span id="cb85-9"><a href="more-linear-programming-models.html#cb85-9" aria-hidden="true" tabindex="-1"></a>S <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1000</span>, <span class="dv">1500</span>, <span class="dv">1500</span>)</span>
+<span id="cb85-10"><a href="more-linear-programming-models.html#cb85-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb85-11"><a href="more-linear-programming-models.html#cb85-11" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">700</span>,  <span class="dv">900</span>, <span class="dv">1200</span>, <span class="dv">900</span>)</span></code></pre></div>
+<p>At this point, it may be a good idea to look at the arcs and see if you can expect which routes are likely to be heavily used and which are likely to be unused. You can also do this by looking at the matrix of transportation costs.<br />
+</p>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:Show-Transp-Cost">TABLE 3.9: </span>Costs for Transportation Application.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Atl
+</th>
+<th style="text-align:right;">
+Bos
+</th>
+<th style="text-align:right;">
+Chi
+</th>
+<th style="text-align:right;">
+Den
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+MN
+</td>
+<td style="text-align:right;">
+65
+</td>
+<td style="text-align:right;">
+57
+</td>
+<td style="text-align:right;">
+22
+</td>
+<td style="text-align:right;">
+42
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PA
+</td>
+<td style="text-align:right;">
+36
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+60
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WY
+</td>
+<td style="text-align:right;">
+65
+</td>
+<td style="text-align:right;">
+70
+</td>
+<td style="text-align:right;">
+55
+</td>
+<td style="text-align:right;">
+42
+</td>
+</tr>
+</tbody>
+</table>
+<p>Now, let’s move on to implementing the model.</p>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="more-linear-programming-models.html#cb86-1" aria-hidden="true" tabindex="-1"></a>transportationmodel <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>()             <span class="sc">|&gt;</span></span>
+<span id="cb86-2"><a href="more-linear-programming-models.html#cb86-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">add_variable</span>(Vx[i, j], <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, </span>
+<span id="cb86-3"><a href="more-linear-programming-models.html#cb86-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>NSupply, </span>
+<span id="cb86-4"><a href="more-linear-programming-models.html#cb86-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>NDest, <span class="at">lb=</span><span class="dv">0</span>)             <span class="sc">|&gt;</span></span>
+<span id="cb86-5"><a href="more-linear-programming-models.html#cb86-5" aria-hidden="true" tabindex="-1"></a> <span class="fu">set_objective</span> (<span class="fu">sum_expr</span>(Cost[i,j] <span class="sc">*</span> Vx[i,j] , </span>
+<span id="cb86-6"><a href="more-linear-programming-models.html#cb86-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">i=</span><span class="dv">1</span><span class="sc">:</span>NSupply, </span>
+<span id="cb86-7"><a href="more-linear-programming-models.html#cb86-7" aria-hidden="true" tabindex="-1"></a>                          <span class="at">j=</span><span class="dv">1</span><span class="sc">:</span>NDest ), <span class="st">&quot;min&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb86-8"><a href="more-linear-programming-models.html#cb86-8" aria-hidden="true" tabindex="-1"></a> <span class="fu">add_constraint</span> (<span class="fu">sum_expr</span>(Vx[i,j], <span class="at">i=</span><span class="dv">1</span><span class="sc">:</span>NSupply) </span>
+<span id="cb86-9"><a href="more-linear-programming-models.html#cb86-9" aria-hidden="true" tabindex="-1"></a>                <span class="sc">&gt;=</span> D[j],   </span>
+<span id="cb86-10"><a href="more-linear-programming-models.html#cb86-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">j=</span><span class="dv">1</span><span class="sc">:</span>NDest)<span class="sc">|&gt;</span> </span>
+<span id="cb86-11"><a href="more-linear-programming-models.html#cb86-11" aria-hidden="true" tabindex="-1"></a> <span class="fu">add_constraint</span> (<span class="fu">sum_expr</span>(Vx[i,j], <span class="at">j=</span><span class="dv">1</span><span class="sc">:</span>NDest)</span>
+<span id="cb86-12"><a href="more-linear-programming-models.html#cb86-12" aria-hidden="true" tabindex="-1"></a>                <span class="sc">&lt;=</span> S[i],    </span>
+<span id="cb86-13"><a href="more-linear-programming-models.html#cb86-13" aria-hidden="true" tabindex="-1"></a>                <span class="at">i=</span><span class="dv">1</span><span class="sc">:</span>NSupply)  </span>
+<span id="cb86-14"><a href="more-linear-programming-models.html#cb86-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb86-15"><a href="more-linear-programming-models.html#cb86-15" aria-hidden="true" tabindex="-1"></a>res.transp <span class="ot">&lt;-</span><span class="fu">solve_model</span>(</span>
+<span id="cb86-16"><a href="more-linear-programming-models.html#cb86-16" aria-hidden="true" tabindex="-1"></a>  transportationmodel, <span class="fu">with_ROI</span>(<span class="at">solver =</span><span class="st">&quot;glpk&quot;</span>))</span></code></pre></div>
+<p>Let’s confirm that our model solved correctly.<br />
+</p>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="more-linear-programming-models.html#cb87-1" aria-hidden="true" tabindex="-1"></a>res.transp<span class="sc">$</span>status</span></code></pre></div>
+<pre><code>## [1] &quot;optimal&quot;</code></pre>
+<p>Since it was solved to optimality, the optimal objective function value is meaningful and again we can use an inline code chunk of <code>R</code> to extract this value 1.259^{5}. The actual decision variable values of the solution are more interesting though. Let’s first prepare these results by extracting them from the solution object and then applying our names to them.<br />
+</p>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="more-linear-programming-models.html#cb89-1" aria-hidden="true" tabindex="-1"></a>Transp <span class="ot">&lt;-</span> <span class="fu">matrix</span>(res.transp<span class="sc">$</span>solution,</span>
+<span id="cb89-2"><a href="more-linear-programming-models.html#cb89-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">nrow =</span> NSupply,</span>
+<span id="cb89-3"><a href="more-linear-programming-models.html#cb89-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">dimnames =</span><span class="fu">list</span>(snames,dnames))  </span></code></pre></div>
+<p>Now we can display the table of optimal transportation decisions from supply points to destinations cleanly.<br />
+</p>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-10">TABLE 3.10: </span>Optimal Transportation Plan
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Atl
+</th>
+<th style="text-align:right;">
+Bos
+</th>
+<th style="text-align:right;">
+Chi
+</th>
+<th style="text-align:right;">
+Den
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+MN
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PA
+</td>
+<td style="text-align:right;">
+600
+</td>
+<td style="text-align:right;">
+900
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WY
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+200
+</td>
+<td style="text-align:right;">
+900
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="transshipment-models" class="section level3" number="3.4.3">
+<h3><span class="header-section-number">3.4.3</span> Transshipment Models</h3>
+<p>A generalization of the transportation model is that of transshipment  where some nodes are intermediate nodes that are neither pure sources or destinations but can have both inflow and outflow. We could extend our previous example with factories in Vietnam and Thailand. Note that the facilities in the middle (Minnesota, Pennsylvania, and Wyoming) are better described as distribution centers rather than warehouses.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:Fig-Transshipment"></span>
+<img src="images/Fig03-02-Transshipment.PNG" alt="Transshipment Application." width="3in" />
+<p class="caption">
+FIGURE 3.2: Transshipment Application.
+</p>
+</div>
+<p>In this case, the standard convention might be to work from left to right and index the set of factories by <em>i</em>, the set of distribution centers by <em>j</em> and the set of customers by <em>k</em>. We might also use <span class="math inline">\(x_{i,j}\)</span> to be the amount to ship from factory <em>i</em> to distribution center <em>j</em> and <span class="math inline">\(y_{j,k}\)</span> to be the amount to ship from distribution center <em>j</em> to customer <em>k</em>.</p>
+<p>A common characteristic of this kind of problem is then that the inflow at each distribution center must equal the outflow. This means that for Minnesota, <span class="math inline">\((j=1)\)</span>, we would would have a relationship of the following.<br />
+</p>
+<p><span class="math display">\[x_{1,1}+x_{2,1}=y_{1,1}+y_{1,2}+y_{1,3}+y_{1,4}\]</span></p>
+<p>This lends itself to a summation.<br />
+</p>
+<p><span class="math display">\[\sum_{i=1}^2 x_{i,1}=\sum_{k=1}^4 y_{1,k}\]</span></p>
+<p>We can then generalize this for every distribution center, <em>j</em>.<br />
+</p>
+<p><span class="math display">\[\sum_{i=1}^2 x_{i,j}=\sum_{k=1}^4 y_{j,k} \; \forall \; j\]</span>
+Now we could put everything together. We’ll differentiate the costs to ship from supply and to destination now as <span class="math inline">\(C_{i,j}^S\)</span> and <span class="math inline">\(C_{j,k}^D\)</span> respectively.<br />
+</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{Min   }   &amp;  \sum_{i} \sum_{j} C_{i,j}^S x_{i,j} + 
+                           \sum_{j} \sum_{k} C_{j,k}^D y_{j,k}\\
+    \text{s.t.: } &amp; \sum_{j} y_{j,k} \leq D_k \; \forall \; k &amp;\text{[Demand Limits]}\\
+                       &amp; \sum_{j} x_{i,j} \leq S_i \; \forall \; i &amp;\text{[Supply Limits]}\\
+                       &amp; \sum_{i} x_{i,j}=\sum_{k} y_{j,k} \; \forall \; j &amp;\text{[Inflow=Outflow]}\\
+                       &amp; x_{i,j},  y_{j,k} \geq 0  \; \forall \; i,j,k 
+  \end{aligned}
+  \end{split}
+\]</span></p>
+<p>The directions of the supply and demand constraint inequalities must again be considered as to whether the problem is supply or demand constrained, lest we find an optimal solution of doing nothing.<br />
+</p>
+<p>This transshipment application can be further enhanced to allow for losses along arcs. In this case there might be affect amount that reaches the distribution center based on losses enroute. For example, we might use <span class="math inline">\(L_{i,j}\)</span> to capture this effect with <span class="math inline">\(L_{1,2}=0.9\)</span> to indicate that only 90% of the material makes it from factory <em>1</em> to distribution center <em>2</em>. We would then modify the balance constraints to take the following form <span class="math inline">\(\sum_{i} L_{i,j} \cdot x_{i,j}=\sum_{k} y_{j,k} \; \forall \; j\)</span>. Losses might also apply in the transportation to the end customer with similar modifications to the model. </p>
+<p>Another common situation is to add capacity limits to each arc, perhaps both upper and lower bounds on capacity.<br />
+</p>
+<p>Real world applications applications often also require modeling a time dimension which leads us to issue production and inventory planning.</p>
+</div>
+<div id="production-and-inventory-planning" class="section level3" number="3.4.4">
+<h3><span class="header-section-number">3.4.4</span> Production and Inventory Planning</h3>
+<p>A common application is production planning and inventory management planning over time. 
+Let’s assume a company has a manufacturing cost for product <em>p</em> in time period <em>t</em> of <span class="math inline">\(C^M_{p,t}\)</span>.
+The cost to carry a unit of product <em>p</em> in inventory from period <em>t</em> to <em>t+1</em> is <span class="math inline">\(C^I_{p,t}\)</span>.
+Demand of <span class="math inline">\(D_{p,t}\)</span> must be met each period.
+The maximum production in any period can vary and is denoted as <span class="math inline">\(M_{p,t}\)</span>.
+The beginning inventory for each product is <span class="math inline">\(B_{p}\)</span>.
+The goal of the manager is to find a production plan that minimizes cost.<br />
+</p>
+<p>We can start by defining our decision variables.
+We will need a set of decision variables for the amount to produce of each product <em>p</em> in each period <em>t</em>.
+Let’s define that as <span class="math inline">\(x_{p,t}\)</span>.<br />
+</p>
+<p>Similarly, we will define a variable for the inventory at the end of each period, <span class="math inline">\(y_{p,t}\)</span>.<br />
+</p>
+<p>The production cost is simply cost per product multiplied by the number of products produced or <span class="math inline">\(\sum_{p} \sum_{t} C^M_{p,t} \cdot x_{p,t}\)</span>.
+</p>
+<p>The inventory carrying cost follows the same structure, <span class="math inline">\(\sum_{p} \sum_{t} C^I_{p,t} \cdot y_{p,t}\)</span>. </p>
+<p>We can then combine them as <span class="math inline">\(\sum_{p} \sum_{t}\left( C^M_{p,t} \cdot x_{p,t} + C^I_{p,t} \cdot y_{p,t}\right)\)</span> </p>
+<p>At this point, it is important to look at the relationship between inventory, production, and sales.
+</p>
+<p>Sometimes care must be taken for the “boundary conditions” of the first or last time period.
+In our case, we have a value defined the beginning inventory of <span class="math inline">\(B_p\)</span>.
+For product 1, we would have <span class="math inline">\(B_1 + x_{1,1} - D_{1,1} = y_{1,1}\)</span>.
+For product 2, it would be <span class="math inline">\(B_2 + x_{2,1} - D_{2,1} = y_{2,1}\)</span> and so on for other products.
+We would generalize this then as <span class="math inline">\(B_p + x_{p,1} - D_{p,1} = y_{p,1}\)</span>.
+</p>
+<p>For periods after the first <span class="math inline">\((t&gt;1)\)</span>) Essentially the ending inventory is equal to the beginning inventory plus the inflow (production) minus the outflow (demand).
+For product <em>p</em> in time period <em>t</em>, this then becomes <span class="math inline">\(y_{p,t-1} + x_{p,t} - D_{p,t} = y_{p,t}\)</span>.<br />
+</p>
+<p>Of course we would need to ensure appropriate upper and lower bounds on the decision variables.<br />
+</p>
+<p>Let’s wrap it all together in the follow formulation.<br />
+</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{Min    }   &amp;  \sum_{p} \sum_{t}\left( C^M_{p,t}  \cdot x_{p,t} + C^I_{p,t}  \cdot y_{p,t}\right) \\
+    \text{s.t.:  } &amp; B_{p} + x_{p,1} - D_{p,1} = y_{p,1}   \; \forall \; p &amp;\text{[Period 1 Inventory]} \\
+            &amp; y_{p,t-1} + x_{p,t} - D_{p,t} = y_{p,t}   \; \forall \; p, \; t &gt; 1 &amp;\text{[Following Periods]}  \\
+            &amp; 0 \leq x_{p,t} \leq M_{p,t} \; \forall \; p, t &amp;\text{[Production Limits]} \\
+            &amp; x_{p,t} \; y_{p,t} \geq 0 \; \forall \; p, t &amp;\text{[Non-negativity]}\\
+  \\
+  \end{aligned}
+  \end{split}
+\]</span></p>
+<p>This model illustrates the basic dynamics of relating production, inventory, and demand.
+Each application often requires tailoring to address specific needs.
+For example:</p>
+<ul>
+<li>Some companies require safety stocks levels to be maintained which could be done by setting minimum inventory levels.</li>
+<li>Sometimes all the demand cannot be met in a period - this can be modeled by separating sales from demand with a separate variable for sales in each period.</li>
+<li>Allowing backlogged demand that can be met in the following period - again modeled with an additional variable.</li>
+</ul>
+</div>
+<div id="standard-form" class="section level3" number="3.4.5">
+<h3><span class="header-section-number">3.4.5</span> Standard Form</h3>
+<p>Any linear program with inequality constraints can be converted into what is referred to as standard form. 
+First, all strictly numerical terms are collected or moved to the right hand side and all variables are on the left hand side.<br />
+</p>
+<p>It makes little difference as to whether the objective function is a <em>min</em> or a <em>max</em> function since a min objective function can be converted to a max objective function by multiplying everything by a negative one.
+The converse is also true.<br />
+</p>
+<p>The last step is where all of the inequalities are replaced by strict equality relations.
+The conversion of inequalities to equalities warrants a little further explanation.
+This is done by introducing a new, non-negative “slack” variable for each inequality. 
+If the inequality is a <span class="math inline">\(\leq\)</span>, then the slack variable can be thought of as filling the left hand side to make it equal to the right hand side so the slack variable is added to the left hand side.
+If the inequality is <span class="math inline">\(\geq\)</span>, then the slack variable is the amount that must be absorbed from the left hand side to make it equal the right hand side.<br />
+</p>
+<p>Let’s demonstrate with a two variable example.</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{max    } &amp;  2 \cdot x + 3 \cdot y \\
+    \text{s.t.:  } &amp;  10 \cdot x + 2 \cdot y \leq 110 \\
+                  &amp; 2 \cdot x + 10 \cdot y \geq 50 \\
+                  &amp; 2 \cdot x = 4 \cdot y  \\
+                  &amp; x, \; y \geq 0  
+  \end{aligned}
+  \end{split}
+\]</span></p>
+<p>This can be then transformed to standard form by rearranging terms in the third constraint and adding two non-negative slack variables to the first two constraints.</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{max    } &amp;  2 \cdot x + 3 \cdot y \\
+    \text{s.t.:  } &amp;  10 \cdot x + 2 \cdot y + s_1 = 110 \\
+                   &amp; 2 \cdot x + 10 \cdot y -s_2 = 50 \\
+                   &amp; 2 \cdot x - 4 \cdot y = 0 \\
+                   &amp; x, \; y, \; s_1, \; s_2 \geq 0  
+  \end{aligned}
+  \end{split}
+\]</span></p>
+<p>The standard form now consists of a system of equations, generally with far more variables (both regular and slack) than equations. The simplex algorithm makes use of the fact that a system of equations and unknowns can be solved efficiently. The Simplex algorithm solves for as many variables (termed basic variables) as there are equations and sets the remaining variables to zero (non-basic variables).
+It then systematically swaps a variable from the set of basic variables and non-basic variables until it can no longer find an improvement. The actual algorithm for the Simplex algorithm is beyond the scope of what we will cover in this book.<br />
+Let’s examine the solution to our example though.<br />
+</p>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="more-linear-programming-models.html#cb90-1" aria-hidden="true" tabindex="-1"></a>StdModel <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">|&gt;</span></span>
+<span id="cb90-2"><a href="more-linear-programming-models.html#cb90-2" aria-hidden="true" tabindex="-1"></a> <span class="co"># Avoid name space conflicts V prefix for ompr variables.</span></span>
+<span id="cb90-3"><a href="more-linear-programming-models.html#cb90-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb90-4"><a href="more-linear-programming-models.html#cb90-4" aria-hidden="true" tabindex="-1"></a> <span class="fu">add_variable</span>(Vx, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>)  <span class="sc">|&gt;</span></span>
+<span id="cb90-5"><a href="more-linear-programming-models.html#cb90-5" aria-hidden="true" tabindex="-1"></a> <span class="fu">add_variable</span>(Vy, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>)  <span class="sc">|&gt;</span></span>
+<span id="cb90-6"><a href="more-linear-programming-models.html#cb90-6" aria-hidden="true" tabindex="-1"></a> <span class="fu">add_variable</span>(Vs1, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb90-7"><a href="more-linear-programming-models.html#cb90-7" aria-hidden="true" tabindex="-1"></a> <span class="fu">add_variable</span>(Vs2, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb90-8"><a href="more-linear-programming-models.html#cb90-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb90-9"><a href="more-linear-programming-models.html#cb90-9" aria-hidden="true" tabindex="-1"></a> <span class="fu">set_objective</span>(<span class="dv">2</span><span class="sc">*</span>Vx <span class="sc">+</span> <span class="dv">3</span><span class="sc">*</span>Vy,<span class="st">&quot;max&quot;</span>)               <span class="sc">|&gt;</span></span>
+<span id="cb90-10"><a href="more-linear-programming-models.html#cb90-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb90-11"><a href="more-linear-programming-models.html#cb90-11" aria-hidden="true" tabindex="-1"></a> <span class="fu">add_constraint</span>(<span class="dv">10</span><span class="sc">*</span>Vx <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>Vy <span class="sc">+</span> Vs1<span class="sc">==</span><span class="dv">110</span>)        <span class="sc">|&gt;</span></span>
+<span id="cb90-12"><a href="more-linear-programming-models.html#cb90-12" aria-hidden="true" tabindex="-1"></a> <span class="fu">add_constraint</span>(<span class="dv">2</span><span class="sc">*</span>Vx <span class="sc">+</span> <span class="dv">10</span><span class="sc">*</span>Vy <span class="sc">-</span> Vs2<span class="sc">==</span><span class="dv">50</span>)         <span class="sc">|&gt;</span> </span>
+<span id="cb90-13"><a href="more-linear-programming-models.html#cb90-13" aria-hidden="true" tabindex="-1"></a> <span class="fu">add_constraint</span>(<span class="dv">2</span><span class="sc">*</span>Vx <span class="sc">-</span> <span class="dv">4</span><span class="sc">*</span>Vy <span class="sc">==</span> <span class="dv">0</span>) </span>
+<span id="cb90-14"><a href="more-linear-programming-models.html#cb90-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-15"><a href="more-linear-programming-models.html#cb90-15" aria-hidden="true" tabindex="-1"></a>  resStd <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(StdModel, </span>
+<span id="cb90-16"><a href="more-linear-programming-models.html#cb90-16" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
+<span id="cb90-17"><a href="more-linear-programming-models.html#cb90-17" aria-hidden="true" tabindex="-1"></a>  resStd</span></code></pre></div>
+<pre><code>## Status: optimal
+## Objective value: 35</code></pre>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="more-linear-programming-models.html#cb92-1" aria-hidden="true" tabindex="-1"></a>x  <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (resStd , Vx)</span>
+<span id="cb92-2"><a href="more-linear-programming-models.html#cb92-2" aria-hidden="true" tabindex="-1"></a>y  <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (resStd , Vy)</span>
+<span id="cb92-3"><a href="more-linear-programming-models.html#cb92-3" aria-hidden="true" tabindex="-1"></a>s1 <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (resStd , Vs1)</span>
+<span id="cb92-4"><a href="more-linear-programming-models.html#cb92-4" aria-hidden="true" tabindex="-1"></a>s2 <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (resStd , Vs2)</span>
+<span id="cb92-5"><a href="more-linear-programming-models.html#cb92-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-6"><a href="more-linear-programming-models.html#cb92-6" aria-hidden="true" tabindex="-1"></a>base_case_res           <span class="ot">&lt;-</span> <span class="fu">cbind</span>(x, y, s1, s2)</span>
+<span id="cb92-7"><a href="more-linear-programming-models.html#cb92-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(base_case_res) <span class="ot">&lt;-</span> <span class="st">&quot;Optimal Values&quot;</span></span>
+<span id="cb92-8"><a href="more-linear-programming-models.html#cb92-8" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(base_case_res, <span class="at">booktabs=</span>T, </span>
+<span id="cb92-9"><a href="more-linear-programming-models.html#cb92-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption=</span><span class="st">&quot;Solution to Standard Form&quot;</span>)<span class="sc">|&gt;</span></span>
+<span id="cb92-10"><a href="more-linear-programming-models.html#cb92-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:StdModel">TABLE 3.11: </span>Solution to Standard Form
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+x
+</th>
+<th style="text-align:right;">
+y
+</th>
+<th style="text-align:right;">
+s1
+</th>
+<th style="text-align:right;">
+s2
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Optimal Values
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+20
+</td>
+</tr>
+</tbody>
+</table>
+<p>Notice that we had three equations and four variables (both regular and slack variables.) This meant that at every iteration of the simplex algorithm, it would set one variable equal to zero and solve for the other three variables because solving three equations with three unknowns is very easy. This is consistent with our solution, where <span class="math inline">\(s_1\)</span> is zero and the other three variables all had values.<br />
+</p>
+</div>
+</div>
+<div id="vector-and-matrix-forms-of-lps" class="section level2" number="3.5">
+<h2><span class="header-section-number">3.5</span> Vector and Matrix Forms of LPs</h2>
+<p>One of the benefits of using an algebraic modeling approach for linear programming such as <code>ompr</code> is that it provides a direct mapping from the mathematical model of the application to the implementation.
+The actual solver used such as <code>glpk,</code> <code>symphony,</code> or <code>lpSolve</code> take the linear program in a different form though and <code>ompr</code> processes it into a form they can handle.     Technically, the <code>glpk</code> and <code>symphony</code> are made available on CRAN as <code>Rglpk</code> and <code>Rsymphony</code> to distinguish them from other implementations of their optimization engines.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:Fig-ompr-structure"></span>
+<img src="images/Fig03-03-ROI-1.PNG" alt="Relationship between ompr and solvers." width="100%" />
+<p class="caption">
+FIGURE 3.3: Relationship between ompr and solvers.
+</p>
+</div>
+<p>In general, the solver thinks of the problem in terms of a vector of coefficients for the objective function, <em>C</em>, a vector of right hand side constraint values, <em>B</em>, a matrix of data, <em>A</em>, and a vector of variables, <em>x</em>.
+The result is that any linear program can be thought of in a form to the right.</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{max    } &amp;  C \cdot x \\
+    \text{s.t.:  } &amp;  A \cdot x \leq B \\
+                   &amp; x \geq 0  
+  \end{aligned}
+  \end{split}
+\]</span></p>
+<p>Let’s examine building our first two variable LP model in this way using the <code>lpsolveAPI</code>  package.<br />
+</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{Max    } &amp; 7\cdot Ants +12 \cdot Bats \\
+    \text{s.t.:  } &amp; 1\cdot Ants + 4 \cdot Bats \leq 800 \\
+                   &amp; 3\cdot Ants + 6 \cdot Bats \leq 900 \\
+                   &amp; 2\cdot Ants + 2 \cdot Bats \leq 480 \\
+                   &amp; 2\cdot Ants + 10 \cdot Bats \leq 1200 \\
+                   &amp; Ants, \; Bats \geq 0  
+  \end{aligned}
+  \end{split}
+\]</span></p>
+<p>Now let’s implement the model the model using <code>lpSolveAPI</code>.</p>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="more-linear-programming-models.html#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lpSolveAPI)</span>
+<span id="cb93-2"><a href="more-linear-programming-models.html#cb93-2" aria-hidden="true" tabindex="-1"></a>lps.model <span class="ot">&lt;-</span> <span class="fu">make.lp</span>(<span class="dv">0</span>, <span class="dv">2</span>) <span class="co"># Make empty 2 var model</span></span>
+<span id="cb93-3"><a href="more-linear-programming-models.html#cb93-3" aria-hidden="true" tabindex="-1"></a><span class="fu">add.constraint</span>(lps.model, <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">4</span>), <span class="st">&quot;&lt;=&quot;</span>, <span class="dv">800</span>)</span>
+<span id="cb93-4"><a href="more-linear-programming-models.html#cb93-4" aria-hidden="true" tabindex="-1"></a><span class="fu">add.constraint</span>(lps.model, <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">6</span>), <span class="st">&quot;&lt;=&quot;</span>, <span class="dv">900</span>)</span>
+<span id="cb93-5"><a href="more-linear-programming-models.html#cb93-5" aria-hidden="true" tabindex="-1"></a><span class="fu">add.constraint</span>(lps.model, <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>), <span class="st">&quot;&lt;=&quot;</span>, <span class="dv">480</span>)</span>
+<span id="cb93-6"><a href="more-linear-programming-models.html#cb93-6" aria-hidden="true" tabindex="-1"></a><span class="fu">add.constraint</span>(lps.model, <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">10</span>), <span class="st">&quot;&lt;=&quot;</span>, <span class="dv">1200</span>)</span>
+<span id="cb93-7"><a href="more-linear-programming-models.html#cb93-7" aria-hidden="true" tabindex="-1"></a><span class="fu">set.objfn</span>(lps.model, <span class="fu">c</span>(<span class="sc">-</span><span class="dv">7</span>,<span class="sc">-</span><span class="dv">12</span>))</span>
+<span id="cb93-8"><a href="more-linear-programming-models.html#cb93-8" aria-hidden="true" tabindex="-1"></a><span class="fu">name.lp</span>(lps.model, <span class="st">&quot;Simple LP&quot;</span>)</span>
+<span id="cb93-9"><a href="more-linear-programming-models.html#cb93-9" aria-hidden="true" tabindex="-1"></a><span class="fu">name.lp</span>(lps.model)</span></code></pre></div>
+<pre><code>## [1] &quot;Simple LP&quot;</code></pre>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="more-linear-programming-models.html#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot.lpExtPtr(lps.model)</span></span>
+<span id="cb95-2"><a href="more-linear-programming-models.html#cb95-2" aria-hidden="true" tabindex="-1"></a><span class="fu">solve</span>(lps.model)</span></code></pre></div>
+<pre><code>## [1] 0</code></pre>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="more-linear-programming-models.html#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="fu">get.primal.solution</span>(lps.model, <span class="at">orig=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## [1] 420 900 480 960 180  60</code></pre>
+<p>While the graph may not be as elegant our earlier versions, it shows how the problem can be visualized.</p>
+<p>Earlier in the chapter, we created data structures for the generalized version of the optimization model. Recall that earlier in this chapter we created a <code>Resources</code> matrix of the resources used by each product - this corresponds to our <span class="math inline">\(A\)</span> matrix. We also created a single column matrix, <code>Available</code>, for the amount of each resource available which is our <span class="math inline">\(B\)</span> vector. The <code>Profit</code> single row matrix serves as our <span class="math inline">\(C\)</span> vector. The last item that we need to do is to specify a direction for each inequality.</p>
+<p>We could rewrite our formulation then as the following.</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{max  }   &amp;  Profit \cdot x \\
+    \text{s.t. } &amp;  Resources \cdot x \leq Available \\
+                       &amp; x \geq 0  
+  \end{aligned}
+  \end{split}
+\]</span></p>
+<p>The <code>Rglpk</code> package can then be accessed directly.</p>
+<div class="figure"><span style="display:block;" id="fig:Fig-ompr-to-glpk"></span>
+<img src="images/Fig03-04-ROI-glpk1.PNG" alt="Relationship between ompr and Rglpk." width="100%" />
+<p class="caption">
+FIGURE 3.4: Relationship between ompr and Rglpk.
+</p>
+</div>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="more-linear-programming-models.html#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span> (Rglpk)    <span class="co"># Load Rglpk package</span></span></code></pre></div>
+<pre><code>## Loading required package: slam</code></pre>
+<pre><code>## Using the GLPK callable library version 4.47</code></pre>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="more-linear-programming-models.html#cb102-1" aria-hidden="true" tabindex="-1"></a>dir2<span class="ot">&lt;-</span> <span class="fu">c</span>( <span class="st">&quot;&lt;=&quot;</span>, <span class="st">&quot;&lt;=&quot;</span>, <span class="st">&quot;&lt;=&quot;</span>, <span class="st">&quot;&lt;=&quot;</span>, <span class="st">&quot;&lt;=&quot;</span>)</span>
+<span id="cb102-2"><a href="more-linear-programming-models.html#cb102-2" aria-hidden="true" tabindex="-1"></a>                   <span class="co"># Set direction of each inequality</span></span>
+<span id="cb102-3"><a href="more-linear-programming-models.html#cb102-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-4"><a href="more-linear-programming-models.html#cb102-4" aria-hidden="true" tabindex="-1"></a>res2 <span class="ot">&lt;-</span> <span class="fu">Rglpk_solve_LP</span>(<span class="at">obj=</span>Profit,    <span class="co"># C vector</span></span>
+<span id="cb102-5"><a href="more-linear-programming-models.html#cb102-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">mat=</span>Resources, <span class="co"># A matrix</span></span>
+<span id="cb102-6"><a href="more-linear-programming-models.html#cb102-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">dir=</span>dir2,  <span class="co"># Constraint Inequalities</span></span>
+<span id="cb102-7"><a href="more-linear-programming-models.html#cb102-7" aria-hidden="true" tabindex="-1"></a>                       Available, <span class="co"># B vector</span></span>
+<span id="cb102-8"><a href="more-linear-programming-models.html#cb102-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">max=</span><span class="cn">TRUE</span>)  <span class="co"># False does minimization</span></span>
+<span id="cb102-9"><a href="more-linear-programming-models.html#cb102-9" aria-hidden="true" tabindex="-1"></a>   <span class="co"># Uses default bounds on all variables:</span></span>
+<span id="cb102-10"><a href="more-linear-programming-models.html#cb102-10" aria-hidden="true" tabindex="-1"></a>   <span class="co">#   LB = 0, UB=infinity (just non-negativity)</span></span>
+<span id="cb102-11"><a href="more-linear-programming-models.html#cb102-11" aria-hidden="true" tabindex="-1"></a>   <span class="co">#   Defaults to continuous variables</span></span></code></pre></div>
+<p>Notice that calling the solver directly such as in this way using <code>Rglpk</code> does not require naming decision variables. A decision variable is created for each column of the matrix. Directly accessing the solver allows for all the same features that we use through <code>ompr</code> such as placing bounds on the variables, changing to a minimization objective function, and more such as advanced solving options. Other LP solving engines available in <code>R</code> such as <code>RSymphony</code> and <code>lpSolve</code> have similar syntax for solving. Let’s look at the results. As usual, we start by examining the status.  </p>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="more-linear-programming-models.html#cb103-1" aria-hidden="true" tabindex="-1"></a>res2<span class="sc">$</span>status</span></code></pre></div>
+<pre><code>## [1] 0</code></pre>
+<p>The status returned by <code>Rglpk</code> is zero. This may sound bad but the package’s help file indicates that returning a status value of zero means that no problems occurred and it found an optimal solution. We can then proceed to examine the objective function value.</p>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="more-linear-programming-models.html#cb105-1" aria-hidden="true" tabindex="-1"></a>res2<span class="sc">$</span>optimum</span></code></pre></div>
+<pre><code>## [1] 4800</code></pre>
+<p>This objective function value may look familiar. Now let’s look at the solution in terms of optimal decision variable values.</p>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="more-linear-programming-models.html#cb107-1" aria-hidden="true" tabindex="-1"></a>res2<span class="sc">$</span>solution</span></code></pre></div>
+<pre><code>## [1] 240   0   0   0</code></pre>
+<p>Most of these LP solving engines can also allow models to be built up incrementally as well by creating an empty model, then adding an objective function and adding constraints, bounds on variables as separate lines of <code>R</code> code.</p>
+<p>While working with the solver directly has the benefit of avoiding ambiguities such as the difficulty of parsing solution status correctly, creating a single <em>A</em> matrix for optimization problems with multiple sets of decision variables and decision variables that may have 3 or more subscripts can be very tricky, hard to maintain, and even harder to debug. Also, the results require just as much or more care in unpacking as the solution variable values are returned as a single vector, <em>x</em> containing all the separate decision variables. Think of having three triple subscripted variables, <em>u</em>, <em>v</em>, and <em>y</em> with each subscript having 12 values. The resulting <em>x</em> vector will have <span class="math inline">\(3 \cdot 12^3=5184\)</span> elements, each of which must always be considered in exactly the same order for each constraint or building of the <em>A</em> matrix.</p>
+<p>At this point, it may be apparent that a chief benefit of <code>ompr</code> is that allows the modeler to deal with the model at a higher level and forces the computer to handle the detailed accounting translating the model into a lower level solvable structure and then translating the solution back into the original terms. These conversions are analogous to using a high level computer language versus a low level assembly code. A talented programmer can write a program in assembly code to do anything that could be done in a high level language but the cost in terms of time and effort is typically prohibitive.</p>
+<p>The investment of time and effort to use a lower level, more direct access to the solver engine may be warranted when developing a package that does optimization. For example, packages for doing Data Envelopment Analysis require doing many linear programs. These are typically done using the lower level engines such as lpSolveAPI, <code>Rglkp</code>, <code>lpSolveAPI</code>, or other tools rather than <code>ompr</code> but the platform decision should be made carefully. A more indepth example of building optimization models using lower level access calls is in <em>DEA Using R</em>.</p>
+<p>Since each low level solver may have different choices made in terms of the name or format of parameters to be passed for the LP as well as a different naming convention of elements being passed back, a translation layer has been developed, <code>ROI</code> which stands for the R Optimization Interface. There is the core <code>ROI</code> package and a specific <code>ROI</code> interface for each LP solver such as <code>ROI.plugin.glpk</code>. <code>ROI</code> can then be used to simplify switching between LP solvers. This is demonstrated in Chapter 8.</p>
+</div>
+<div id="exercises-1" class="section level2" number="3.6">
+<h2><span class="header-section-number">3.6</span> Exercises</h2>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-5" class="exercise"><strong>Exercise 3.1  (Transportation) </strong></span>Four manufacturing plants are supplying material for distributors in four regions.
+The four supply plants are located in Chicago, Beaverton, Eugene, and Dallas.
+The four distributors are in PDX (Portland), SEA (Seattle), MSP (Minneapolis), and ATL (Atlanta).
+Each manufacturing plant has a maximum amount that they can produce.
+For example, Chicago can produce at most 500.
+Similarly, the PDX region can handle at most 700 units.
+The cost to transport from Dallas to MSP is three times as high as the cost from Dallas to Atlanta.
+The table on the right displays the transportation cost between all the cities.
+</p>
+<table>
+<caption>Transportation Cost between Cities</caption>
+<thead>
+<tr class="header">
+<th align="right">Node</th>
+<th align="center">PDX</th>
+<th align="center">SEA</th>
+<th align="center">MSP</th>
+<th align="center">ATL</th>
+<th align="center"><strong>Supply</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">Chicago</td>
+<td align="center">20</td>
+<td align="center">21</td>
+<td align="center">8</td>
+<td align="center">12</td>
+<td align="center"><strong>500</strong></td>
+</tr>
+<tr class="even">
+<td align="right">Beaverton</td>
+<td align="center">6</td>
+<td align="center">7</td>
+<td align="center">18</td>
+<td align="center">24</td>
+<td align="center"><strong>500</strong></td>
+</tr>
+<tr class="odd">
+<td align="right">Eugene</td>
+<td align="center">8</td>
+<td align="center">10</td>
+<td align="center">22</td>
+<td align="center">28</td>
+<td align="center"><strong>500</strong></td>
+</tr>
+<tr class="even">
+<td align="right">Dallas</td>
+<td align="center">16</td>
+<td align="center">26</td>
+<td align="center">15</td>
+<td align="center">5</td>
+<td align="center"><strong>600</strong></td>
+</tr>
+<tr class="odd">
+<td align="right"><strong>Capacity</strong></td>
+<td align="center"><strong>700</strong></td>
+<td align="center"><strong>500</strong></td>
+<td align="center"><strong>500</strong></td>
+<td align="center"><strong>600</strong></td>
+<td align="center"></td>
+</tr>
+</tbody>
+</table>
+<p>Formulate an explicit model for the above application that solves this transportation problem to find the lowest cost way of transporting as much as product as we can to distributors.
+Hint: You might choose to define variables based on the first letter of source and destination so <em>XCP</em> is the amount to ship from Chicago to PDX.<br />
+</p>
+<p>Implement and solve the model using <code>ompr</code>.
+Be sure to interpret and discuss the solution as to why it makes it sense.
+</p>
+</div>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-6" class="exercise"><strong>Exercise 3.2  (Generalized Transportation Model) </strong></span>Formulate a generalized model for the above application that solves this transportation problem to find the lowest cost way of transporting as much product as we can to distributors.<br />
+</p>
+<p><strong>Hint</strong>: Feel free to use my LaTeX formulation for the general transportation model and make change(s) to reflect your case.<br />
+</p>
+<p>Implement and solve the model using <code>ompr</code>. Be sure to discuss the solution as to why it makes sense.</p>
+</div>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-7" class="exercise"><strong>Exercise 3.3  (Convert LP to Standard Form) </strong></span>Convert the three variable LP represented in Table 3.13 into standard form.</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{Max:} &amp; \\
+                &amp; Profit=20\cdot Ants+10\cdot Bats+16\cdot Cats \\
+    \text{S.t.} &amp; \\
+                &amp; 6\cdot Ants+3\cdot Bats+4\cdot Cats \leq 2000 \\
+                &amp; 8\cdot Ants+4\cdot Bats+4\cdot Cats \leq 2000 \\
+                &amp; 6\cdot Ants+3\cdot Bats+8\cdot Cats \leq 1440 \\
+                &amp; 40\cdot Ants+20\cdot Bats+16\cdot Cats \leq 9600 \\
+                &amp; Cats  \leq 200 \\
+                &amp; Ants, Bats, Cats \geq 0  
+  \end{aligned}
+  \end{split}
+\]</span></p>
+</div>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-8" class="exercise"><strong>Exercise 3.4  (Solve Standard Form) </strong></span>Implement and solve the standard form of the LP using R.
+Be sure to interpret the solution and discuss how it compares to the solution from the original model.</p>
+</div>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-9" class="exercise"><strong>Exercise 3.5  (Adding a Constraint) </strong></span>Add a new constraint to model in Exercise 3.4 such that number of Bats are double than the number of
+Ants. Be sure to interpret the solution and discuss how it compares to the solution from the original model.</p>
+</div>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-10" class="exercise"><strong>Exercise 3.6  (Convert Generalized LP to Standard Form) </strong></span>Convert the following generalized production planning LP into standard form.<br />
+<strong>Hint:</strong> define a set of variables, <span class="math inline">\(s_j\)</span> to reflect these changes and add it to the following formulation.</p>
+<p><span class="math display">\[
+ \begin{split}
+ \begin{aligned}
+    \text{Maximize  }   &amp;  \sum_{i=1}^3 P_i x_i \\
+    \text{subject to } &amp; \sum_{i=1}^3 R_{i,j}x_i \leq A_j  \; \forall \; j\\
+                       &amp; x_i \geq 0  \; \forall \; i
+  \end{aligned}
+  \end{split}
+\]</span></p>
+</div>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-11" class="exercise"><strong>Exercise 3.7  (Staff Scheduling) </strong></span>The need for nurses has increased rapidly during the Covid pandemic. Specific Hospital has determined their need for nurses throughout the day. They expect the following numbers of nurses to be needed over the typical 24 hour period.
+The nurses work eight hour shifts, starting at each 4 hour time period specified in the table.</p>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="more-linear-programming-models.html#cb109-1" aria-hidden="true" tabindex="-1"></a>hph_needs <span class="ot">&lt;-</span> <span class="fu">matrix</span> (<span class="fu">c</span>(<span class="dv">50</span>, <span class="dv">140</span>, <span class="dv">260</span>, <span class="dv">140</span>, <span class="dv">100</span>, <span class="dv">80</span>), <span class="at">ncol=</span><span class="dv">1</span>, </span>
+<span id="cb109-2"><a href="more-linear-programming-models.html#cb109-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">dimnames =</span> <span class="fu">c</span>(<span class="fu">list</span>(<span class="fu">c</span>(<span class="st">&quot;midnight - 4 AM&quot;</span>,</span>
+<span id="cb109-3"><a href="more-linear-programming-models.html#cb109-3" aria-hidden="true" tabindex="-1"></a>                        <span class="st">&quot;4 AM - 8 AM&quot;</span>,</span>
+<span id="cb109-4"><a href="more-linear-programming-models.html#cb109-4" aria-hidden="true" tabindex="-1"></a>                        <span class="st">&quot;8 AM - noon&quot;</span>,</span>
+<span id="cb109-5"><a href="more-linear-programming-models.html#cb109-5" aria-hidden="true" tabindex="-1"></a>                        <span class="st">&quot;noon - 4 PM&quot;</span>,</span>
+<span id="cb109-6"><a href="more-linear-programming-models.html#cb109-6" aria-hidden="true" tabindex="-1"></a>                        <span class="st">&quot;4 PM - 8 PM&quot;</span>,</span>
+<span id="cb109-7"><a href="more-linear-programming-models.html#cb109-7" aria-hidden="true" tabindex="-1"></a>                        <span class="st">&quot;8 PM - midnight&quot;</span>)),</span>
+<span id="cb109-8"><a href="more-linear-programming-models.html#cb109-8" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">&quot;Required Nurses&quot;</span>))))</span>
+<span id="cb109-9"><a href="more-linear-programming-models.html#cb109-9" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (hph_needs, <span class="at">booktabs=</span>T, <span class="at">caption=</span><span class="st">&quot;Staff Scheduling&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb109-10"><a href="more-linear-programming-models.html#cb109-10" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:nurse-scheduling">TABLE 3.12: </span>Staff Scheduling
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Required Nurses
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+midnight - 4 AM
+</td>
+<td style="text-align:right;">
+50
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4 AM - 8 AM
+</td>
+<td style="text-align:right;">
+140
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+8 AM - noon
+</td>
+<td style="text-align:right;">
+260
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+noon - 4 PM
+</td>
+<td style="text-align:right;">
+140
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4 PM - 8 PM
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+8 PM - midnight
+</td>
+<td style="text-align:right;">
+80
+</td>
+</tr>
+</tbody>
+</table>
+<ol style="list-style-type: lower-alpha">
+<li>Create an appropriate optimization model to minimize the number of nurses needed to cover the requirements.</li>
+<li>Implement and solve the model in R.</li>
+<li>Discuss and explain your solution.</li>
+</ol>
+</div>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-12" class="exercise"><strong>Exercise 3.8  (Reallocating personnel at Nikola) </strong></span>Due to the semiconductor shortage affecting the automotive industry, the production of vehicles has slowed down. The lack of a key control chip has brought the Engine shop of the manufacturing plant of automotive company Nikola to a complete halt. The company has decided to use the personnel from the Engine shop in other shops in the Press shop and the Paint shop, split equally. Also, it has decided to store the assembled vehicles in the plant until Engine Shop is functional
+again. The maximum capacity of the storage of cars is 10000.
+Current manpower and production information is as given in the table.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Process Area</th>
+<th align="center">Alpha</th>
+<th align="center">Beta</th>
+<th align="center">Gamma</th>
+<th align="center">Theta</th>
+<th align="center">Available labor hours</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">Profit</td>
+<td align="center">$4000</td>
+<td align="center">$3000</td>
+<td align="center">$3600</td>
+<td align="center">$5000</td>
+<td align="center"></td>
+</tr>
+<tr class="even">
+<td align="right">Press Shop</td>
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">600</td>
+</tr>
+<tr class="odd">
+<td align="right">Weld Shop</td>
+<td align="center">3</td>
+<td align="center">4</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">1200</td>
+</tr>
+<tr class="even">
+<td align="right">Paint Shop</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">760</td>
+</tr>
+<tr class="odd">
+<td align="right">Engine Shop</td>
+<td align="center">3</td>
+<td align="center">5</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">700</td>
+</tr>
+<tr class="even">
+<td align="right">Assembly Shop</td>
+<td align="center">2</td>
+<td align="center">0</td>
+<td align="center">2</td>
+<td align="center">0</td>
+<td align="center">1000</td>
+</tr>
+</tbody>
+</table>
+<p>Make required change to the given table and Create an optimization model to find a production plan with
+max profit for all four car models - Alpha, Beta, Gamma, and Theta. Make sure to consider the max storage
+limit of 10000 cars.</p>
+</div>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="introduction-to-linear-programming.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="sensitivity-analysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
