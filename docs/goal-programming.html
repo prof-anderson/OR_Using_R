@@ -24,7 +24,7 @@
 <meta name="author" content="Timothy R. Anderson" />
 
 
-<meta name="date" content="2021-12-22" />
+<meta name="date" content="2021-12-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -577,26 +577,26 @@ Rather than directly stating the solution value of 1980, a more general approach
   \end{aligned}
   \end{split}
 \]</span></p>
-<div class="sourceCode" id="cb260"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb260-1"><a href="goal-programming.html#cb260-1" aria-hidden="true" tabindex="-1"></a>Home1Model <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">|&gt;</span></span>
-<span id="cb260-2"><a href="goal-programming.html#cb260-2" aria-hidden="true" tabindex="-1"></a> <span class="co"># Avoid name space conflicts by using a prefix of V</span></span>
-<span id="cb260-3"><a href="goal-programming.html#cb260-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(VH, <span class="at">type =</span> <span class="st">&quot;integer&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
-<span id="cb260-4"><a href="goal-programming.html#cb260-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(VR, <span class="at">type =</span> <span class="st">&quot;integer&quot;</span>,<span class="at">lb =</span> <span class="dv">0</span>)  <span class="sc">|&gt;</span></span>
-<span id="cb260-5"><a href="goal-programming.html#cb260-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_objective</span>(<span class="fl">1.1</span><span class="sc">*</span>VH <span class="sc">+</span> <span class="fl">2.25</span><span class="sc">*</span>VR,<span class="st">&quot;max&quot;</span>)      <span class="sc">|&gt;</span></span>
-<span id="cb260-6"><a href="goal-programming.html#cb260-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">10</span><span class="sc">*</span>VH <span class="sc">+</span> <span class="dv">25</span><span class="sc">*</span>VR <span class="sc">&lt;=</span> <span class="dv">1000</span>)      <span class="sc">|&gt;</span> </span>
-<span id="cb260-7"><a href="goal-programming.html#cb260-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="fl">0.1</span><span class="sc">*</span>VH <span class="sc">+</span> <span class="fl">0.1</span><span class="sc">*</span>VR <span class="sc">&lt;=</span> <span class="dv">7</span>) </span>
-<span id="cb260-8"><a href="goal-programming.html#cb260-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb260-9"><a href="goal-programming.html#cb260-9" aria-hidden="true" tabindex="-1"></a>res_Home1 <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(Home1Model, </span>
-<span id="cb260-10"><a href="goal-programming.html#cb260-10" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
-<span id="cb260-11"><a href="goal-programming.html#cb260-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb260-12"><a href="goal-programming.html#cb260-12" aria-hidden="true" tabindex="-1"></a>H  <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (res_Home1 , VH)</span>
-<span id="cb260-13"><a href="goal-programming.html#cb260-13" aria-hidden="true" tabindex="-1"></a>R  <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (res_Home1 , VR)</span>
-<span id="cb260-14"><a href="goal-programming.html#cb260-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb260-15"><a href="goal-programming.html#cb260-15" aria-hidden="true" tabindex="-1"></a>sum_Home1           <span class="ot">&lt;-</span> <span class="fu">cbind</span>(res_Home1<span class="sc">$</span>objective_value,H, R)</span>
-<span id="cb260-16"><a href="goal-programming.html#cb260-16" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(sum_Home1) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Obj. Func. Val.&quot;</span>, <span class="st">&quot;H&quot;</span>, <span class="st">&quot;R&quot;</span>)</span>
-<span id="cb260-17"><a href="goal-programming.html#cb260-17" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(sum_Home1) <span class="ot">&lt;-</span> <span class="st">&quot;Group 1: Max People&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb258"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb258-1"><a href="goal-programming.html#cb258-1" aria-hidden="true" tabindex="-1"></a>Home1Model <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">|&gt;</span></span>
+<span id="cb258-2"><a href="goal-programming.html#cb258-2" aria-hidden="true" tabindex="-1"></a> <span class="co"># Avoid name space conflicts by using a prefix of V</span></span>
+<span id="cb258-3"><a href="goal-programming.html#cb258-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(VH, <span class="at">type =</span> <span class="st">&quot;integer&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb258-4"><a href="goal-programming.html#cb258-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(VR, <span class="at">type =</span> <span class="st">&quot;integer&quot;</span>,<span class="at">lb =</span> <span class="dv">0</span>)  <span class="sc">|&gt;</span></span>
+<span id="cb258-5"><a href="goal-programming.html#cb258-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_objective</span>(<span class="fl">1.1</span><span class="sc">*</span>VH <span class="sc">+</span> <span class="fl">2.25</span><span class="sc">*</span>VR,<span class="st">&quot;max&quot;</span>)      <span class="sc">|&gt;</span></span>
+<span id="cb258-6"><a href="goal-programming.html#cb258-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">10</span><span class="sc">*</span>VH <span class="sc">+</span> <span class="dv">25</span><span class="sc">*</span>VR <span class="sc">&lt;=</span> <span class="dv">1000</span>)      <span class="sc">|&gt;</span> </span>
+<span id="cb258-7"><a href="goal-programming.html#cb258-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="fl">0.1</span><span class="sc">*</span>VH <span class="sc">+</span> <span class="fl">0.1</span><span class="sc">*</span>VR <span class="sc">&lt;=</span> <span class="dv">7</span>) </span>
+<span id="cb258-8"><a href="goal-programming.html#cb258-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb258-9"><a href="goal-programming.html#cb258-9" aria-hidden="true" tabindex="-1"></a>res_Home1 <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(Home1Model, </span>
+<span id="cb258-10"><a href="goal-programming.html#cb258-10" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
+<span id="cb258-11"><a href="goal-programming.html#cb258-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb258-12"><a href="goal-programming.html#cb258-12" aria-hidden="true" tabindex="-1"></a>H  <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (res_Home1 , VH)</span>
+<span id="cb258-13"><a href="goal-programming.html#cb258-13" aria-hidden="true" tabindex="-1"></a>R  <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (res_Home1 , VR)</span>
+<span id="cb258-14"><a href="goal-programming.html#cb258-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb258-15"><a href="goal-programming.html#cb258-15" aria-hidden="true" tabindex="-1"></a>sum_Home1           <span class="ot">&lt;-</span> <span class="fu">cbind</span>(res_Home1<span class="sc">$</span>objective_value,H, R)</span>
+<span id="cb258-16"><a href="goal-programming.html#cb258-16" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(sum_Home1) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Obj. Func. Val.&quot;</span>, <span class="st">&quot;H&quot;</span>, <span class="st">&quot;R&quot;</span>)</span>
+<span id="cb258-17"><a href="goal-programming.html#cb258-17" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(sum_Home1) <span class="ot">&lt;-</span> <span class="st">&quot;Group 1: Max People&quot;</span></span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-60">TABLE 8.1: </span>Group 1’s Ideal Solution.
+<span id="tab:unnamed-chunk-61">TABLE 8.1: </span>Group 1’s Ideal Solution.
 </caption>
 <thead>
 <tr>
@@ -641,20 +641,20 @@ Group 1: Max People
   \end{aligned}
   \end{split}
 \]</span></p>
-<div class="sourceCode" id="cb261"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb261-1"><a href="goal-programming.html#cb261-1" aria-hidden="true" tabindex="-1"></a>Home2Model <span class="ot">&lt;-</span> <span class="fu">set_objective</span>(Home1Model, </span>
-<span id="cb261-2"><a href="goal-programming.html#cb261-2" aria-hidden="true" tabindex="-1"></a>                            <span class="fl">0.1</span><span class="sc">*</span>VH <span class="sc">+</span> <span class="fl">0.9</span><span class="sc">*</span>VR,<span class="st">&quot;max&quot;</span>)</span>
-<span id="cb261-3"><a href="goal-programming.html#cb261-3" aria-hidden="true" tabindex="-1"></a>  res_Home2 <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(Home2Model, </span>
-<span id="cb261-4"><a href="goal-programming.html#cb261-4" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
-<span id="cb261-5"><a href="goal-programming.html#cb261-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb261-6"><a href="goal-programming.html#cb261-6" aria-hidden="true" tabindex="-1"></a>H  <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (res_Home2 , VH)</span>
-<span id="cb261-7"><a href="goal-programming.html#cb261-7" aria-hidden="true" tabindex="-1"></a>R  <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (res_Home2 , VR)</span>
-<span id="cb261-8"><a href="goal-programming.html#cb261-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb261-9"><a href="goal-programming.html#cb261-9" aria-hidden="true" tabindex="-1"></a>sum_Home2           <span class="ot">&lt;-</span> <span class="fu">cbind</span>(res_Home2<span class="sc">$</span>objective_value,H, R)</span>
-<span id="cb261-10"><a href="goal-programming.html#cb261-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(sum_Home2) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Obj. Func. Val.&quot;</span>, <span class="st">&quot;H&quot;</span>, <span class="st">&quot;R&quot;</span>)</span>
-<span id="cb261-11"><a href="goal-programming.html#cb261-11" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(sum_Home2) <span class="ot">&lt;-</span> <span class="st">&quot;Group 2: Max Children&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb259"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb259-1"><a href="goal-programming.html#cb259-1" aria-hidden="true" tabindex="-1"></a>Home2Model <span class="ot">&lt;-</span> <span class="fu">set_objective</span>(Home1Model, </span>
+<span id="cb259-2"><a href="goal-programming.html#cb259-2" aria-hidden="true" tabindex="-1"></a>                            <span class="fl">0.1</span><span class="sc">*</span>VH <span class="sc">+</span> <span class="fl">0.9</span><span class="sc">*</span>VR,<span class="st">&quot;max&quot;</span>)</span>
+<span id="cb259-3"><a href="goal-programming.html#cb259-3" aria-hidden="true" tabindex="-1"></a>  res_Home2 <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(Home2Model, </span>
+<span id="cb259-4"><a href="goal-programming.html#cb259-4" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
+<span id="cb259-5"><a href="goal-programming.html#cb259-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb259-6"><a href="goal-programming.html#cb259-6" aria-hidden="true" tabindex="-1"></a>H  <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (res_Home2 , VH)</span>
+<span id="cb259-7"><a href="goal-programming.html#cb259-7" aria-hidden="true" tabindex="-1"></a>R  <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (res_Home2 , VR)</span>
+<span id="cb259-8"><a href="goal-programming.html#cb259-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb259-9"><a href="goal-programming.html#cb259-9" aria-hidden="true" tabindex="-1"></a>sum_Home2           <span class="ot">&lt;-</span> <span class="fu">cbind</span>(res_Home2<span class="sc">$</span>objective_value,H, R)</span>
+<span id="cb259-10"><a href="goal-programming.html#cb259-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(sum_Home2) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Obj. Func. Val.&quot;</span>, <span class="st">&quot;H&quot;</span>, <span class="st">&quot;R&quot;</span>)</span>
+<span id="cb259-11"><a href="goal-programming.html#cb259-11" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(sum_Home2) <span class="ot">&lt;-</span> <span class="st">&quot;Group 2: Max Children&quot;</span></span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-62">TABLE 8.2: </span>Comparing Homelessness Solutions.
+<span id="tab:unnamed-chunk-63">TABLE 8.2: </span>Comparing Homelessness Solutions.
 </caption>
 <thead>
 <tr>
@@ -721,7 +721,7 @@ Group 2: Max Children
 \]</span></p>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-63">TABLE 8.3: </span>Solution by Minimizing Sum of Deviations
+<span id="tab:unnamed-chunk-64">TABLE 8.3: </span>Solution by Minimizing Sum of Deviations
 </caption>
 <thead>
 <tr>
@@ -797,7 +797,7 @@ Min sum of deviations
 ## Objective value: 0.1</code></pre>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-64">TABLE 8.4: </span>Solution by Minimizing Sum of Percentage Deviations
+<span id="tab:unnamed-chunk-65">TABLE 8.4: </span>Solution by Minimizing Sum of Percentage Deviations
 </caption>
 <thead>
 <tr>
@@ -873,41 +873,41 @@ Min sum of deviation %s
 \]</span></p>
 <p>Let’s show the full R implementation of our minimax model.<br />
 </p>
-<div class="sourceCode" id="cb263"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb263-1"><a href="goal-programming.html#cb263-1" aria-hidden="true" tabindex="-1"></a>Home5Model <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">|&gt;</span></span>
-<span id="cb263-2"><a href="goal-programming.html#cb263-2" aria-hidden="true" tabindex="-1"></a> <span class="co"># To avoid name space conflicts, using a prefix of V</span></span>
-<span id="cb263-3"><a href="goal-programming.html#cb263-3" aria-hidden="true" tabindex="-1"></a> <span class="co">#    for ompr variables.</span></span>
-<span id="cb263-4"><a href="goal-programming.html#cb263-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(VQ, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>)         <span class="sc">|&gt;</span></span>
-<span id="cb263-5"><a href="goal-programming.html#cb263-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(VH, <span class="at">type =</span> <span class="st">&quot;integer&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>)    <span class="sc">|&gt;</span></span>
-<span id="cb263-6"><a href="goal-programming.html#cb263-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(VR, <span class="at">type =</span> <span class="st">&quot;integer&quot;</span>,<span class="at">lb =</span> <span class="dv">0</span>)     <span class="sc">|&gt;</span></span>
-<span id="cb263-7"><a href="goal-programming.html#cb263-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Vd1, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>,<span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
-<span id="cb263-8"><a href="goal-programming.html#cb263-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Vd2, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>,<span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
-<span id="cb263-9"><a href="goal-programming.html#cb263-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_objective</span>(VQ ,<span class="st">&quot;min&quot;</span>)                      <span class="sc">|&gt;</span></span>
-<span id="cb263-10"><a href="goal-programming.html#cb263-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(VQ<span class="sc">&gt;=</span>Vd1<span class="sc">/</span>T1)                    <span class="sc">|&gt;</span></span>
-<span id="cb263-11"><a href="goal-programming.html#cb263-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(VQ<span class="sc">&gt;=</span>Vd2<span class="sc">/</span>T2)                    <span class="sc">|&gt;</span></span>
-<span id="cb263-12"><a href="goal-programming.html#cb263-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="fl">1.1</span><span class="sc">*</span>VH <span class="sc">+</span> <span class="fl">2.25</span><span class="sc">*</span>VR <span class="sc">+</span> Vd1 <span class="sc">==</span> T1)  <span class="sc">|&gt;</span></span>
-<span id="cb263-13"><a href="goal-programming.html#cb263-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="fl">0.1</span><span class="sc">*</span>VH <span class="sc">+</span> <span class="fl">0.9</span><span class="sc">*</span>VR <span class="sc">+</span> Vd2 <span class="sc">==</span> T2)   <span class="sc">|&gt;</span></span>
-<span id="cb263-14"><a href="goal-programming.html#cb263-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">10</span><span class="sc">*</span>VH <span class="sc">+</span> <span class="dv">25</span><span class="sc">*</span>VR <span class="sc">&lt;=</span> <span class="dv">1000</span>)         <span class="sc">|&gt;</span> </span>
-<span id="cb263-15"><a href="goal-programming.html#cb263-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="fl">0.1</span><span class="sc">*</span>VH <span class="sc">+</span> <span class="fl">0.1</span><span class="sc">*</span>VR <span class="sc">&lt;=</span> <span class="dv">7</span>) </span>
-<span id="cb263-16"><a href="goal-programming.html#cb263-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb263-17"><a href="goal-programming.html#cb263-17" aria-hidden="true" tabindex="-1"></a>res_Home5 <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(Home5Model, </span>
-<span id="cb263-18"><a href="goal-programming.html#cb263-18" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
-<span id="cb263-19"><a href="goal-programming.html#cb263-19" aria-hidden="true" tabindex="-1"></a>res_Home5</span></code></pre></div>
+<div class="sourceCode" id="cb261"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb261-1"><a href="goal-programming.html#cb261-1" aria-hidden="true" tabindex="-1"></a>Home5Model <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">|&gt;</span></span>
+<span id="cb261-2"><a href="goal-programming.html#cb261-2" aria-hidden="true" tabindex="-1"></a> <span class="co"># To avoid name space conflicts, using a prefix of V</span></span>
+<span id="cb261-3"><a href="goal-programming.html#cb261-3" aria-hidden="true" tabindex="-1"></a> <span class="co">#    for ompr variables.</span></span>
+<span id="cb261-4"><a href="goal-programming.html#cb261-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(VQ, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>)         <span class="sc">|&gt;</span></span>
+<span id="cb261-5"><a href="goal-programming.html#cb261-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(VH, <span class="at">type =</span> <span class="st">&quot;integer&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>)    <span class="sc">|&gt;</span></span>
+<span id="cb261-6"><a href="goal-programming.html#cb261-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(VR, <span class="at">type =</span> <span class="st">&quot;integer&quot;</span>,<span class="at">lb =</span> <span class="dv">0</span>)     <span class="sc">|&gt;</span></span>
+<span id="cb261-7"><a href="goal-programming.html#cb261-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Vd1, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>,<span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb261-8"><a href="goal-programming.html#cb261-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Vd2, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>,<span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb261-9"><a href="goal-programming.html#cb261-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_objective</span>(VQ ,<span class="st">&quot;min&quot;</span>)                      <span class="sc">|&gt;</span></span>
+<span id="cb261-10"><a href="goal-programming.html#cb261-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(VQ<span class="sc">&gt;=</span>Vd1<span class="sc">/</span>T1)                    <span class="sc">|&gt;</span></span>
+<span id="cb261-11"><a href="goal-programming.html#cb261-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(VQ<span class="sc">&gt;=</span>Vd2<span class="sc">/</span>T2)                    <span class="sc">|&gt;</span></span>
+<span id="cb261-12"><a href="goal-programming.html#cb261-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="fl">1.1</span><span class="sc">*</span>VH <span class="sc">+</span> <span class="fl">2.25</span><span class="sc">*</span>VR <span class="sc">+</span> Vd1 <span class="sc">==</span> T1)  <span class="sc">|&gt;</span></span>
+<span id="cb261-13"><a href="goal-programming.html#cb261-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="fl">0.1</span><span class="sc">*</span>VH <span class="sc">+</span> <span class="fl">0.9</span><span class="sc">*</span>VR <span class="sc">+</span> Vd2 <span class="sc">==</span> T2)   <span class="sc">|&gt;</span></span>
+<span id="cb261-14"><a href="goal-programming.html#cb261-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">10</span><span class="sc">*</span>VH <span class="sc">+</span> <span class="dv">25</span><span class="sc">*</span>VR <span class="sc">&lt;=</span> <span class="dv">1000</span>)         <span class="sc">|&gt;</span> </span>
+<span id="cb261-15"><a href="goal-programming.html#cb261-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="fl">0.1</span><span class="sc">*</span>VH <span class="sc">+</span> <span class="fl">0.1</span><span class="sc">*</span>VR <span class="sc">&lt;=</span> <span class="dv">7</span>) </span>
+<span id="cb261-16"><a href="goal-programming.html#cb261-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb261-17"><a href="goal-programming.html#cb261-17" aria-hidden="true" tabindex="-1"></a>res_Home5 <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(Home5Model, </span>
+<span id="cb261-18"><a href="goal-programming.html#cb261-18" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
+<span id="cb261-19"><a href="goal-programming.html#cb261-19" aria-hidden="true" tabindex="-1"></a>res_Home5</span></code></pre></div>
 <pre><code>## Status: optimal
 ## Objective value: 0.08</code></pre>
-<div class="sourceCode" id="cb265"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb265-1"><a href="goal-programming.html#cb265-1" aria-hidden="true" tabindex="-1"></a>H  <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (res_Home5, VH)</span>
-<span id="cb265-2"><a href="goal-programming.html#cb265-2" aria-hidden="true" tabindex="-1"></a>R  <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (res_Home5, VR)</span>
-<span id="cb265-3"><a href="goal-programming.html#cb265-3" aria-hidden="true" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (res_Home5, Vd1)</span>
-<span id="cb265-4"><a href="goal-programming.html#cb265-4" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (res_Home5, Vd2)</span>
-<span id="cb265-5"><a href="goal-programming.html#cb265-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb265-6"><a href="goal-programming.html#cb265-6" aria-hidden="true" tabindex="-1"></a>sum_Home5  <span class="ot">&lt;-</span> <span class="fu">cbind</span>(</span>
-<span id="cb265-7"><a href="goal-programming.html#cb265-7" aria-hidden="true" tabindex="-1"></a>  res_Home5<span class="sc">$</span>objective_value, H, R, </span>
-<span id="cb265-8"><a href="goal-programming.html#cb265-8" aria-hidden="true" tabindex="-1"></a>  d1, d1<span class="sc">/</span>T1, d2, d2<span class="sc">/</span>T2)</span>
-<span id="cb265-9"><a href="goal-programming.html#cb265-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(sum_Home5) <span class="ot">&lt;-</span> </span>
-<span id="cb265-10"><a href="goal-programming.html#cb265-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">&quot;Obj. Func. Val.&quot;</span>, <span class="st">&quot;H&quot;</span>, <span class="st">&quot;R&quot;</span>, <span class="st">&quot;d1&quot;</span>, <span class="st">&quot;d1%&quot;</span>, <span class="st">&quot;d2&quot;</span>, <span class="st">&quot;d2%&quot;</span>)</span>
-<span id="cb265-11"><a href="goal-programming.html#cb265-11" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(sum_Home5) <span class="ot">&lt;-</span> <span class="st">&quot;Minimax&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb263"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb263-1"><a href="goal-programming.html#cb263-1" aria-hidden="true" tabindex="-1"></a>H  <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (res_Home5, VH)</span>
+<span id="cb263-2"><a href="goal-programming.html#cb263-2" aria-hidden="true" tabindex="-1"></a>R  <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (res_Home5, VR)</span>
+<span id="cb263-3"><a href="goal-programming.html#cb263-3" aria-hidden="true" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (res_Home5, Vd1)</span>
+<span id="cb263-4"><a href="goal-programming.html#cb263-4" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> <span class="fu">get_solution</span> (res_Home5, Vd2)</span>
+<span id="cb263-5"><a href="goal-programming.html#cb263-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb263-6"><a href="goal-programming.html#cb263-6" aria-hidden="true" tabindex="-1"></a>sum_Home5  <span class="ot">&lt;-</span> <span class="fu">cbind</span>(</span>
+<span id="cb263-7"><a href="goal-programming.html#cb263-7" aria-hidden="true" tabindex="-1"></a>  res_Home5<span class="sc">$</span>objective_value, H, R, </span>
+<span id="cb263-8"><a href="goal-programming.html#cb263-8" aria-hidden="true" tabindex="-1"></a>  d1, d1<span class="sc">/</span>T1, d2, d2<span class="sc">/</span>T2)</span>
+<span id="cb263-9"><a href="goal-programming.html#cb263-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(sum_Home5) <span class="ot">&lt;-</span> </span>
+<span id="cb263-10"><a href="goal-programming.html#cb263-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">&quot;Obj. Func. Val.&quot;</span>, <span class="st">&quot;H&quot;</span>, <span class="st">&quot;R&quot;</span>, <span class="st">&quot;d1&quot;</span>, <span class="st">&quot;d1%&quot;</span>, <span class="st">&quot;d2&quot;</span>, <span class="st">&quot;d2%&quot;</span>)</span>
+<span id="cb263-11"><a href="goal-programming.html#cb263-11" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(sum_Home5) <span class="ot">&lt;-</span> <span class="st">&quot;Minimax&quot;</span></span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-65">TABLE 8.5: </span>Minimax Solution.
+<span id="tab:unnamed-chunk-66">TABLE 8.5: </span>Minimax Solution.
 </caption>
 <thead>
 <tr>
@@ -1034,11 +1034,11 @@ Minimax
 </p>
 <p>Try to give some thoughts as to how to set this up before moving on to seeing our formulation. </p>
 <p>To provide some space before we discuss the formulation, let’s show the data. Rather than providing a data table that must be retyped, let’s use a dataset already available in R so you can simply load the state data. Note that you can grab the population in 1977 in terms of thousands. </p>
-<div class="sourceCode" id="cb266"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb266-1"><a href="goal-programming.html#cb266-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(state)</span>
-<span id="cb266-2"><a href="goal-programming.html#cb266-2" aria-hidden="true" tabindex="-1"></a>Customers <span class="ot">&lt;-</span> state.x77[,<span class="dv">1</span>]</span>
-<span id="cb266-3"><a href="goal-programming.html#cb266-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">head</span> (Customers), <span class="at">booktabs=</span>T,</span>
-<span id="cb266-4"><a href="goal-programming.html#cb266-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption=</span><span class="st">&quot;Number of Customers for First Six States.&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb266-5"><a href="goal-programming.html#cb266-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb264"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb264-1"><a href="goal-programming.html#cb264-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(state)</span>
+<span id="cb264-2"><a href="goal-programming.html#cb264-2" aria-hidden="true" tabindex="-1"></a>Customers <span class="ot">&lt;-</span> state.x77[,<span class="dv">1</span>]</span>
+<span id="cb264-3"><a href="goal-programming.html#cb264-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">head</span> (Customers), <span class="at">booktabs=</span>T,</span>
+<span id="cb264-4"><a href="goal-programming.html#cb264-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption=</span><span class="st">&quot;Number of Customers for First Six States.&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb264-5"><a href="goal-programming.html#cb264-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:loading-mailing-data">TABLE 8.6: </span>Number of Customers for First Six States.
@@ -1136,25 +1136,25 @@ Colorado
 <div id="implementing-the-state-mailing-model" class="section level3" number="8.4.2">
 <h3><span class="header-section-number">8.4.2</span> Implementing the State Mailing Model</h3>
 <p>Let’s now move on to implement this model in R.</p>
-<div class="sourceCode" id="cb267"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb267-1"><a href="goal-programming.html#cb267-1" aria-hidden="true" tabindex="-1"></a>States <span class="ot">&lt;-</span> <span class="dv">50</span>  <span class="co"># Options to shrink problem for testing</span></span>
-<span id="cb267-2"><a href="goal-programming.html#cb267-2" aria-hidden="true" tabindex="-1"></a>Weeks <span class="ot">&lt;-</span> <span class="dv">8</span></span>
-<span id="cb267-3"><a href="goal-programming.html#cb267-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb267-4"><a href="goal-programming.html#cb267-4" aria-hidden="true" tabindex="-1"></a>Mail1 <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>()</span>
-<span id="cb267-5"><a href="goal-programming.html#cb267-5" aria-hidden="true" tabindex="-1"></a>     <span class="co"># 1 iff state s gets assigned to week w</span></span>
-<span id="cb267-6"><a href="goal-programming.html#cb267-6" aria-hidden="true" tabindex="-1"></a>Mail1 <span class="ot">&lt;-</span> <span class="fu">add_variable</span>(Mail1, Vx[s, w], </span>
-<span id="cb267-7"><a href="goal-programming.html#cb267-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">s=</span><span class="dv">1</span><span class="sc">:</span>States, <span class="at">w=</span><span class="dv">1</span><span class="sc">:</span>Weeks, <span class="at">type=</span><span class="st">&quot;binary&quot;</span>) </span>
-<span id="cb267-8"><a href="goal-programming.html#cb267-8" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb267-9"><a href="goal-programming.html#cb267-9" aria-hidden="true" tabindex="-1"></a>Mail1 <span class="ot">&lt;-</span> <span class="fu">add_variable</span>(Mail1, VQ, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>)</span>
-<span id="cb267-10"><a href="goal-programming.html#cb267-10" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb267-11"><a href="goal-programming.html#cb267-11" aria-hidden="true" tabindex="-1"></a>Mail1 <span class="ot">&lt;-</span> <span class="fu">set_objective</span>(Mail1, VQ, <span class="st">&quot;min&quot;</span>)</span>
-<span id="cb267-12"><a href="goal-programming.html#cb267-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb267-13"><a href="goal-programming.html#cb267-13" aria-hidden="true" tabindex="-1"></a><span class="co"># every state  needs to be assigned to a week</span></span>
-<span id="cb267-14"><a href="goal-programming.html#cb267-14" aria-hidden="true" tabindex="-1"></a>Mail1 <span class="ot">&lt;-</span> <span class="fu">add_constraint</span>(Mail1, <span class="fu">sum_expr</span>(Vx[s, w], </span>
-<span id="cb267-15"><a href="goal-programming.html#cb267-15" aria-hidden="true" tabindex="-1"></a>                          <span class="at">w=</span><span class="dv">1</span><span class="sc">:</span>Weeks)<span class="sc">==</span><span class="dv">1</span>, <span class="at">s=</span><span class="dv">1</span><span class="sc">:</span>States) </span>
-<span id="cb267-16"><a href="goal-programming.html#cb267-16" aria-hidden="true" tabindex="-1"></a>Mail1 <span class="ot">&lt;-</span> <span class="fu">add_constraint</span>(Mail1, VQ <span class="sc">&gt;=</span> </span>
-<span id="cb267-17"><a href="goal-programming.html#cb267-17" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">sum_expr</span>(Customers [s]<span class="sc">*</span>Vx[s, w], </span>
-<span id="cb267-18"><a href="goal-programming.html#cb267-18" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">s=</span><span class="dv">1</span><span class="sc">:</span>States), <span class="at">w =</span> <span class="dv">1</span><span class="sc">:</span>Weeks) </span>
-<span id="cb267-19"><a href="goal-programming.html#cb267-19" aria-hidden="true" tabindex="-1"></a>Mail1</span></code></pre></div>
+<div class="sourceCode" id="cb265"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb265-1"><a href="goal-programming.html#cb265-1" aria-hidden="true" tabindex="-1"></a>States <span class="ot">&lt;-</span> <span class="dv">50</span>  <span class="co"># Options to shrink problem for testing</span></span>
+<span id="cb265-2"><a href="goal-programming.html#cb265-2" aria-hidden="true" tabindex="-1"></a>Weeks <span class="ot">&lt;-</span> <span class="dv">8</span></span>
+<span id="cb265-3"><a href="goal-programming.html#cb265-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb265-4"><a href="goal-programming.html#cb265-4" aria-hidden="true" tabindex="-1"></a>Mail1 <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>()</span>
+<span id="cb265-5"><a href="goal-programming.html#cb265-5" aria-hidden="true" tabindex="-1"></a>     <span class="co"># 1 iff state s gets assigned to week w</span></span>
+<span id="cb265-6"><a href="goal-programming.html#cb265-6" aria-hidden="true" tabindex="-1"></a>Mail1 <span class="ot">&lt;-</span> <span class="fu">add_variable</span>(Mail1, Vx[s, w], </span>
+<span id="cb265-7"><a href="goal-programming.html#cb265-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">s=</span><span class="dv">1</span><span class="sc">:</span>States, <span class="at">w=</span><span class="dv">1</span><span class="sc">:</span>Weeks, <span class="at">type=</span><span class="st">&quot;binary&quot;</span>) </span>
+<span id="cb265-8"><a href="goal-programming.html#cb265-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb265-9"><a href="goal-programming.html#cb265-9" aria-hidden="true" tabindex="-1"></a>Mail1 <span class="ot">&lt;-</span> <span class="fu">add_variable</span>(Mail1, VQ, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>)</span>
+<span id="cb265-10"><a href="goal-programming.html#cb265-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb265-11"><a href="goal-programming.html#cb265-11" aria-hidden="true" tabindex="-1"></a>Mail1 <span class="ot">&lt;-</span> <span class="fu">set_objective</span>(Mail1, VQ, <span class="st">&quot;min&quot;</span>)</span>
+<span id="cb265-12"><a href="goal-programming.html#cb265-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb265-13"><a href="goal-programming.html#cb265-13" aria-hidden="true" tabindex="-1"></a><span class="co"># every state  needs to be assigned to a week</span></span>
+<span id="cb265-14"><a href="goal-programming.html#cb265-14" aria-hidden="true" tabindex="-1"></a>Mail1 <span class="ot">&lt;-</span> <span class="fu">add_constraint</span>(Mail1, <span class="fu">sum_expr</span>(Vx[s, w], </span>
+<span id="cb265-15"><a href="goal-programming.html#cb265-15" aria-hidden="true" tabindex="-1"></a>                          <span class="at">w=</span><span class="dv">1</span><span class="sc">:</span>Weeks)<span class="sc">==</span><span class="dv">1</span>, <span class="at">s=</span><span class="dv">1</span><span class="sc">:</span>States) </span>
+<span id="cb265-16"><a href="goal-programming.html#cb265-16" aria-hidden="true" tabindex="-1"></a>Mail1 <span class="ot">&lt;-</span> <span class="fu">add_constraint</span>(Mail1, VQ <span class="sc">&gt;=</span> </span>
+<span id="cb265-17"><a href="goal-programming.html#cb265-17" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">sum_expr</span>(Customers [s]<span class="sc">*</span>Vx[s, w], </span>
+<span id="cb265-18"><a href="goal-programming.html#cb265-18" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">s=</span><span class="dv">1</span><span class="sc">:</span>States), <span class="at">w =</span> <span class="dv">1</span><span class="sc">:</span>Weeks) </span>
+<span id="cb265-19"><a href="goal-programming.html#cb265-19" aria-hidden="true" tabindex="-1"></a>Mail1</span></code></pre></div>
 <pre><code>## Mixed integer linear optimization problem
 ## Variables:
 ##   Continuous: 1 
@@ -1162,10 +1162,10 @@ Colorado
 ##   Binary: 400 
 ## Model sense: minimize 
 ## Constraints: 58</code></pre>
-<div class="sourceCode" id="cb269"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb269-1"><a href="goal-programming.html#cb269-1" aria-hidden="true" tabindex="-1"></a>res_Mail1 <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(Mail1, </span>
-<span id="cb269-2"><a href="goal-programming.html#cb269-2" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;symphony&quot;</span>,</span>
-<span id="cb269-3"><a href="goal-programming.html#cb269-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">verbosity=</span><span class="sc">-</span><span class="dv">1</span>, <span class="at">gap_limit=</span><span class="fl">1.5</span>))</span></code></pre></div>
-<div class="sourceCode" id="cb270"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb270-1"><a href="goal-programming.html#cb270-1" aria-hidden="true" tabindex="-1"></a>res_Mail1</span></code></pre></div>
+<div class="sourceCode" id="cb267"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb267-1"><a href="goal-programming.html#cb267-1" aria-hidden="true" tabindex="-1"></a>res_Mail1 <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(Mail1, </span>
+<span id="cb267-2"><a href="goal-programming.html#cb267-2" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;symphony&quot;</span>,</span>
+<span id="cb267-3"><a href="goal-programming.html#cb267-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">verbosity=</span><span class="sc">-</span><span class="dv">1</span>, <span class="at">gap_limit=</span><span class="fl">1.5</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb268"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb268-1"><a href="goal-programming.html#cb268-1" aria-hidden="true" tabindex="-1"></a>res_Mail1</span></code></pre></div>
 <pre><code>## Status: infeasible
 ## Objective value: 26834</code></pre>
 <p>Note that the the messages from Symphony indicate that the solution found was feasible while <code>ompr</code> interprets the status as <code>infeasible.</code> This is a bug that we have discussed earlier. Turning on an option for more messages from the solver such as <code>verbose=TRUE</code> for <code>verbose=TRUE</code> or <code>verbosity=0</code> for <code>symphony</code> can give confirmation that the final status is <em>not</em> infeasible.</p>
@@ -1173,15 +1173,15 @@ Colorado
 <p>In fact, I realized that the feasible solution found was very close to the best remaining branches so perhaps this solution was optimal but it was taking a very long time to prove that it was optimal. In any case, it is probably good enough. Often data may only be accurate to <span class="math inline">\(\pm5\%\)</span> so spending extensive time trying to get significantly more accurate results is not very productive. This suggests setting stopping options such as a time limit, number of LPs, or a <em>good enough</em> setting. For this problem, I chose the latter option.</p>
 <p>We solved this with a mixed integer programming problem gap limit of <span class="math inline">\(1.5\%\)</span> meaning that while we have not <em>proven</em> this solution to be optimal, we do know that it is impossible to find a solution more than 1.5% better. From a branch and bound algorithm perspective, this means that while we have not searched down fully or pruned every branch, we know that no branch has the potential of being more than <span class="math inline">\(1.5\%\)</span> better than the feasible solution that we have already found.</p>
 <p>Now let’s move on to discussing the results. We will start with filtering out all the variables that have zero values so we can focus on the ones of interest - the states that are assigned to each week. Also, notice that a <code>dplyr</code> function was used to add state names to the data frame.</p>
-<div class="sourceCode" id="cb272"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb272-1"><a href="goal-programming.html#cb272-1" aria-hidden="true" tabindex="-1"></a>assigned1a <span class="ot">&lt;-</span> res_Mail1 <span class="sc">|&gt;</span> </span>
-<span id="cb272-2"><a href="goal-programming.html#cb272-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">get_solution</span>(Vx[s,w]) <span class="sc">|&gt;</span></span>
-<span id="cb272-3"><a href="goal-programming.html#cb272-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">filter</span>(value <span class="sc">&gt;</span>.<span class="dv">9</span>) <span class="sc">|&gt;</span></span>
-<span id="cb272-4"><a href="goal-programming.html#cb272-4" aria-hidden="true" tabindex="-1"></a> <span class="fu">select</span> (s,w)</span>
-<span id="cb272-5"><a href="goal-programming.html#cb272-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(assigned1a)<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="fu">names</span>(Customers[assigned1a[,<span class="dv">1</span>]]))</span>
-<span id="cb272-6"><a href="goal-programming.html#cb272-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb272-7"><a href="goal-programming.html#cb272-7" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">head</span>(assigned1a), <span class="at">booktabs=</span>T,</span>
-<span id="cb272-8"><a href="goal-programming.html#cb272-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption=</span><span class="st">&quot;Example of some states assigned to week 1&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb272-9"><a href="goal-programming.html#cb272-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb270"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb270-1"><a href="goal-programming.html#cb270-1" aria-hidden="true" tabindex="-1"></a>assigned1a <span class="ot">&lt;-</span> res_Mail1 <span class="sc">|&gt;</span> </span>
+<span id="cb270-2"><a href="goal-programming.html#cb270-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">get_solution</span>(Vx[s,w]) <span class="sc">|&gt;</span></span>
+<span id="cb270-3"><a href="goal-programming.html#cb270-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">filter</span>(value <span class="sc">&gt;</span>.<span class="dv">9</span>) <span class="sc">|&gt;</span></span>
+<span id="cb270-4"><a href="goal-programming.html#cb270-4" aria-hidden="true" tabindex="-1"></a> <span class="fu">select</span> (s,w)</span>
+<span id="cb270-5"><a href="goal-programming.html#cb270-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(assigned1a)<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="fu">names</span>(Customers[assigned1a[,<span class="dv">1</span>]]))</span>
+<span id="cb270-6"><a href="goal-programming.html#cb270-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb270-7"><a href="goal-programming.html#cb270-7" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">head</span>(assigned1a), <span class="at">booktabs=</span>T,</span>
+<span id="cb270-8"><a href="goal-programming.html#cb270-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption=</span><span class="st">&quot;Example of some states assigned to week 1&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb270-9"><a href="goal-programming.html#cb270-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:Sample-of-States-Week1">TABLE 8.7: </span>Example of some states assigned to week 1
@@ -1269,26 +1269,26 @@ South Carolina
 </table>
 <p>That is just for six states in the first week though.<br />
 </p>
-<div class="sourceCode" id="cb273"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb273-1"><a href="goal-programming.html#cb273-1" aria-hidden="true" tabindex="-1"></a>assigned1b <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(assigned1a)</span>
-<span id="cb273-2"><a href="goal-programming.html#cb273-2" aria-hidden="true" tabindex="-1"></a>table_results1<span class="ot">&lt;-</span><span class="fu">c</span>() <span class="co"># Prepare a new table of results</span></span>
-<span id="cb273-3"><a href="goal-programming.html#cb273-3" aria-hidden="true" tabindex="-1"></a>cols_list<span class="ot">&lt;-</span><span class="fu">c</span>()      <span class="co"># Prepare column list</span></span>
-<span id="cb273-4"><a href="goal-programming.html#cb273-4" aria-hidden="true" tabindex="-1"></a>weeksmail<span class="ot">&lt;-</span><span class="st">&quot;&quot;</span></span>
-<span id="cb273-5"><a href="goal-programming.html#cb273-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb273-6"><a href="goal-programming.html#cb273-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (week_counter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>Weeks) {</span>
-<span id="cb273-7"><a href="goal-programming.html#cb273-7" aria-hidden="true" tabindex="-1"></a>  weeksmail1a<span class="ot">&lt;-</span> assigned1b <span class="sc">|&gt;</span></span>
-<span id="cb273-8"><a href="goal-programming.html#cb273-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(w<span class="sc">==</span>week_counter) <span class="sc">|&gt;</span></span>
-<span id="cb273-9"><a href="goal-programming.html#cb273-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(rowname)</span>
-<span id="cb273-10"><a href="goal-programming.html#cb273-10" aria-hidden="true" tabindex="-1"></a>  cols_list <span class="ot">&lt;-</span> <span class="fu">append</span>(cols_list, <span class="fu">paste0</span>(<span class="st">&quot;Week &quot;</span>, week_counter))</span>
-<span id="cb273-11"><a href="goal-programming.html#cb273-11" aria-hidden="true" tabindex="-1"></a>  table_results1 <span class="ot">&lt;-</span> <span class="fu">append</span>(table_results1,</span>
-<span id="cb273-12"><a href="goal-programming.html#cb273-12" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">paste</span>(weeksmail1a<span class="sc">$</span>rowname, </span>
-<span id="cb273-13"><a href="goal-programming.html#cb273-13" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">collapse =</span> <span class="st">&quot;, &quot;</span>))}</span>
-<span id="cb273-14"><a href="goal-programming.html#cb273-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb273-15"><a href="goal-programming.html#cb273-15" aria-hidden="true" tabindex="-1"></a>text_tbl <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Weeks =</span> cols_list,<span class="at">States =</span> table_results1)</span></code></pre></div>
-<div class="sourceCode" id="cb274"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb274-1"><a href="goal-programming.html#cb274-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(text_tbl, <span class="at">booktabs=</span>T,</span>
-<span id="cb274-2"><a href="goal-programming.html#cb274-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption=</span><span class="st">&quot;Display of States by Week&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb274-3"><a href="goal-programming.html#cb274-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="fu">c</span>(<span class="st">&quot;hold_position&quot;</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb274-4"><a href="goal-programming.html#cb274-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_spec</span>(<span class="dv">1</span>, <span class="at">bold =</span> T) <span class="sc">%&gt;%</span></span>
-<span id="cb274-5"><a href="goal-programming.html#cb274-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_spec</span>(<span class="dv">2</span>, <span class="at">width =</span> <span class="st">&quot;30em&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb271"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb271-1"><a href="goal-programming.html#cb271-1" aria-hidden="true" tabindex="-1"></a>assigned1b <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(assigned1a)</span>
+<span id="cb271-2"><a href="goal-programming.html#cb271-2" aria-hidden="true" tabindex="-1"></a>table_results1<span class="ot">&lt;-</span><span class="fu">c</span>() <span class="co"># Prepare a new table of results</span></span>
+<span id="cb271-3"><a href="goal-programming.html#cb271-3" aria-hidden="true" tabindex="-1"></a>cols_list<span class="ot">&lt;-</span><span class="fu">c</span>()      <span class="co"># Prepare column list</span></span>
+<span id="cb271-4"><a href="goal-programming.html#cb271-4" aria-hidden="true" tabindex="-1"></a>weeksmail<span class="ot">&lt;-</span><span class="st">&quot;&quot;</span></span>
+<span id="cb271-5"><a href="goal-programming.html#cb271-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb271-6"><a href="goal-programming.html#cb271-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (week_counter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>Weeks) {</span>
+<span id="cb271-7"><a href="goal-programming.html#cb271-7" aria-hidden="true" tabindex="-1"></a>  weeksmail1a<span class="ot">&lt;-</span> assigned1b <span class="sc">|&gt;</span></span>
+<span id="cb271-8"><a href="goal-programming.html#cb271-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(w<span class="sc">==</span>week_counter) <span class="sc">|&gt;</span></span>
+<span id="cb271-9"><a href="goal-programming.html#cb271-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(rowname)</span>
+<span id="cb271-10"><a href="goal-programming.html#cb271-10" aria-hidden="true" tabindex="-1"></a>  cols_list <span class="ot">&lt;-</span> <span class="fu">append</span>(cols_list, <span class="fu">paste0</span>(<span class="st">&quot;Week &quot;</span>, week_counter))</span>
+<span id="cb271-11"><a href="goal-programming.html#cb271-11" aria-hidden="true" tabindex="-1"></a>  table_results1 <span class="ot">&lt;-</span> <span class="fu">append</span>(table_results1,</span>
+<span id="cb271-12"><a href="goal-programming.html#cb271-12" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">paste</span>(weeksmail1a<span class="sc">$</span>rowname, </span>
+<span id="cb271-13"><a href="goal-programming.html#cb271-13" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">collapse =</span> <span class="st">&quot;, &quot;</span>))}</span>
+<span id="cb271-14"><a href="goal-programming.html#cb271-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb271-15"><a href="goal-programming.html#cb271-15" aria-hidden="true" tabindex="-1"></a>text_tbl <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Weeks =</span> cols_list,<span class="at">States =</span> table_results1)</span></code></pre></div>
+<div class="sourceCode" id="cb272"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb272-1"><a href="goal-programming.html#cb272-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(text_tbl, <span class="at">booktabs=</span>T,</span>
+<span id="cb272-2"><a href="goal-programming.html#cb272-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption=</span><span class="st">&quot;Display of States by Week&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb272-3"><a href="goal-programming.html#cb272-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="fu">c</span>(<span class="st">&quot;hold_position&quot;</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb272-4"><a href="goal-programming.html#cb272-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_spec</span>(<span class="dv">1</span>, <span class="at">bold =</span> T) <span class="sc">%&gt;%</span></span>
+<span id="cb272-5"><a href="goal-programming.html#cb272-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_spec</span>(<span class="dv">2</span>, <span class="at">width =</span> <span class="st">&quot;30em&quot;</span>)</span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:Display-weekly-Mailings">TABLE 8.8: </span>Display of States by Week
@@ -1372,18 +1372,18 @@ Connecticut, Kansas, Michigan, Mississippi, Nebraska, New Jersey, North Dakota
 </table>
 <p>Since this is state level data, let’s look at a map of the schedule.<br />
 </p>
-<div class="sourceCode" id="cb275"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb275-1"><a href="goal-programming.html#cb275-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span> (ggplot2)</span>
-<span id="cb275-2"><a href="goal-programming.html#cb275-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span> (maps)</span>
-<span id="cb275-3"><a href="goal-programming.html#cb275-3" aria-hidden="true" tabindex="-1"></a>mapx <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">region=</span><span class="fu">tolower</span>(<span class="fu">rownames</span>(assigned1a)), </span>
-<span id="cb275-4"><a href="goal-programming.html#cb275-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">week=</span>assigned1a[,<span class="st">&quot;w&quot;</span>], </span>
-<span id="cb275-5"><a href="goal-programming.html#cb275-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">stringsAsFactors=</span>F)</span>
-<span id="cb275-6"><a href="goal-programming.html#cb275-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb275-7"><a href="goal-programming.html#cb275-7" aria-hidden="true" tabindex="-1"></a>states_map <span class="ot">&lt;-</span> <span class="fu">map_data</span>(<span class="st">&quot;state&quot;</span>)</span>
-<span id="cb275-8"><a href="goal-programming.html#cb275-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mapx, <span class="fu">aes</span>(<span class="at">map_id =</span> region)) <span class="sc">+</span> </span>
-<span id="cb275-9"><a href="goal-programming.html#cb275-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_map</span>(<span class="fu">aes</span>(<span class="at">fill =</span> week, <span class="at">colour =</span> <span class="st">&quot;white&quot;</span>), </span>
-<span id="cb275-10"><a href="goal-programming.html#cb275-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">map =</span> states_map) <span class="sc">+</span></span>
-<span id="cb275-11"><a href="goal-programming.html#cb275-11" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_fill_viridis_c</span>(<span class="at">option =</span> <span class="st">&quot;C&quot;</span>) <span class="sc">+</span></span>
-<span id="cb275-12"><a href="goal-programming.html#cb275-12" aria-hidden="true" tabindex="-1"></a><span class="fu">expand_limits</span>(<span class="at">x =</span> states_map<span class="sc">$</span>long, <span class="at">y =</span> states_map<span class="sc">$</span>lat)</span></code></pre></div>
+<div class="sourceCode" id="cb273"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb273-1"><a href="goal-programming.html#cb273-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span> (ggplot2)</span>
+<span id="cb273-2"><a href="goal-programming.html#cb273-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span> (maps)</span>
+<span id="cb273-3"><a href="goal-programming.html#cb273-3" aria-hidden="true" tabindex="-1"></a>mapx <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">region=</span><span class="fu">tolower</span>(<span class="fu">rownames</span>(assigned1a)), </span>
+<span id="cb273-4"><a href="goal-programming.html#cb273-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">week=</span>assigned1a[,<span class="st">&quot;w&quot;</span>], </span>
+<span id="cb273-5"><a href="goal-programming.html#cb273-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">stringsAsFactors=</span>F)</span>
+<span id="cb273-6"><a href="goal-programming.html#cb273-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb273-7"><a href="goal-programming.html#cb273-7" aria-hidden="true" tabindex="-1"></a>states_map <span class="ot">&lt;-</span> <span class="fu">map_data</span>(<span class="st">&quot;state&quot;</span>)</span>
+<span id="cb273-8"><a href="goal-programming.html#cb273-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mapx, <span class="fu">aes</span>(<span class="at">map_id =</span> region)) <span class="sc">+</span> </span>
+<span id="cb273-9"><a href="goal-programming.html#cb273-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_map</span>(<span class="fu">aes</span>(<span class="at">fill =</span> week, <span class="at">colour =</span> <span class="st">&quot;white&quot;</span>), </span>
+<span id="cb273-10"><a href="goal-programming.html#cb273-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">map =</span> states_map) <span class="sc">+</span></span>
+<span id="cb273-11"><a href="goal-programming.html#cb273-11" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_fill_viridis_c</span>(<span class="at">option =</span> <span class="st">&quot;C&quot;</span>) <span class="sc">+</span></span>
+<span id="cb273-12"><a href="goal-programming.html#cb273-12" aria-hidden="true" tabindex="-1"></a><span class="fu">expand_limits</span>(<span class="at">x =</span> states_map<span class="sc">$</span>long, <span class="at">y =</span> states_map<span class="sc">$</span>lat)</span></code></pre></div>
 <div class="figure"><span style="display:block;" id="fig:Map-of-Mailing-Results"></span>
 <img src="OMUR_files/figure-html/Map-of-Mailing-Results-1.png" alt="Map of Mailing Results" width="100%" />
 <p class="caption">
@@ -1405,16 +1405,16 @@ FIGURE 8.1: Map of Mailing Results
 \]</span></p>
 <p>We could then extend our <code>ompr</code> model, <code>Mail1</code> with the additional constraints.<br />
 </p>
-<div class="sourceCode" id="cb276"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb276-1"><a href="goal-programming.html#cb276-1" aria-hidden="true" tabindex="-1"></a>Mail2 <span class="ot">&lt;-</span> <span class="fu">add_constraint</span>(Mail1, </span>
-<span id="cb276-2"><a href="goal-programming.html#cb276-2" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">sum_expr</span>(Customers [s]<span class="sc">*</span>Vx[s, w<span class="dv">-1</span>], </span>
-<span id="cb276-3"><a href="goal-programming.html#cb276-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">s=</span><span class="dv">1</span><span class="sc">:</span>States) <span class="sc">&gt;=</span></span>
-<span id="cb276-4"><a href="goal-programming.html#cb276-4" aria-hidden="true" tabindex="-1"></a>               <span class="fu">sum_expr</span>(Customers [s]<span class="sc">*</span>Vx[s, w], </span>
-<span id="cb276-5"><a href="goal-programming.html#cb276-5" aria-hidden="true" tabindex="-1"></a>                              <span class="at">s=</span><span class="dv">1</span><span class="sc">:</span>States), </span>
-<span id="cb276-6"><a href="goal-programming.html#cb276-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">w =</span> <span class="dv">2</span><span class="sc">:</span>Weeks)</span></code></pre></div>
+<div class="sourceCode" id="cb274"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb274-1"><a href="goal-programming.html#cb274-1" aria-hidden="true" tabindex="-1"></a>Mail2 <span class="ot">&lt;-</span> <span class="fu">add_constraint</span>(Mail1, </span>
+<span id="cb274-2"><a href="goal-programming.html#cb274-2" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">sum_expr</span>(Customers [s]<span class="sc">*</span>Vx[s, w<span class="dv">-1</span>], </span>
+<span id="cb274-3"><a href="goal-programming.html#cb274-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">s=</span><span class="dv">1</span><span class="sc">:</span>States) <span class="sc">&gt;=</span></span>
+<span id="cb274-4"><a href="goal-programming.html#cb274-4" aria-hidden="true" tabindex="-1"></a>               <span class="fu">sum_expr</span>(Customers [s]<span class="sc">*</span>Vx[s, w], </span>
+<span id="cb274-5"><a href="goal-programming.html#cb274-5" aria-hidden="true" tabindex="-1"></a>                              <span class="at">s=</span><span class="dv">1</span><span class="sc">:</span>States), </span>
+<span id="cb274-6"><a href="goal-programming.html#cb274-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">w =</span> <span class="dv">2</span><span class="sc">:</span>Weeks)</span></code></pre></div>
 <p>While it might be thought that adding constraints limits the search space of possible solutions and might speed up solution, in this case it slows down solving speed tremendously. Despite having having less than half the binary variables of applications from Chapter 8 and the same number the earlier mail problem, this problem turns out to be most computationally demanding so far. The branch and bound process from symphony takes hours to solve.</p>
-<div class="sourceCode" id="cb277"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb277-1"><a href="goal-programming.html#cb277-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(<span class="fu">as.matrix</span>(table_results1[<span class="sc">-</span><span class="dv">1</span>]), <span class="at">booktabs=</span>T, <span class="at">caption=</span></span>
-<span id="cb277-2"><a href="goal-programming.html#cb277-2" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Solution with Symmetry Breaking&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb277-3"><a href="goal-programming.html#cb277-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb275"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb275-1"><a href="goal-programming.html#cb275-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(<span class="fu">as.matrix</span>(table_results1[<span class="sc">-</span><span class="dv">1</span>]), <span class="at">booktabs=</span>T, <span class="at">caption=</span></span>
+<span id="cb275-2"><a href="goal-programming.html#cb275-2" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Solution with Symmetry Breaking&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb275-3"><a href="goal-programming.html#cb275-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
 <p>The solving time using this modification to the LP changed tremendously. On an Intel i7 mobile CPU and R 4.1.1. the following results were obtained before terminating the solver after nearly four hours. Within 6 seconds it found a feasible solution as demonstrated by the Lower Bound of 26,540 but the upper bound of what could still be undiscovered was 29,602. This gives a possible suboptimality gap of 10.34%. Over the next half hour the Solver did not find a better solution (Lower Bound stays unchanged) but is able to reduce the Upper Bound. At this point I terminated the solver. There had been modest improvement in the search process in the first 30 minutes with two and a half million iterations (linear programming subproblems) but then no change for the three and half hours and almost six million more iterations.</p>
 <table>
 <caption>Solving Progress for Modified Mailing Model.</caption>

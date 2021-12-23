@@ -24,7 +24,7 @@
 <meta name="author" content="Timothy R. Anderson" />
 
 
-<meta name="date" content="2021-12-22" />
+<meta name="date" content="2021-12-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -425,9 +425,9 @@ div.csl-indent {
 <h1><span class="header-section-number">D</span> Making Good Tables</h1>
 <div id="importance-of-tables-in-modeling" class="section level2" number="12.1">
 <h2><span class="header-section-number">D.1</span> Importance of Tables in Modeling</h2>
-<div class="sourceCode" id="cb313"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb313-1"><a href="making-good-tables.html#cb313-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)  <span class="co"># Only two packages used in this Appendix</span></span>
-<span id="cb313-2"><a href="making-good-tables.html#cb313-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span> (kableExtra)</span>
-<span id="cb313-3"><a href="making-good-tables.html#cb313-3" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb311"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb311-1"><a href="making-good-tables.html#cb311-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)  <span class="co"># Only two packages used in this Appendix</span></span>
+<span id="cb311-2"><a href="making-good-tables.html#cb311-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span> (kableExtra)</span>
+<span id="cb311-3"><a href="making-good-tables.html#cb311-3" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <p>The data scientist may interpret “A picture is worth a thousand words” as “A figure or table may be worth a thousand words.” The most elegant and sophisticated analysis is useless if the results are not documented or used. While figures are a subject too broad for an appendix, tables are so core to analysis that it warrants explaining how we created the tables for the book. This Appendix is provided to show all the techniques that were used in making the tables throughout the book to enable the reader to use them as well. Providing the information in one place in the Appendix will reduce the repetition in the other chapters.</p>
 <p>Throughout the bulk of the book, sometimes the command for generating the table is shown for demonstrating particular techniques but they are discussed in more detail in this appendix. The RMarkdown source documents have the code for each table in the book.</p>
 <p>Because of the importance of tables, many packages have been developed for creating rich and sophisticated tables such as knitr’s <code>kable</code>, <code>pander</code>, <code>grid.table</code>, <code>huxtable</code>, <code>flextable</code>, <code>gt</code>, <code>xtable</code>, <code>ztable</code>, and more. Previous versions of this book extensively used <code>pander</code> and <code>grid.table</code>. After a lot of trial and error, I settled on knitr’s <code>kable</code> using the enhancements provided by <code>kableExtra</code> for the following reasons:</p>
@@ -455,21 +455,21 @@ div.csl-indent {
 <div id="table-footnotes-with-kable" class="section level2" number="12.3">
 <h2><span class="header-section-number">D.3</span> Table Footnotes with Kable</h2>
 <p>Footnotes can be text or listed with demarcations for numbers, letters, or symbols. </p>
-<div class="sourceCode" id="cb314"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb314-1"><a href="making-good-tables.html#cb314-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>),<span class="at">nrow=</span><span class="dv">2</span>, <span class="at">ncol=</span><span class="dv">2</span>) </span>
-<span id="cb314-2"><a href="making-good-tables.html#cb314-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(m) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Row name 1&quot;</span>, <span class="st">&quot;Row name 2&quot;</span>)</span>
-<span id="cb314-3"><a href="making-good-tables.html#cb314-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb314-4"><a href="making-good-tables.html#cb314-4" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (m, <span class="at">booktabs=</span>T,</span>
-<span id="cb314-5"><a href="making-good-tables.html#cb314-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption=</span><span class="st">&quot;Footnotes in Tables Using kbl&quot;</span>,</span>
-<span id="cb314-6"><a href="making-good-tables.html#cb314-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">col.names=</span><span class="fu">c</span>(<span class="st">&quot;C1&quot;</span>, <span class="st">&quot;C2&quot;</span>), </span>
-<span id="cb314-7"><a href="making-good-tables.html#cb314-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">row.names=</span>F)<span class="sc">|&gt;</span></span>
-<span id="cb314-8"><a href="making-good-tables.html#cb314-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)<span class="sc">|&gt;</span></span>
-<span id="cb314-9"><a href="making-good-tables.html#cb314-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">footnote</span>(<span class="at">general =</span> <span class="st">&quot;General comments about the table. &quot;</span>,</span>
-<span id="cb314-10"><a href="making-good-tables.html#cb314-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">number =</span> <span class="fu">c</span>(<span class="st">&quot;Footnote 1; &quot;</span>, <span class="st">&quot;Footnote 2; &quot;</span>),</span>
-<span id="cb314-11"><a href="making-good-tables.html#cb314-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">alphabet =</span> <span class="fu">c</span>(<span class="st">&quot;Footnote A; &quot;</span>, <span class="st">&quot;Footnote B; &quot;</span>),</span>
-<span id="cb314-12"><a href="making-good-tables.html#cb314-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">symbol =</span> <span class="fu">c</span>(<span class="st">&quot;Footnote Symbol 1; &quot;</span>, <span class="st">&quot;Footnote Symbol 2&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb312"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb312-1"><a href="making-good-tables.html#cb312-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>),<span class="at">nrow=</span><span class="dv">2</span>, <span class="at">ncol=</span><span class="dv">2</span>) </span>
+<span id="cb312-2"><a href="making-good-tables.html#cb312-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(m) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Row name 1&quot;</span>, <span class="st">&quot;Row name 2&quot;</span>)</span>
+<span id="cb312-3"><a href="making-good-tables.html#cb312-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb312-4"><a href="making-good-tables.html#cb312-4" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (m, <span class="at">booktabs=</span>T,</span>
+<span id="cb312-5"><a href="making-good-tables.html#cb312-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption=</span><span class="st">&quot;Footnotes in Tables Using kbl&quot;</span>,</span>
+<span id="cb312-6"><a href="making-good-tables.html#cb312-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">col.names=</span><span class="fu">c</span>(<span class="st">&quot;C1&quot;</span>, <span class="st">&quot;C2&quot;</span>), </span>
+<span id="cb312-7"><a href="making-good-tables.html#cb312-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">row.names=</span>F)<span class="sc">|&gt;</span></span>
+<span id="cb312-8"><a href="making-good-tables.html#cb312-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)<span class="sc">|&gt;</span></span>
+<span id="cb312-9"><a href="making-good-tables.html#cb312-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">footnote</span>(<span class="at">general =</span> <span class="st">&quot;General comments about the table. &quot;</span>,</span>
+<span id="cb312-10"><a href="making-good-tables.html#cb312-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">number =</span> <span class="fu">c</span>(<span class="st">&quot;Footnote 1; &quot;</span>, <span class="st">&quot;Footnote 2; &quot;</span>),</span>
+<span id="cb312-11"><a href="making-good-tables.html#cb312-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">alphabet =</span> <span class="fu">c</span>(<span class="st">&quot;Footnote A; &quot;</span>, <span class="st">&quot;Footnote B; &quot;</span>),</span>
+<span id="cb312-12"><a href="making-good-tables.html#cb312-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">symbol =</span> <span class="fu">c</span>(<span class="st">&quot;Footnote Symbol 1; &quot;</span>, <span class="st">&quot;Footnote Symbol 2&quot;</span>))</span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;border-bottom: 0;">
 <caption>
-<span id="tab:unnamed-chunk-84">TABLE D.1: </span>Footnotes in Tables Using kbl
+<span id="tab:unnamed-chunk-85">TABLE D.1: </span>Footnotes in Tables Using kbl
 </caption>
 <thead>
 <tr>
@@ -548,28 +548,28 @@ C2
 <p>Kable has a handy option for changing <code>col.names</code> in the function directly. This is helpful because often the data structure has a specific naming convention for specific reasons but are not in very human readable format. Rather than always changing the column names before displaying the table or creating a new table with just different column names, this gives you the option just changing it for display purposes without affecting the original table. </p>
 <p>One tricky thing is that while column names can be changed in <code>kable</code>, row names cannot be changed in <code>kable</code>, despite the options looking equivalent <code>col.names=</code> vs. <code>row.names=</code>.</p>
 <p>The following code chunk seems like it should work but <code>row.names</code> generates an error because it wants a <code>TRUE</code> or <code>FALSE</code> (or their shorthand equivalents of <code>T</code> and <code>F</code>) rather than the row names. The code chunk was set to <code>eval=FALSE</code> in order to avoid causing an error. The lesson is that row names are not always handled in R in the same way as column names or as even consistently in different settings.</p>
-<div class="sourceCode" id="cb315"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb315-1"><a href="making-good-tables.html#cb315-1" aria-hidden="true" tabindex="-1"></a><span class="co"># eval=FALSE to avoid breaking error.</span></span>
-<span id="cb315-2"><a href="making-good-tables.html#cb315-2" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>,<span class="at">nrow=</span><span class="dv">2</span>, <span class="at">ncol=</span><span class="dv">2</span>) </span>
-<span id="cb315-3"><a href="making-good-tables.html#cb315-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb315-4"><a href="making-good-tables.html#cb315-4" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span> (m, </span>
-<span id="cb315-5"><a href="making-good-tables.html#cb315-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">col.names=</span><span class="fu">c</span>(<span class="st">&quot;C1&quot;</span>, <span class="st">&quot;C2&quot;</span>),</span>
-<span id="cb315-6"><a href="making-good-tables.html#cb315-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">row.names=</span><span class="fu">c</span>(<span class="st">&quot;R1&quot;</span>, <span class="st">&quot;R2&quot;</span>)) </span>
-<span id="cb315-7"><a href="making-good-tables.html#cb315-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Works for col.names but not row.names</span></span>
-<span id="cb315-8"><a href="making-good-tables.html#cb315-8" aria-hidden="true" tabindex="-1"></a><span class="co"># The following demonstrates use of row.names</span></span></code></pre></div>
+<div class="sourceCode" id="cb313"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb313-1"><a href="making-good-tables.html#cb313-1" aria-hidden="true" tabindex="-1"></a><span class="co"># eval=FALSE to avoid breaking error.</span></span>
+<span id="cb313-2"><a href="making-good-tables.html#cb313-2" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>,<span class="at">nrow=</span><span class="dv">2</span>, <span class="at">ncol=</span><span class="dv">2</span>) </span>
+<span id="cb313-3"><a href="making-good-tables.html#cb313-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb313-4"><a href="making-good-tables.html#cb313-4" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span> (m, </span>
+<span id="cb313-5"><a href="making-good-tables.html#cb313-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">col.names=</span><span class="fu">c</span>(<span class="st">&quot;C1&quot;</span>, <span class="st">&quot;C2&quot;</span>),</span>
+<span id="cb313-6"><a href="making-good-tables.html#cb313-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">row.names=</span><span class="fu">c</span>(<span class="st">&quot;R1&quot;</span>, <span class="st">&quot;R2&quot;</span>)) </span>
+<span id="cb313-7"><a href="making-good-tables.html#cb313-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Works for col.names but not row.names</span></span>
+<span id="cb313-8"><a href="making-good-tables.html#cb313-8" aria-hidden="true" tabindex="-1"></a><span class="co"># The following demonstrates use of row.names</span></span></code></pre></div>
 <p>Since <code>col.names</code> works well, there is no reason to spend more time on it. Let’s instead show how to replace row names for a table. The following example gives bad row names to a matrix that I want to replace and use with an better set of row names. It then generates four tables showing these situations. The last two options give good results.</p>
-<div class="sourceCode" id="cb316"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb316-1"><a href="making-good-tables.html#cb316-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">2</span>)</span>
-<span id="cb316-2"><a href="making-good-tables.html#cb316-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb316-3"><a href="making-good-tables.html#cb316-3" aria-hidden="true" tabindex="-1"></a>BR <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Bad row name 1&quot;</span>, <span class="st">&quot;Bad row name 2&quot;</span>)</span>
-<span id="cb316-4"><a href="making-good-tables.html#cb316-4" aria-hidden="true" tabindex="-1"></a>GR <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Good row name 1&quot;</span>, <span class="st">&quot;Good row name 2&quot;</span>)</span>
-<span id="cb316-5"><a href="making-good-tables.html#cb316-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb316-6"><a href="making-good-tables.html#cb316-6" aria-hidden="true" tabindex="-1"></a><span class="fu">row.names</span> (m)<span class="ot">&lt;-</span>BR  <span class="co"># Treat as default to be avoided</span></span>
-<span id="cb316-7"><a href="making-good-tables.html#cb316-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb316-8"><a href="making-good-tables.html#cb316-8" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (m, <span class="at">booktabs=</span>T, <span class="at">caption=</span><span class="st">&quot;Retain Row Names by Using `row.name=T`&quot;</span>,</span>
-<span id="cb316-9"><a href="making-good-tables.html#cb316-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">col.names=</span><span class="fu">c</span>(<span class="st">&quot;C1&quot;</span>, <span class="st">&quot;C2&quot;</span>), <span class="at">row.names=</span>T)                            <span class="sc">|&gt;</span>   </span>
-<span id="cb316-10"><a href="making-good-tables.html#cb316-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span> (<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)  </span></code></pre></div>
+<div class="sourceCode" id="cb314"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb314-1"><a href="making-good-tables.html#cb314-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">2</span>)</span>
+<span id="cb314-2"><a href="making-good-tables.html#cb314-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb314-3"><a href="making-good-tables.html#cb314-3" aria-hidden="true" tabindex="-1"></a>BR <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Bad row name 1&quot;</span>, <span class="st">&quot;Bad row name 2&quot;</span>)</span>
+<span id="cb314-4"><a href="making-good-tables.html#cb314-4" aria-hidden="true" tabindex="-1"></a>GR <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Good row name 1&quot;</span>, <span class="st">&quot;Good row name 2&quot;</span>)</span>
+<span id="cb314-5"><a href="making-good-tables.html#cb314-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb314-6"><a href="making-good-tables.html#cb314-6" aria-hidden="true" tabindex="-1"></a><span class="fu">row.names</span> (m)<span class="ot">&lt;-</span>BR  <span class="co"># Treat as default to be avoided</span></span>
+<span id="cb314-7"><a href="making-good-tables.html#cb314-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb314-8"><a href="making-good-tables.html#cb314-8" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (m, <span class="at">booktabs=</span>T, <span class="at">caption=</span><span class="st">&quot;Retain Row Names by Using `row.name=T`&quot;</span>,</span>
+<span id="cb314-9"><a href="making-good-tables.html#cb314-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">col.names=</span><span class="fu">c</span>(<span class="st">&quot;C1&quot;</span>, <span class="st">&quot;C2&quot;</span>), <span class="at">row.names=</span>T)                            <span class="sc">|&gt;</span>   </span>
+<span id="cb314-10"><a href="making-good-tables.html#cb314-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span> (<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)  </span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-86">TABLE D.2: </span>Retain Row Names by Using <code>row.name=T</code>
+<span id="tab:unnamed-chunk-87">TABLE D.2: </span>Retain Row Names by Using <code>row.name=T</code>
 </caption>
 <thead>
 <tr>
@@ -608,12 +608,12 @@ Bad row name 2
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb317"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb317-1"><a href="making-good-tables.html#cb317-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (m, <span class="at">booktabs=</span>T, <span class="at">caption=</span><span class="st">&quot;Drop Row Name by Using `row.name=F`&quot;</span>,</span>
-<span id="cb317-2"><a href="making-good-tables.html#cb317-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">col.names=</span><span class="fu">c</span>(<span class="st">&quot;C1&quot;</span>, <span class="st">&quot;C2&quot;</span>), <span class="at">row.names=</span>F)                            <span class="sc">|&gt;</span></span>
-<span id="cb317-3"><a href="making-good-tables.html#cb317-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span> (<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)  </span></code></pre></div>
+<div class="sourceCode" id="cb315"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb315-1"><a href="making-good-tables.html#cb315-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (m, <span class="at">booktabs=</span>T, <span class="at">caption=</span><span class="st">&quot;Drop Row Name by Using `row.name=F`&quot;</span>,</span>
+<span id="cb315-2"><a href="making-good-tables.html#cb315-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">col.names=</span><span class="fu">c</span>(<span class="st">&quot;C1&quot;</span>, <span class="st">&quot;C2&quot;</span>), <span class="at">row.names=</span>F)                            <span class="sc">|&gt;</span></span>
+<span id="cb315-3"><a href="making-good-tables.html#cb315-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span> (<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)  </span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-86">TABLE D.2: </span>Drop Row Name by Using <code>row.name=F</code>
+<span id="tab:unnamed-chunk-87">TABLE D.2: </span>Drop Row Name by Using <code>row.name=F</code>
 </caption>
 <thead>
 <tr>
@@ -644,13 +644,13 @@ C2
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb318"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb318-1"><a href="making-good-tables.html#cb318-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">cbind</span>(<span class="fu">as.matrix</span>(GR),m), <span class="at">booktabs=</span>T,</span>
-<span id="cb318-2"><a href="making-good-tables.html#cb318-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption=</span><span class="st">&quot;Adding Row Names as a Leading Column&quot;</span>,</span>
-<span id="cb318-3"><a href="making-good-tables.html#cb318-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">col.names=</span><span class="fu">c</span>(<span class="st">&quot;&quot;</span>, <span class="st">&quot;C1&quot;</span>, <span class="st">&quot;C2&quot;</span>), <span class="at">row.names=</span>F)                        <span class="sc">|&gt;</span></span>
-<span id="cb318-4"><a href="making-good-tables.html#cb318-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span> (<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)  </span></code></pre></div>
+<div class="sourceCode" id="cb316"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb316-1"><a href="making-good-tables.html#cb316-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">cbind</span>(<span class="fu">as.matrix</span>(GR),m), <span class="at">booktabs=</span>T,</span>
+<span id="cb316-2"><a href="making-good-tables.html#cb316-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption=</span><span class="st">&quot;Adding Row Names as a Leading Column&quot;</span>,</span>
+<span id="cb316-3"><a href="making-good-tables.html#cb316-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">col.names=</span><span class="fu">c</span>(<span class="st">&quot;&quot;</span>, <span class="st">&quot;C1&quot;</span>, <span class="st">&quot;C2&quot;</span>), <span class="at">row.names=</span>F)                        <span class="sc">|&gt;</span></span>
+<span id="cb316-4"><a href="making-good-tables.html#cb316-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span> (<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)  </span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-86">TABLE D.2: </span>Adding Row Names as a Leading Column
+<span id="tab:unnamed-chunk-87">TABLE D.2: </span>Adding Row Names as a Leading Column
 </caption>
 <thead>
 <tr>
@@ -689,14 +689,14 @@ Good row name 2
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb319"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb319-1"><a href="making-good-tables.html#cb319-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(m)<span class="ot">&lt;-</span>GR  </span>
-<span id="cb319-2"><a href="making-good-tables.html#cb319-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (m, <span class="at">booktabs=</span>T,</span>
-<span id="cb319-3"><a href="making-good-tables.html#cb319-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption=</span><span class="st">&quot;Replacing row names in matrix before kable&quot;</span>,</span>
-<span id="cb319-4"><a href="making-good-tables.html#cb319-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">col.names=</span><span class="fu">c</span>(<span class="st">&quot;C1&quot;</span>, <span class="st">&quot;C2&quot;</span>), <span class="at">row.names=</span>T)                            <span class="sc">|&gt;</span></span>
-<span id="cb319-5"><a href="making-good-tables.html#cb319-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span> (<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)  </span></code></pre></div>
+<div class="sourceCode" id="cb317"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb317-1"><a href="making-good-tables.html#cb317-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(m)<span class="ot">&lt;-</span>GR  </span>
+<span id="cb317-2"><a href="making-good-tables.html#cb317-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (m, <span class="at">booktabs=</span>T,</span>
+<span id="cb317-3"><a href="making-good-tables.html#cb317-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption=</span><span class="st">&quot;Replacing row names in matrix before kable&quot;</span>,</span>
+<span id="cb317-4"><a href="making-good-tables.html#cb317-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">col.names=</span><span class="fu">c</span>(<span class="st">&quot;C1&quot;</span>, <span class="st">&quot;C2&quot;</span>), <span class="at">row.names=</span>T)                            <span class="sc">|&gt;</span></span>
+<span id="cb317-5"><a href="making-good-tables.html#cb317-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span> (<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)  </span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-86">TABLE D.2: </span>Replacing row names in matrix before kable
+<span id="tab:unnamed-chunk-87">TABLE D.2: </span>Replacing row names in matrix before kable
 </caption>
 <thead>
 <tr>
@@ -746,14 +746,14 @@ Good row name 2
 <div id="booktabs-vs.-default" class="section level2" number="12.5">
 <h2><span class="header-section-number">D.5</span> Booktabs vs. Default</h2>
 <p>The <code>booktabs</code> option is used to provide the formatting commonly used in books and journals. Notably it reduces the extra border lines for every element that leaves an otherwise nice table looking like it is an Excel screen capture. </p>
-<div class="sourceCode" id="cb320"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb320-1"><a href="making-good-tables.html#cb320-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">cbind</span>(<span class="fu">as.matrix</span>(GR),m),</span>
-<span id="cb320-2"><a href="making-good-tables.html#cb320-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption=</span><span class="st">&quot;Default format using kable.&quot;</span>,</span>
-<span id="cb320-3"><a href="making-good-tables.html#cb320-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">col.names=</span><span class="fu">c</span>(<span class="st">&quot;&quot;</span>, <span class="st">&quot;C1&quot;</span>, <span class="st">&quot;C2&quot;</span>), </span>
-<span id="cb320-4"><a href="making-good-tables.html#cb320-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">row.names=</span>F) <span class="sc">|&gt;</span></span>
-<span id="cb320-5"><a href="making-good-tables.html#cb320-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb318"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb318-1"><a href="making-good-tables.html#cb318-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">cbind</span>(<span class="fu">as.matrix</span>(GR),m),</span>
+<span id="cb318-2"><a href="making-good-tables.html#cb318-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption=</span><span class="st">&quot;Default format using kable.&quot;</span>,</span>
+<span id="cb318-3"><a href="making-good-tables.html#cb318-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">col.names=</span><span class="fu">c</span>(<span class="st">&quot;&quot;</span>, <span class="st">&quot;C1&quot;</span>, <span class="st">&quot;C2&quot;</span>), </span>
+<span id="cb318-4"><a href="making-good-tables.html#cb318-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">row.names=</span>F) <span class="sc">|&gt;</span></span>
+<span id="cb318-5"><a href="making-good-tables.html#cb318-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-87">TABLE D.3: </span>Default format using kable.
+<span id="tab:unnamed-chunk-88">TABLE D.3: </span>Default format using kable.
 </caption>
 <thead>
 <tr>
@@ -792,14 +792,14 @@ Good row name 2
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb321"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb321-1"><a href="making-good-tables.html#cb321-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">cbind</span>(<span class="fu">as.matrix</span>(GR),m), <span class="at">booktabs=</span>T,</span>
-<span id="cb321-2"><a href="making-good-tables.html#cb321-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption=</span><span class="st">&quot;Kable using booktabs.&quot;</span>,</span>
-<span id="cb321-3"><a href="making-good-tables.html#cb321-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">col.names=</span><span class="fu">c</span>(<span class="st">&quot;&quot;</span>, <span class="st">&quot;C1&quot;</span>, <span class="st">&quot;C2&quot;</span>), </span>
-<span id="cb321-4"><a href="making-good-tables.html#cb321-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">row.names=</span>F)<span class="sc">|&gt;</span></span>
-<span id="cb321-5"><a href="making-good-tables.html#cb321-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb319"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb319-1"><a href="making-good-tables.html#cb319-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">cbind</span>(<span class="fu">as.matrix</span>(GR),m), <span class="at">booktabs=</span>T,</span>
+<span id="cb319-2"><a href="making-good-tables.html#cb319-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption=</span><span class="st">&quot;Kable using booktabs.&quot;</span>,</span>
+<span id="cb319-3"><a href="making-good-tables.html#cb319-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">col.names=</span><span class="fu">c</span>(<span class="st">&quot;&quot;</span>, <span class="st">&quot;C1&quot;</span>, <span class="st">&quot;C2&quot;</span>), </span>
+<span id="cb319-4"><a href="making-good-tables.html#cb319-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">row.names=</span>F)<span class="sc">|&gt;</span></span>
+<span id="cb319-5"><a href="making-good-tables.html#cb319-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-87">TABLE D.3: </span>Kable using booktabs.
+<span id="tab:unnamed-chunk-88">TABLE D.3: </span>Kable using booktabs.
 </caption>
 <thead>
 <tr>
@@ -846,17 +846,17 @@ Good row name 2
 <li>Set <code>escape=F</code> to allow using LaTeX,</li>
 <li>Any command requiring a slash character in LaTeX requires a double slash. For example, <code>$\theta^{CRS}$</code> to create <span class="math inline">\(\theta^{CRS}\)</span> would instead require <code>$\\theta^{CRS}$</code> as shown below.</li>
 </ul>
-<div class="sourceCode" id="cb322"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb322-1"><a href="making-good-tables.html#cb322-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">2</span>)</span>
-<span id="cb322-2"><a href="making-good-tables.html#cb322-2" aria-hidden="true" tabindex="-1"></a>GR <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;$</span><span class="sc">\\</span><span class="st">phi$&quot;</span>, <span class="st">&quot;$</span><span class="sc">\\</span><span class="st">omega$&quot;</span>)</span>
-<span id="cb322-3"><a href="making-good-tables.html#cb322-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb322-4"><a href="making-good-tables.html#cb322-4" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(<span class="fu">cbind</span>(<span class="fu">as.matrix</span>(GR),m), <span class="at">booktabs=</span>T, <span class="at">escape=</span>F, <span class="at">caption=</span></span>
-<span id="cb322-5"><a href="making-good-tables.html#cb322-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Using LaTeX in Row and Column Names&quot;</span>,</span>
-<span id="cb322-6"><a href="making-good-tables.html#cb322-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.names=</span><span class="fu">c</span>(<span class="st">&quot;&quot;</span>,<span class="st">&quot;$</span><span class="sc">\\</span><span class="st">theta^{CRS}$&quot;</span>, <span class="st">&quot;$</span><span class="sc">\\</span><span class="st">lambda_A$&quot;</span>), </span>
-<span id="cb322-7"><a href="making-good-tables.html#cb322-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">row.names=</span>F)<span class="sc">|&gt;</span></span>
-<span id="cb322-8"><a href="making-good-tables.html#cb322-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb320"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb320-1"><a href="making-good-tables.html#cb320-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">2</span>)</span>
+<span id="cb320-2"><a href="making-good-tables.html#cb320-2" aria-hidden="true" tabindex="-1"></a>GR <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;$</span><span class="sc">\\</span><span class="st">phi$&quot;</span>, <span class="st">&quot;$</span><span class="sc">\\</span><span class="st">omega$&quot;</span>)</span>
+<span id="cb320-3"><a href="making-good-tables.html#cb320-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb320-4"><a href="making-good-tables.html#cb320-4" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(<span class="fu">cbind</span>(<span class="fu">as.matrix</span>(GR),m), <span class="at">booktabs=</span>T, <span class="at">escape=</span>F, <span class="at">caption=</span></span>
+<span id="cb320-5"><a href="making-good-tables.html#cb320-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Using LaTeX in Row and Column Names&quot;</span>,</span>
+<span id="cb320-6"><a href="making-good-tables.html#cb320-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.names=</span><span class="fu">c</span>(<span class="st">&quot;&quot;</span>,<span class="st">&quot;$</span><span class="sc">\\</span><span class="st">theta^{CRS}$&quot;</span>, <span class="st">&quot;$</span><span class="sc">\\</span><span class="st">lambda_A$&quot;</span>), </span>
+<span id="cb320-7"><a href="making-good-tables.html#cb320-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">row.names=</span>F)<span class="sc">|&gt;</span></span>
+<span id="cb320-8"><a href="making-good-tables.html#cb320-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-88">TABLE D.4: </span>Using LaTeX in Row and Column Names
+<span id="tab:unnamed-chunk-89">TABLE D.4: </span>Using LaTeX in Row and Column Names
 </caption>
 <thead>
 <tr>
@@ -899,17 +899,17 @@ Good row name 2
 <div id="fitting-tables-to-page-width" class="section level2" number="12.7">
 <h2><span class="header-section-number">D.7</span> Fitting Tables to Page Width</h2>
 <p>Large tables can be problematic. Kable can scale a table to fit the page width easily using the <code>scale_down</code> option in <code>kableExtra</code> via the <code>kable_styling</code> and <code>latex_options</code>. </p>
-<div class="sourceCode" id="cb323"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb323-1"><a href="making-good-tables.html#cb323-1" aria-hidden="true" tabindex="-1"></a>NWeeks <span class="ot">&lt;-</span> <span class="dv">24</span></span>
-<span id="cb323-2"><a href="making-good-tables.html#cb323-2" aria-hidden="true" tabindex="-1"></a>mbig <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span>(<span class="dv">2</span><span class="sc">*</span>NWeeks), <span class="at">ncol=</span> NWeeks, <span class="at">byrow=</span><span class="cn">TRUE</span>,)</span>
-<span id="cb323-3"><a href="making-good-tables.html#cb323-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span> (mbig) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Widgets&quot;</span>, <span class="st">&quot;Gadgets&quot;</span>)</span>
-<span id="cb323-4"><a href="making-good-tables.html#cb323-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb323-5"><a href="making-good-tables.html#cb323-5" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(mbig,<span class="at">booktabs=</span>T, </span>
-<span id="cb323-6"><a href="making-good-tables.html#cb323-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption=</span><span class="st">&quot;Scaling Table to Fit Page&quot;</span>)<span class="sc">|&gt;</span></span>
-<span id="cb323-7"><a href="making-good-tables.html#cb323-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> </span>
-<span id="cb323-8"><a href="making-good-tables.html#cb323-8" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">c</span>(<span class="st">&quot;hold_position&quot;</span>, <span class="st">&quot;scale_down&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb321"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb321-1"><a href="making-good-tables.html#cb321-1" aria-hidden="true" tabindex="-1"></a>NWeeks <span class="ot">&lt;-</span> <span class="dv">24</span></span>
+<span id="cb321-2"><a href="making-good-tables.html#cb321-2" aria-hidden="true" tabindex="-1"></a>mbig <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span>(<span class="dv">2</span><span class="sc">*</span>NWeeks), <span class="at">ncol=</span> NWeeks, <span class="at">byrow=</span><span class="cn">TRUE</span>,)</span>
+<span id="cb321-3"><a href="making-good-tables.html#cb321-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span> (mbig) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Widgets&quot;</span>, <span class="st">&quot;Gadgets&quot;</span>)</span>
+<span id="cb321-4"><a href="making-good-tables.html#cb321-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb321-5"><a href="making-good-tables.html#cb321-5" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(mbig,<span class="at">booktabs=</span>T, </span>
+<span id="cb321-6"><a href="making-good-tables.html#cb321-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption=</span><span class="st">&quot;Scaling Table to Fit Page&quot;</span>)<span class="sc">|&gt;</span></span>
+<span id="cb321-7"><a href="making-good-tables.html#cb321-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> </span>
+<span id="cb321-8"><a href="making-good-tables.html#cb321-8" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">c</span>(<span class="st">&quot;hold_position&quot;</span>, <span class="st">&quot;scale_down&quot;</span>))</span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-89">TABLE D.5: </span>Scaling Table to Fit Page
+<span id="tab:unnamed-chunk-90">TABLE D.5: </span>Scaling Table to Fit Page
 </caption>
 <tbody>
 <tr>

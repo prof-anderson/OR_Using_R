@@ -24,7 +24,7 @@
 <meta name="author" content="Timothy R. Anderson" />
 
 
-<meta name="date" content="2021-12-22" />
+<meta name="date" content="2021-12-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -522,7 +522,7 @@ or LP for short. It would not be linear if any nonlinear function is made of the
 <p>We do this by iteratively adding each constraint and trimming the feasible region. The line can be drawn by looking at the constraint from two perspectives. First as if only Ants are produced and second as if only Bats are produced. This gives specific point on the horizontal and vertical axes respectively which are simply connected.<br />
 </p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:Fig-First-Constraint"></span>
-<img src="images/Fig02-01-First_Constraint.PNG" alt="Drawing a First Constraint." width="3in" />
+<img src="images/Fig02-01-First-Constraint.PNG" alt="Drawing a First Constraint." width="3in" />
 <p class="caption">
 FIGURE 2.1: Drawing a First Constraint.
 </p>
@@ -531,22 +531,21 @@ FIGURE 2.1: Drawing a First Constraint.
 <p>In each figure, we illustrate the feasible region as a grayed oval but it is the whole region.<br />
 </p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:Fig-Second-Constraint"></span>
-<img src="images/Fig02-02-Second_Constraint.PNG" alt="Adding the Assembly Constraint." width="3in" />
+<img src="images/Fig02-02-Second-Constraint.PNG" alt="Adding the Assembly Constraint." width="3in" />
 <p class="caption">
 FIGURE 2.2: Adding the Assembly Constraint.
 </p>
 </div>
-<p>The assembly constraint is drawn as a red line connecting a production plan of just 300 Ants on the horizontal axis to just 150 Bats on the vertical axis.<br />
-</p>
+<p>The assembly constraint is drawn as a red line connecting a production plan of just 300 Ants on the horizontal axis to just 150 Bats on the vertical axis.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:Fig-Third-Constraint"></span>
-<img src="images/Fig02-03-Third_Constraint.PNG" alt="Adding the Testing Constraint." width="3in" />
+<img src="images/Fig02-03-Third-Constraint.PNG" alt="Adding the Testing Constraint." width="3in" />
 <p class="caption">
 FIGURE 2.3: Adding the Testing Constraint.
 </p>
 </div>
 <p>Since both products require two hours of testing and there are 480 hours available, the Green Testing constraint connects producing just 240 Ants and just 240 Bats.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:Fig-Fourth-Constraint"></span>
-<img src="images/Fig02-04-Fourth_Constraint.PNG" alt="Adding the Sensors Constraint." width="3in" />
+<img src="images/Fig02-04-Fourth-Constraint.PNG" alt="Adding the Sensors Constraint." width="3in" />
 <p class="caption">
 FIGURE 2.4: Adding the Sensors Constraint.
 </p>
@@ -554,21 +553,21 @@ FIGURE 2.4: Adding the Sensors Constraint.
 <p>We now draw our fourth and final constraint - Sensors. This constraint is done in yellow so it may be more difficult to see but it goes from an Ants only production plan of 600 units to a bats only production plan of 120.</p>
 <p>This now results in a feasible region that satisfies all of the constraints simultaneously. Every point in this region is feasible or possible in that it does not violate any of the constraints. There is an infinite number of possible points in this feasible region.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:Fig-Feasible-Region"></span>
-<img src="images/Fig02-05-Feasible_Region.PNG" alt="Feasible Region for Drone Manufacturing." width="3in" />
+<img src="images/Fig02-05-Feasible-Region.PNG" alt="Feasible Region for Drone Manufacturing." width="3in" />
 <p class="caption">
 FIGURE 2.5: Feasible Region for Drone Manufacturing.
 </p>
 </div>
 <p>Given that we are doing linear programming and we are trying to maximize or minimize a certain objective function, the optimal solution will be at a corner point or more formally, a vertex. In our example, we can narrow our attention from the full feasible region to just the five vertices or candidate solutions.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:Fig-Candidate-Solutions"></span>
-<img src="images/Fig02-06-Candidate_Solutions.PNG" alt="Candidate Solutions." width="3in" />
+<img src="images/Fig02-06-Candidate-Solutions.PNG" alt="Candidate Solutions." width="3in" />
 <p class="caption">
 FIGURE 2.6: Candidate Solutions.
 </p>
 </div>
 <p>Lastly, we can pick from among these possible solutions by drawing parallel, equal profit lines radiating out from the origin to find the last line that still touches the feasible region. The figure to the right shows one line with a profit of <span class="math inline">\(\$ 1400\)</span>. A second line is drawn that last touches the feasible region is at <span class="math inline">\(\$ 1980\)</span>.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:Fig-Iso-Profit"></span>
-<img src="images/Fig02-07-Iso_Profit.PNG" alt="Parallel Equal Profit Lines." width="3in" />
+<img src="images/Fig02-07-Iso-Profit.PNG" alt="Parallel Equal Profit Lines." width="3in" />
 <p class="caption">
 FIGURE 2.7: Parallel Equal Profit Lines.
 </p>
@@ -576,7 +575,7 @@ FIGURE 2.7: Parallel Equal Profit Lines.
 <p>Graphically, we could read the number of Ants and number of Bats to produce. Accuracy would be limited to the drawing skills and tools used.</p>
 <p>Rather than relying on this graphical approach for determining the coordinates of each point drawn, each point in a two dimensional space is defined by the intersection of two lines. In this case, the optimal solution (and all of the other candidate solutions too) can be defined by the intersection of two constraint lines, rewritten as exact equalities. These can be solved as a system of equations with two equations and two unknowns. The optimal solution here is defined by the intersection of the Assembly (Red) and the Testing (Green) constraints. Just solve <span class="math inline">\(3A+6B=900\)</span> and <span class="math inline">\(2A+2B=480\)</span> for <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:Fig-Optimal-Solution"></span>
-<img src="images/Fig02-08-Optimal_Solution.PNG" alt="Optimal Solution." width="3in" />
+<img src="images/Fig02-08-Optimal-Solution.PNG" alt="Optimal Solution." width="3in" />
 <p class="caption">
 FIGURE 2.8: Optimal Solution.
 </p>

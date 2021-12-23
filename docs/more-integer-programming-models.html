@@ -24,7 +24,7 @@
 <meta name="author" content="Timothy R. Anderson" />
 
 
-<meta name="date" content="2021-12-22" />
+<meta name="date" content="2021-12-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -524,16 +524,16 @@ You can think of this as a map for a square region that is 1000 kilometers in bo
 We are then randomly placing customers on the map.</p>
 <p>Next we set the number of customers to be 200 and the number of warehouses to be 40.
 The size of this problem can have a tremendous impact on solving speed.<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a></p>
-<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="more-integer-programming-models.html#cb182-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)      <span class="co"># Set random number seed</span></span>
-<span id="cb182-2"><a href="more-integer-programming-models.html#cb182-2" aria-hidden="true" tabindex="-1"></a>grid_size <span class="ot">&lt;-</span> <span class="dv">1000</span>   <span class="co"># Horizontal and vertical axis ranges </span></span>
-<span id="cb182-3"><a href="more-integer-programming-models.html#cb182-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">200</span> ; m <span class="ot">&lt;-</span> <span class="dv">40</span>  <span class="co"># Set number of customers and warehouses</span></span></code></pre></div>
+<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="more-integer-programming-models.html#cb180-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)      <span class="co"># Set random number seed</span></span>
+<span id="cb180-2"><a href="more-integer-programming-models.html#cb180-2" aria-hidden="true" tabindex="-1"></a>grid_size <span class="ot">&lt;-</span> <span class="dv">1000</span>   <span class="co"># Horizontal and vertical axis ranges </span></span>
+<span id="cb180-3"><a href="more-integer-programming-models.html#cb180-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">200</span> ; m <span class="ot">&lt;-</span> <span class="dv">40</span>  <span class="co"># Set number of customers and warehouses</span></span></code></pre></div>
 <p>Next we create the customer data as a dataframe. The <code>runif</code> function generates a uniform random number between 0.0 and 1.0 such as perhaps 0.32721.This would be multiplied by our grid size multiplier of 1,000 resulting in 327.21.
 This is then rounded to 327. Let’s now see how this is implemented for customers.</p>
-<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="more-integer-programming-models.html#cb183-1" aria-hidden="true" tabindex="-1"></a>customer_locations <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(      </span>
-<span id="cb183-2"><a href="more-integer-programming-models.html#cb183-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span>n,                        <span class="co"># Create column with ID numbers from 1 to n</span></span>
-<span id="cb183-3"><a href="more-integer-programming-models.html#cb183-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">round</span>(<span class="fu">runif</span>(n) <span class="sc">*</span> grid_size), <span class="co"># Create n x-coordinate values </span></span>
-<span id="cb183-4"><a href="more-integer-programming-models.html#cb183-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">round</span>(<span class="fu">runif</span>(n) <span class="sc">*</span> grid_size)  <span class="co"># Create n y-coordinate values </span></span>
-<span id="cb183-5"><a href="more-integer-programming-models.html#cb183-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="more-integer-programming-models.html#cb181-1" aria-hidden="true" tabindex="-1"></a>customer_locations <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(      </span>
+<span id="cb181-2"><a href="more-integer-programming-models.html#cb181-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span>n,                        <span class="co"># Create column with ID numbers from 1 to n</span></span>
+<span id="cb181-3"><a href="more-integer-programming-models.html#cb181-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">round</span>(<span class="fu">runif</span>(n) <span class="sc">*</span> grid_size), <span class="co"># Create n x-coordinate values </span></span>
+<span id="cb181-4"><a href="more-integer-programming-models.html#cb181-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">round</span>(<span class="fu">runif</span>(n) <span class="sc">*</span> grid_size)  <span class="co"># Create n y-coordinate values </span></span>
+<span id="cb181-5"><a href="more-integer-programming-models.html#cb181-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p>Choosing to open a warehouse entails a fixed cost that varies for each warehouse, <em>j</em>, defined earlier as <span class="math inline">\(fixedcost_j\)</span> or <code>fixedcost[j]</code> in <code>R</code>.
 The warehouse locations and fixed costs are again generated randomly as described by Dirk Schumacher.</p>
 <blockquote>
@@ -541,16 +541,16 @@ The warehouse locations and fixed costs are again generated randomly as describe
 The fixed cost for the warehouses are randomly generated as well with mean cost of 10,000.
 Notice that in this case, the fixedcost is generated using a normal random variable function, with a mean of 10 times the grid size or 10,000 and a standard deviation of 5000.</p>
 </blockquote>
-<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="more-integer-programming-models.html#cb184-1" aria-hidden="true" tabindex="-1"></a>warehouse_locations <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb184-2"><a href="more-integer-programming-models.html#cb184-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span>m,</span>
-<span id="cb184-3"><a href="more-integer-programming-models.html#cb184-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">round</span>(<span class="fu">runif</span>(m) <span class="sc">*</span> grid_size),</span>
-<span id="cb184-4"><a href="more-integer-programming-models.html#cb184-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">round</span>(<span class="fu">runif</span>(m) <span class="sc">*</span> grid_size)</span>
-<span id="cb184-5"><a href="more-integer-programming-models.html#cb184-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb184-6"><a href="more-integer-programming-models.html#cb184-6" aria-hidden="true" tabindex="-1"></a>fixedcost <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rnorm</span>(m, <span class="at">mean =</span> grid_size <span class="sc">*</span> <span class="dv">10</span>, </span>
-<span id="cb184-7"><a href="more-integer-programming-models.html#cb184-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">sd =</span> grid_size <span class="sc">*</span> <span class="dv">5</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="more-integer-programming-models.html#cb182-1" aria-hidden="true" tabindex="-1"></a>warehouse_locations <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb182-2"><a href="more-integer-programming-models.html#cb182-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span>m,</span>
+<span id="cb182-3"><a href="more-integer-programming-models.html#cb182-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">round</span>(<span class="fu">runif</span>(m) <span class="sc">*</span> grid_size),</span>
+<span id="cb182-4"><a href="more-integer-programming-models.html#cb182-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">round</span>(<span class="fu">runif</span>(m) <span class="sc">*</span> grid_size)</span>
+<span id="cb182-5"><a href="more-integer-programming-models.html#cb182-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb182-6"><a href="more-integer-programming-models.html#cb182-6" aria-hidden="true" tabindex="-1"></a>fixedcost <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rnorm</span>(m, <span class="at">mean =</span> grid_size <span class="sc">*</span> <span class="dv">10</span>, </span>
+<span id="cb182-7"><a href="more-integer-programming-models.html#cb182-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">sd =</span> grid_size <span class="sc">*</span> <span class="dv">5</span>))</span></code></pre></div>
 <p>The fixed costs to set up a warehouse are the following:</p>
-<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="more-integer-programming-models.html#cb185-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(fixedcost, <span class="at">main=</span><span class="st">&quot;Fixed Costs of Warehouses&quot;</span>, </span>
-<span id="cb185-2"><a href="more-integer-programming-models.html#cb185-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">&quot;Cost&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="more-integer-programming-models.html#cb183-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(fixedcost, <span class="at">main=</span><span class="st">&quot;Fixed Costs of Warehouses&quot;</span>, </span>
+<span id="cb183-2"><a href="more-integer-programming-models.html#cb183-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">&quot;Cost&quot;</span>)</span></code></pre></div>
 <p><img src="OMUR_files/figure-html/Fixedcost-histogram-1.png" width="672" /></p>
 <p>he distribution of fixed costs is pretty broad. In fact, using a normal distribution means that is unbounded in both directions so it is possible for a warehouse to have a negative construction cost. While a negative construction cost might seem impossible, perhaps this would be an example of local tax incentives at work.<br />
 </p>
@@ -560,18 +560,18 @@ Of course in terms of cost, we could scale it or add a startup cost to each trip
 </p>
 <p>Here we define a function to calculate the distance between customer <em>i</em> and warehouse <em>j</em>.<br />
 </p>
-<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="more-integer-programming-models.html#cb186-1" aria-hidden="true" tabindex="-1"></a>transportcost <span class="ot">&lt;-</span> <span class="cf">function</span>(i, j) {</span>
-<span id="cb186-2"><a href="more-integer-programming-models.html#cb186-2" aria-hidden="true" tabindex="-1"></a>  customer <span class="ot">&lt;-</span> customer_locations[i, ]</span>
-<span id="cb186-3"><a href="more-integer-programming-models.html#cb186-3" aria-hidden="true" tabindex="-1"></a>  warehouse <span class="ot">&lt;-</span> warehouse_locations[j, ]</span>
-<span id="cb186-4"><a href="more-integer-programming-models.html#cb186-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="fu">sqrt</span>((customer<span class="sc">$</span>x <span class="sc">-</span> warehouse<span class="sc">$</span>x)<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> </span>
-<span id="cb186-5"><a href="more-integer-programming-models.html#cb186-5" aria-hidden="true" tabindex="-1"></a>               (customer<span class="sc">$</span>y <span class="sc">-</span> warehouse<span class="sc">$</span>y)<span class="sc">^</span><span class="dv">2</span>))</span>
-<span id="cb186-6"><a href="more-integer-programming-models.html#cb186-6" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb186-7"><a href="more-integer-programming-models.html#cb186-7" aria-hidden="true" tabindex="-1"></a><span class="fu">transportcost</span>(<span class="dv">1</span>, <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="more-integer-programming-models.html#cb184-1" aria-hidden="true" tabindex="-1"></a>transportcost <span class="ot">&lt;-</span> <span class="cf">function</span>(i, j) {</span>
+<span id="cb184-2"><a href="more-integer-programming-models.html#cb184-2" aria-hidden="true" tabindex="-1"></a>  customer <span class="ot">&lt;-</span> customer_locations[i, ]</span>
+<span id="cb184-3"><a href="more-integer-programming-models.html#cb184-3" aria-hidden="true" tabindex="-1"></a>  warehouse <span class="ot">&lt;-</span> warehouse_locations[j, ]</span>
+<span id="cb184-4"><a href="more-integer-programming-models.html#cb184-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="fu">sqrt</span>((customer<span class="sc">$</span>x <span class="sc">-</span> warehouse<span class="sc">$</span>x)<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> </span>
+<span id="cb184-5"><a href="more-integer-programming-models.html#cb184-5" aria-hidden="true" tabindex="-1"></a>               (customer<span class="sc">$</span>y <span class="sc">-</span> warehouse<span class="sc">$</span>y)<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb184-6"><a href="more-integer-programming-models.html#cb184-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb184-7"><a href="more-integer-programming-models.html#cb184-7" aria-hidden="true" tabindex="-1"></a><span class="fu">transportcost</span>(<span class="dv">1</span>, <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>## [1] 648</code></pre>
 <p>We could look at a sample of the customer location data.</p>
-<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="more-integer-programming-models.html#cb188-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">head</span>(customer_locations), <span class="at">booktabs=</span>T, </span>
-<span id="cb188-2"><a href="more-integer-programming-models.html#cb188-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption=</span><span class="st">&quot;Locations of First Six Customers&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb188-3"><a href="more-integer-programming-models.html#cb188-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="more-integer-programming-models.html#cb186-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">head</span>(customer_locations), <span class="at">booktabs=</span>T, </span>
+<span id="cb186-2"><a href="more-integer-programming-models.html#cb186-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption=</span><span class="st">&quot;Locations of First Six Customers&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb186-3"><a href="more-integer-programming-models.html#cb186-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:Customer-Location">TABLE 7.1: </span>Locations of First Six Customers
@@ -661,48 +661,48 @@ y
 <p>A table of the randomly generated locations is not terribly helpful for understanding the locations of customers or warehouses though.
 Let’s build a map by plotting both customers and warehouses together.
 Black dots are customers and red dots are possible warehouse locations.</p>
-<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="more-integer-programming-models.html#cb189-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(customer_locations, <span class="fu">aes</span>(x, y)) <span class="sc">+</span> </span>
-<span id="cb189-2"><a href="more-integer-programming-models.html#cb189-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
-<span id="cb189-3"><a href="more-integer-programming-models.html#cb189-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> warehouse_locations, <span class="at">color =</span> <span class="st">&quot;red&quot;</span>, </span>
-<span id="cb189-4"><a href="more-integer-programming-models.html#cb189-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">shape =</span> <span class="dv">17</span>) <span class="sc">+</span></span>
-<span id="cb189-5"><a href="more-integer-programming-models.html#cb189-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, grid_size)) <span class="sc">+</span></span>
-<span id="cb189-6"><a href="more-integer-programming-models.html#cb189-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, grid_size)) <span class="sc">+</span></span>
-<span id="cb189-7"><a href="more-integer-programming-models.html#cb189-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">caption=</span><span class="st">&quot;Black dots are customers. Light red triangles </span></span>
-<span id="cb189-8"><a href="more-integer-programming-models.html#cb189-8" aria-hidden="true" tabindex="-1"></a><span class="st">       show potential warehouse locations.&quot;</span>) <span class="sc">+</span></span>
-<span id="cb189-9"><a href="more-integer-programming-models.html#cb189-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_blank</span>(), </span>
-<span id="cb189-10"><a href="more-integer-programming-models.html#cb189-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(), </span>
-<span id="cb189-11"><a href="more-integer-programming-models.html#cb189-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text =</span> <span class="fu">element_blank</span>(), </span>
-<span id="cb189-12"><a href="more-integer-programming-models.html#cb189-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid =</span> <span class="fu">element_blank</span>())</span>
-<span id="cb189-13"><a href="more-integer-programming-models.html#cb189-13" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-39"></span>
-<img src="OMUR_files/figure-html/unnamed-chunk-39-1.png" alt="Map of Customer and Warehouse Locations" width="672" />
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="more-integer-programming-models.html#cb187-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(customer_locations, <span class="fu">aes</span>(x, y)) <span class="sc">+</span> </span>
+<span id="cb187-2"><a href="more-integer-programming-models.html#cb187-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb187-3"><a href="more-integer-programming-models.html#cb187-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> warehouse_locations, <span class="at">color =</span> <span class="st">&quot;red&quot;</span>, </span>
+<span id="cb187-4"><a href="more-integer-programming-models.html#cb187-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">shape =</span> <span class="dv">17</span>) <span class="sc">+</span></span>
+<span id="cb187-5"><a href="more-integer-programming-models.html#cb187-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, grid_size)) <span class="sc">+</span></span>
+<span id="cb187-6"><a href="more-integer-programming-models.html#cb187-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, grid_size)) <span class="sc">+</span></span>
+<span id="cb187-7"><a href="more-integer-programming-models.html#cb187-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">caption=</span><span class="st">&quot;Black dots are customers. Light red triangles </span></span>
+<span id="cb187-8"><a href="more-integer-programming-models.html#cb187-8" aria-hidden="true" tabindex="-1"></a><span class="st">       show potential warehouse locations.&quot;</span>) <span class="sc">+</span></span>
+<span id="cb187-9"><a href="more-integer-programming-models.html#cb187-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb187-10"><a href="more-integer-programming-models.html#cb187-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb187-11"><a href="more-integer-programming-models.html#cb187-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb187-12"><a href="more-integer-programming-models.html#cb187-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb187-13"><a href="more-integer-programming-models.html#cb187-13" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-40"></span>
+<img src="OMUR_files/figure-html/unnamed-chunk-40-1.png" alt="Map of Customer and Warehouse Locations" width="672" />
 <p class="caption">
 FIGURE 7.1: Map of Customer and Warehouse Locations
 </p>
 </div>
 <p>Note that I have modified the variables names for <em>x</em> and <em>y</em> to be <code>Vx</code> and <code>Vy</code> in the code chunk to remove confusion over x and y representing location or variables. The prefix of <code>V</code> is meant to suggest that it is a variable. It also helps prevent name space conflicts with other <code>R</code> objects in my environment.<br />
 </p>
-<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="more-integer-programming-models.html#cb190-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">|&gt;</span></span>
-<span id="cb190-2"><a href="more-integer-programming-models.html#cb190-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 1 iff i gets assigned to warehouse j</span></span>
-<span id="cb190-3"><a href="more-integer-programming-models.html#cb190-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Vx [i, j], <span class="at">i=</span><span class="dv">1</span><span class="sc">:</span>n, <span class="at">j=</span><span class="dv">1</span><span class="sc">:</span>m, <span class="at">type=</span><span class="st">&quot;binary&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb190-4"><a href="more-integer-programming-models.html#cb190-4" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb190-5"><a href="more-integer-programming-models.html#cb190-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 1 iff warehouse j is built</span></span>
-<span id="cb190-6"><a href="more-integer-programming-models.html#cb190-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Vy [j], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>m, <span class="at">type =</span> <span class="st">&quot;binary&quot;</span>)       <span class="sc">|&gt;</span></span>
-<span id="cb190-7"><a href="more-integer-programming-models.html#cb190-7" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb190-8"><a href="more-integer-programming-models.html#cb190-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># minimize cost</span></span>
-<span id="cb190-9"><a href="more-integer-programming-models.html#cb190-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_objective</span>(<span class="fu">sum_expr</span>(<span class="fu">transportcost</span>(i, j) <span class="sc">*</span> Vx[i, j], </span>
-<span id="cb190-10"><a href="more-integer-programming-models.html#cb190-10" aria-hidden="true" tabindex="-1"></a>                         <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>n, <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>m) <span class="sc">+</span> </span>
-<span id="cb190-11"><a href="more-integer-programming-models.html#cb190-11" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">sum_expr</span>(fixedcost[j] <span class="sc">*</span> Vy[j], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>m), </span>
-<span id="cb190-12"><a href="more-integer-programming-models.html#cb190-12" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;min&quot;</span>)                                 <span class="sc">|&gt;</span></span>
-<span id="cb190-13"><a href="more-integer-programming-models.html#cb190-13" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb190-14"><a href="more-integer-programming-models.html#cb190-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># every customer needs to be assigned to a warehouse</span></span>
-<span id="cb190-15"><a href="more-integer-programming-models.html#cb190-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="fu">sum_expr</span>(Vx[i, j], <span class="at">j=</span><span class="dv">1</span><span class="sc">:</span>m)<span class="sc">==</span><span class="dv">1</span>, <span class="at">i=</span><span class="dv">1</span><span class="sc">:</span>n)  <span class="sc">|&gt;</span>  </span>
-<span id="cb190-16"><a href="more-integer-programming-models.html#cb190-16" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb190-17"><a href="more-integer-programming-models.html#cb190-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># if a customer is assigned to a warehouse, </span></span>
-<span id="cb190-18"><a href="more-integer-programming-models.html#cb190-18" aria-hidden="true" tabindex="-1"></a>  <span class="co">#    then this warehouse must be built</span></span>
-<span id="cb190-19"><a href="more-integer-programming-models.html#cb190-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(Vx[i,j] <span class="sc">&lt;=</span> Vy[j], <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>n, <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>m)</span>
-<span id="cb190-20"><a href="more-integer-programming-models.html#cb190-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb190-21"><a href="more-integer-programming-models.html#cb190-21" aria-hidden="true" tabindex="-1"></a>model</span></code></pre></div>
+<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="more-integer-programming-models.html#cb188-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">|&gt;</span></span>
+<span id="cb188-2"><a href="more-integer-programming-models.html#cb188-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 1 iff i gets assigned to warehouse j</span></span>
+<span id="cb188-3"><a href="more-integer-programming-models.html#cb188-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Vx [i, j], <span class="at">i=</span><span class="dv">1</span><span class="sc">:</span>n, <span class="at">j=</span><span class="dv">1</span><span class="sc">:</span>m, <span class="at">type=</span><span class="st">&quot;binary&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb188-4"><a href="more-integer-programming-models.html#cb188-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb188-5"><a href="more-integer-programming-models.html#cb188-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 1 iff warehouse j is built</span></span>
+<span id="cb188-6"><a href="more-integer-programming-models.html#cb188-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Vy [j], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>m, <span class="at">type =</span> <span class="st">&quot;binary&quot;</span>)       <span class="sc">|&gt;</span></span>
+<span id="cb188-7"><a href="more-integer-programming-models.html#cb188-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb188-8"><a href="more-integer-programming-models.html#cb188-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># minimize cost</span></span>
+<span id="cb188-9"><a href="more-integer-programming-models.html#cb188-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_objective</span>(<span class="fu">sum_expr</span>(<span class="fu">transportcost</span>(i, j) <span class="sc">*</span> Vx[i, j], </span>
+<span id="cb188-10"><a href="more-integer-programming-models.html#cb188-10" aria-hidden="true" tabindex="-1"></a>                         <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>n, <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>m) <span class="sc">+</span> </span>
+<span id="cb188-11"><a href="more-integer-programming-models.html#cb188-11" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">sum_expr</span>(fixedcost[j] <span class="sc">*</span> Vy[j], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>m), </span>
+<span id="cb188-12"><a href="more-integer-programming-models.html#cb188-12" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;min&quot;</span>)                                 <span class="sc">|&gt;</span></span>
+<span id="cb188-13"><a href="more-integer-programming-models.html#cb188-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb188-14"><a href="more-integer-programming-models.html#cb188-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># every customer needs to be assigned to a warehouse</span></span>
+<span id="cb188-15"><a href="more-integer-programming-models.html#cb188-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="fu">sum_expr</span>(Vx[i, j], <span class="at">j=</span><span class="dv">1</span><span class="sc">:</span>m)<span class="sc">==</span><span class="dv">1</span>, <span class="at">i=</span><span class="dv">1</span><span class="sc">:</span>n)  <span class="sc">|&gt;</span>  </span>
+<span id="cb188-16"><a href="more-integer-programming-models.html#cb188-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb188-17"><a href="more-integer-programming-models.html#cb188-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># if a customer is assigned to a warehouse, </span></span>
+<span id="cb188-18"><a href="more-integer-programming-models.html#cb188-18" aria-hidden="true" tabindex="-1"></a>  <span class="co">#    then this warehouse must be built</span></span>
+<span id="cb188-19"><a href="more-integer-programming-models.html#cb188-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(Vx[i,j] <span class="sc">&lt;=</span> Vy[j], <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>n, <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>m)</span>
+<span id="cb188-20"><a href="more-integer-programming-models.html#cb188-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb188-21"><a href="more-integer-programming-models.html#cb188-21" aria-hidden="true" tabindex="-1"></a>model</span></code></pre></div>
 <pre><code>## Mixed integer linear optimization problem
 ## Variables:
 ##   Continuous: 0 
@@ -727,9 +727,9 @@ A particularly big MIP running on Amazon Web Services might create a sizable bil
 </p>
 <p>In summary, non-trivial MIP models should be run locally on a computer unless you are certain that your computational loads will not cause a problem for yourself or others.<br />
 </p>
-<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="more-integer-programming-models.html#cb192-1" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(model, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
-<span id="cb192-2"><a href="more-integer-programming-models.html#cb192-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb192-3"><a href="more-integer-programming-models.html#cb192-3" aria-hidden="true" tabindex="-1"></a>result</span></code></pre></div>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="more-integer-programming-models.html#cb190-1" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(model, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
+<span id="cb190-2"><a href="more-integer-programming-models.html#cb190-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb190-3"><a href="more-integer-programming-models.html#cb190-3" aria-hidden="true" tabindex="-1"></a>result</span></code></pre></div>
 <pre><code>## Status: optimal
 ## Objective value: 60736</code></pre>
 <p>We can see that the result was solved to optimality and the objective function value of We can summarize the information by simply extracting a the objective function value.
@@ -744,10 +744,10 @@ Only a small percentage of the <em>x</em> variables are not zero.<a href="#fn7" 
 In order to do so, Dirk uses the <code>dplyr</code> package.
 This package provides a tremendous number of functions for data management.
 To illustrate how this is done, let’s review line by line how this code chunk works.</p>
-<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="more-integer-programming-models.html#cb194-1" aria-hidden="true" tabindex="-1"></a>matching <span class="ot">&lt;-</span> result <span class="sc">|&gt;</span> </span>
-<span id="cb194-2"><a href="more-integer-programming-models.html#cb194-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_solution</span>(Vx[i,j]) <span class="sc">|&gt;</span></span>
-<span id="cb194-3"><a href="more-integer-programming-models.html#cb194-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(value <span class="sc">&gt;</span> .<span class="dv">9</span>) <span class="sc">|&gt;</span>  </span>
-<span id="cb194-4"><a href="more-integer-programming-models.html#cb194-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(i, j)</span></code></pre></div>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="more-integer-programming-models.html#cb192-1" aria-hidden="true" tabindex="-1"></a>matching <span class="ot">&lt;-</span> result <span class="sc">|&gt;</span> </span>
+<span id="cb192-2"><a href="more-integer-programming-models.html#cb192-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_solution</span>(Vx[i,j]) <span class="sc">|&gt;</span></span>
+<span id="cb192-3"><a href="more-integer-programming-models.html#cb192-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(value <span class="sc">&gt;</span> .<span class="dv">9</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb192-4"><a href="more-integer-programming-models.html#cb192-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(i, j)</span></code></pre></div>
 <p>The next command <code>matching &lt;- result |&gt;</code> does a few things.
 It uses the piping operator <code>|&gt;</code> to pass the <code>result</code> object into being used by the following command and then everything that gets done later in this piped sequence will be assigned to <code>matching</code>.<br />
 </p>
@@ -762,9 +762,9 @@ Notice that this does not pass the actual value of zero or one - we know it is o
 Also, note that it does not include the piping operator <code>|&gt;</code> which means that it is the end of this piped sequence.<br />
 </p>
 <p>Let’s review what the two versions of the results look like.</p>
-<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="more-integer-programming-models.html#cb195-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">head</span>( <span class="fu">get_solution</span>(result, Vx[i,j])), <span class="at">booktabs=</span>T,</span>
-<span id="cb195-2"><a href="more-integer-programming-models.html#cb195-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption =</span> <span class="st">&quot;Raw Results for Vx Variable.&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb195-3"><a href="more-integer-programming-models.html#cb195-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="more-integer-programming-models.html#cb193-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">head</span>( <span class="fu">get_solution</span>(result, Vx[i,j])), <span class="at">booktabs=</span>T,</span>
+<span id="cb193-2"><a href="more-integer-programming-models.html#cb193-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption =</span> <span class="st">&quot;Raw Results for Vx Variable.&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb193-3"><a href="more-integer-programming-models.html#cb193-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:raw-results-table">TABLE 7.2: </span>Raw Results for Vx Variable.
@@ -875,10 +875,10 @@ Vx
 <p>Notice that in the table of raw results, the first six entries (obtained using the <code>head</code> function) did not show any customers assigned to a warehouse.
 This isn’t surprising given that only one in twenty values are non-zero. It is common in many binary programming cases for the vast majority of variables to have a value of zero.<br />
 </p>
-<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="more-integer-programming-models.html#cb196-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">head</span>( matching), <span class="at">booktabs=</span>T, </span>
-<span id="cb196-2"><a href="more-integer-programming-models.html#cb196-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption=</span></span>
-<span id="cb196-3"><a href="more-integer-programming-models.html#cb196-3" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;Subset of Customers (i) Assigned to Warehouses (j)&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb196-4"><a href="more-integer-programming-models.html#cb196-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="more-integer-programming-models.html#cb194-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">head</span>( matching), <span class="at">booktabs=</span>T, </span>
+<span id="cb194-2"><a href="more-integer-programming-models.html#cb194-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption=</span></span>
+<span id="cb194-3"><a href="more-integer-programming-models.html#cb194-3" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;Subset of Customers (i) Assigned to Warehouses (j)&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb194-4"><a href="more-integer-programming-models.html#cb194-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:processed-results-table">TABLE 7.3: </span>Subset of Customers (i) Assigned to Warehouses (j)
@@ -953,12 +953,12 @@ It has cut out the vast majority of rows (decision variables) with zero values.<
 Dirk used one single code chunk to do more processing of results, focused on warehouses, and then create the final plot.
 I’ll break up the steps into separate code chunks just for the sake of illustrating how they work and showing the intermediate products. This is a useful chance to see how to manage results.<br />
 </p>
-<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb197-1"><a href="more-integer-programming-models.html#cb197-1" aria-hidden="true" tabindex="-1"></a>plot_assignment <span class="ot">&lt;-</span> matching <span class="sc">|&gt;</span> </span>
-<span id="cb197-2"><a href="more-integer-programming-models.html#cb197-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(customer_locations, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;i&quot;</span> <span class="ot">=</span> <span class="st">&quot;id&quot;</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb197-3"><a href="more-integer-programming-models.html#cb197-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(warehouse_locations, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;j&quot;</span> <span class="ot">=</span> <span class="st">&quot;id&quot;</span>))</span>
-<span id="cb197-4"><a href="more-integer-programming-models.html#cb197-4" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">head</span>(plot_assignment), <span class="at">booktabs=</span>T, <span class="at">caption=</span></span>
-<span id="cb197-5"><a href="more-integer-programming-models.html#cb197-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;XY coordinates to draw Customer-Warehouse Routes&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb197-6"><a href="more-integer-programming-models.html#cb197-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="more-integer-programming-models.html#cb195-1" aria-hidden="true" tabindex="-1"></a>plot_assignment <span class="ot">&lt;-</span> matching <span class="sc">|&gt;</span> </span>
+<span id="cb195-2"><a href="more-integer-programming-models.html#cb195-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(customer_locations, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;i&quot;</span> <span class="ot">=</span> <span class="st">&quot;id&quot;</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb195-3"><a href="more-integer-programming-models.html#cb195-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(warehouse_locations, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;j&quot;</span> <span class="ot">=</span> <span class="st">&quot;id&quot;</span>))</span>
+<span id="cb195-4"><a href="more-integer-programming-models.html#cb195-4" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">head</span>(plot_assignment), <span class="at">booktabs=</span>T, <span class="at">caption=</span></span>
+<span id="cb195-5"><a href="more-integer-programming-models.html#cb195-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;XY coordinates to draw Customer-Warehouse Routes&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb195-6"><a href="more-integer-programming-models.html#cb195-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:plot-assignment">TABLE 7.4: </span>XY coordinates to draw Customer-Warehouse Routes
@@ -1111,14 +1111,14 @@ y.y
 <p>Notice that this gives the beginning and ending coordinates of what will soon be lines to show the connections between customers and warehouses.<br />
 </p>
 <p>Now, let’s calculate how many customers each warehouse serves.</p>
-<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="more-integer-programming-models.html#cb198-1" aria-hidden="true" tabindex="-1"></a>customer_count <span class="ot">&lt;-</span> matching <span class="sc">|&gt;</span> </span>
-<span id="cb198-2"><a href="more-integer-programming-models.html#cb198-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Process matching and save result to customer_count</span></span>
-<span id="cb198-3"><a href="more-integer-programming-models.html#cb198-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(j)              <span class="sc">|&gt;</span> <span class="co"># Group by warehouse</span></span>
-<span id="cb198-4"><a href="more-integer-programming-models.html#cb198-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())       <span class="sc">|&gt;</span> <span class="co"># Summarize count</span></span>
-<span id="cb198-5"><a href="more-integer-programming-models.html#cb198-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">id =</span> j)              <span class="co"># Rename column from j to id</span></span>
-<span id="cb198-6"><a href="more-integer-programming-models.html#cb198-6" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (customer_count, <span class="at">booktabs=</span>T, <span class="at">caption=</span></span>
-<span id="cb198-7"><a href="more-integer-programming-models.html#cb198-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Count of Customers Assigned to Each Operating Warehouse&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb198-8"><a href="more-integer-programming-models.html#cb198-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="more-integer-programming-models.html#cb196-1" aria-hidden="true" tabindex="-1"></a>customer_count <span class="ot">&lt;-</span> matching <span class="sc">|&gt;</span> </span>
+<span id="cb196-2"><a href="more-integer-programming-models.html#cb196-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Process matching and save result to customer_count</span></span>
+<span id="cb196-3"><a href="more-integer-programming-models.html#cb196-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(j)              <span class="sc">|&gt;</span> <span class="co"># Group by warehouse</span></span>
+<span id="cb196-4"><a href="more-integer-programming-models.html#cb196-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())       <span class="sc">|&gt;</span> <span class="co"># Summarize count</span></span>
+<span id="cb196-5"><a href="more-integer-programming-models.html#cb196-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">id =</span> j)              <span class="co"># Rename column from j to id</span></span>
+<span id="cb196-6"><a href="more-integer-programming-models.html#cb196-6" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (customer_count, <span class="at">booktabs=</span>T, <span class="at">caption=</span></span>
+<span id="cb196-7"><a href="more-integer-programming-models.html#cb196-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Count of Customers Assigned to Each Operating Warehouse&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb196-8"><a href="more-integer-programming-models.html#cb196-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:customer-count">TABLE 7.5: </span>Count of Customers Assigned to Each Operating Warehouse
@@ -1164,13 +1164,13 @@ n
 Let’s gather more information to examine the fixed cost of the selected.
 How does this compare with the histogram of fixed costs?<br />
 </p>
-<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="more-integer-programming-models.html#cb199-1" aria-hidden="true" tabindex="-1"></a>plot_warehouses <span class="ot">&lt;-</span> warehouse_locations              <span class="sc">|&gt;</span> </span>
-<span id="cb199-2"><a href="more-integer-programming-models.html#cb199-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">costs =</span> fixedcost)                         <span class="sc">|&gt;</span> </span>
-<span id="cb199-3"><a href="more-integer-programming-models.html#cb199-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(customer_count, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)             <span class="sc">|&gt;</span> </span>
-<span id="cb199-4"><a href="more-integer-programming-models.html#cb199-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(id <span class="sc">%in%</span> <span class="fu">unique</span>(matching<span class="sc">$</span>j))</span>
-<span id="cb199-5"><a href="more-integer-programming-models.html#cb199-5" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (plot_warehouses, <span class="at">booktabs=</span>T, <span class="at">caption =</span> </span>
-<span id="cb199-6"><a href="more-integer-programming-models.html#cb199-6" aria-hidden="true" tabindex="-1"></a>          <span class="st">&quot;Summary of Results for Warehouses Used&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb199-7"><a href="more-integer-programming-models.html#cb199-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb197-1"><a href="more-integer-programming-models.html#cb197-1" aria-hidden="true" tabindex="-1"></a>plot_warehouses <span class="ot">&lt;-</span> warehouse_locations              <span class="sc">|&gt;</span> </span>
+<span id="cb197-2"><a href="more-integer-programming-models.html#cb197-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">costs =</span> fixedcost)                         <span class="sc">|&gt;</span> </span>
+<span id="cb197-3"><a href="more-integer-programming-models.html#cb197-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(customer_count, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)             <span class="sc">|&gt;</span> </span>
+<span id="cb197-4"><a href="more-integer-programming-models.html#cb197-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(id <span class="sc">%in%</span> <span class="fu">unique</span>(matching<span class="sc">$</span>j))</span>
+<span id="cb197-5"><a href="more-integer-programming-models.html#cb197-5" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (plot_warehouses, <span class="at">booktabs=</span>T, <span class="at">caption =</span> </span>
+<span id="cb197-6"><a href="more-integer-programming-models.html#cb197-6" aria-hidden="true" tabindex="-1"></a>          <span class="st">&quot;Summary of Results for Warehouses Used&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb197-7"><a href="more-integer-programming-models.html#cb197-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:prepare-to-plot-warehouses">TABLE 7.6: </span>Summary of Results for Warehouses Used
@@ -1250,29 +1250,29 @@ n
 </table>
 <p>The <code>plot_warehouses</code> data frame<a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a> is built using <code>dplyr</code> functions to create a summary of the important information about the warehouses used: where they are located, costs, and number of customers served.<br />
 </p>
-<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="more-integer-programming-models.html#cb200-1" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> </span>
-<span id="cb200-2"><a href="more-integer-programming-models.html#cb200-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">data=</span>plot_assignment, </span>
-<span id="cb200-3"><a href="more-integer-programming-models.html#cb200-3" aria-hidden="true" tabindex="-1"></a>               <span class="fu">aes</span>(<span class="at">x=</span>x.y, <span class="at">y=</span>y.y, <span class="at">xend=</span>x.x, <span class="at">yend=</span>y.x)) <span class="sc">+</span> </span>
-<span id="cb200-4"><a href="more-integer-programming-models.html#cb200-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data  =</span> plot_warehouses, </span>
-<span id="cb200-5"><a href="more-integer-programming-models.html#cb200-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">&quot;red&quot;</span>, <span class="at">size=</span><span class="dv">3</span>, <span class="at">shape=</span><span class="dv">17</span>) <span class="sc">+</span></span>
-<span id="cb200-6"><a href="more-integer-programming-models.html#cb200-6" aria-hidden="true" tabindex="-1"></a>  ggrepel<span class="sc">::</span><span class="fu">geom_label_repel</span>(<span class="at">data  =</span> plot_warehouses, </span>
-<span id="cb200-7"><a href="more-integer-programming-models.html#cb200-7" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">paste0</span>(</span>
-<span id="cb200-8"><a href="more-integer-programming-models.html#cb200-8" aria-hidden="true" tabindex="-1"></a>                              <span class="st">&quot;fixed costs:&quot;</span>,costs, <span class="st">&quot;; </span></span>
-<span id="cb200-9"><a href="more-integer-programming-models.html#cb200-9" aria-hidden="true" tabindex="-1"></a><span class="st">                              customers: &quot;</span>, n)), </span>
-<span id="cb200-10"><a href="more-integer-programming-models.html#cb200-10" aria-hidden="true" tabindex="-1"></a>                            <span class="at">size =</span> <span class="dv">2</span>, <span class="at">nudge_y =</span> <span class="dv">20</span>) <span class="sc">+</span> </span>
-<span id="cb200-11"><a href="more-integer-programming-models.html#cb200-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="fu">paste0</span>(</span>
-<span id="cb200-12"><a href="more-integer-programming-models.html#cb200-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Optimal Warehouse Locations and Customer Assignment&quot;</span>),</span>
-<span id="cb200-13"><a href="more-integer-programming-models.html#cb200-13" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;Big red triangles show warehouses that will be built.</span></span>
-<span id="cb200-14"><a href="more-integer-programming-models.html#cb200-14" aria-hidden="true" tabindex="-1"></a><span class="st">Light red are unused warehouse locations. </span></span>
-<span id="cb200-15"><a href="more-integer-programming-models.html#cb200-15" aria-hidden="true" tabindex="-1"></a><span class="st">Lines connect customers to their assigned warehouses.&quot;</span>)</span></code></pre></div>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-40"></span>
-<img src="OMUR_files/figure-html/unnamed-chunk-40-1.png" alt="Optional Warehouse Locations Customer Assignments" width="672" />
+<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="more-integer-programming-models.html#cb198-1" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> </span>
+<span id="cb198-2"><a href="more-integer-programming-models.html#cb198-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">data=</span>plot_assignment, </span>
+<span id="cb198-3"><a href="more-integer-programming-models.html#cb198-3" aria-hidden="true" tabindex="-1"></a>               <span class="fu">aes</span>(<span class="at">x=</span>x.y, <span class="at">y=</span>y.y, <span class="at">xend=</span>x.x, <span class="at">yend=</span>y.x)) <span class="sc">+</span> </span>
+<span id="cb198-4"><a href="more-integer-programming-models.html#cb198-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data  =</span> plot_warehouses, </span>
+<span id="cb198-5"><a href="more-integer-programming-models.html#cb198-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">&quot;red&quot;</span>, <span class="at">size=</span><span class="dv">3</span>, <span class="at">shape=</span><span class="dv">17</span>) <span class="sc">+</span></span>
+<span id="cb198-6"><a href="more-integer-programming-models.html#cb198-6" aria-hidden="true" tabindex="-1"></a>  ggrepel<span class="sc">::</span><span class="fu">geom_label_repel</span>(<span class="at">data  =</span> plot_warehouses, </span>
+<span id="cb198-7"><a href="more-integer-programming-models.html#cb198-7" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">paste0</span>(</span>
+<span id="cb198-8"><a href="more-integer-programming-models.html#cb198-8" aria-hidden="true" tabindex="-1"></a>                              <span class="st">&quot;fixed costs:&quot;</span>,costs, <span class="st">&quot;; </span></span>
+<span id="cb198-9"><a href="more-integer-programming-models.html#cb198-9" aria-hidden="true" tabindex="-1"></a><span class="st">                              customers: &quot;</span>, n)), </span>
+<span id="cb198-10"><a href="more-integer-programming-models.html#cb198-10" aria-hidden="true" tabindex="-1"></a>                            <span class="at">size =</span> <span class="dv">2</span>, <span class="at">nudge_y =</span> <span class="dv">20</span>) <span class="sc">+</span> </span>
+<span id="cb198-11"><a href="more-integer-programming-models.html#cb198-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="fu">paste0</span>(</span>
+<span id="cb198-12"><a href="more-integer-programming-models.html#cb198-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Optimal Warehouse Locations and Customer Assignment&quot;</span>),</span>
+<span id="cb198-13"><a href="more-integer-programming-models.html#cb198-13" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;Big red triangles show warehouses that will be built.</span></span>
+<span id="cb198-14"><a href="more-integer-programming-models.html#cb198-14" aria-hidden="true" tabindex="-1"></a><span class="st">Light red are unused warehouse locations. </span></span>
+<span id="cb198-15"><a href="more-integer-programming-models.html#cb198-15" aria-hidden="true" tabindex="-1"></a><span class="st">Lines connect customers to their assigned warehouses.&quot;</span>)</span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-41"></span>
+<img src="OMUR_files/figure-html/unnamed-chunk-41-1.png" alt="Optional Warehouse Locations Customer Assignments" width="672" />
 <p class="caption">
 FIGURE 7.2: Optional Warehouse Locations Customer Assignments
 </p>
 </div>
 <p>The total fixed costs for setting up the 3 warehouses is:</p>
-<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb201-1"><a href="more-integer-programming-models.html#cb201-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(fixedcost[<span class="fu">unique</span>(matching<span class="sc">$</span>j)])</span></code></pre></div>
+<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="more-integer-programming-models.html#cb199-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(fixedcost[<span class="fu">unique</span>(matching<span class="sc">$</span>j)])</span></code></pre></div>
 <pre><code>## [1] 9756</code></pre>
 <p>The above function cleverly uses the warehouse ID column from <code>matching</code> (<code>matching$j</code>) to make list unique and get rid of duplicates.
 Recall that warehouses will be listed 100 times since every customer has a warehouse listed in matching.
@@ -1280,21 +1280,21 @@ Next, it uses these ID numbers to extract fixed-cost values and adds them up.
 Note that when you see a command such as this in R, it can often work to run them one at time in the console to see how they work.
 To demonstrate this, see how each statement builds upon the previous.</p>
 <p><code>matching$j</code></p>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-41"></span>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-42"></span>
 <img src="images/ch8-MatchingJ.PNG" alt="LP Region and 10 IP Feasible Solutions" width="100%" />
 <p class="caption">
 FIGURE 7.3: LP Region and 10 IP Feasible Solutions
 </p>
 </div>
-<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb203-1"><a href="more-integer-programming-models.html#cb203-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(matching<span class="sc">$</span>j)                  </span></code></pre></div>
+<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb201-1"><a href="more-integer-programming-models.html#cb201-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(matching<span class="sc">$</span>j)                  </span></code></pre></div>
 <pre><code>## [1]  3 24 28</code></pre>
-<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb205-1"><a href="more-integer-programming-models.html#cb205-1" aria-hidden="true" tabindex="-1"></a>   <span class="co"># Eliminate duplicate warehouse IDs</span></span>
-<span id="cb205-2"><a href="more-integer-programming-models.html#cb205-2" aria-hidden="true" tabindex="-1"></a>fixedcost[<span class="fu">unique</span>(matching<span class="sc">$</span>j)]       </span></code></pre></div>
+<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb203-1"><a href="more-integer-programming-models.html#cb203-1" aria-hidden="true" tabindex="-1"></a>   <span class="co"># Eliminate duplicate warehouse IDs</span></span>
+<span id="cb203-2"><a href="more-integer-programming-models.html#cb203-2" aria-hidden="true" tabindex="-1"></a>fixedcost[<span class="fu">unique</span>(matching<span class="sc">$</span>j)]       </span></code></pre></div>
 <pre><code>## [1] 4511 1184 4061</code></pre>
-<div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb207-1"><a href="more-integer-programming-models.html#cb207-1" aria-hidden="true" tabindex="-1"></a>   <span class="co">#Find fixed costs of warehouses used</span></span>
-<span id="cb207-2"><a href="more-integer-programming-models.html#cb207-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(fixedcost[<span class="fu">unique</span>(matching<span class="sc">$</span>j)])  </span></code></pre></div>
+<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb205-1"><a href="more-integer-programming-models.html#cb205-1" aria-hidden="true" tabindex="-1"></a>   <span class="co">#Find fixed costs of warehouses used</span></span>
+<span id="cb205-2"><a href="more-integer-programming-models.html#cb205-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(fixedcost[<span class="fu">unique</span>(matching<span class="sc">$</span>j)])  </span></code></pre></div>
 <pre><code>## [1] 9756</code></pre>
-<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="more-integer-programming-models.html#cb209-1" aria-hidden="true" tabindex="-1"></a>   <span class="co"># Add fixed costs of all warehouses used</span></span></code></pre></div>
+<div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb207-1"><a href="more-integer-programming-models.html#cb207-1" aria-hidden="true" tabindex="-1"></a>   <span class="co"># Add fixed costs of all warehouses used</span></span></code></pre></div>
 </div>
 <div id="warehouse-discussion" class="section level3" number="7.2.3">
 <h3><span class="header-section-number">7.2.3</span> Warehouse Discussion</h3>
@@ -1340,10 +1340,10 @@ Again, do not run the following code chunks in this section on a cloud-based ser
 For the sake of comparison, let’s start off with it too. We’ll set the <code>verbose=TRUE</code> option to be passed through ROI to the <code>glpk</code> solver. The exact options available for each solver and their available options varies.
 We will use the <code>tictoc</code> package to help us collect data on timing.
 Note that timing can vary even if the same problem is solved on the same computer twice in rapid succession.</p>
-<div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb210-1"><a href="more-integer-programming-models.html#cb210-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tictoc)   <span class="co"># Package used for timing R functions</span></span>
-<span id="cb210-2"><a href="more-integer-programming-models.html#cb210-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tic</span>(<span class="st">&quot;glpk&quot;</span>)        <span class="co"># Start the timer...</span></span>
-<span id="cb210-3"><a href="more-integer-programming-models.html#cb210-3" aria-hidden="true" tabindex="-1"></a>result_glpk <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(</span>
-<span id="cb210-4"><a href="more-integer-programming-models.html#cb210-4" aria-hidden="true" tabindex="-1"></a>  model, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>, <span class="at">verbose=</span><span class="cn">TRUE</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb208-1"><a href="more-integer-programming-models.html#cb208-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tictoc)   <span class="co"># Package used for timing R functions</span></span>
+<span id="cb208-2"><a href="more-integer-programming-models.html#cb208-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tic</span>(<span class="st">&quot;glpk&quot;</span>)        <span class="co"># Start the timer...</span></span>
+<span id="cb208-3"><a href="more-integer-programming-models.html#cb208-3" aria-hidden="true" tabindex="-1"></a>result_glpk <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(</span>
+<span id="cb208-4"><a href="more-integer-programming-models.html#cb208-4" aria-hidden="true" tabindex="-1"></a>  model, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>, <span class="at">verbose=</span><span class="cn">TRUE</span>))</span></code></pre></div>
 <pre><code>## &lt;SOLVER MSG&gt;  ----
 ## GLPK Simplex Optimizer, v4.47
 ## 8200 rows, 8040 columns, 24000 non-zeros
@@ -1365,29 +1365,29 @@ Note that timing can vary even if the same problem is solved on the same compute
 ## +  2714: mip =  6.073600000e+004 &gt;=     tree is empty   0.0% (0; 1)
 ## INTEGER OPTIMAL SOLUTION FOUND
 ## &lt;!SOLVER MSG&gt; ----</code></pre>
-<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb212-1"><a href="more-integer-programming-models.html#cb212-1" aria-hidden="true" tabindex="-1"></a>glpktime <span class="ot">&lt;-</span> <span class="fu">toc</span>()  <span class="co"># End the timer and save results</span></span></code></pre></div>
-<pre><code>## glpk: 29.26 sec elapsed</code></pre>
-<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb214-1"><a href="more-integer-programming-models.html#cb214-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">solver_status</span>(result_glpk))</span></code></pre></div>
+<div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb210-1"><a href="more-integer-programming-models.html#cb210-1" aria-hidden="true" tabindex="-1"></a>glpktime <span class="ot">&lt;-</span> <span class="fu">toc</span>()  <span class="co"># End the timer and save results</span></span></code></pre></div>
+<pre><code>## glpk: 28.5 sec elapsed</code></pre>
+<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb212-1"><a href="more-integer-programming-models.html#cb212-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">solver_status</span>(result_glpk))</span></code></pre></div>
 <pre><code>## [1] &quot;optimal&quot;</code></pre>
-<div class="sourceCode" id="cb216"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb216-1"><a href="more-integer-programming-models.html#cb216-1" aria-hidden="true" tabindex="-1"></a>glpktime1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;glpk&quot;</span>, glpktime<span class="sc">$</span>toc <span class="sc">-</span> glpktime<span class="sc">$</span>tic, </span>
-<span id="cb216-2"><a href="more-integer-programming-models.html#cb216-2" aria-hidden="true" tabindex="-1"></a>               result_glpk<span class="sc">$</span>status, </span>
-<span id="cb216-3"><a href="more-integer-programming-models.html#cb216-3" aria-hidden="true" tabindex="-1"></a>               result_glpk<span class="sc">$</span>objective_value)</span></code></pre></div>
+<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb214-1"><a href="more-integer-programming-models.html#cb214-1" aria-hidden="true" tabindex="-1"></a>glpktime1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;glpk&quot;</span>, glpktime<span class="sc">$</span>toc <span class="sc">-</span> glpktime<span class="sc">$</span>tic, </span>
+<span id="cb214-2"><a href="more-integer-programming-models.html#cb214-2" aria-hidden="true" tabindex="-1"></a>               result_glpk<span class="sc">$</span>status, </span>
+<span id="cb214-3"><a href="more-integer-programming-models.html#cb214-3" aria-hidden="true" tabindex="-1"></a>               result_glpk<span class="sc">$</span>objective_value)</span></code></pre></div>
 <p>The more verbose output provides additional details on the solving. For example, it indicates that the Simplex method was used by indicating a Simplex optimizer was used before then passing the LP relaxation solution to the integer optimization.  In general, the <code>glpk</code> solver worked. We’ll take the results and combine them with other shortly.</p>
 </div>
 <div id="performance-of-symphony" class="section level3" number="7.3.2">
 <h3><span class="header-section-number">7.3.2</span> Performance of <code>symphony</code></h3>
 <p>Let’s move on to testing the <code>symphony</code> solver. Symphony is a solver with a long history of development.</p>
-<div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb217-1"><a href="more-integer-programming-models.html#cb217-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tic</span>(<span class="st">&quot;symphony&quot;</span>)</span>
-<span id="cb217-2"><a href="more-integer-programming-models.html#cb217-2" aria-hidden="true" tabindex="-1"></a>result_symphony <span class="ot">&lt;-</span>  <span class="fu">solve_model</span>(</span>
-<span id="cb217-3"><a href="more-integer-programming-models.html#cb217-3" aria-hidden="true" tabindex="-1"></a>  model, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;symphony&quot;</span>, <span class="at">verbosity =</span> <span class="sc">-</span><span class="dv">1</span>))</span>
-<span id="cb217-4"><a href="more-integer-programming-models.html#cb217-4" aria-hidden="true" tabindex="-1"></a>symphonytime <span class="ot">&lt;-</span> <span class="fu">toc</span>()</span></code></pre></div>
-<pre><code>## symphony: 28.41 sec elapsed</code></pre>
-<div class="sourceCode" id="cb219"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb219-1"><a href="more-integer-programming-models.html#cb219-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">solver_status</span>(result_symphony))</span></code></pre></div>
+<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="more-integer-programming-models.html#cb215-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tic</span>(<span class="st">&quot;symphony&quot;</span>)</span>
+<span id="cb215-2"><a href="more-integer-programming-models.html#cb215-2" aria-hidden="true" tabindex="-1"></a>result_symphony <span class="ot">&lt;-</span>  <span class="fu">solve_model</span>(</span>
+<span id="cb215-3"><a href="more-integer-programming-models.html#cb215-3" aria-hidden="true" tabindex="-1"></a>  model, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;symphony&quot;</span>, <span class="at">verbosity =</span> <span class="sc">-</span><span class="dv">1</span>))</span>
+<span id="cb215-4"><a href="more-integer-programming-models.html#cb215-4" aria-hidden="true" tabindex="-1"></a>symphonytime <span class="ot">&lt;-</span> <span class="fu">toc</span>()</span></code></pre></div>
+<pre><code>## symphony: 28.94 sec elapsed</code></pre>
+<div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb217-1"><a href="more-integer-programming-models.html#cb217-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">solver_status</span>(result_symphony))</span></code></pre></div>
 <pre><code>## [1] &quot;optimal&quot;</code></pre>
-<div class="sourceCode" id="cb221"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb221-1"><a href="more-integer-programming-models.html#cb221-1" aria-hidden="true" tabindex="-1"></a>symphonytime1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;symphony&quot;</span>, </span>
-<span id="cb221-2"><a href="more-integer-programming-models.html#cb221-2" aria-hidden="true" tabindex="-1"></a>                   symphonytime<span class="sc">$</span>toc <span class="sc">-</span> symphonytime<span class="sc">$</span>tic,</span>
-<span id="cb221-3"><a href="more-integer-programming-models.html#cb221-3" aria-hidden="true" tabindex="-1"></a>                   result_symphony<span class="sc">$</span>status,</span>
-<span id="cb221-4"><a href="more-integer-programming-models.html#cb221-4" aria-hidden="true" tabindex="-1"></a>                   result_symphony<span class="sc">$</span>objective_value)</span></code></pre></div>
+<div class="sourceCode" id="cb219"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb219-1"><a href="more-integer-programming-models.html#cb219-1" aria-hidden="true" tabindex="-1"></a>symphonytime1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;symphony&quot;</span>, </span>
+<span id="cb219-2"><a href="more-integer-programming-models.html#cb219-2" aria-hidden="true" tabindex="-1"></a>                   symphonytime<span class="sc">$</span>toc <span class="sc">-</span> symphonytime<span class="sc">$</span>tic,</span>
+<span id="cb219-3"><a href="more-integer-programming-models.html#cb219-3" aria-hidden="true" tabindex="-1"></a>                   result_symphony<span class="sc">$</span>status,</span>
+<span id="cb219-4"><a href="more-integer-programming-models.html#cb219-4" aria-hidden="true" tabindex="-1"></a>                   result_symphony<span class="sc">$</span>objective_value)</span></code></pre></div>
 <p>Again, <code>symphony</code> successfully solved the optimization problem.<br />
 </p>
 <p>Several items should be noted from the above code and output.</p>
@@ -1402,18 +1402,18 @@ It should be an integer to indicate the number of seconds to run before stopping
 <p>The last option, <code>first_feasible</code>, has a default value of <code>FALSE</code>.
 If it is set to <code>TRUE</code>, then symphony will stop when it has found a first solution that satisfies all the constraints (including integrality) rather than continuing on to prove optimality.</p>
 <p>Let’s examine the impact of just looking at the first feasible solution found by passing <code>first_feasible=TRUE</code> to see what happens.</p>
-<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb222-1"><a href="more-integer-programming-models.html#cb222-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tic</span>(<span class="st">&quot;symphony&quot;</span>)</span>
-<span id="cb222-2"><a href="more-integer-programming-models.html#cb222-2" aria-hidden="true" tabindex="-1"></a>result_symphony_ff <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(</span>
-<span id="cb222-3"><a href="more-integer-programming-models.html#cb222-3" aria-hidden="true" tabindex="-1"></a>  model, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;symphony&quot;</span>,</span>
-<span id="cb222-4"><a href="more-integer-programming-models.html#cb222-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">verbosity =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">first_feasible=</span><span class="cn">TRUE</span>))</span>
-<span id="cb222-5"><a href="more-integer-programming-models.html#cb222-5" aria-hidden="true" tabindex="-1"></a>symphonytimeff <span class="ot">&lt;-</span> <span class="fu">toc</span>()</span></code></pre></div>
-<pre><code>## symphony: 27.72 sec elapsed</code></pre>
-<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb224-1"><a href="more-integer-programming-models.html#cb224-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">solver_status</span>(result_symphony_ff))</span></code></pre></div>
+<div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb220-1"><a href="more-integer-programming-models.html#cb220-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tic</span>(<span class="st">&quot;symphony&quot;</span>)</span>
+<span id="cb220-2"><a href="more-integer-programming-models.html#cb220-2" aria-hidden="true" tabindex="-1"></a>result_symphony_ff <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(</span>
+<span id="cb220-3"><a href="more-integer-programming-models.html#cb220-3" aria-hidden="true" tabindex="-1"></a>  model, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;symphony&quot;</span>,</span>
+<span id="cb220-4"><a href="more-integer-programming-models.html#cb220-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">verbosity =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">first_feasible=</span><span class="cn">TRUE</span>))</span>
+<span id="cb220-5"><a href="more-integer-programming-models.html#cb220-5" aria-hidden="true" tabindex="-1"></a>symphonytimeff <span class="ot">&lt;-</span> <span class="fu">toc</span>()</span></code></pre></div>
+<pre><code>## symphony: 30.52 sec elapsed</code></pre>
+<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb222-1"><a href="more-integer-programming-models.html#cb222-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">solver_status</span>(result_symphony_ff))</span></code></pre></div>
 <pre><code>## [1] &quot;infeasible&quot;</code></pre>
-<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb226-1"><a href="more-integer-programming-models.html#cb226-1" aria-hidden="true" tabindex="-1"></a>symphonytimeff <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;symphony first feas.&quot;</span>, </span>
-<span id="cb226-2"><a href="more-integer-programming-models.html#cb226-2" aria-hidden="true" tabindex="-1"></a>                    symphonytimeff<span class="sc">$</span>toc <span class="sc">-</span> symphonytimeff<span class="sc">$</span>tic,</span>
-<span id="cb226-3"><a href="more-integer-programming-models.html#cb226-3" aria-hidden="true" tabindex="-1"></a>                   result_symphony_ff<span class="sc">$</span>status,</span>
-<span id="cb226-4"><a href="more-integer-programming-models.html#cb226-4" aria-hidden="true" tabindex="-1"></a>                   result_symphony_ff<span class="sc">$</span>objective_value)</span></code></pre></div>
+<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb224-1"><a href="more-integer-programming-models.html#cb224-1" aria-hidden="true" tabindex="-1"></a>symphonytimeff <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;symphony first feas.&quot;</span>, </span>
+<span id="cb224-2"><a href="more-integer-programming-models.html#cb224-2" aria-hidden="true" tabindex="-1"></a>                    symphonytimeff<span class="sc">$</span>toc <span class="sc">-</span> symphonytimeff<span class="sc">$</span>tic,</span>
+<span id="cb224-3"><a href="more-integer-programming-models.html#cb224-3" aria-hidden="true" tabindex="-1"></a>                   result_symphony_ff<span class="sc">$</span>status,</span>
+<span id="cb224-4"><a href="more-integer-programming-models.html#cb224-4" aria-hidden="true" tabindex="-1"></a>                   result_symphony_ff<span class="sc">$</span>objective_value)</span></code></pre></div>
 <p>Several interesting and important things should be noted here.
 First, <code>ompr</code> status indicates that the problem is infeasible. Just as we saw in Chapter 2’s unbounded case, <code>ompr</code> interprets the status code from the solver by way of <code>ROI</code> as not being solved to optimality and concludes that the problem is not feasible. </p>
 <p>This is a known issue in <code>ompr</code> and <code>ompr.ROI</code>as of version 0.8.1.
@@ -1427,17 +1427,17 @@ It highlights that “infeasible” status from the <code>ompr</code> should be 
 <h3><span class="header-section-number">7.3.3</span> Performance of <code>lpsolve</code></h3>
 <p>The <code>lpsolve</code> package has a long history too and is widely used. Let’s test it and see how it performs.<br />
 </p>
-<div class="sourceCode" id="cb227"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb227-1"><a href="more-integer-programming-models.html#cb227-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tic</span>(<span class="st">&quot;lpsolve&quot;</span>)</span>
-<span id="cb227-2"><a href="more-integer-programming-models.html#cb227-2" aria-hidden="true" tabindex="-1"></a>result_lpsolve <span class="ot">&lt;-</span>  <span class="fu">solve_model</span>(</span>
-<span id="cb227-3"><a href="more-integer-programming-models.html#cb227-3" aria-hidden="true" tabindex="-1"></a>  model, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;lpsolve&quot;</span>, <span class="at">verbose=</span><span class="cn">FALSE</span>))</span>
-<span id="cb227-4"><a href="more-integer-programming-models.html#cb227-4" aria-hidden="true" tabindex="-1"></a>lpsolvetime <span class="ot">&lt;-</span> <span class="fu">toc</span>()</span></code></pre></div>
-<pre><code>## lpsolve: 29.59 sec elapsed</code></pre>
-<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb229-1"><a href="more-integer-programming-models.html#cb229-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">solver_status</span>(result_lpsolve))</span></code></pre></div>
+<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb225-1"><a href="more-integer-programming-models.html#cb225-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tic</span>(<span class="st">&quot;lpsolve&quot;</span>)</span>
+<span id="cb225-2"><a href="more-integer-programming-models.html#cb225-2" aria-hidden="true" tabindex="-1"></a>result_lpsolve <span class="ot">&lt;-</span>  <span class="fu">solve_model</span>(</span>
+<span id="cb225-3"><a href="more-integer-programming-models.html#cb225-3" aria-hidden="true" tabindex="-1"></a>  model, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;lpsolve&quot;</span>, <span class="at">verbose=</span><span class="cn">FALSE</span>))</span>
+<span id="cb225-4"><a href="more-integer-programming-models.html#cb225-4" aria-hidden="true" tabindex="-1"></a>lpsolvetime <span class="ot">&lt;-</span> <span class="fu">toc</span>()</span></code></pre></div>
+<pre><code>## lpsolve: 31.02 sec elapsed</code></pre>
+<div class="sourceCode" id="cb227"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb227-1"><a href="more-integer-programming-models.html#cb227-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">solver_status</span>(result_lpsolve))</span></code></pre></div>
 <pre><code>## [1] &quot;optimal&quot;</code></pre>
-<div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb231-1"><a href="more-integer-programming-models.html#cb231-1" aria-hidden="true" tabindex="-1"></a>lpsolvetime1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;lpsolve&quot;</span>, </span>
-<span id="cb231-2"><a href="more-integer-programming-models.html#cb231-2" aria-hidden="true" tabindex="-1"></a>                  lpsolvetime<span class="sc">$</span>toc <span class="sc">-</span> lpsolvetime<span class="sc">$</span>tic,</span>
-<span id="cb231-3"><a href="more-integer-programming-models.html#cb231-3" aria-hidden="true" tabindex="-1"></a>                   result_lpsolve<span class="sc">$</span>status,</span>
-<span id="cb231-4"><a href="more-integer-programming-models.html#cb231-4" aria-hidden="true" tabindex="-1"></a>                   result_lpsolve<span class="sc">$</span>objective_value)</span></code></pre></div>
+<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb229-1"><a href="more-integer-programming-models.html#cb229-1" aria-hidden="true" tabindex="-1"></a>lpsolvetime1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;lpsolve&quot;</span>, </span>
+<span id="cb229-2"><a href="more-integer-programming-models.html#cb229-2" aria-hidden="true" tabindex="-1"></a>                  lpsolvetime<span class="sc">$</span>toc <span class="sc">-</span> lpsolvetime<span class="sc">$</span>tic,</span>
+<span id="cb229-3"><a href="more-integer-programming-models.html#cb229-3" aria-hidden="true" tabindex="-1"></a>                   result_lpsolve<span class="sc">$</span>status,</span>
+<span id="cb229-4"><a href="more-integer-programming-models.html#cb229-4" aria-hidden="true" tabindex="-1"></a>                   result_lpsolve<span class="sc">$</span>objective_value)</span></code></pre></div>
 <p>Again, we see that <code>lpsolve</code> was also successful.</p>
 </div>
 <div id="performance-of-gurobi" class="section level3" number="7.3.4">
@@ -1461,15 +1461,15 @@ To use Gurobi in R, do the following:</p>
 <li>Maintain the philosophy of open-source tools</li>
 <li>Performance testing of gurobi under these circumstances might not do justice to the performance benefits of gurobi on much more complex optimization problems.</li>
 </ul>
-<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb232-1"><a href="more-integer-programming-models.html#cb232-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tic</span>(<span class="st">&quot;gurobi&quot;</span>)</span>
-<span id="cb232-2"><a href="more-integer-programming-models.html#cb232-2" aria-hidden="true" tabindex="-1"></a>result_gurobi <span class="ot">&lt;-</span>  <span class="fu">solve_model</span>(</span>
-<span id="cb232-3"><a href="more-integer-programming-models.html#cb232-3" aria-hidden="true" tabindex="-1"></a>  model, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;gurobi&quot;</span>))</span>
-<span id="cb232-4"><a href="more-integer-programming-models.html#cb232-4" aria-hidden="true" tabindex="-1"></a>gurobitime <span class="ot">&lt;-</span> <span class="fu">toc</span>()</span>
-<span id="cb232-5"><a href="more-integer-programming-models.html#cb232-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">solver_status</span>(result_gurobi))</span>
-<span id="cb232-6"><a href="more-integer-programming-models.html#cb232-6" aria-hidden="true" tabindex="-1"></a>gurobitime1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;gurobi&quot;</span>, </span>
-<span id="cb232-7"><a href="more-integer-programming-models.html#cb232-7" aria-hidden="true" tabindex="-1"></a>                  gurobitime<span class="sc">$</span>toc <span class="sc">-</span> gurobitime<span class="sc">$</span>tic,</span>
-<span id="cb232-8"><a href="more-integer-programming-models.html#cb232-8" aria-hidden="true" tabindex="-1"></a>                   result_gurobi<span class="sc">$</span>status,</span>
-<span id="cb232-9"><a href="more-integer-programming-models.html#cb232-9" aria-hidden="true" tabindex="-1"></a>                   result_lpsolve<span class="sc">$</span>objective_value)</span></code></pre></div>
+<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb230-1"><a href="more-integer-programming-models.html#cb230-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tic</span>(<span class="st">&quot;gurobi&quot;</span>)</span>
+<span id="cb230-2"><a href="more-integer-programming-models.html#cb230-2" aria-hidden="true" tabindex="-1"></a>result_gurobi <span class="ot">&lt;-</span>  <span class="fu">solve_model</span>(</span>
+<span id="cb230-3"><a href="more-integer-programming-models.html#cb230-3" aria-hidden="true" tabindex="-1"></a>  model, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;gurobi&quot;</span>))</span>
+<span id="cb230-4"><a href="more-integer-programming-models.html#cb230-4" aria-hidden="true" tabindex="-1"></a>gurobitime <span class="ot">&lt;-</span> <span class="fu">toc</span>()</span>
+<span id="cb230-5"><a href="more-integer-programming-models.html#cb230-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">solver_status</span>(result_gurobi))</span>
+<span id="cb230-6"><a href="more-integer-programming-models.html#cb230-6" aria-hidden="true" tabindex="-1"></a>gurobitime1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;gurobi&quot;</span>, </span>
+<span id="cb230-7"><a href="more-integer-programming-models.html#cb230-7" aria-hidden="true" tabindex="-1"></a>                  gurobitime<span class="sc">$</span>toc <span class="sc">-</span> gurobitime<span class="sc">$</span>tic,</span>
+<span id="cb230-8"><a href="more-integer-programming-models.html#cb230-8" aria-hidden="true" tabindex="-1"></a>                   result_gurobi<span class="sc">$</span>status,</span>
+<span id="cb230-9"><a href="more-integer-programming-models.html#cb230-9" aria-hidden="true" tabindex="-1"></a>                   result_lpsolve<span class="sc">$</span>objective_value)</span></code></pre></div>
 <p>The <code>ROI.plugin</code> for each respective solver general accepts a subset of all the parameters or options that a solver can use.
 This may mean some trial and error is involved.
 The <a href="https://www.gurobi.com/documentation/9.0/refman/parameters.html#sec:Parameters">Gurobi documentation</a> provides a comprehensive list of parameters.</p>
@@ -1488,17 +1488,17 @@ The <a href="https://www.gurobi.com/documentation/9.0/refman/parameters.html#sec
 <div id="comparing-results-across-solvers" class="section level3" number="7.3.5">
 <h3><span class="header-section-number">7.3.5</span> Comparing Results across Solvers</h3>
 <p>Now let’s compare how three major open source optimization solvers performed.</p>
-<div class="sourceCode" id="cb233"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb233-1"><a href="more-integer-programming-models.html#cb233-1" aria-hidden="true" tabindex="-1"></a>timeresults <span class="ot">&lt;-</span> <span class="fu">rbind</span>(glpktime1, symphonytime1, </span>
-<span id="cb233-2"><a href="more-integer-programming-models.html#cb233-2" aria-hidden="true" tabindex="-1"></a>                     symphonytimeff, lpsolvetime1)</span>
-<span id="cb233-3"><a href="more-integer-programming-models.html#cb233-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span> (timeresults) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Solver&quot;</span>, <span class="st">&quot;Time (Sec)&quot;</span>, </span>
-<span id="cb233-4"><a href="more-integer-programming-models.html#cb233-4" aria-hidden="true" tabindex="-1"></a>                            <span class="st">&quot;Status&quot;</span>, </span>
-<span id="cb233-5"><a href="more-integer-programming-models.html#cb233-5" aria-hidden="true" tabindex="-1"></a>                            <span class="st">&quot;Obj. Func. Value&quot;</span>)</span>
-<span id="cb233-6"><a href="more-integer-programming-models.html#cb233-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span> (timeresults) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb233-7"><a href="more-integer-programming-models.html#cb233-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb233-8"><a href="more-integer-programming-models.html#cb233-8" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (timeresults, <span class="at">booktabs =</span> T, <span class="at">digits=</span><span class="dv">2</span>,</span>
-<span id="cb233-9"><a href="more-integer-programming-models.html#cb233-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption=</span><span class="st">&quot;Comparison of Results from Warehouse </span></span>
-<span id="cb233-10"><a href="more-integer-programming-models.html#cb233-10" aria-hidden="true" tabindex="-1"></a><span class="st">       Customer Assignment Across Solvers&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb233-11"><a href="more-integer-programming-models.html#cb233-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb231-1"><a href="more-integer-programming-models.html#cb231-1" aria-hidden="true" tabindex="-1"></a>timeresults <span class="ot">&lt;-</span> <span class="fu">rbind</span>(glpktime1, symphonytime1, </span>
+<span id="cb231-2"><a href="more-integer-programming-models.html#cb231-2" aria-hidden="true" tabindex="-1"></a>                     symphonytimeff, lpsolvetime1)</span>
+<span id="cb231-3"><a href="more-integer-programming-models.html#cb231-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span> (timeresults) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Solver&quot;</span>, <span class="st">&quot;Time (Sec)&quot;</span>, </span>
+<span id="cb231-4"><a href="more-integer-programming-models.html#cb231-4" aria-hidden="true" tabindex="-1"></a>                            <span class="st">&quot;Status&quot;</span>, </span>
+<span id="cb231-5"><a href="more-integer-programming-models.html#cb231-5" aria-hidden="true" tabindex="-1"></a>                            <span class="st">&quot;Obj. Func. Value&quot;</span>)</span>
+<span id="cb231-6"><a href="more-integer-programming-models.html#cb231-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span> (timeresults) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb231-7"><a href="more-integer-programming-models.html#cb231-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb231-8"><a href="more-integer-programming-models.html#cb231-8" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (timeresults, <span class="at">booktabs =</span> T, <span class="at">digits=</span><span class="dv">2</span>,</span>
+<span id="cb231-9"><a href="more-integer-programming-models.html#cb231-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption=</span><span class="st">&quot;Comparison of Results from Warehouse </span></span>
+<span id="cb231-10"><a href="more-integer-programming-models.html#cb231-10" aria-hidden="true" tabindex="-1"></a><span class="st">       Customer Assignment Across Solvers&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb231-11"><a href="more-integer-programming-models.html#cb231-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:comparetimes">TABLE 7.7: </span>Comparison of Results from Warehouse
@@ -1526,7 +1526,7 @@ Obj. Func. Value
 glpk
 </td>
 <td style="text-align:left;">
-29.26
+28.5
 </td>
 <td style="text-align:left;">
 optimal
@@ -1540,7 +1540,7 @@ optimal
 symphony
 </td>
 <td style="text-align:left;">
-28.41
+28.94
 </td>
 <td style="text-align:left;">
 optimal
@@ -1554,7 +1554,7 @@ optimal
 symphony first feas.
 </td>
 <td style="text-align:left;">
-27.72
+30.52
 </td>
 <td style="text-align:left;">
 infeasible
@@ -1568,7 +1568,7 @@ infeasible
 lpsolve
 </td>
 <td style="text-align:left;">
-29.59
+31.02
 </td>
 <td style="text-align:left;">
 optimal
@@ -1616,8 +1616,8 @@ These might be required in detailed performance testing or numerical performance
 <h3><span class="header-section-number">7.3.6</span> Popularity of LP Solvers</h3>
 <p>Let’s take another look at comparing solvers by examining their popularity.
 More precisely, let’s examine the download logs of CRAN for a variety of linear programming solvers.</p>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-42"></span>
-<img src="OMUR_files/figure-html/unnamed-chunk-42-1.png" alt="Monthly Downloads of Optimzation Packages" width="960" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-43"></span>
+<img src="OMUR_files/figure-html/unnamed-chunk-43-1.png" alt="Monthly Downloads of Optimzation Packages" width="960" />
 <p class="caption">
 FIGURE 7.4: Monthly Downloads of Optimzation Packages
 </p>
@@ -1628,8 +1628,8 @@ While we can’t see which packages are being specifically used most often for <
 <p>We will focus our attention on the ROI packages that emphasize linear programming.
 This means dropping packages such as <code>ROI.plugin.nloptr</code> and <code>ROI.plugin.quadprog</code>.</p>
 <p>Also, commercial software that is not available on CRAN such as gurobi and XPress, are not included.</p>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-43"></span>
-<img src="OMUR_files/figure-html/unnamed-chunk-43-1.png" alt="Monthly Downloads of Major ROI LP Plugins" width="960" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-44"></span>
+<img src="OMUR_files/figure-html/unnamed-chunk-44-1.png" alt="Monthly Downloads of Major ROI LP Plugins" width="960" />
 <p class="caption">
 FIGURE 7.5: Monthly Downloads of Major ROI LP Plugins
 </p>
@@ -1638,15 +1638,15 @@ FIGURE 7.5: Monthly Downloads of Major ROI LP Plugins
 This of course does not mean that <code>glpk</code> is better than the others but is interesting to note.
 The spikes in downloads could be driven by other packages that use this particular solver, visibility from vignettes, courses, other publications, or package updates.<br />
 </p>
-<div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb234-1"><a href="more-integer-programming-models.html#cb234-1" aria-hidden="true" tabindex="-1"></a>pkg_dl_data <span class="ot">&lt;-</span> <span class="fu">cran_stats</span>(<span class="at">packages =</span> <span class="fu">c</span>(<span class="st">&quot;ompr&quot;</span>))</span>
-<span id="cb234-2"><a href="more-integer-programming-models.html#cb234-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pkg_dl_data, <span class="fu">aes</span>(end, downloads, <span class="at">group=</span>package, </span>
-<span id="cb234-3"><a href="more-integer-programming-models.html#cb234-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">color=</span>package)) <span class="sc">+</span></span>
-<span id="cb234-4"><a href="more-integer-programming-models.html#cb234-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>()  <span class="sc">+</span> </span>
-<span id="cb234-5"><a href="more-integer-programming-models.html#cb234-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">subtitle =</span> <span class="st">&quot;ompr:  Optimization Modeling Package for R&quot;</span>,</span>
-<span id="cb234-6"><a href="more-integer-programming-models.html#cb234-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption =</span> <span class="st">&quot;Source: CRAN&quot;</span>, </span>
-<span id="cb234-7"><a href="more-integer-programming-models.html#cb234-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Month&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Downloads&quot;</span>) </span></code></pre></div>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-44"></span>
-<img src="OMUR_files/figure-html/unnamed-chunk-44-1.png" alt="Monthly Downloads of ompr" width="960" />
+<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb232-1"><a href="more-integer-programming-models.html#cb232-1" aria-hidden="true" tabindex="-1"></a>pkg_dl_data <span class="ot">&lt;-</span> <span class="fu">cran_stats</span>(<span class="at">packages =</span> <span class="fu">c</span>(<span class="st">&quot;ompr&quot;</span>))</span>
+<span id="cb232-2"><a href="more-integer-programming-models.html#cb232-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pkg_dl_data, <span class="fu">aes</span>(end, downloads, <span class="at">group=</span>package, </span>
+<span id="cb232-3"><a href="more-integer-programming-models.html#cb232-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">color=</span>package)) <span class="sc">+</span></span>
+<span id="cb232-4"><a href="more-integer-programming-models.html#cb232-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>()  <span class="sc">+</span> </span>
+<span id="cb232-5"><a href="more-integer-programming-models.html#cb232-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">subtitle =</span> <span class="st">&quot;ompr:  Optimization Modeling Package for R&quot;</span>,</span>
+<span id="cb232-6"><a href="more-integer-programming-models.html#cb232-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption =</span> <span class="st">&quot;Source: CRAN&quot;</span>, </span>
+<span id="cb232-7"><a href="more-integer-programming-models.html#cb232-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Month&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Downloads&quot;</span>) </span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-45"></span>
+<img src="OMUR_files/figure-html/unnamed-chunk-45-1.png" alt="Monthly Downloads of ompr" width="960" />
 <p class="caption">
 FIGURE 7.6: Monthly Downloads of ompr
 </p>
@@ -1778,34 +1778,34 @@ We could also tell a solver such as <code>symphony</code> to just find a first f
 <div id="implementing-sudoku-in-ompr" class="section level3" number="7.4.3">
 <h3><span class="header-section-number">7.4.3</span> Implementing Sudoku in ompr</h3>
 <p>We are now ready to implement the model. As always, clearly defining variables and constraints is important. A triple subscripted variable often makes for a tricky model to both formulate and implement. Also, that last constraint may take careful examination.</p>
-<div class="sourceCode" id="cb235"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb235-1"><a href="more-integer-programming-models.html#cb235-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">9</span></span>
-<span id="cb235-2"><a href="more-integer-programming-models.html#cb235-2" aria-hidden="true" tabindex="-1"></a>Sudoku_model <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">|&gt;</span></span>
-<span id="cb235-3"><a href="more-integer-programming-models.html#cb235-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb235-4"><a href="more-integer-programming-models.html#cb235-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># The number k stored in position i,j</span></span>
-<span id="cb235-5"><a href="more-integer-programming-models.html#cb235-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Vx[i, j, k], <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>n, <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>n, <span class="at">k =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, </span>
-<span id="cb235-6"><a href="more-integer-programming-models.html#cb235-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">type =</span> <span class="st">&quot;binary&quot;</span>)    <span class="sc">|&gt;</span></span>
-<span id="cb235-7"><a href="more-integer-programming-models.html#cb235-7" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb235-8"><a href="more-integer-programming-models.html#cb235-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># no objective</span></span>
-<span id="cb235-9"><a href="more-integer-programming-models.html#cb235-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_objective</span>(<span class="dv">0</span>)                 <span class="sc">|&gt;</span></span>
-<span id="cb235-10"><a href="more-integer-programming-models.html#cb235-10" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb235-11"><a href="more-integer-programming-models.html#cb235-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># only one number can be assigned per cell</span></span>
-<span id="cb235-12"><a href="more-integer-programming-models.html#cb235-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="fu">sum_expr</span>(Vx[i, j, k], <span class="at">k =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>) <span class="sc">==</span> <span class="dv">1</span>, </span>
-<span id="cb235-13"><a href="more-integer-programming-models.html#cb235-13" aria-hidden="true" tabindex="-1"></a>                 <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>n, <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>n) <span class="sc">|&gt;</span></span>
-<span id="cb235-14"><a href="more-integer-programming-models.html#cb235-14" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb235-15"><a href="more-integer-programming-models.html#cb235-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># each number is exactly once in a row</span></span>
-<span id="cb235-16"><a href="more-integer-programming-models.html#cb235-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="fu">sum_expr</span>(Vx[i, j, k], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>n) <span class="sc">==</span> <span class="dv">1</span>, </span>
-<span id="cb235-17"><a href="more-integer-programming-models.html#cb235-17" aria-hidden="true" tabindex="-1"></a>                 <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>n, <span class="at">k =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>) <span class="sc">|&gt;</span></span>
-<span id="cb235-18"><a href="more-integer-programming-models.html#cb235-18" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb235-19"><a href="more-integer-programming-models.html#cb235-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># each number is exactly once in a column</span></span>
-<span id="cb235-20"><a href="more-integer-programming-models.html#cb235-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="fu">sum_expr</span>(Vx[i, j, k], <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>n) <span class="sc">==</span> <span class="dv">1</span>, </span>
-<span id="cb235-21"><a href="more-integer-programming-models.html#cb235-21" aria-hidden="true" tabindex="-1"></a>                 <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>n, <span class="at">k =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb235-22"><a href="more-integer-programming-models.html#cb235-22" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb235-23"><a href="more-integer-programming-models.html#cb235-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># each 3x3 square must have all numbers</span></span>
-<span id="cb235-24"><a href="more-integer-programming-models.html#cb235-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="fu">sum_expr</span>(Vx[i, j, k], <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span> <span class="sc">+</span> r, </span>
-<span id="cb235-25"><a href="more-integer-programming-models.html#cb235-25" aria-hidden="true" tabindex="-1"></a>                          <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span> <span class="sc">+</span> c) <span class="sc">==</span> <span class="dv">1</span>, </span>
-<span id="cb235-26"><a href="more-integer-programming-models.html#cb235-26" aria-hidden="true" tabindex="-1"></a>                 <span class="at">r =</span> <span class="fu">seq</span>(<span class="dv">0</span>, n <span class="sc">-</span> <span class="dv">3</span>, <span class="dv">3</span>), </span>
-<span id="cb235-27"><a href="more-integer-programming-models.html#cb235-27" aria-hidden="true" tabindex="-1"></a>                 <span class="at">c =</span> <span class="fu">seq</span>(<span class="dv">0</span>, n <span class="sc">-</span> <span class="dv">3</span>, <span class="dv">3</span>), <span class="at">k =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>)</span>
-<span id="cb235-28"><a href="more-integer-programming-models.html#cb235-28" aria-hidden="true" tabindex="-1"></a>Sudoku_model</span></code></pre></div>
+<div class="sourceCode" id="cb233"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb233-1"><a href="more-integer-programming-models.html#cb233-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">9</span></span>
+<span id="cb233-2"><a href="more-integer-programming-models.html#cb233-2" aria-hidden="true" tabindex="-1"></a>Sudoku_model <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">|&gt;</span></span>
+<span id="cb233-3"><a href="more-integer-programming-models.html#cb233-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb233-4"><a href="more-integer-programming-models.html#cb233-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># The number k stored in position i,j</span></span>
+<span id="cb233-5"><a href="more-integer-programming-models.html#cb233-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(Vx[i, j, k], <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>n, <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>n, <span class="at">k =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, </span>
+<span id="cb233-6"><a href="more-integer-programming-models.html#cb233-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">type =</span> <span class="st">&quot;binary&quot;</span>)    <span class="sc">|&gt;</span></span>
+<span id="cb233-7"><a href="more-integer-programming-models.html#cb233-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb233-8"><a href="more-integer-programming-models.html#cb233-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># no objective</span></span>
+<span id="cb233-9"><a href="more-integer-programming-models.html#cb233-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_objective</span>(<span class="dv">0</span>)                 <span class="sc">|&gt;</span></span>
+<span id="cb233-10"><a href="more-integer-programming-models.html#cb233-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb233-11"><a href="more-integer-programming-models.html#cb233-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># only one number can be assigned per cell</span></span>
+<span id="cb233-12"><a href="more-integer-programming-models.html#cb233-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="fu">sum_expr</span>(Vx[i, j, k], <span class="at">k =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>) <span class="sc">==</span> <span class="dv">1</span>, </span>
+<span id="cb233-13"><a href="more-integer-programming-models.html#cb233-13" aria-hidden="true" tabindex="-1"></a>                 <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>n, <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>n) <span class="sc">|&gt;</span></span>
+<span id="cb233-14"><a href="more-integer-programming-models.html#cb233-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb233-15"><a href="more-integer-programming-models.html#cb233-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># each number is exactly once in a row</span></span>
+<span id="cb233-16"><a href="more-integer-programming-models.html#cb233-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="fu">sum_expr</span>(Vx[i, j, k], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>n) <span class="sc">==</span> <span class="dv">1</span>, </span>
+<span id="cb233-17"><a href="more-integer-programming-models.html#cb233-17" aria-hidden="true" tabindex="-1"></a>                 <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>n, <span class="at">k =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>) <span class="sc">|&gt;</span></span>
+<span id="cb233-18"><a href="more-integer-programming-models.html#cb233-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb233-19"><a href="more-integer-programming-models.html#cb233-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># each number is exactly once in a column</span></span>
+<span id="cb233-20"><a href="more-integer-programming-models.html#cb233-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="fu">sum_expr</span>(Vx[i, j, k], <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>n) <span class="sc">==</span> <span class="dv">1</span>, </span>
+<span id="cb233-21"><a href="more-integer-programming-models.html#cb233-21" aria-hidden="true" tabindex="-1"></a>                 <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>n, <span class="at">k =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb233-22"><a href="more-integer-programming-models.html#cb233-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb233-23"><a href="more-integer-programming-models.html#cb233-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># each 3x3 square must have all numbers</span></span>
+<span id="cb233-24"><a href="more-integer-programming-models.html#cb233-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="fu">sum_expr</span>(Vx[i, j, k], <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span> <span class="sc">+</span> r, </span>
+<span id="cb233-25"><a href="more-integer-programming-models.html#cb233-25" aria-hidden="true" tabindex="-1"></a>                          <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span> <span class="sc">+</span> c) <span class="sc">==</span> <span class="dv">1</span>, </span>
+<span id="cb233-26"><a href="more-integer-programming-models.html#cb233-26" aria-hidden="true" tabindex="-1"></a>                 <span class="at">r =</span> <span class="fu">seq</span>(<span class="dv">0</span>, n <span class="sc">-</span> <span class="dv">3</span>, <span class="dv">3</span>), </span>
+<span id="cb233-27"><a href="more-integer-programming-models.html#cb233-27" aria-hidden="true" tabindex="-1"></a>                 <span class="at">c =</span> <span class="fu">seq</span>(<span class="dv">0</span>, n <span class="sc">-</span> <span class="dv">3</span>, <span class="dv">3</span>), <span class="at">k =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>)</span>
+<span id="cb233-28"><a href="more-integer-programming-models.html#cb233-28" aria-hidden="true" tabindex="-1"></a>Sudoku_model</span></code></pre></div>
 <pre><code>## Mixed integer linear optimization problem
 ## Variables:
 ##   Continuous: 0 
@@ -1819,9 +1819,9 @@ That means that the solver will find a valid Sudoku without any prior hints.<br 
 </p>
 <p>I’ve made a couple of minor changes to Dirk’s code chunks.
 In the implementation, I replaced the <code>x</code> variable in <code>ompr</code> with <code>Vx</code> to avoid R name space collisions with previously defined R data structures named <code>x</code> in my environment. Secondly, I switch the <code>sx</code> and <code>sy</code> to <code>r</code> and <code>c</code> to represent moving over by rows and columns in the tricky last constraint for clusters.</p>
-<div class="sourceCode" id="cb237"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb237-1"><a href="more-integer-programming-models.html#cb237-1" aria-hidden="true" tabindex="-1"></a>Sudoku_result <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(</span>
-<span id="cb237-2"><a href="more-integer-programming-models.html#cb237-2" aria-hidden="true" tabindex="-1"></a>  Sudoku_model, <span class="fu">with_ROI</span>(</span>
-<span id="cb237-3"><a href="more-integer-programming-models.html#cb237-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>, <span class="at">verbose =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb235"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb235-1"><a href="more-integer-programming-models.html#cb235-1" aria-hidden="true" tabindex="-1"></a>Sudoku_result <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(</span>
+<span id="cb235-2"><a href="more-integer-programming-models.html#cb235-2" aria-hidden="true" tabindex="-1"></a>  Sudoku_model, <span class="fu">with_ROI</span>(</span>
+<span id="cb235-3"><a href="more-integer-programming-models.html#cb235-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>, <span class="at">verbose =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
 <pre><code>## &lt;SOLVER MSG&gt;  ----
 ## GLPK Simplex Optimizer, v4.47
 ## 324 rows, 729 columns, 2916 non-zeros
@@ -1838,32 +1838,32 @@ In the implementation, I replaced the <code>x</code> variable in <code>ompr</cod
 ## +  1414: mip =  0.000000000e+000 &lt;=     tree is empty   0.0% (0; 85)
 ## INTEGER OPTIMAL SOLUTION FOUND
 ## &lt;!SOLVER MSG&gt; ----</code></pre>
-<div class="sourceCode" id="cb239"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb239-1"><a href="more-integer-programming-models.html#cb239-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the following dplyr statement plots a 9x9 matrix</span></span>
-<span id="cb239-2"><a href="more-integer-programming-models.html#cb239-2" aria-hidden="true" tabindex="-1"></a>Solution <span class="ot">&lt;-</span> Sudoku_result <span class="sc">|&gt;</span> </span>
-<span id="cb239-3"><a href="more-integer-programming-models.html#cb239-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_solution</span>(Vx[i,j,k]) <span class="sc">|&gt;</span></span>
-<span id="cb239-4"><a href="more-integer-programming-models.html#cb239-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(value <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span>  </span>
-<span id="cb239-5"><a href="more-integer-programming-models.html#cb239-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(i, j, k) <span class="sc">|&gt;</span> </span>
-<span id="cb239-6"><a href="more-integer-programming-models.html#cb239-6" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">spread</span>(j, k) <span class="sc">|&gt;</span> </span>
-<span id="cb239-7"><a href="more-integer-programming-models.html#cb239-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>i)</span></code></pre></div>
+<div class="sourceCode" id="cb237"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb237-1"><a href="more-integer-programming-models.html#cb237-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the following dplyr statement plots a 9x9 matrix</span></span>
+<span id="cb237-2"><a href="more-integer-programming-models.html#cb237-2" aria-hidden="true" tabindex="-1"></a>Solution <span class="ot">&lt;-</span> Sudoku_result <span class="sc">|&gt;</span> </span>
+<span id="cb237-3"><a href="more-integer-programming-models.html#cb237-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_solution</span>(Vx[i,j,k]) <span class="sc">|&gt;</span></span>
+<span id="cb237-4"><a href="more-integer-programming-models.html#cb237-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(value <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb237-5"><a href="more-integer-programming-models.html#cb237-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(i, j, k) <span class="sc">|&gt;</span> </span>
+<span id="cb237-6"><a href="more-integer-programming-models.html#cb237-6" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">spread</span>(j, k) <span class="sc">|&gt;</span> </span>
+<span id="cb237-7"><a href="more-integer-programming-models.html#cb237-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>i)</span></code></pre></div>
 <p>If you want to solve a specific Sudoku you can fix certain cells to specific values.
 For example here we solve a Sudoku that has the sequence from 1 to 9 in the first 3x3 matrix fixed.</p>
-<div class="sourceCode" id="cb240"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb240-1"><a href="more-integer-programming-models.html#cb240-1" aria-hidden="true" tabindex="-1"></a>Sudoku_model_specific <span class="ot">&lt;-</span> Sudoku_model <span class="sc">|&gt;</span> </span>
-<span id="cb240-2"><a href="more-integer-programming-models.html#cb240-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(Vx[<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>] <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span>  </span>
-<span id="cb240-3"><a href="more-integer-programming-models.html#cb240-3" aria-hidden="true" tabindex="-1"></a>     <span class="co"># Set digit in top left to the number 1</span></span>
-<span id="cb240-4"><a href="more-integer-programming-models.html#cb240-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(Vx[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>] <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span>  </span>
-<span id="cb240-5"><a href="more-integer-programming-models.html#cb240-5" aria-hidden="true" tabindex="-1"></a>     <span class="co"># Set digit in row 1, column 2 to the number 2</span></span>
-<span id="cb240-6"><a href="more-integer-programming-models.html#cb240-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(Vx[<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">3</span>] <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span>  </span>
-<span id="cb240-7"><a href="more-integer-programming-models.html#cb240-7" aria-hidden="true" tabindex="-1"></a>     <span class="co"># Set digit in row 1, column 3 to the number 3</span></span>
-<span id="cb240-8"><a href="more-integer-programming-models.html#cb240-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(Vx[<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">4</span>] <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span>  </span>
-<span id="cb240-9"><a href="more-integer-programming-models.html#cb240-9" aria-hidden="true" tabindex="-1"></a>     <span class="co"># Set digit in row 2, column 1 to the number 4</span></span>
-<span id="cb240-10"><a href="more-integer-programming-models.html#cb240-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(Vx[<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">5</span>] <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span>  <span class="co"># etc....</span></span>
-<span id="cb240-11"><a href="more-integer-programming-models.html#cb240-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(Vx[<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">6</span>] <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb240-12"><a href="more-integer-programming-models.html#cb240-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(Vx[<span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">7</span>] <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb240-13"><a href="more-integer-programming-models.html#cb240-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(Vx[<span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">8</span>] <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb240-14"><a href="more-integer-programming-models.html#cb240-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(Vx[<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">9</span>] <span class="sc">==</span> <span class="dv">1</span>)</span>
-<span id="cb240-15"><a href="more-integer-programming-models.html#cb240-15" aria-hidden="true" tabindex="-1"></a>Sudoku_result_specific <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(</span>
-<span id="cb240-16"><a href="more-integer-programming-models.html#cb240-16" aria-hidden="true" tabindex="-1"></a>  Sudoku_model_specific, <span class="fu">with_ROI</span>(</span>
-<span id="cb240-17"><a href="more-integer-programming-models.html#cb240-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>, <span class="at">verbose =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb238-1"><a href="more-integer-programming-models.html#cb238-1" aria-hidden="true" tabindex="-1"></a>Sudoku_model_specific <span class="ot">&lt;-</span> Sudoku_model <span class="sc">|&gt;</span> </span>
+<span id="cb238-2"><a href="more-integer-programming-models.html#cb238-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(Vx[<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>] <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb238-3"><a href="more-integer-programming-models.html#cb238-3" aria-hidden="true" tabindex="-1"></a>     <span class="co"># Set digit in top left to the number 1</span></span>
+<span id="cb238-4"><a href="more-integer-programming-models.html#cb238-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(Vx[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>] <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb238-5"><a href="more-integer-programming-models.html#cb238-5" aria-hidden="true" tabindex="-1"></a>     <span class="co"># Set digit in row 1, column 2 to the number 2</span></span>
+<span id="cb238-6"><a href="more-integer-programming-models.html#cb238-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(Vx[<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">3</span>] <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb238-7"><a href="more-integer-programming-models.html#cb238-7" aria-hidden="true" tabindex="-1"></a>     <span class="co"># Set digit in row 1, column 3 to the number 3</span></span>
+<span id="cb238-8"><a href="more-integer-programming-models.html#cb238-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(Vx[<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">4</span>] <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb238-9"><a href="more-integer-programming-models.html#cb238-9" aria-hidden="true" tabindex="-1"></a>     <span class="co"># Set digit in row 2, column 1 to the number 4</span></span>
+<span id="cb238-10"><a href="more-integer-programming-models.html#cb238-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(Vx[<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">5</span>] <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span>  <span class="co"># etc....</span></span>
+<span id="cb238-11"><a href="more-integer-programming-models.html#cb238-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(Vx[<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">6</span>] <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb238-12"><a href="more-integer-programming-models.html#cb238-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(Vx[<span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">7</span>] <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb238-13"><a href="more-integer-programming-models.html#cb238-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(Vx[<span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">8</span>] <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb238-14"><a href="more-integer-programming-models.html#cb238-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(Vx[<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">9</span>] <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb238-15"><a href="more-integer-programming-models.html#cb238-15" aria-hidden="true" tabindex="-1"></a>Sudoku_result_specific <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(</span>
+<span id="cb238-16"><a href="more-integer-programming-models.html#cb238-16" aria-hidden="true" tabindex="-1"></a>  Sudoku_model_specific, <span class="fu">with_ROI</span>(</span>
+<span id="cb238-17"><a href="more-integer-programming-models.html#cb238-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>, <span class="at">verbose =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
 <pre><code>## &lt;SOLVER MSG&gt;  ----
 ## GLPK Simplex Optimizer, v4.47
 ## 333 rows, 729 columns, 2925 non-zeros
@@ -1879,13 +1879,13 @@ For example here we solve a Sudoku that has the sequence from 1 to 9 in the firs
 ## +   980: mip =  0.000000000e+000 &lt;=     tree is empty   0.0% (0; 61)
 ## INTEGER OPTIMAL SOLUTION FOUND
 ## &lt;!SOLVER MSG&gt; ----</code></pre>
-<div class="sourceCode" id="cb242"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb242-1"><a href="more-integer-programming-models.html#cb242-1" aria-hidden="true" tabindex="-1"></a>Solution_specific <span class="ot">&lt;-</span> Sudoku_result_specific <span class="sc">|&gt;</span> </span>
-<span id="cb242-2"><a href="more-integer-programming-models.html#cb242-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_solution</span>(Vx[i,j,k]) <span class="sc">|&gt;</span></span>
-<span id="cb242-3"><a href="more-integer-programming-models.html#cb242-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(value <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span>  </span>
-<span id="cb242-4"><a href="more-integer-programming-models.html#cb242-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(i, j, k) <span class="sc">|&gt;</span> </span>
-<span id="cb242-5"><a href="more-integer-programming-models.html#cb242-5" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">spread</span>(j, k) <span class="sc">|&gt;</span> </span>
-<span id="cb242-6"><a href="more-integer-programming-models.html#cb242-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>i) </span></code></pre></div>
-<div class="sourceCode" id="cb243"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb243-1"><a href="more-integer-programming-models.html#cb243-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (Solution_specific)   <span class="co"># Display solution to Sudoku Puzzle</span></span></code></pre></div>
+<div class="sourceCode" id="cb240"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb240-1"><a href="more-integer-programming-models.html#cb240-1" aria-hidden="true" tabindex="-1"></a>Solution_specific <span class="ot">&lt;-</span> Sudoku_result_specific <span class="sc">|&gt;</span> </span>
+<span id="cb240-2"><a href="more-integer-programming-models.html#cb240-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_solution</span>(Vx[i,j,k]) <span class="sc">|&gt;</span></span>
+<span id="cb240-3"><a href="more-integer-programming-models.html#cb240-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(value <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb240-4"><a href="more-integer-programming-models.html#cb240-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(i, j, k) <span class="sc">|&gt;</span> </span>
+<span id="cb240-5"><a href="more-integer-programming-models.html#cb240-5" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">spread</span>(j, k) <span class="sc">|&gt;</span> </span>
+<span id="cb240-6"><a href="more-integer-programming-models.html#cb240-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>i) </span></code></pre></div>
+<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb241-1"><a href="more-integer-programming-models.html#cb241-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (Solution_specific)   <span class="co"># Display solution to Sudoku Puzzle</span></span></code></pre></div>
 <table>
 <thead>
 <tr>
@@ -2183,7 +2183,7 @@ For example here we solve a Sudoku that has the sequence from 1 to 9 in the firs
 </tbody>
 </table>
 <p>Now, let’s try printing it nicely using the <code>sudokuAlt</code> package from Bill Venables, available from CRAN.</p>
-<div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb244-1"><a href="more-integer-programming-models.html#cb244-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">as.sudoku</span>(<span class="fu">as.matrix</span>(Solution_specific, <span class="at">colGame=</span><span class="st">&quot;grey&quot;</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb242"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb242-1"><a href="more-integer-programming-models.html#cb242-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">as.sudoku</span>(<span class="fu">as.matrix</span>(Solution_specific, <span class="at">colGame=</span><span class="st">&quot;grey&quot;</span>)))</span></code></pre></div>
 <p><img src="OMUR_files/figure-html/printing_sudoku_solution_margin-1.png" width="672" /></p>
 <p>Have at it.
 Any Sudoku puzzle can be solved using this model as long as there is a feasible solution.
@@ -2299,28 +2299,28 @@ It consists of 4x4 grids and uses the letters starting with A in place of number
 <h2><span class="header-section-number">7.6</span> Production Planning over Time</h2>
 <p>Let’s revisit our drone manufacturing example but accounting for time. In this case, we’ll look at producing ants and bats over time while accounting for with varying weekly demand, inventory carrying costs, setup costs, marginal production costs, and beginning inventory. The planning horizon is four weeks.</p>
 <p>Let’s start by by showing the data.</p>
-<div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb245-1"><a href="more-integer-programming-models.html#cb245-1" aria-hidden="true" tabindex="-1"></a>nTime <span class="ot">&lt;-</span> <span class="dv">4</span></span>
-<span id="cb245-2"><a href="more-integer-programming-models.html#cb245-2" aria-hidden="true" tabindex="-1"></a>mDemandA <span class="ot">&lt;-</span> <span class="dv">150</span>  <span class="co"># Used for generating demand</span></span>
-<span id="cb245-3"><a href="more-integer-programming-models.html#cb245-3" aria-hidden="true" tabindex="-1"></a>mDemandB <span class="ot">&lt;-</span> <span class="dv">250</span>  <span class="co">#  Upper limit for random number generator</span></span>
-<span id="cb245-4"><a href="more-integer-programming-models.html#cb245-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb245-5"><a href="more-integer-programming-models.html#cb245-5" aria-hidden="true" tabindex="-1"></a>demA <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">round</span>(<span class="fu">runif</span>(nTime)<span class="sc">*</span>mDemandA))   </span>
-<span id="cb245-6"><a href="more-integer-programming-models.html#cb245-6" aria-hidden="true" tabindex="-1"></a>demB <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">round</span>(<span class="fu">runif</span>(nTime)<span class="sc">*</span>mDemandB))</span>
-<span id="cb245-7"><a href="more-integer-programming-models.html#cb245-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb245-8"><a href="more-integer-programming-models.html#cb245-8" aria-hidden="true" tabindex="-1"></a>beg_invA <span class="ot">&lt;-</span> <span class="dv">71</span>; beg_invB <span class="ot">&lt;-</span> <span class="dv">98</span>  <span class="co"># Inv at beginning of week 1</span></span>
-<span id="cb245-9"><a href="more-integer-programming-models.html#cb245-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb245-10"><a href="more-integer-programming-models.html#cb245-10" aria-hidden="true" tabindex="-1"></a>fcostA <span class="ot">&lt;-</span> <span class="dv">80</span>; fcostB <span class="ot">&lt;-</span> <span class="dv">140</span>  <span class="co"># Setup cost for product </span></span>
-<span id="cb245-11"><a href="more-integer-programming-models.html#cb245-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb245-12"><a href="more-integer-programming-models.html#cb245-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb245-13"><a href="more-integer-programming-models.html#cb245-13" aria-hidden="true" tabindex="-1"></a>invcostA <span class="ot">&lt;-</span> <span class="fl">1.5</span>; invcostB <span class="ot">&lt;-</span> <span class="fl">2.0</span> <span class="co"># Weekly carry cost per unit</span></span>
-<span id="cb245-14"><a href="more-integer-programming-models.html#cb245-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb245-15"><a href="more-integer-programming-models.html#cb245-15" aria-hidden="true" tabindex="-1"></a>prodcostA <span class="ot">&lt;-</span> <span class="dv">10</span>; prodcostB <span class="ot">&lt;-</span> <span class="dv">11</span> <span class="co"># Marginal production cost of A</span></span>
-<span id="cb245-16"><a href="more-integer-programming-models.html#cb245-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb245-17"><a href="more-integer-programming-models.html#cb245-17" aria-hidden="true" tabindex="-1"></a>lmaxinv <span class="ot">&lt;-</span> <span class="dv">400</span>  <span class="co"># Maximum combined inventory</span></span>
-<span id="cb245-18"><a href="more-integer-programming-models.html#cb245-18" aria-hidden="true" tabindex="-1"></a>lmaxpro <span class="ot">&lt;-</span> <span class="dv">600</span>  <span class="co"># Maximum combined production</span></span></code></pre></div>
+<div class="sourceCode" id="cb243"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb243-1"><a href="more-integer-programming-models.html#cb243-1" aria-hidden="true" tabindex="-1"></a>nTime <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb243-2"><a href="more-integer-programming-models.html#cb243-2" aria-hidden="true" tabindex="-1"></a>mDemandA <span class="ot">&lt;-</span> <span class="dv">150</span>  <span class="co"># Used for generating demand</span></span>
+<span id="cb243-3"><a href="more-integer-programming-models.html#cb243-3" aria-hidden="true" tabindex="-1"></a>mDemandB <span class="ot">&lt;-</span> <span class="dv">250</span>  <span class="co">#  Upper limit for random number generator</span></span>
+<span id="cb243-4"><a href="more-integer-programming-models.html#cb243-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb243-5"><a href="more-integer-programming-models.html#cb243-5" aria-hidden="true" tabindex="-1"></a>demA <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">round</span>(<span class="fu">runif</span>(nTime)<span class="sc">*</span>mDemandA))   </span>
+<span id="cb243-6"><a href="more-integer-programming-models.html#cb243-6" aria-hidden="true" tabindex="-1"></a>demB <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">round</span>(<span class="fu">runif</span>(nTime)<span class="sc">*</span>mDemandB))</span>
+<span id="cb243-7"><a href="more-integer-programming-models.html#cb243-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb243-8"><a href="more-integer-programming-models.html#cb243-8" aria-hidden="true" tabindex="-1"></a>beg_invA <span class="ot">&lt;-</span> <span class="dv">71</span>; beg_invB <span class="ot">&lt;-</span> <span class="dv">98</span>  <span class="co"># Inv at beginning of week 1</span></span>
+<span id="cb243-9"><a href="more-integer-programming-models.html#cb243-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb243-10"><a href="more-integer-programming-models.html#cb243-10" aria-hidden="true" tabindex="-1"></a>fcostA <span class="ot">&lt;-</span> <span class="dv">80</span>; fcostB <span class="ot">&lt;-</span> <span class="dv">140</span>  <span class="co"># Setup cost for product </span></span>
+<span id="cb243-11"><a href="more-integer-programming-models.html#cb243-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb243-12"><a href="more-integer-programming-models.html#cb243-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb243-13"><a href="more-integer-programming-models.html#cb243-13" aria-hidden="true" tabindex="-1"></a>invcostA <span class="ot">&lt;-</span> <span class="fl">1.5</span>; invcostB <span class="ot">&lt;-</span> <span class="fl">2.0</span> <span class="co"># Weekly carry cost per unit</span></span>
+<span id="cb243-14"><a href="more-integer-programming-models.html#cb243-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb243-15"><a href="more-integer-programming-models.html#cb243-15" aria-hidden="true" tabindex="-1"></a>prodcostA <span class="ot">&lt;-</span> <span class="dv">10</span>; prodcostB <span class="ot">&lt;-</span> <span class="dv">11</span> <span class="co"># Marginal production cost of A</span></span>
+<span id="cb243-16"><a href="more-integer-programming-models.html#cb243-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb243-17"><a href="more-integer-programming-models.html#cb243-17" aria-hidden="true" tabindex="-1"></a>lmaxinv <span class="ot">&lt;-</span> <span class="dv">400</span>  <span class="co"># Maximum combined inventory</span></span>
+<span id="cb243-18"><a href="more-integer-programming-models.html#cb243-18" aria-hidden="true" tabindex="-1"></a>lmaxpro <span class="ot">&lt;-</span> <span class="dv">600</span>  <span class="co"># Maximum combined production</span></span></code></pre></div>
 <p>Our demand over time for Ants and Bat is then the following.</p>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-47">TABLE 7.8: </span>Product Demand over Time
+<span id="tab:unnamed-chunk-48">TABLE 7.8: </span>Product Demand over Time
 </caption>
 <thead>
 <tr>
@@ -2458,64 +2458,64 @@ The linking constraint for Bats follows the same form.</p>
 <div id="implementing-the-model-1" class="section level3" number="7.6.1">
 <h3><span class="header-section-number">7.6.1</span> Implementing the Model</h3>
 <p>We’ll start by initializing the model and creating the decision variables.</p>
-<div class="sourceCode" id="cb246"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb246-1"><a href="more-integer-programming-models.html#cb246-1" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>()</span>
-<span id="cb246-2"><a href="more-integer-programming-models.html#cb246-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb246-3"><a href="more-integer-programming-models.html#cb246-3" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_variable</span> (promod, VxA[tt], <span class="at">tt=</span><span class="dv">1</span><span class="sc">:</span>nTime, </span>
-<span id="cb246-4"><a href="more-integer-programming-models.html#cb246-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">lb=</span><span class="dv">0</span>, <span class="at">type=</span><span class="st">&quot;continuous&quot;</span>)</span>
-<span id="cb246-5"><a href="more-integer-programming-models.html#cb246-5" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_variable</span> (promod, VxB[tt], <span class="at">tt=</span><span class="dv">1</span><span class="sc">:</span>nTime, </span>
-<span id="cb246-6"><a href="more-integer-programming-models.html#cb246-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">lb=</span><span class="dv">0</span>, <span class="at">type=</span><span class="st">&quot;continuous&quot;</span>)</span>
-<span id="cb246-7"><a href="more-integer-programming-models.html#cb246-7" aria-hidden="true" tabindex="-1"></a>   <span class="co"># Production volume for products A and B in each time period.</span></span>
-<span id="cb246-8"><a href="more-integer-programming-models.html#cb246-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb246-9"><a href="more-integer-programming-models.html#cb246-9" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_variable</span> (promod, VyA[tt], <span class="at">tt=</span><span class="dv">1</span><span class="sc">:</span>nTime, <span class="at">type=</span><span class="st">&quot;binary&quot;</span>)</span>
-<span id="cb246-10"><a href="more-integer-programming-models.html#cb246-10" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_variable</span> (promod, VyB[tt], <span class="at">tt=</span><span class="dv">1</span><span class="sc">:</span>nTime, <span class="at">type=</span><span class="st">&quot;binary&quot;</span>)</span>
-<span id="cb246-11"><a href="more-integer-programming-models.html#cb246-11" aria-hidden="true" tabindex="-1"></a>   <span class="co"># Setups incurred for each product in each time period.</span></span>
-<span id="cb246-12"><a href="more-integer-programming-models.html#cb246-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb246-13"><a href="more-integer-programming-models.html#cb246-13" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_variable</span> (promod, VzA[tt], <span class="at">tt=</span><span class="dv">1</span><span class="sc">:</span>nTime, </span>
-<span id="cb246-14"><a href="more-integer-programming-models.html#cb246-14" aria-hidden="true" tabindex="-1"></a>                        <span class="at">lb=</span><span class="dv">0</span>, <span class="at">type=</span><span class="st">&quot;continuous&quot;</span>)</span>
-<span id="cb246-15"><a href="more-integer-programming-models.html#cb246-15" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_variable</span> (promod, VzB[tt], <span class="at">tt=</span><span class="dv">1</span><span class="sc">:</span>nTime, </span>
-<span id="cb246-16"><a href="more-integer-programming-models.html#cb246-16" aria-hidden="true" tabindex="-1"></a>                        <span class="at">lb=</span><span class="dv">0</span>, <span class="at">type=</span><span class="st">&quot;continuous&quot;</span>)</span>
-<span id="cb246-17"><a href="more-integer-programming-models.html#cb246-17" aria-hidden="true" tabindex="-1"></a>   <span class="co"># Inventory at end of period for each product.</span></span></code></pre></div>
+<div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb244-1"><a href="more-integer-programming-models.html#cb244-1" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>()</span>
+<span id="cb244-2"><a href="more-integer-programming-models.html#cb244-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb244-3"><a href="more-integer-programming-models.html#cb244-3" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_variable</span> (promod, VxA[tt], <span class="at">tt=</span><span class="dv">1</span><span class="sc">:</span>nTime, </span>
+<span id="cb244-4"><a href="more-integer-programming-models.html#cb244-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">lb=</span><span class="dv">0</span>, <span class="at">type=</span><span class="st">&quot;continuous&quot;</span>)</span>
+<span id="cb244-5"><a href="more-integer-programming-models.html#cb244-5" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_variable</span> (promod, VxB[tt], <span class="at">tt=</span><span class="dv">1</span><span class="sc">:</span>nTime, </span>
+<span id="cb244-6"><a href="more-integer-programming-models.html#cb244-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">lb=</span><span class="dv">0</span>, <span class="at">type=</span><span class="st">&quot;continuous&quot;</span>)</span>
+<span id="cb244-7"><a href="more-integer-programming-models.html#cb244-7" aria-hidden="true" tabindex="-1"></a>   <span class="co"># Production volume for products A and B in each time period.</span></span>
+<span id="cb244-8"><a href="more-integer-programming-models.html#cb244-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb244-9"><a href="more-integer-programming-models.html#cb244-9" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_variable</span> (promod, VyA[tt], <span class="at">tt=</span><span class="dv">1</span><span class="sc">:</span>nTime, <span class="at">type=</span><span class="st">&quot;binary&quot;</span>)</span>
+<span id="cb244-10"><a href="more-integer-programming-models.html#cb244-10" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_variable</span> (promod, VyB[tt], <span class="at">tt=</span><span class="dv">1</span><span class="sc">:</span>nTime, <span class="at">type=</span><span class="st">&quot;binary&quot;</span>)</span>
+<span id="cb244-11"><a href="more-integer-programming-models.html#cb244-11" aria-hidden="true" tabindex="-1"></a>   <span class="co"># Setups incurred for each product in each time period.</span></span>
+<span id="cb244-12"><a href="more-integer-programming-models.html#cb244-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb244-13"><a href="more-integer-programming-models.html#cb244-13" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_variable</span> (promod, VzA[tt], <span class="at">tt=</span><span class="dv">1</span><span class="sc">:</span>nTime, </span>
+<span id="cb244-14"><a href="more-integer-programming-models.html#cb244-14" aria-hidden="true" tabindex="-1"></a>                        <span class="at">lb=</span><span class="dv">0</span>, <span class="at">type=</span><span class="st">&quot;continuous&quot;</span>)</span>
+<span id="cb244-15"><a href="more-integer-programming-models.html#cb244-15" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_variable</span> (promod, VzB[tt], <span class="at">tt=</span><span class="dv">1</span><span class="sc">:</span>nTime, </span>
+<span id="cb244-16"><a href="more-integer-programming-models.html#cb244-16" aria-hidden="true" tabindex="-1"></a>                        <span class="at">lb=</span><span class="dv">0</span>, <span class="at">type=</span><span class="st">&quot;continuous&quot;</span>)</span>
+<span id="cb244-17"><a href="more-integer-programming-models.html#cb244-17" aria-hidden="true" tabindex="-1"></a>   <span class="co"># Inventory at end of period for each product.</span></span></code></pre></div>
 <p>Now let’s define the objective function.
 We are not selling prices</p>
-<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb247-1"><a href="more-integer-programming-models.html#cb247-1" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">set_objective</span>(promod, <span class="fu">sum_expr</span>(prodcostA <span class="sc">*</span> VxA[tt] <span class="sc">+</span> </span>
-<span id="cb247-2"><a href="more-integer-programming-models.html#cb247-2" aria-hidden="true" tabindex="-1"></a>                                         prodcostB <span class="sc">*</span> VxB[tt] <span class="sc">+</span> </span>
-<span id="cb247-3"><a href="more-integer-programming-models.html#cb247-3" aria-hidden="true" tabindex="-1"></a>                                         fcostA <span class="sc">*</span> VyA [tt] <span class="sc">+</span></span>
-<span id="cb247-4"><a href="more-integer-programming-models.html#cb247-4" aria-hidden="true" tabindex="-1"></a>                                         fcostB <span class="sc">*</span> VyB [tt] <span class="sc">+</span></span>
-<span id="cb247-5"><a href="more-integer-programming-models.html#cb247-5" aria-hidden="true" tabindex="-1"></a>                                         invcostA <span class="sc">*</span> VzA [tt] <span class="sc">+</span></span>
-<span id="cb247-6"><a href="more-integer-programming-models.html#cb247-6" aria-hidden="true" tabindex="-1"></a>                                         invcostB <span class="sc">*</span> VzB [tt],</span>
-<span id="cb247-7"><a href="more-integer-programming-models.html#cb247-7" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">tt=</span><span class="dv">1</span><span class="sc">:</span>nTime),</span>
-<span id="cb247-8"><a href="more-integer-programming-models.html#cb247-8" aria-hidden="true" tabindex="-1"></a>                                         <span class="st">&quot;min&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb245-1"><a href="more-integer-programming-models.html#cb245-1" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">set_objective</span>(promod, <span class="fu">sum_expr</span>(prodcostA <span class="sc">*</span> VxA[tt] <span class="sc">+</span> </span>
+<span id="cb245-2"><a href="more-integer-programming-models.html#cb245-2" aria-hidden="true" tabindex="-1"></a>                                         prodcostB <span class="sc">*</span> VxB[tt] <span class="sc">+</span> </span>
+<span id="cb245-3"><a href="more-integer-programming-models.html#cb245-3" aria-hidden="true" tabindex="-1"></a>                                         fcostA <span class="sc">*</span> VyA [tt] <span class="sc">+</span></span>
+<span id="cb245-4"><a href="more-integer-programming-models.html#cb245-4" aria-hidden="true" tabindex="-1"></a>                                         fcostB <span class="sc">*</span> VyB [tt] <span class="sc">+</span></span>
+<span id="cb245-5"><a href="more-integer-programming-models.html#cb245-5" aria-hidden="true" tabindex="-1"></a>                                         invcostA <span class="sc">*</span> VzA [tt] <span class="sc">+</span></span>
+<span id="cb245-6"><a href="more-integer-programming-models.html#cb245-6" aria-hidden="true" tabindex="-1"></a>                                         invcostB <span class="sc">*</span> VzB [tt],</span>
+<span id="cb245-7"><a href="more-integer-programming-models.html#cb245-7" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">tt=</span><span class="dv">1</span><span class="sc">:</span>nTime),</span>
+<span id="cb245-8"><a href="more-integer-programming-models.html#cb245-8" aria-hidden="true" tabindex="-1"></a>                                         <span class="st">&quot;min&quot;</span>)</span></code></pre></div>
 <p>Let’s start with our constraints for linking production, inventory, and demand for the first week.
 The inventory at the end of week 1 is simply the beginning inventory at the start of week 1 (<code>beg_invA</code>) plus the amount produced minus the demand.</p>
 <p>Note that this assumes all demand must be satisfied in the same week.
 This model could be extended to allow for backlogged demand or other variations.</p>
-<div class="sourceCode" id="cb248"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb248-1"><a href="more-integer-programming-models.html#cb248-1" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_constraint</span> (promod, </span>
-<span id="cb248-2"><a href="more-integer-programming-models.html#cb248-2" aria-hidden="true" tabindex="-1"></a>                          beg_invA <span class="sc">+</span> VxA[<span class="dv">1</span>] <span class="sc">-</span> demA [<span class="dv">1</span>] <span class="sc">==</span> VzA[<span class="dv">1</span>] )</span>
-<span id="cb248-3"><a href="more-integer-programming-models.html#cb248-3" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_constraint</span> (promod, </span>
-<span id="cb248-4"><a href="more-integer-programming-models.html#cb248-4" aria-hidden="true" tabindex="-1"></a>                          beg_invB <span class="sc">+</span> VxB[<span class="dv">1</span>] <span class="sc">-</span> demB [<span class="dv">1</span>] <span class="sc">==</span> VzB[<span class="dv">1</span>] )</span></code></pre></div>
+<div class="sourceCode" id="cb246"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb246-1"><a href="more-integer-programming-models.html#cb246-1" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_constraint</span> (promod, </span>
+<span id="cb246-2"><a href="more-integer-programming-models.html#cb246-2" aria-hidden="true" tabindex="-1"></a>                          beg_invA <span class="sc">+</span> VxA[<span class="dv">1</span>] <span class="sc">-</span> demA [<span class="dv">1</span>] <span class="sc">==</span> VzA[<span class="dv">1</span>] )</span>
+<span id="cb246-3"><a href="more-integer-programming-models.html#cb246-3" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_constraint</span> (promod, </span>
+<span id="cb246-4"><a href="more-integer-programming-models.html#cb246-4" aria-hidden="true" tabindex="-1"></a>                          beg_invB <span class="sc">+</span> VxB[<span class="dv">1</span>] <span class="sc">-</span> demB [<span class="dv">1</span>] <span class="sc">==</span> VzB[<span class="dv">1</span>] )</span></code></pre></div>
 <p>This handled the first week.
 Now we need to do the same for all of the following weeks.
 We take the ending inventory from the previous week, add the new production, and then subtract the demand to give us the ending inventory for both products.</p>
-<div class="sourceCode" id="cb249"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb249-1"><a href="more-integer-programming-models.html#cb249-1" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_constraint</span> (promod, VzA[tt<span class="dv">-1</span>] <span class="sc">+</span> VxA[tt] <span class="sc">-</span> </span>
-<span id="cb249-2"><a href="more-integer-programming-models.html#cb249-2" aria-hidden="true" tabindex="-1"></a>                            demA [tt] <span class="sc">==</span> VzA[tt], <span class="at">tt =</span> <span class="dv">2</span><span class="sc">:</span>nTime )</span>
-<span id="cb249-3"><a href="more-integer-programming-models.html#cb249-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb249-4"><a href="more-integer-programming-models.html#cb249-4" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_constraint</span> (promod, VzB[tt<span class="dv">-1</span>] <span class="sc">+</span> VxB[tt] <span class="sc">-</span> </span>
-<span id="cb249-5"><a href="more-integer-programming-models.html#cb249-5" aria-hidden="true" tabindex="-1"></a>                            demB [tt] <span class="sc">==</span> VzB[tt], <span class="at">tt =</span> <span class="dv">2</span><span class="sc">:</span>nTime )</span></code></pre></div>
+<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb247-1"><a href="more-integer-programming-models.html#cb247-1" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_constraint</span> (promod, VzA[tt<span class="dv">-1</span>] <span class="sc">+</span> VxA[tt] <span class="sc">-</span> </span>
+<span id="cb247-2"><a href="more-integer-programming-models.html#cb247-2" aria-hidden="true" tabindex="-1"></a>                            demA [tt] <span class="sc">==</span> VzA[tt], <span class="at">tt =</span> <span class="dv">2</span><span class="sc">:</span>nTime )</span>
+<span id="cb247-3"><a href="more-integer-programming-models.html#cb247-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb247-4"><a href="more-integer-programming-models.html#cb247-4" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_constraint</span> (promod, VzB[tt<span class="dv">-1</span>] <span class="sc">+</span> VxB[tt] <span class="sc">-</span> </span>
+<span id="cb247-5"><a href="more-integer-programming-models.html#cb247-5" aria-hidden="true" tabindex="-1"></a>                            demB [tt] <span class="sc">==</span> VzB[tt], <span class="at">tt =</span> <span class="dv">2</span><span class="sc">:</span>nTime )</span></code></pre></div>
 <p>Now we need to use our create our linking constraints to connect our production and decision to produce products.
 We will use the Big M method and the maximum production production value as our Big M value.</p>
-<div class="sourceCode" id="cb250"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb250-1"><a href="more-integer-programming-models.html#cb250-1" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_constraint</span> (promod, VxA [tt] <span class="sc">&lt;=</span> lmaxpro <span class="sc">*</span> VyA[tt], </span>
-<span id="cb250-2"><a href="more-integer-programming-models.html#cb250-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">tt =</span> <span class="dv">1</span><span class="sc">:</span>nTime)</span>
-<span id="cb250-3"><a href="more-integer-programming-models.html#cb250-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb250-4"><a href="more-integer-programming-models.html#cb250-4" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_constraint</span> (promod, VxB [tt] <span class="sc">&lt;=</span> lmaxpro <span class="sc">*</span> VyB[tt], </span>
-<span id="cb250-5"><a href="more-integer-programming-models.html#cb250-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">tt =</span> <span class="dv">1</span><span class="sc">:</span>nTime)</span></code></pre></div>
+<div class="sourceCode" id="cb248"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb248-1"><a href="more-integer-programming-models.html#cb248-1" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_constraint</span> (promod, VxA [tt] <span class="sc">&lt;=</span> lmaxpro <span class="sc">*</span> VyA[tt], </span>
+<span id="cb248-2"><a href="more-integer-programming-models.html#cb248-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">tt =</span> <span class="dv">1</span><span class="sc">:</span>nTime)</span>
+<span id="cb248-3"><a href="more-integer-programming-models.html#cb248-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb248-4"><a href="more-integer-programming-models.html#cb248-4" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_constraint</span> (promod, VxB [tt] <span class="sc">&lt;=</span> lmaxpro <span class="sc">*</span> VyB[tt], </span>
+<span id="cb248-5"><a href="more-integer-programming-models.html#cb248-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">tt =</span> <span class="dv">1</span><span class="sc">:</span>nTime)</span></code></pre></div>
 <p>Now let’s put a limit our joint inventory of products.</p>
-<div class="sourceCode" id="cb251"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb251-1"><a href="more-integer-programming-models.html#cb251-1" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_constraint</span> (promod, VzA[tt] <span class="sc">+</span> VzB[tt] <span class="sc">&lt;=</span> lmaxinv, </span>
-<span id="cb251-2"><a href="more-integer-programming-models.html#cb251-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">tt =</span> <span class="dv">1</span><span class="sc">:</span>nTime)</span></code></pre></div>
+<div class="sourceCode" id="cb249"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb249-1"><a href="more-integer-programming-models.html#cb249-1" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_constraint</span> (promod, VzA[tt] <span class="sc">+</span> VzB[tt] <span class="sc">&lt;=</span> lmaxinv, </span>
+<span id="cb249-2"><a href="more-integer-programming-models.html#cb249-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">tt =</span> <span class="dv">1</span><span class="sc">:</span>nTime)</span></code></pre></div>
 <p>Now let’s put a limit our joint production capacity of products.</p>
-<div class="sourceCode" id="cb252"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb252-1"><a href="more-integer-programming-models.html#cb252-1" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_constraint</span> (promod, VzA[tt] <span class="sc">+</span> VzB[tt] <span class="sc">&lt;=</span> lmaxpro, </span>
-<span id="cb252-2"><a href="more-integer-programming-models.html#cb252-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">tt =</span> <span class="dv">1</span><span class="sc">:</span>nTime)</span></code></pre></div>
+<div class="sourceCode" id="cb250"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb250-1"><a href="more-integer-programming-models.html#cb250-1" aria-hidden="true" tabindex="-1"></a>promod <span class="ot">&lt;-</span> <span class="fu">add_constraint</span> (promod, VzA[tt] <span class="sc">+</span> VzB[tt] <span class="sc">&lt;=</span> lmaxpro, </span>
+<span id="cb250-2"><a href="more-integer-programming-models.html#cb250-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">tt =</span> <span class="dv">1</span><span class="sc">:</span>nTime)</span></code></pre></div>
 <p>At this point, let’s look at the size of the problem.</p>
-<div class="sourceCode" id="cb253"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb253-1"><a href="more-integer-programming-models.html#cb253-1" aria-hidden="true" tabindex="-1"></a>promod</span></code></pre></div>
+<div class="sourceCode" id="cb251"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb251-1"><a href="more-integer-programming-models.html#cb251-1" aria-hidden="true" tabindex="-1"></a>promod</span></code></pre></div>
 <pre><code>## Mixed integer linear optimization problem
 ## Variables:
 ##   Continuous: 16 
@@ -2524,29 +2524,29 @@ We will use the Big M method and the maximum production production value as our 
 ## Model sense: minimize 
 ## Constraints: 24</code></pre>
 <p>We are ready to solve.</p>
-<div class="sourceCode" id="cb255"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb255-1"><a href="more-integer-programming-models.html#cb255-1" aria-hidden="true" tabindex="-1"></a>prores <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(promod, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
-<span id="cb255-2"><a href="more-integer-programming-models.html#cb255-2" aria-hidden="true" tabindex="-1"></a>prores<span class="sc">$</span>status</span></code></pre></div>
+<div class="sourceCode" id="cb253"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb253-1"><a href="more-integer-programming-models.html#cb253-1" aria-hidden="true" tabindex="-1"></a>prores <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(promod, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span>
+<span id="cb253-2"><a href="more-integer-programming-models.html#cb253-2" aria-hidden="true" tabindex="-1"></a>prores<span class="sc">$</span>status</span></code></pre></div>
 <pre><code>## [1] &quot;optimal&quot;</code></pre>
-<div class="sourceCode" id="cb257"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb257-1"><a href="more-integer-programming-models.html#cb257-1" aria-hidden="true" tabindex="-1"></a>prores<span class="sc">$</span>objective_value</span></code></pre></div>
+<div class="sourceCode" id="cb255"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb255-1"><a href="more-integer-programming-models.html#cb255-1" aria-hidden="true" tabindex="-1"></a>prores<span class="sc">$</span>objective_value</span></code></pre></div>
 <pre><code>## [1] 8856.5</code></pre>
 <p>We could do some light processing of results for display purposes.</p>
-<div class="sourceCode" id="cb259"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb259-1"><a href="more-integer-programming-models.html#cb259-1" aria-hidden="true" tabindex="-1"></a>Sol <span class="ot">&lt;-</span> <span class="fu">rbind</span> (</span>
-<span id="cb259-2"><a href="more-integer-programming-models.html#cb259-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>(<span class="fu">as.matrix</span>(<span class="fu">as.numeric</span>(<span class="fu">get_solution</span> (prores, VxA[tt])[,<span class="dv">3</span>]))),</span>
-<span id="cb259-3"><a href="more-integer-programming-models.html#cb259-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>(<span class="fu">as.matrix</span>(<span class="fu">as.numeric</span>(<span class="fu">get_solution</span> (prores, VxB[tt])[,<span class="dv">3</span>]))),</span>
-<span id="cb259-4"><a href="more-integer-programming-models.html#cb259-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>(<span class="fu">as.matrix</span>(<span class="fu">as.numeric</span>(<span class="fu">get_solution</span> (prores, VyA[tt])[,<span class="dv">3</span>]))),</span>
-<span id="cb259-5"><a href="more-integer-programming-models.html#cb259-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>(<span class="fu">as.matrix</span>(<span class="fu">as.numeric</span>(<span class="fu">get_solution</span> (prores, VyB[tt])[,<span class="dv">3</span>]))),</span>
-<span id="cb259-6"><a href="more-integer-programming-models.html#cb259-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>(<span class="fu">as.matrix</span>(<span class="fu">as.numeric</span>(<span class="fu">get_solution</span> (prores, VzA[tt])[,<span class="dv">3</span>]))),</span>
-<span id="cb259-7"><a href="more-integer-programming-models.html#cb259-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>(<span class="fu">as.matrix</span>(<span class="fu">as.numeric</span>(<span class="fu">get_solution</span> (prores, VzB[tt])[,<span class="dv">3</span>]))))</span>
-<span id="cb259-8"><a href="more-integer-programming-models.html#cb259-8" aria-hidden="true" tabindex="-1"></a>var_list <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;$x_{t_A}$&quot;</span>, <span class="st">&quot;$x_{t_B}$&quot;</span>, <span class="st">&quot;$y_{t_A}$&quot;</span>, <span class="st">&quot;$y_{t_B}$&quot;</span>,</span>
-<span id="cb259-9"><a href="more-integer-programming-models.html#cb259-9" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;$z_{t_A}$&quot;</span>, <span class="st">&quot;$z_{t_B}$&quot;</span>) </span>
-<span id="cb259-10"><a href="more-integer-programming-models.html#cb259-10" aria-hidden="true" tabindex="-1"></a>Sol <span class="ot">&lt;-</span> <span class="fu">cbind</span>(var_list, Sol)</span>
-<span id="cb259-11"><a href="more-integer-programming-models.html#cb259-11" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Sol) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Variable&quot;</span>, <span class="st">&quot;Week 1&quot;</span>, <span class="st">&quot;Week 2&quot;</span>, <span class="st">&quot;Week 3&quot;</span>, <span class="st">&quot;Week 4&quot;</span>)  </span>
-<span id="cb259-12"><a href="more-integer-programming-models.html#cb259-12" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(Sol) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Ant Production&quot;</span>, <span class="st">&quot;Bat Production&quot;</span>,</span>
-<span id="cb259-13"><a href="more-integer-programming-models.html#cb259-13" aria-hidden="true" tabindex="-1"></a>                        <span class="st">&quot;Ant Setup&quot;</span>, <span class="st">&quot;Bat Setup&quot;</span>,</span>
-<span id="cb259-14"><a href="more-integer-programming-models.html#cb259-14" aria-hidden="true" tabindex="-1"></a>                        <span class="st">&quot;Ant Inventory&quot;</span>, <span class="st">&quot;Bat Inventory&quot;</span>)  </span></code></pre></div>
+<div class="sourceCode" id="cb257"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb257-1"><a href="more-integer-programming-models.html#cb257-1" aria-hidden="true" tabindex="-1"></a>Sol <span class="ot">&lt;-</span> <span class="fu">rbind</span> (</span>
+<span id="cb257-2"><a href="more-integer-programming-models.html#cb257-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>(<span class="fu">as.matrix</span>(<span class="fu">as.numeric</span>(<span class="fu">get_solution</span> (prores, VxA[tt])[,<span class="dv">3</span>]))),</span>
+<span id="cb257-3"><a href="more-integer-programming-models.html#cb257-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>(<span class="fu">as.matrix</span>(<span class="fu">as.numeric</span>(<span class="fu">get_solution</span> (prores, VxB[tt])[,<span class="dv">3</span>]))),</span>
+<span id="cb257-4"><a href="more-integer-programming-models.html#cb257-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>(<span class="fu">as.matrix</span>(<span class="fu">as.numeric</span>(<span class="fu">get_solution</span> (prores, VyA[tt])[,<span class="dv">3</span>]))),</span>
+<span id="cb257-5"><a href="more-integer-programming-models.html#cb257-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>(<span class="fu">as.matrix</span>(<span class="fu">as.numeric</span>(<span class="fu">get_solution</span> (prores, VyB[tt])[,<span class="dv">3</span>]))),</span>
+<span id="cb257-6"><a href="more-integer-programming-models.html#cb257-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>(<span class="fu">as.matrix</span>(<span class="fu">as.numeric</span>(<span class="fu">get_solution</span> (prores, VzA[tt])[,<span class="dv">3</span>]))),</span>
+<span id="cb257-7"><a href="more-integer-programming-models.html#cb257-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>(<span class="fu">as.matrix</span>(<span class="fu">as.numeric</span>(<span class="fu">get_solution</span> (prores, VzB[tt])[,<span class="dv">3</span>]))))</span>
+<span id="cb257-8"><a href="more-integer-programming-models.html#cb257-8" aria-hidden="true" tabindex="-1"></a>var_list <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;$x_{t_A}$&quot;</span>, <span class="st">&quot;$x_{t_B}$&quot;</span>, <span class="st">&quot;$y_{t_A}$&quot;</span>, <span class="st">&quot;$y_{t_B}$&quot;</span>,</span>
+<span id="cb257-9"><a href="more-integer-programming-models.html#cb257-9" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;$z_{t_A}$&quot;</span>, <span class="st">&quot;$z_{t_B}$&quot;</span>) </span>
+<span id="cb257-10"><a href="more-integer-programming-models.html#cb257-10" aria-hidden="true" tabindex="-1"></a>Sol <span class="ot">&lt;-</span> <span class="fu">cbind</span>(var_list, Sol)</span>
+<span id="cb257-11"><a href="more-integer-programming-models.html#cb257-11" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Sol) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Variable&quot;</span>, <span class="st">&quot;Week 1&quot;</span>, <span class="st">&quot;Week 2&quot;</span>, <span class="st">&quot;Week 3&quot;</span>, <span class="st">&quot;Week 4&quot;</span>)  </span>
+<span id="cb257-12"><a href="more-integer-programming-models.html#cb257-12" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(Sol) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Ant Production&quot;</span>, <span class="st">&quot;Bat Production&quot;</span>,</span>
+<span id="cb257-13"><a href="more-integer-programming-models.html#cb257-13" aria-hidden="true" tabindex="-1"></a>                        <span class="st">&quot;Ant Setup&quot;</span>, <span class="st">&quot;Bat Setup&quot;</span>,</span>
+<span id="cb257-14"><a href="more-integer-programming-models.html#cb257-14" aria-hidden="true" tabindex="-1"></a>                        <span class="st">&quot;Ant Inventory&quot;</span>, <span class="st">&quot;Bat Inventory&quot;</span>)  </span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-58">TABLE 7.9: </span>Production Planning Over Time
+<span id="tab:unnamed-chunk-59">TABLE 7.9: </span>Production Planning Over Time
 </caption>
 <thead>
 <tr>

@@ -24,7 +24,7 @@
 <meta name="author" content="Timothy R. Anderson" />
 
 
-<meta name="date" content="2021-12-22" />
+<meta name="date" content="2021-12-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -655,20 +655,20 @@ A common mistake is to use an asterisk, *, to indicate multiplication in LaTeX.<
 <h2><span class="header-section-number">B.9</span> Applications of Summation</h2>
 <p>Sequence applications of summation notation can be very practical in that we can extract real-world data values given in an array or a matrix.</p>
 <p>For example, let’s imagine that the itemized cost for the production of a product from start to finish is that which is given in the table below.</p>
-<div class="sourceCode" id="cb303"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb303-1"><a href="introduction-to-math-notation.html#cb303-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load library</span></span>
-<span id="cb303-2"><a href="introduction-to-math-notation.html#cb303-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra,<span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb303-3"><a href="introduction-to-math-notation.html#cb303-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb303-4"><a href="introduction-to-math-notation.html#cb303-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create data table</span></span>
-<span id="cb303-5"><a href="introduction-to-math-notation.html#cb303-5" aria-hidden="true" tabindex="-1"></a>M1 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">11</span>,<span class="dv">12</span>,<span class="dv">13</span>,<span class="dv">14</span>,<span class="dv">15</span>), <span class="at">ncol=</span><span class="dv">1</span>)</span>
-<span id="cb303-6"><a href="introduction-to-math-notation.html#cb303-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(M1)<span class="ot">&lt;-</span><span class="fu">list</span>(<span class="st">&quot;Design&quot;</span>, <span class="st">&quot;Materials&quot;</span>, </span>
-<span id="cb303-7"><a href="introduction-to-math-notation.html#cb303-7" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;Production&quot;</span>, <span class="st">&quot;Packaging&quot;</span>, </span>
-<span id="cb303-8"><a href="introduction-to-math-notation.html#cb303-8" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;Distribution&quot;</span>)</span>
-<span id="cb303-9"><a href="introduction-to-math-notation.html#cb303-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span> (M1) <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">&quot;Product 1&quot;</span>)</span>
-<span id="cb303-10"><a href="introduction-to-math-notation.html#cb303-10" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (M1, <span class="at">booktabs=</span>T,</span>
-<span id="cb303-11"><a href="introduction-to-math-notation.html#cb303-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption=</span><span class="st">&quot;Production Costs for Product 1&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb301"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb301-1"><a href="introduction-to-math-notation.html#cb301-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load library</span></span>
+<span id="cb301-2"><a href="introduction-to-math-notation.html#cb301-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra,<span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb301-3"><a href="introduction-to-math-notation.html#cb301-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb301-4"><a href="introduction-to-math-notation.html#cb301-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create data table</span></span>
+<span id="cb301-5"><a href="introduction-to-math-notation.html#cb301-5" aria-hidden="true" tabindex="-1"></a>M1 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">11</span>,<span class="dv">12</span>,<span class="dv">13</span>,<span class="dv">14</span>,<span class="dv">15</span>), <span class="at">ncol=</span><span class="dv">1</span>)</span>
+<span id="cb301-6"><a href="introduction-to-math-notation.html#cb301-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(M1)<span class="ot">&lt;-</span><span class="fu">list</span>(<span class="st">&quot;Design&quot;</span>, <span class="st">&quot;Materials&quot;</span>, </span>
+<span id="cb301-7"><a href="introduction-to-math-notation.html#cb301-7" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;Production&quot;</span>, <span class="st">&quot;Packaging&quot;</span>, </span>
+<span id="cb301-8"><a href="introduction-to-math-notation.html#cb301-8" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;Distribution&quot;</span>)</span>
+<span id="cb301-9"><a href="introduction-to-math-notation.html#cb301-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span> (M1) <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">&quot;Product 1&quot;</span>)</span>
+<span id="cb301-10"><a href="introduction-to-math-notation.html#cb301-10" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (M1, <span class="at">booktabs=</span>T,</span>
+<span id="cb301-11"><a href="introduction-to-math-notation.html#cb301-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption=</span><span class="st">&quot;Production Costs for Product 1&quot;</span>)</span></code></pre></div>
 <table>
 <caption>
-<span id="tab:unnamed-chunk-80">TABLE B.1: </span>Production Costs for Product 1
+<span id="tab:unnamed-chunk-81">TABLE B.1: </span>Production Costs for Product 1
 </caption>
 <thead>
 <tr>
@@ -734,16 +734,16 @@ Distribution
 \end{split}
 \]</span></p>
 <p>Let’s say we now have additional products being produced.</p>
-<div class="sourceCode" id="cb304"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb304-1"><a href="introduction-to-math-notation.html#cb304-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load Data Table 2</span></span>
-<span id="cb304-2"><a href="introduction-to-math-notation.html#cb304-2" aria-hidden="true" tabindex="-1"></a>M2<span class="ot">&lt;-</span><span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">11</span>,<span class="dv">12</span>,<span class="dv">13</span>,<span class="dv">14</span>,<span class="dv">15</span>,<span class="dv">21</span>,<span class="dv">22</span>,<span class="dv">23</span>,<span class="dv">24</span>,<span class="dv">25</span>,<span class="dv">31</span>,<span class="dv">32</span>,<span class="dv">33</span>,<span class="dv">34</span>,<span class="dv">35</span>), <span class="at">ncol=</span><span class="dv">3</span>)</span>
-<span id="cb304-3"><a href="introduction-to-math-notation.html#cb304-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(M2)<span class="ot">&lt;-</span><span class="fu">list</span>(<span class="st">&quot;Design&quot;</span>, <span class="st">&quot;Materials&quot;</span>, <span class="st">&quot;Production&quot;</span>, </span>
-<span id="cb304-4"><a href="introduction-to-math-notation.html#cb304-4" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;Packaging&quot;</span>, <span class="st">&quot;Distribution&quot;</span>)</span>
-<span id="cb304-5"><a href="introduction-to-math-notation.html#cb304-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(M2)<span class="ot">&lt;-</span><span class="fu">list</span>(<span class="st">&quot;Product 1&quot;</span>, <span class="st">&quot;Product 2&quot;</span>, <span class="st">&quot;Product 3&quot;</span>)</span>
-<span id="cb304-6"><a href="introduction-to-math-notation.html#cb304-6" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(M2, <span class="at">booktabs=</span>T, <span class="at">caption=</span></span>
-<span id="cb304-7"><a href="introduction-to-math-notation.html#cb304-7" aria-hidden="true" tabindex="-1"></a>         <span class="st">&quot;Itemized Production Costs for Three Products&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb302"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb302-1"><a href="introduction-to-math-notation.html#cb302-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load Data Table 2</span></span>
+<span id="cb302-2"><a href="introduction-to-math-notation.html#cb302-2" aria-hidden="true" tabindex="-1"></a>M2<span class="ot">&lt;-</span><span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">11</span>,<span class="dv">12</span>,<span class="dv">13</span>,<span class="dv">14</span>,<span class="dv">15</span>,<span class="dv">21</span>,<span class="dv">22</span>,<span class="dv">23</span>,<span class="dv">24</span>,<span class="dv">25</span>,<span class="dv">31</span>,<span class="dv">32</span>,<span class="dv">33</span>,<span class="dv">34</span>,<span class="dv">35</span>), <span class="at">ncol=</span><span class="dv">3</span>)</span>
+<span id="cb302-3"><a href="introduction-to-math-notation.html#cb302-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(M2)<span class="ot">&lt;-</span><span class="fu">list</span>(<span class="st">&quot;Design&quot;</span>, <span class="st">&quot;Materials&quot;</span>, <span class="st">&quot;Production&quot;</span>, </span>
+<span id="cb302-4"><a href="introduction-to-math-notation.html#cb302-4" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;Packaging&quot;</span>, <span class="st">&quot;Distribution&quot;</span>)</span>
+<span id="cb302-5"><a href="introduction-to-math-notation.html#cb302-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(M2)<span class="ot">&lt;-</span><span class="fu">list</span>(<span class="st">&quot;Product 1&quot;</span>, <span class="st">&quot;Product 2&quot;</span>, <span class="st">&quot;Product 3&quot;</span>)</span>
+<span id="cb302-6"><a href="introduction-to-math-notation.html#cb302-6" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(M2, <span class="at">booktabs=</span>T, <span class="at">caption=</span></span>
+<span id="cb302-7"><a href="introduction-to-math-notation.html#cb302-7" aria-hidden="true" tabindex="-1"></a>         <span class="st">&quot;Itemized Production Costs for Three Products&quot;</span>)</span></code></pre></div>
 <table>
 <caption>
-<span id="tab:unnamed-chunk-81">TABLE B.2: </span>Itemized Production Costs for Three Products
+<span id="tab:unnamed-chunk-82">TABLE B.2: </span>Itemized Production Costs for Three Products
 </caption>
 <thead>
 <tr>

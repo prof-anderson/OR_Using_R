@@ -24,7 +24,7 @@
 <meta name="author" content="Timothy R. Anderson" />
 
 
-<meta name="date" content="2021-12-22" />
+<meta name="date" content="2021-12-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -823,14 +823,11 @@ Optimal results for DMU B
 </tbody>
 </table>
 <div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="data-envelopment-analysis.html#cb129-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: Creating LaTeX column names is covered in appendix D.</span></span></code></pre></div>
-<p>The above table follows a few convenient conventions. First, rather than using <span class="math inline">\(\theta\)</span>, we label the efficiency score by the model used for the model, in this case the constant returns to scale is labeled as CCR after Charnes, Cooper, and Rhodes <span class="citation">(<a href="#ref-RhodesDataEnvelopmentAnalysis1978" role="doc-biblioref">Rhodes 1978</a>)</span>. Later we will cover other models including the variable returns to scale model, labeled BCC after Banker, Charnes, and Cooper <span class="citation">(<a href="#ref-banker1984" role="doc-biblioref">Banker, Charnes, and Cooper 1984</a>)</span>.</p>
+<p>The above table follows a few convenient conventions. First, the <span class="math inline">\(\theta\)</span>, gets a superscript to indicate that it for the CRS or constant returns to scale model. This is sometimes labeled as CCR after Charnes, Cooper, and Rhodes <span class="citation">(<a href="#ref-RhodesDataEnvelopmentAnalysis1978" role="doc-biblioref">Rhodes 1978</a>)</span>. Later we will cover other models including the variable returns to scale model, sometimes labeled BCC after Banker, Charnes, and Cooper <span class="citation">(<a href="#ref-banker1984" role="doc-biblioref">Banker, Charnes, and Cooper 1984</a>)</span>.</p>
 <p>Another convention is to embed the <em>orientation</em> in the table. This an input-oriented model where the primary focus is on achieving efficiency through input reduction. Output-orientation is also very common where the primary goal is for a unit to increase output with the requirement of not using any more input.        </p>
-<p>The results in the table indicate that DMU <em>B</em> has an efficiency score of 50%. The target of performance is made of DMU <em>C</em> scaled down by a factor of 0.33. These results match the graphical results from earlier.<br />
-</p>
-<p>Another item to note is that we are using some of the flexibility of <code>kable</code> in our table. In particular, we are able to use LaTeX in ou in column headings as long as we set <code>escape=F</code>. Note from the code chunk that the actual use requires an extra slash.  <br />
-</p>
-<p>Let’s now extend it to handle multiple inputs, <code>NX</code>, and outputs, <code>NY</code>. Of course this doesn’t have any impact on our results just yet since we are still only using a single input and output but we now have the structure to accommodate the more general case of DEA. To provide a little variety, we’ll change it to the first DMU, A, to give a little more variety.<br />
-</p>
+<p>The results in the table indicate that DMU <em>B</em> has an efficiency score of 50%. The target of performance is made of DMU <em>C</em> scaled down by a factor of 0.33. These results match the graphical results from earlier. This 50% efficiency score means that if B were using best practices as demonstrated by the other units, it would only need 50% of the inputs to produce the same output.</p>
+<p>Another item to note is that we are using some of the flexibility of <code>kable</code> in our table. In particular, we are able to use LaTeX in our in column headings as long as we set <code>escape=F</code>. Note from the code chunk that the actual use requires an extra slash.  </p>
+<p>Let’s now extend it to handle multiple inputs, <code>NX</code>, and outputs, <code>NY</code>. Of course this doesn’t have any impact on our results just yet since we are still only using a single input and output but we now have the structure to accommodate the more general case of DEA. To provide a little variety, we’ll change it to the first DMU, A, to give a little more variety.</p>
 <div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="data-envelopment-analysis.html#cb130-1" aria-hidden="true" tabindex="-1"></a>k<span class="ot">&lt;-</span><span class="dv">1</span>    <span class="co"># Analyze first unit, DMU A.</span></span>
 <span id="cb130-2"><a href="data-envelopment-analysis.html#cb130-2" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>()                                          <span class="sc">|&gt;</span></span>
 <span id="cb130-3"><a href="data-envelopment-analysis.html#cb130-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(vlambda[j], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, </span>
@@ -907,10 +904,8 @@ Optimal results for DMU A
 </tr>
 </tbody>
 </table>
-<p>Again, the results match what would be expected the graphical analysis.<br />
-</p>
-<p>Now we should extend this to handle all four of the decision making units. A key new function that we use here is the <code>for</code> command to loop the previous code that we had used for analyzing A and B separately. Notably, we assign the results to matrices at the end of each loop.<br />
-</p>
+<p>Again, the results match what would be expected the graphical analysis.</p>
+<p>Now we should extend this to handle all four of the decision making units. A key new function that we use here is the <code>for</code> command to loop the previous code that we had used for analyzing A and B separately. Notably, we assign the results to matrices at the end of each loop.</p>
 <div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb131-1"><a href="data-envelopment-analysis.html#cb131-1" aria-hidden="true" tabindex="-1"></a>results.efficiency <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rep</span>(<span class="sc">-</span><span class="fl">1.0</span>, <span class="dv">1</span>), <span class="at">nrow=</span>ND, <span class="at">ncol=</span><span class="dv">1</span>)</span>
 <span id="cb131-2"><a href="data-envelopment-analysis.html#cb131-2" aria-hidden="true" tabindex="-1"></a>results.lambda     <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rep</span>(<span class="sc">-</span><span class="fl">1.0</span>, ND), <span class="at">nrow=</span>ND,<span class="at">ncol=</span>ND)</span>
 <span id="cb131-3"><a href="data-envelopment-analysis.html#cb131-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>ND) {</span>
@@ -934,8 +929,7 @@ Optimal results for DMU A
 ## [1] &quot;DMU=&quot;    &quot;2&quot;       &quot;optimal&quot;
 ## [1] &quot;DMU=&quot;    &quot;3&quot;       &quot;optimal&quot;
 ## [1] &quot;DMU=&quot;    &quot;4&quot;       &quot;optimal&quot;</code></pre>
-<p>Success! This indicates each of the four linear programs was solved to optimality. By itself, it doesn’t help much though. We need to now display each column of results. Lambda, <span class="math inline">\(\lambda\)</span>, reflects the way that a best target is made for that unit.<br />
-</p>
+<p>Success! This indicates each of the four linear programs was solved to optimality. By itself, it doesn’t help much though. We need to now display each column of results. Lambda, <span class="math inline">\(\lambda\)</span>, reflects the way that a best target is made for that unit.</p>
 <div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb133-1"><a href="data-envelopment-analysis.html#cb133-1" aria-hidden="true" tabindex="-1"></a>Lambdanames <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">&quot;$</span><span class="sc">\\</span><span class="st">lambda_A$&quot;</span>, <span class="st">&quot;$</span><span class="sc">\\</span><span class="st">lambda_B$&quot;</span>, </span>
 <span id="cb133-2"><a href="data-envelopment-analysis.html#cb133-2" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&quot;$</span><span class="sc">\\</span><span class="st">lambda_C$&quot;</span>, <span class="st">&quot;$</span><span class="sc">\\</span><span class="st">lambda_D$&quot;</span>)</span>
 <span id="cb133-3"><a href="data-envelopment-analysis.html#cb133-3" aria-hidden="true" tabindex="-1"></a>DMUnames <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;D&quot;</span>)</span>
@@ -1117,19 +1111,14 @@ D
 </tr>
 </tbody>
 </table>
-<p>The results match those observed graphically but let’s discuss them. These results indicate that only DMU <em>C</em> is efficient. Rescaled versions of <em>C</em> could produce the same level of output of <em>A</em>, <em>B</em>, or <em>D</em>, while using just 25%, 50%, and 20% less input respectively. The targets of performance for <em>A</em> and <em>B</em> are constructed by scaling down unit <em>C</em> to a much smaller size, as shown by the the values of <span class="math inline">\(\lambda\)</span>. In contrast, <em>D</em>’s performance is surpassed by a 33% larger version of <em>C</em>.<br />
-</p>
-<p>It is an important step of any DEA study to carefully examine the results. In this case, it might be argued that for certain applications, <em>C</em>’s business practices do not readily scale and therefore could not be assumed to operate at a much smaller or larger size. Recall our original application of stores. It might be that practices employed by store C, Trader Carrie’s, do not easily scale to larger or smaller operations. Al’s Pantry (store A) is a much smaller operation and just trying to keep the store in operation with ten employees may be a major challenge. Perhaps all of the stores offer 24 hour a day operation. During the slow time after midnight, Trader Carrie’s could have just one employee working. Meanwhile Al’s Pantry could not stay in business with one third of an employee working at 3 AM!<br />
-</p>
-<p>Similarly, Trader Carrie’s may not scale to larger operations. In a mid-sized store, employees may feel more comfortable with all parts of the store but in a larger store, people work in separate departments such as the produce department and the meat department. This separation by departments may yield benefits or disbenefits.<br />
-</p>
-<p>Up until this point, we have assumed constant returns to scale but there are other versions of returns to scale to better fit the needs of each application. Next, let’s incorporate modeling returns to scale.<br />
-</p>
+<p>The results match those observed graphically but let’s discuss them. These results indicate that only DMU <em>C</em> is efficient. Rescaled versions of <em>C</em> could produce the same level of output of <em>A</em>, <em>B</em>, or <em>D</em>, while using just 25%, 50%, and 20% less input respectively. The targets of performance for <em>A</em> and <em>B</em> are constructed by scaling down unit <em>C</em> to a much smaller size, as shown by the the values of <span class="math inline">\(\lambda\)</span>. In contrast, <em>D</em>’s performance is surpassed by a 33% larger version of <em>C</em>.</p>
+<p>It is an important step of any DEA study to carefully examine the results. In this case, it might be argued that for certain applications, <em>C</em>’s business practices do not readily scale and therefore could not be assumed to operate at a much smaller or larger size. Recall our original application of stores. It might be that practices employed by store C, Trader Carrie’s, do not easily scale to larger or smaller operations. Al’s Pantry (store A) is a much smaller operation and just trying to keep the store in operation with ten employees may be a major challenge. Perhaps all of the stores offer 24 hour a day operation. During the slow time after midnight, Trader Carrie’s could have just one employee working. Meanwhile Al’s Pantry could not stay in business with one third of an employee working at 3 AM!</p>
+<p>Similarly, Trader Carrie’s may not scale to larger operations. In a mid-sized store, employees may feel more comfortable with all parts of the store but in a larger store, people work in separate departments such as the produce department and the meat department. This separation by departments may yield benefits or disbenefits.</p>
+<p>Up until this point, we have assumed constant returns to scale but there are other versions of returns to scale to better fit the needs of each application. Next, let’s incorporate modeling returns to scale.</p>
 </div>
 <div id="returns-to-scale" class="section level2" number="5.6">
 <h2><span class="header-section-number">5.6</span> Returns to Scale</h2>
-<p>Let’s also add a constraint that will accommodate returns to scale. All it needs to do is constrain the sum of the <span class="math inline">\(\lambda\)</span> variables equal to 1 enforces variables returns to scale or VRS. or redundant under CRS. <br />
-</p>
+<p>Let’s also add a constraint that will accommodate returns to scale. All it needs to do is constrain the sum of the <span class="math inline">\(\lambda\)</span> variables equal to 1 enforces variables returns to scale or VRS. or redundant under CRS. </p>
 <p><span class="math display" id="eq:LPBCCIOE">\[
 \begin{split}
 \begin{aligned}
@@ -1142,10 +1131,8 @@ D
  \end{split}
   \tag{5.3} 
 \]</span></p>
-<p>To incorporate this, we can add another constraint to our previous model and solve it. Let’s define a parameter, “RTS” to describe which returns to scale assumption we are using and only add the VRS constraint when RTS=“VRS.”<br />
-</p>
-<p>The other very common returns to scale option is constant returns to scale or CRS which is what we have used up to this point. For CRS, you can delete the VRS constraint but it may be helpful in some implementations to maintain a consistent model size for reading out sensitivity information. To maintain the number of rows (constraints) we can make it a redundant constraint by constraining the sum of <span class="math inline">\(\lambda\)</span> to be greater than or equal to zero, <span class="math inline">\(\sum_{j=1}^{n} \lambda_j \geq 0\)</span> Since <span class="math inline">\(\lambda\)</span>’s are by definition non-negative, the sum of <span class="math inline">\(\lambda\)</span>’s is also non-negative and therefore the constraint is superfluous or redundant.<br />
-</p>
+<p>To incorporate this, we can add another constraint to our previous model and solve it. Let’s define a parameter, “RTS” to describe which returns to scale assumption we are using and only add the VRS constraint when RTS=“VRS.”</p>
+<p>The other very common returns to scale option is constant returns to scale or CRS which is what we have used up to this point. For CRS, you can delete the VRS constraint but it may be helpful in some implementations to maintain a consistent model size for reading out sensitivity information. To maintain the number of rows (constraints) we can make it a redundant constraint by constraining the sum of <span class="math inline">\(\lambda\)</span> to be greater than or equal to zero, <span class="math inline">\(\sum_{j=1}^{n} \lambda_j \geq 0\)</span> Since <span class="math inline">\(\lambda\)</span>’s are by definition non-negative, the sum of <span class="math inline">\(\lambda\)</span>’s is also non-negative and therefore the constraint is superfluous or redundant.</p>
 <div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="data-envelopment-analysis.html#cb134-1" aria-hidden="true" tabindex="-1"></a>RTS<span class="ot">&lt;-</span><span class="st">&quot;VRS&quot;</span></span>
 <span id="cb134-2"><a href="data-envelopment-analysis.html#cb134-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>ND) {</span>
 <span id="cb134-3"><a href="data-envelopment-analysis.html#cb134-3" aria-hidden="true" tabindex="-1"></a>  </span>
@@ -1283,8 +1270,7 @@ D
 </tr>
 </tbody>
 </table>
-<p>Notice that the efficiencies have generally increased or stayed the same. Whereas earlier three out of four DMUs were inefficient, now three out of four are efficient. One way of thinking of returns to scale is whether doubling the inputs should be expected to result in doubling the outputs that should be achieved. Another way to think of it is whether it is fair to think of scaling up or down an efficient significantly to set a performance target for a much bigger or smaller unit. For example, would it be <em>fair</em> to compare a small convenience store such as Al’s Pantry or to use a common realworld example, 7-11, to a CostCo store scaled down by a factor of a 100? Much more could be said about returns to scale.<br />
-</p>
+<p>Notice that the efficiencies have generally increased or stayed the same. Whereas earlier three out of four DMUs were inefficient, now three out of four are efficient. One way of thinking of returns to scale is whether doubling the inputs should be expected to result in doubling the outputs that should be achieved. Another way to think of it is whether it is fair to think of scaling up or down an efficient significantly to set a performance target for a much bigger or smaller unit. For example, would it be <em>fair</em> to compare a small convenience store such as Al’s Pantry or to use a common realworld example, 7-11, to a CostCo store scaled down by a factor of a 100? Much more could be said about returns to scale.</p>
 <div class="figure"><span style="display:block;" id="fig:DEA-VRS-Frontier-Plot"></span>
 <img src="OMUR_files/figure-html/DEA-VRS-Frontier-Plot-1.png" alt="BCC (VRS) Efficiency Frontier" width="672" />
 <p class="caption">
@@ -1685,26 +1671,22 @@ D
 </div>
 <div id="multiple-inputs-and-multiple-outputs" class="section level2" number="5.7">
 <h2><span class="header-section-number">5.7</span> Multiple Inputs and Multiple Outputs</h2>
-<p>Using DEA for two-dimensional examples such as the one-input, one-output model is easy to draw and visualize but overkill and not generally very useful.<br />
-</p>
-<p>Let’s move on to a larger application of examining technology transfer success from university research by revisiting <span class="citation">(<a href="#ref-AndersonMeasuringefficiencyuniversity2007" role="doc-biblioref">Anderson, Daim, and Lavoie 2007</a>)</span>. This paper used data from the Association of University Technology Managers, AUTM, and their 2004 survey. We will start by loading the data from the paper. The dataset can be accessed as a comma separated file (CSV) format from our github repository. Note that in RStudio, many datasets can be easily loaded using the <code>Import Dataset</code>command from under the File pulldown command. This provides a nice graphical user interface wrapper around various importing functions with a preview of the imported data along with R code that can be copied to an R script or RMarkdown document.<br />
-</p>
-<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="data-envelopment-analysis.html#cb136-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span></code></pre></div>
-<pre><code>## Warning: package &#39;readr&#39; was built under R version 4.1.2</code></pre>
-<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="data-envelopment-analysis.html#cb138-1" aria-hidden="true" tabindex="-1"></a>univ_lic_2007 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;univ_lic_2007.csv&quot;</span>, <span class="at">show_col_types=</span><span class="cn">FALSE</span>)</span></code></pre></div>
-<p>Next, it is always helpful to look over the dataset. The names of the columns will be long and awkward for displaying results. Let’s abbreviate the names to make it more manageable.<br />
-</p>
-<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="data-envelopment-analysis.html#cb139-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(univ_lic_2007) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;University&quot;</span>, <span class="st">&quot;LicInc&quot;</span>, </span>
-<span id="cb139-2"><a href="data-envelopment-analysis.html#cb139-2" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;LicOpt&quot;</span>, <span class="st">&quot;Startup&quot;</span>, </span>
-<span id="cb139-3"><a href="data-envelopment-analysis.html#cb139-3" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;PatFile&quot;</span>, <span class="st">&quot;PatIss&quot;</span>, <span class="st">&quot;Spend&quot;</span>)</span>
-<span id="cb139-4"><a href="data-envelopment-analysis.html#cb139-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb139-5"><a href="data-envelopment-analysis.html#cb139-5" aria-hidden="true" tabindex="-1"></a>utt2007 <span class="ot">&lt;-</span> univ_lic_2007 [<span class="dv">1</span><span class="sc">:</span><span class="dv">25</span>,] <span class="co"># Use first 25 universities</span></span>
-<span id="cb139-6"><a href="data-envelopment-analysis.html#cb139-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb139-7"><a href="data-envelopment-analysis.html#cb139-7" aria-hidden="true" tabindex="-1"></a>utt2007 <span class="ot">&lt;-</span> utt2007 [,<span class="sc">-</span><span class="dv">5</span>] <span class="co"># Drop the fifth column (Patents Filed)</span></span>
-<span id="cb139-8"><a href="data-envelopment-analysis.html#cb139-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb139-9"><a href="data-envelopment-analysis.html#cb139-9" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">head</span>(utt2007), <span class="at">booktabs=</span>T, </span>
-<span id="cb139-10"><a href="data-envelopment-analysis.html#cb139-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption=</span><span class="st">&quot;Simplified Data for University Technology Transfer&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb139-11"><a href="data-envelopment-analysis.html#cb139-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<p>Using DEA for two-dimensional examples such as the one-input, one-output model is easy to draw and visualize but overkill and not generally very useful.</p>
+<p>Let’s move on to a larger application of examining technology transfer success from university research by revisiting <span class="citation">(<a href="#ref-AndersonMeasuringefficiencyuniversity2007" role="doc-biblioref">Anderson, Daim, and Lavoie 2007</a>)</span>. This paper used data from the Association of University Technology Managers, AUTM, and their 2004 survey. We will start by loading the data from the paper. The dataset can be accessed as a comma separated file (CSV) format from our github repository. Note that in RStudio, many datasets can be easily loaded using the <code>Import Dataset</code>command from under the File pulldown command. This provides a nice graphical user interface wrapper around various importing functions with a preview of the imported data along with R code that can be copied to an R script or RMarkdown document.</p>
+<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="data-envelopment-analysis.html#cb136-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb136-2"><a href="data-envelopment-analysis.html#cb136-2" aria-hidden="true" tabindex="-1"></a>univ_lic_2007 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;univ_lic_2007.csv&quot;</span>, <span class="at">show_col_types=</span><span class="cn">FALSE</span>)</span></code></pre></div>
+<p>Next, it is always helpful to look over the dataset. The names of the columns will be long and awkward for displaying results. Let’s abbreviate the names to make it more manageable.</p>
+<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="data-envelopment-analysis.html#cb137-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(univ_lic_2007) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;University&quot;</span>, <span class="st">&quot;LicInc&quot;</span>, </span>
+<span id="cb137-2"><a href="data-envelopment-analysis.html#cb137-2" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;LicOpt&quot;</span>, <span class="st">&quot;Startup&quot;</span>, </span>
+<span id="cb137-3"><a href="data-envelopment-analysis.html#cb137-3" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;PatFile&quot;</span>, <span class="st">&quot;PatIss&quot;</span>, <span class="st">&quot;Spend&quot;</span>)</span>
+<span id="cb137-4"><a href="data-envelopment-analysis.html#cb137-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb137-5"><a href="data-envelopment-analysis.html#cb137-5" aria-hidden="true" tabindex="-1"></a>utt2007 <span class="ot">&lt;-</span> univ_lic_2007 [<span class="dv">1</span><span class="sc">:</span><span class="dv">25</span>,] <span class="co"># Use first 25 universities</span></span>
+<span id="cb137-6"><a href="data-envelopment-analysis.html#cb137-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb137-7"><a href="data-envelopment-analysis.html#cb137-7" aria-hidden="true" tabindex="-1"></a>utt2007 <span class="ot">&lt;-</span> utt2007 [,<span class="sc">-</span><span class="dv">5</span>] <span class="co"># Drop the fifth column (Patents Filed)</span></span>
+<span id="cb137-8"><a href="data-envelopment-analysis.html#cb137-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb137-9"><a href="data-envelopment-analysis.html#cb137-9" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">head</span>(utt2007), <span class="at">booktabs=</span>T, </span>
+<span id="cb137-10"><a href="data-envelopment-analysis.html#cb137-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption=</span><span class="st">&quot;Simplified Data for University Technology Transfer&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb137-11"><a href="data-envelopment-analysis.html#cb137-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:Simplify-data">TABLE 5.10: </span>Simplified Data for University Technology Transfer
@@ -1856,40 +1838,40 @@ U of Florida
 </table>
 <p>Rather than using the full dataset. We are going to simplify the data a little. First we limit it to just the first 25 universities instead of the full set of 54. Second, we will drop the measure of patents filed.</p>
 <p>Now, let’s prepare our data for the upcoming analyses.</p>
-<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="data-envelopment-analysis.html#cb140-1" aria-hidden="true" tabindex="-1"></a>xdata <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(utt2007 [,<span class="dv">6</span>])</span>
-<span id="cb140-2"><a href="data-envelopment-analysis.html#cb140-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(xdata)<span class="ot">&lt;-</span><span class="fu">as.matrix</span>(utt2007[,<span class="dv">1</span>])</span>
-<span id="cb140-3"><a href="data-envelopment-analysis.html#cb140-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb140-4"><a href="data-envelopment-analysis.html#cb140-4" aria-hidden="true" tabindex="-1"></a>ydata <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(utt2007 [,<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>])</span>
-<span id="cb140-5"><a href="data-envelopment-analysis.html#cb140-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(ydata)<span class="ot">&lt;-</span><span class="fu">as.matrix</span>(utt2007[,<span class="dv">1</span>])</span>
-<span id="cb140-6"><a href="data-envelopment-analysis.html#cb140-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb140-7"><a href="data-envelopment-analysis.html#cb140-7" aria-hidden="true" tabindex="-1"></a>Xnames <span class="ot">&lt;-</span> <span class="fu">colnames</span>(xdata)</span>
-<span id="cb140-8"><a href="data-envelopment-analysis.html#cb140-8" aria-hidden="true" tabindex="-1"></a>Ynames <span class="ot">&lt;-</span> <span class="fu">colnames</span>(ydata)</span>
-<span id="cb140-9"><a href="data-envelopment-analysis.html#cb140-9" aria-hidden="true" tabindex="-1"></a>DMUnames <span class="ot">&lt;-</span><span class="fu">list</span>(<span class="fu">as.matrix</span>(utt2007[,<span class="dv">1</span>]))</span>
-<span id="cb140-10"><a href="data-envelopment-analysis.html#cb140-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb140-11"><a href="data-envelopment-analysis.html#cb140-11" aria-hidden="true" tabindex="-1"></a><span class="fu">dimnames</span>(xdata)              <span class="ot">&lt;-</span> <span class="fu">c</span>(DMUnames,Xnames)</span>
-<span id="cb140-12"><a href="data-envelopment-analysis.html#cb140-12" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(ydata)              <span class="ot">&lt;-</span> Ynames</span>
-<span id="cb140-13"><a href="data-envelopment-analysis.html#cb140-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb140-14"><a href="data-envelopment-analysis.html#cb140-14" aria-hidden="true" tabindex="-1"></a>ND <span class="ot">&lt;-</span> <span class="fu">nrow</span>(xdata)  <span class="co"># Number of DMUs (universities)</span></span>
-<span id="cb140-15"><a href="data-envelopment-analysis.html#cb140-15" aria-hidden="true" tabindex="-1"></a>NX <span class="ot">&lt;-</span> <span class="fu">ncol</span>(xdata)  <span class="co"># Number of inputs (just 1 in this case)</span></span>
-<span id="cb140-16"><a href="data-envelopment-analysis.html#cb140-16" aria-hidden="true" tabindex="-1"></a>NY <span class="ot">&lt;-</span> <span class="fu">ncol</span>(ydata)  <span class="co"># Number of outputs</span></span>
-<span id="cb140-17"><a href="data-envelopment-analysis.html#cb140-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb140-18"><a href="data-envelopment-analysis.html#cb140-18" aria-hidden="true" tabindex="-1"></a>res.efficiency <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rep</span>(<span class="sc">-</span><span class="fl">1.0</span>, ND), <span class="at">nrow=</span>ND, <span class="at">ncol=</span><span class="dv">1</span>)</span>
-<span id="cb140-19"><a href="data-envelopment-analysis.html#cb140-19" aria-hidden="true" tabindex="-1"></a>res.lambda     <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rep</span>(<span class="sc">-</span><span class="fl">1.0</span>, ND<span class="sc">^</span><span class="dv">2</span>), <span class="at">nrow=</span>ND,<span class="at">ncol=</span>ND)</span>
-<span id="cb140-20"><a href="data-envelopment-analysis.html#cb140-20" aria-hidden="true" tabindex="-1"></a><span class="fu">dimnames</span>(res.efficiency) <span class="ot">&lt;-</span> <span class="fu">c</span>(DMUnames,<span class="st">&quot;CCR-IO&quot;</span>)</span>
-<span id="cb140-21"><a href="data-envelopment-analysis.html#cb140-21" aria-hidden="true" tabindex="-1"></a><span class="fu">dimnames</span>(res.lambda)     <span class="ot">&lt;-</span> <span class="fu">c</span>(DMUnames,DMUnames)</span>
-<span id="cb140-22"><a href="data-envelopment-analysis.html#cb140-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb140-23"><a href="data-envelopment-analysis.html#cb140-23" aria-hidden="true" tabindex="-1"></a><span class="co">#Define printable names to be used as appropriate</span></span>
-<span id="cb140-24"><a href="data-envelopment-analysis.html#cb140-24" aria-hidden="true" tabindex="-1"></a>ynames_printable<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&quot;Licensing Income</span><span class="sc">\n</span><span class="st">($M)&quot;</span>, </span>
-<span id="cb140-25"><a href="data-envelopment-analysis.html#cb140-25" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&quot;Licenses and </span><span class="sc">\n</span><span class="st"> Options Executed&quot;</span>,</span>
-<span id="cb140-26"><a href="data-envelopment-analysis.html#cb140-26" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&quot;Startup Companies&quot;</span>,</span>
-<span id="cb140-27"><a href="data-envelopment-analysis.html#cb140-27" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&quot;US Patents Issued&quot;</span>)</span>
-<span id="cb140-28"><a href="data-envelopment-analysis.html#cb140-28" aria-hidden="true" tabindex="-1"></a>xnames_printable<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&quot;Total Research</span><span class="sc">\n</span><span class="st"> Spending ($M)&quot;</span>)</span>
-<span id="cb140-29"><a href="data-envelopment-analysis.html#cb140-29" aria-hidden="true" tabindex="-1"></a>DMUnames_printable <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(utt2007[,<span class="dv">1</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="data-envelopment-analysis.html#cb138-1" aria-hidden="true" tabindex="-1"></a>xdata <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(utt2007 [,<span class="dv">6</span>])</span>
+<span id="cb138-2"><a href="data-envelopment-analysis.html#cb138-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(xdata)<span class="ot">&lt;-</span><span class="fu">as.matrix</span>(utt2007[,<span class="dv">1</span>])</span>
+<span id="cb138-3"><a href="data-envelopment-analysis.html#cb138-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb138-4"><a href="data-envelopment-analysis.html#cb138-4" aria-hidden="true" tabindex="-1"></a>ydata <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(utt2007 [,<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>])</span>
+<span id="cb138-5"><a href="data-envelopment-analysis.html#cb138-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(ydata)<span class="ot">&lt;-</span><span class="fu">as.matrix</span>(utt2007[,<span class="dv">1</span>])</span>
+<span id="cb138-6"><a href="data-envelopment-analysis.html#cb138-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb138-7"><a href="data-envelopment-analysis.html#cb138-7" aria-hidden="true" tabindex="-1"></a>Xnames <span class="ot">&lt;-</span> <span class="fu">colnames</span>(xdata)</span>
+<span id="cb138-8"><a href="data-envelopment-analysis.html#cb138-8" aria-hidden="true" tabindex="-1"></a>Ynames <span class="ot">&lt;-</span> <span class="fu">colnames</span>(ydata)</span>
+<span id="cb138-9"><a href="data-envelopment-analysis.html#cb138-9" aria-hidden="true" tabindex="-1"></a>DMUnames <span class="ot">&lt;-</span><span class="fu">list</span>(<span class="fu">as.matrix</span>(utt2007[,<span class="dv">1</span>]))</span>
+<span id="cb138-10"><a href="data-envelopment-analysis.html#cb138-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb138-11"><a href="data-envelopment-analysis.html#cb138-11" aria-hidden="true" tabindex="-1"></a><span class="fu">dimnames</span>(xdata)              <span class="ot">&lt;-</span> <span class="fu">c</span>(DMUnames,Xnames)</span>
+<span id="cb138-12"><a href="data-envelopment-analysis.html#cb138-12" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(ydata)              <span class="ot">&lt;-</span> Ynames</span>
+<span id="cb138-13"><a href="data-envelopment-analysis.html#cb138-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb138-14"><a href="data-envelopment-analysis.html#cb138-14" aria-hidden="true" tabindex="-1"></a>ND <span class="ot">&lt;-</span> <span class="fu">nrow</span>(xdata)  <span class="co"># Number of DMUs (universities)</span></span>
+<span id="cb138-15"><a href="data-envelopment-analysis.html#cb138-15" aria-hidden="true" tabindex="-1"></a>NX <span class="ot">&lt;-</span> <span class="fu">ncol</span>(xdata)  <span class="co"># Number of inputs (just 1 in this case)</span></span>
+<span id="cb138-16"><a href="data-envelopment-analysis.html#cb138-16" aria-hidden="true" tabindex="-1"></a>NY <span class="ot">&lt;-</span> <span class="fu">ncol</span>(ydata)  <span class="co"># Number of outputs</span></span>
+<span id="cb138-17"><a href="data-envelopment-analysis.html#cb138-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb138-18"><a href="data-envelopment-analysis.html#cb138-18" aria-hidden="true" tabindex="-1"></a>res.efficiency <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rep</span>(<span class="sc">-</span><span class="fl">1.0</span>, ND), <span class="at">nrow=</span>ND, <span class="at">ncol=</span><span class="dv">1</span>)</span>
+<span id="cb138-19"><a href="data-envelopment-analysis.html#cb138-19" aria-hidden="true" tabindex="-1"></a>res.lambda     <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rep</span>(<span class="sc">-</span><span class="fl">1.0</span>, ND<span class="sc">^</span><span class="dv">2</span>), <span class="at">nrow=</span>ND,<span class="at">ncol=</span>ND)</span>
+<span id="cb138-20"><a href="data-envelopment-analysis.html#cb138-20" aria-hidden="true" tabindex="-1"></a><span class="fu">dimnames</span>(res.efficiency) <span class="ot">&lt;-</span> <span class="fu">c</span>(DMUnames,<span class="st">&quot;CCR-IO&quot;</span>)</span>
+<span id="cb138-21"><a href="data-envelopment-analysis.html#cb138-21" aria-hidden="true" tabindex="-1"></a><span class="fu">dimnames</span>(res.lambda)     <span class="ot">&lt;-</span> <span class="fu">c</span>(DMUnames,DMUnames)</span>
+<span id="cb138-22"><a href="data-envelopment-analysis.html#cb138-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb138-23"><a href="data-envelopment-analysis.html#cb138-23" aria-hidden="true" tabindex="-1"></a><span class="co">#Define printable names to be used as appropriate</span></span>
+<span id="cb138-24"><a href="data-envelopment-analysis.html#cb138-24" aria-hidden="true" tabindex="-1"></a>ynames_printable<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&quot;Licensing Income</span><span class="sc">\n</span><span class="st">($M)&quot;</span>, </span>
+<span id="cb138-25"><a href="data-envelopment-analysis.html#cb138-25" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&quot;Licenses and </span><span class="sc">\n</span><span class="st"> Options Executed&quot;</span>,</span>
+<span id="cb138-26"><a href="data-envelopment-analysis.html#cb138-26" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&quot;Startup Companies&quot;</span>,</span>
+<span id="cb138-27"><a href="data-envelopment-analysis.html#cb138-27" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&quot;US Patents Issued&quot;</span>)</span>
+<span id="cb138-28"><a href="data-envelopment-analysis.html#cb138-28" aria-hidden="true" tabindex="-1"></a>xnames_printable<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&quot;Total Research</span><span class="sc">\n</span><span class="st"> Spending ($M)&quot;</span>)</span>
+<span id="cb138-29"><a href="data-envelopment-analysis.html#cb138-29" aria-hidden="true" tabindex="-1"></a>DMUnames_printable <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(utt2007[,<span class="dv">1</span>])</span></code></pre></div>
 <p>As usual, let’s preview the data.<br />
 </p>
-<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="data-envelopment-analysis.html#cb141-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">head</span>(<span class="fu">cbind</span>(xdata,ydata)), <span class="at">booktabs=</span>T, </span>
-<span id="cb141-2"><a href="data-envelopment-analysis.html#cb141-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption=</span><span class="st">&quot;Selected University Technology </span></span>
-<span id="cb141-3"><a href="data-envelopment-analysis.html#cb141-3" aria-hidden="true" tabindex="-1"></a><span class="st">     Transfer Characteristics.&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="data-envelopment-analysis.html#cb139-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">head</span>(<span class="fu">cbind</span>(xdata,ydata)), <span class="at">booktabs=</span>T, </span>
+<span id="cb139-2"><a href="data-envelopment-analysis.html#cb139-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption=</span><span class="st">&quot;Selected University Technology </span></span>
+<span id="cb139-3"><a href="data-envelopment-analysis.html#cb139-3" aria-hidden="true" tabindex="-1"></a><span class="st">     Transfer Characteristics.&quot;</span>)</span></code></pre></div>
 <table>
 <caption>
 <span id="tab:unnamed-chunk-23">TABLE 5.11: </span>Selected University Technology
@@ -2041,47 +2023,47 @@ U of Florida
 </table>
 <p>Now, let’s move on to the DEA input-output diagram. We use the total research spending as an input and then five separate outputs for the various dimensions of technology transfer success measured by AUTM. This can be visualized with our input-output diagram.<br />
 </p>
-<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="data-envelopment-analysis.html#cb142-1" aria-hidden="true" tabindex="-1"></a>Figure <span class="ot">&lt;-</span> <span class="fu">DrawIOdiagram</span> (xnames_printable, </span>
-<span id="cb142-2"><a href="data-envelopment-analysis.html#cb142-2" aria-hidden="true" tabindex="-1"></a>                         ynames_printable,</span>
-<span id="cb142-3"><a href="data-envelopment-analysis.html#cb142-3" aria-hidden="true" tabindex="-1"></a>                        <span class="st">&#39;&quot;</span><span class="sc">\n\n</span><span class="st">University</span><span class="sc">\n</span><span class="st">Technology</span><span class="sc">\n</span><span class="st">Transfer</span><span class="sc">\n\n</span><span class="st">&quot;&#39;</span>)</span>
-<span id="cb142-4"><a href="data-envelopment-analysis.html#cb142-4" aria-hidden="true" tabindex="-1"></a>tmp<span class="ot">&lt;-</span><span class="fu">capture.output</span>(<span class="fu">rsvg_png</span>(</span>
-<span id="cb142-5"><a href="data-envelopment-analysis.html#cb142-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">charToRaw</span>(<span class="fu">export_svg</span>(Figure)),</span>
-<span id="cb142-6"><a href="data-envelopment-analysis.html#cb142-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">&#39;images/DEA_Univ_IO.PNG&#39;</span>))</span>
-<span id="cb142-7"><a href="data-envelopment-analysis.html#cb142-7" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(</span>
-<span id="cb142-8"><a href="data-envelopment-analysis.html#cb142-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;images/DEA_Univ_IO.PNG&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="data-envelopment-analysis.html#cb140-1" aria-hidden="true" tabindex="-1"></a>Figure <span class="ot">&lt;-</span> <span class="fu">DrawIOdiagram</span> (xnames_printable, </span>
+<span id="cb140-2"><a href="data-envelopment-analysis.html#cb140-2" aria-hidden="true" tabindex="-1"></a>                         ynames_printable,</span>
+<span id="cb140-3"><a href="data-envelopment-analysis.html#cb140-3" aria-hidden="true" tabindex="-1"></a>                        <span class="st">&#39;&quot;</span><span class="sc">\n\n</span><span class="st">University</span><span class="sc">\n</span><span class="st">Technology</span><span class="sc">\n</span><span class="st">Transfer</span><span class="sc">\n\n</span><span class="st">&quot;&#39;</span>)</span>
+<span id="cb140-4"><a href="data-envelopment-analysis.html#cb140-4" aria-hidden="true" tabindex="-1"></a>tmp<span class="ot">&lt;-</span><span class="fu">capture.output</span>(<span class="fu">rsvg_png</span>(</span>
+<span id="cb140-5"><a href="data-envelopment-analysis.html#cb140-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">charToRaw</span>(<span class="fu">export_svg</span>(Figure)),</span>
+<span id="cb140-6"><a href="data-envelopment-analysis.html#cb140-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">&#39;images/DEA_Univ_IO.PNG&#39;</span>))</span>
+<span id="cb140-7"><a href="data-envelopment-analysis.html#cb140-7" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(</span>
+<span id="cb140-8"><a href="data-envelopment-analysis.html#cb140-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;images/DEA_Univ_IO.PNG&quot;</span>)</span></code></pre></div>
 <p><img src="images/DEA_Univ_IO.PNG" width="4in" /></p>
-<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb143-1"><a href="data-envelopment-analysis.html#cb143-1" aria-hidden="true" tabindex="-1"></a>RTS<span class="ot">&lt;-</span><span class="st">&quot;CRS&quot;</span></span>
-<span id="cb143-2"><a href="data-envelopment-analysis.html#cb143-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>ND) {</span>
-<span id="cb143-3"><a href="data-envelopment-analysis.html#cb143-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb143-4"><a href="data-envelopment-analysis.html#cb143-4" aria-hidden="true" tabindex="-1"></a>  modUTT_CCR <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">|&gt;</span></span>
-<span id="cb143-5"><a href="data-envelopment-analysis.html#cb143-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_variable</span>(vlambda[j], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, </span>
-<span id="cb143-6"><a href="data-envelopment-analysis.html#cb143-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
-<span id="cb143-7"><a href="data-envelopment-analysis.html#cb143-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_variable</span>(vtheta, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb143-8"><a href="data-envelopment-analysis.html#cb143-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_objective</span>(vtheta, <span class="st">&quot;min&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb143-9"><a href="data-envelopment-analysis.html#cb143-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_constraint</span>(<span class="fu">sum_expr</span>(vlambda[j] <span class="sc">*</span> xdata[j,i], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND) </span>
-<span id="cb143-10"><a href="data-envelopment-analysis.html#cb143-10" aria-hidden="true" tabindex="-1"></a>                   <span class="sc">&lt;=</span> vtheta <span class="sc">*</span> xdata[k,i], <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>NX, </span>
-<span id="cb143-11"><a href="data-envelopment-analysis.html#cb143-11" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.show_progress_bar=</span><span class="cn">FALSE</span> ) <span class="sc">|&gt;</span></span>
-<span id="cb143-12"><a href="data-envelopment-analysis.html#cb143-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_constraint</span>(<span class="fu">sum_expr</span>(vlambda[j] <span class="sc">*</span> ydata[j,r], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND) </span>
-<span id="cb143-13"><a href="data-envelopment-analysis.html#cb143-13" aria-hidden="true" tabindex="-1"></a>                   <span class="sc">&gt;=</span> ydata[k,r], <span class="at">r =</span> <span class="dv">1</span><span class="sc">:</span>NY, </span>
-<span id="cb143-14"><a href="data-envelopment-analysis.html#cb143-14" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.show_progress_bar=</span><span class="cn">FALSE</span> ) </span>
-<span id="cb143-15"><a href="data-envelopment-analysis.html#cb143-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (RTS<span class="sc">==</span><span class="st">&quot;VRS&quot;</span>) {result <span class="ot">&lt;-</span> <span class="fu">add_constraint</span>(result, </span>
-<span id="cb143-16"><a href="data-envelopment-analysis.html#cb143-16" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">sum_expr</span>(vlambda[j],<span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND) <span class="sc">==</span> <span class="dv">1</span>) }  </span>
-<span id="cb143-17"><a href="data-envelopment-analysis.html#cb143-17" aria-hidden="true" tabindex="-1"></a>        <span class="co">#Returns to Scale</span></span>
-<span id="cb143-18"><a href="data-envelopment-analysis.html#cb143-18" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(modUTT_CCR, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>)) </span>
-<span id="cb143-19"><a href="data-envelopment-analysis.html#cb143-19" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb143-20"><a href="data-envelopment-analysis.html#cb143-20" aria-hidden="true" tabindex="-1"></a>  res.efficiency[k] <span class="ot">&lt;-</span>  <span class="fu">get_solution</span>(res, vtheta)       </span>
-<span id="cb143-21"><a href="data-envelopment-analysis.html#cb143-21" aria-hidden="true" tabindex="-1"></a>  res.lambda[k,] <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">as.matrix</span>(<span class="fu">as.numeric</span>(</span>
-<span id="cb143-22"><a href="data-envelopment-analysis.html#cb143-22" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">get_solution</span>(res, vlambda[j])[,<span class="dv">3</span>] )))</span>
-<span id="cb143-23"><a href="data-envelopment-analysis.html#cb143-23" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="data-envelopment-analysis.html#cb144-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">cbind</span>(res.efficiency, <span class="fu">poscol</span>(res.lambda)),</span>
-<span id="cb144-2"><a href="data-envelopment-analysis.html#cb144-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">booktabs=</span>T, <span class="at">digits=</span><span class="dv">4</span>, <span class="at">escape=</span>F,</span>
-<span id="cb144-3"><a href="data-envelopment-analysis.html#cb144-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">&quot;$</span><span class="sc">\\</span><span class="st">theta^{CRS}$&quot;</span>, <span class="st">&quot;$</span><span class="sc">\\</span><span class="st">lambda_{</span><span class="sc">\\</span><span class="st">text{NYU}}$&quot;</span>,</span>
-<span id="cb144-4"><a href="data-envelopment-analysis.html#cb144-4" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;$</span><span class="sc">\\</span><span class="st">lambda_{</span><span class="sc">\\</span><span class="st">text{UW-Madison}}$&quot;</span>, </span>
-<span id="cb144-5"><a href="data-envelopment-analysis.html#cb144-5" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;$</span><span class="sc">\\</span><span class="st">lambda_{</span><span class="sc">\\</span><span class="st">text{Cal Tech}}$&quot;</span>),</span>
-<span id="cb144-6"><a href="data-envelopment-analysis.html#cb144-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption=</span><span class="st">&quot;Results from University Technology </span></span>
-<span id="cb144-7"><a href="data-envelopment-analysis.html#cb144-7" aria-hidden="true" tabindex="-1"></a><span class="st">     Transfer Example (CRS)&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb144-8"><a href="data-envelopment-analysis.html#cb144-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> </span>
-<span id="cb144-9"><a href="data-envelopment-analysis.html#cb144-9" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">c</span>(<span class="st">&quot;hold_position&quot;</span>, <span class="st">&quot;scale_down&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="data-envelopment-analysis.html#cb141-1" aria-hidden="true" tabindex="-1"></a>RTS<span class="ot">&lt;-</span><span class="st">&quot;CRS&quot;</span></span>
+<span id="cb141-2"><a href="data-envelopment-analysis.html#cb141-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>ND) {</span>
+<span id="cb141-3"><a href="data-envelopment-analysis.html#cb141-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb141-4"><a href="data-envelopment-analysis.html#cb141-4" aria-hidden="true" tabindex="-1"></a>  modUTT_CCR <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">|&gt;</span></span>
+<span id="cb141-5"><a href="data-envelopment-analysis.html#cb141-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_variable</span>(vlambda[j], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, </span>
+<span id="cb141-6"><a href="data-envelopment-analysis.html#cb141-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb141-7"><a href="data-envelopment-analysis.html#cb141-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_variable</span>(vtheta, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb141-8"><a href="data-envelopment-analysis.html#cb141-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_objective</span>(vtheta, <span class="st">&quot;min&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb141-9"><a href="data-envelopment-analysis.html#cb141-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_constraint</span>(<span class="fu">sum_expr</span>(vlambda[j] <span class="sc">*</span> xdata[j,i], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND) </span>
+<span id="cb141-10"><a href="data-envelopment-analysis.html#cb141-10" aria-hidden="true" tabindex="-1"></a>                   <span class="sc">&lt;=</span> vtheta <span class="sc">*</span> xdata[k,i], <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>NX, </span>
+<span id="cb141-11"><a href="data-envelopment-analysis.html#cb141-11" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.show_progress_bar=</span><span class="cn">FALSE</span> ) <span class="sc">|&gt;</span></span>
+<span id="cb141-12"><a href="data-envelopment-analysis.html#cb141-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_constraint</span>(<span class="fu">sum_expr</span>(vlambda[j] <span class="sc">*</span> ydata[j,r], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND) </span>
+<span id="cb141-13"><a href="data-envelopment-analysis.html#cb141-13" aria-hidden="true" tabindex="-1"></a>                   <span class="sc">&gt;=</span> ydata[k,r], <span class="at">r =</span> <span class="dv">1</span><span class="sc">:</span>NY, </span>
+<span id="cb141-14"><a href="data-envelopment-analysis.html#cb141-14" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.show_progress_bar=</span><span class="cn">FALSE</span> ) </span>
+<span id="cb141-15"><a href="data-envelopment-analysis.html#cb141-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (RTS<span class="sc">==</span><span class="st">&quot;VRS&quot;</span>) {result <span class="ot">&lt;-</span> <span class="fu">add_constraint</span>(result, </span>
+<span id="cb141-16"><a href="data-envelopment-analysis.html#cb141-16" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">sum_expr</span>(vlambda[j],<span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND) <span class="sc">==</span> <span class="dv">1</span>) }  </span>
+<span id="cb141-17"><a href="data-envelopment-analysis.html#cb141-17" aria-hidden="true" tabindex="-1"></a>        <span class="co">#Returns to Scale</span></span>
+<span id="cb141-18"><a href="data-envelopment-analysis.html#cb141-18" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(modUTT_CCR, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>)) </span>
+<span id="cb141-19"><a href="data-envelopment-analysis.html#cb141-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb141-20"><a href="data-envelopment-analysis.html#cb141-20" aria-hidden="true" tabindex="-1"></a>  res.efficiency[k] <span class="ot">&lt;-</span>  <span class="fu">get_solution</span>(res, vtheta)       </span>
+<span id="cb141-21"><a href="data-envelopment-analysis.html#cb141-21" aria-hidden="true" tabindex="-1"></a>  res.lambda[k,] <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">as.matrix</span>(<span class="fu">as.numeric</span>(</span>
+<span id="cb141-22"><a href="data-envelopment-analysis.html#cb141-22" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">get_solution</span>(res, vlambda[j])[,<span class="dv">3</span>] )))</span>
+<span id="cb141-23"><a href="data-envelopment-analysis.html#cb141-23" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="data-envelopment-analysis.html#cb142-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">cbind</span>(res.efficiency, <span class="fu">poscol</span>(res.lambda)),</span>
+<span id="cb142-2"><a href="data-envelopment-analysis.html#cb142-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">booktabs=</span>T, <span class="at">digits=</span><span class="dv">4</span>, <span class="at">escape=</span>F,</span>
+<span id="cb142-3"><a href="data-envelopment-analysis.html#cb142-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">&quot;$</span><span class="sc">\\</span><span class="st">theta^{CRS}$&quot;</span>, <span class="st">&quot;$</span><span class="sc">\\</span><span class="st">lambda_{</span><span class="sc">\\</span><span class="st">text{NYU}}$&quot;</span>,</span>
+<span id="cb142-4"><a href="data-envelopment-analysis.html#cb142-4" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;$</span><span class="sc">\\</span><span class="st">lambda_{</span><span class="sc">\\</span><span class="st">text{UW-Madison}}$&quot;</span>, </span>
+<span id="cb142-5"><a href="data-envelopment-analysis.html#cb142-5" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;$</span><span class="sc">\\</span><span class="st">lambda_{</span><span class="sc">\\</span><span class="st">text{Cal Tech}}$&quot;</span>),</span>
+<span id="cb142-6"><a href="data-envelopment-analysis.html#cb142-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption=</span><span class="st">&quot;Results from University Technology </span></span>
+<span id="cb142-7"><a href="data-envelopment-analysis.html#cb142-7" aria-hidden="true" tabindex="-1"></a><span class="st">     Transfer Example (CRS)&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb142-8"><a href="data-envelopment-analysis.html#cb142-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> </span>
+<span id="cb142-9"><a href="data-envelopment-analysis.html#cb142-9" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">c</span>(<span class="st">&quot;hold_position&quot;</span>, <span class="st">&quot;scale_down&quot;</span>))</span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:full-table">TABLE 5.12: </span>Results from University Technology
@@ -2533,43 +2515,39 @@ U. of Chicago UCTech
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb145-1"><a href="data-envelopment-analysis.html#cb145-1" aria-hidden="true" tabindex="-1"></a>UTT_CCR.Res<span class="ot">&lt;-</span><span class="fu">cbind</span>(res.efficiency, res.lambda)</span></code></pre></div>
-<p>Note that the results are different from those in the UTT paper because the model is different and the data is trimmed. This model is an input-oriented model with constant returns to scale. In contrast, the UTT paper uses an output-oriented variable returns to scale model with a weight restriction relationship. Recall that the data is trimmed to the first 25 universities and patents filed is dropped as less important than patents issued.<br />
-</p>
-<p>Every DMU is compared to one or more of the efficient DMUs. In this case there are three efficient DMUs. These are New York University (NYU), University of Wisconsin at Madison (UW-Madison), and California Institute of Technology (Cal Tech). The <code>poscol</code> function from the <code>TRA</code> package trimmed out all of the unused columns in the matrix of lambdas.   This then left us with just the efficiency scores and the three columns with values of <span class="math inline">\(\lambda\)</span> for each of these efficient universities. Given the length of the names of the names of the universities, it would still exceed text size. The <code>kableExtra</code> package has an option of <code>scale_down</code> which makes it easy to fit a table in the printable area.<br />
-</p>
+<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb143-1"><a href="data-envelopment-analysis.html#cb143-1" aria-hidden="true" tabindex="-1"></a>UTT_CCR.Res<span class="ot">&lt;-</span><span class="fu">cbind</span>(res.efficiency, res.lambda)</span></code></pre></div>
+<p>Note that the results are different from those in the UTT paper because the model is different and the data is trimmed. This model is an input-oriented model with constant returns to scale. In contrast, the UTT paper uses an output-oriented variable returns to scale model with a weight restriction relationship. Recall that the data is trimmed to the first 25 universities and patents filed is dropped as less important than patents issued.</p>
+<p>Every DMU is compared to one or more of the efficient DMUs. In this case there are three efficient DMUs. These are New York University (NYU), University of Wisconsin at Madison (UW-Madison), and California Institute of Technology (Cal Tech). The <code>poscol</code> function from the <code>TRA</code> package trimmed out all of the unused columns in the matrix of lambdas.   This then left us with just the efficiency scores and the three columns with values of <span class="math inline">\(\lambda\)</span> for each of these efficient universities. Given the length of the names of the names of the universities, it would still exceed text size. The <code>kableExtra</code> package has an option of <code>scale_down</code> which makes it easy to fit a table in the printable area.</p>
 <p>The University of California System, UC-System, receives an efficiency score of 0.4663. It has a target made up of approximately 0.107 of New York University (NYU), 1.066 of the University of Wisconsin at Madison, 1.186 of Cal Tech that produces similar output using only 47% of the input. This means that if the UC-System were operating efficiently as defined in this model, it would be able to produce the same or more outputs as it actually did using only 47% of the input (Research Funding) as it actually used. This target of performance is made up more more than two other full universities and part of a third.</p>
-<p>Note that these values are rounded using the <code>digits=4</code> from <code>kable</code>.  The result of this is it masks odd some values of <span class="math inline">\(\lambda\)</span> that could warrant a more careful look. In particular, there may be very small positive or negative numbers in the table that are shown as 0.0000. These numbers are due to computational issues in the linear programming solvers and should be interpreted as zero. Rounding the results can make the tables easier for interpretation by the user. The pander packages makes it easy to round numbers to varying levels of precision. The small, nearly zero, values that may appear in DEA calculations can cause some computational difficulty. For example, testing for zero lambda values could miss cases where the value is approximately but not exactly zero.<br />
-<br />
-</p>
+<p>Note that these values are rounded using the <code>digits=4</code> from <code>kable</code>.  The result of this is it masks odd some values of <span class="math inline">\(\lambda\)</span> that could warrant a more careful look. In particular, there may be very small positive or negative numbers in the table that are shown as 0.0000. These numbers are due to computational issues in the linear programming solvers and should be interpreted as zero. Rounding the results can make the tables easier for interpretation by the user. The pander packages makes it easy to round numbers to varying levels of precision. The small, nearly zero, values that may appear in DEA calculations can cause some computational difficulty. For example, testing for zero lambda values could miss cases where the value is approximately but not exactly zero.</p>
 <p>Perhaps the leader of the UC-System would contend that running a ten campus university system with over a quarter million students is very much unlike running the others added together (although NYU is also a large system.) This could suggest a Variable Returns to Scale model which reflects that it operating at a very large and very small scale provide special challenges.</p>
 <p>Let’s compare the results from the constant and variable returns to scale cases. </p>
-<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb146-1"><a href="data-envelopment-analysis.html#cb146-1" aria-hidden="true" tabindex="-1"></a>RTS<span class="ot">&lt;-</span><span class="st">&quot;VRS&quot;</span></span>
-<span id="cb146-2"><a href="data-envelopment-analysis.html#cb146-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>ND) {</span>
-<span id="cb146-3"><a href="data-envelopment-analysis.html#cb146-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb146-4"><a href="data-envelopment-analysis.html#cb146-4" aria-hidden="true" tabindex="-1"></a>  modUTT_BCC <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>()                                    <span class="sc">|&gt;</span></span>
-<span id="cb146-5"><a href="data-envelopment-analysis.html#cb146-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_variable</span>(vlambda[j], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND, <span class="at">type=</span><span class="st">&quot;continuous&quot;</span>, </span>
-<span id="cb146-6"><a href="data-envelopment-analysis.html#cb146-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">lb =</span> <span class="dv">0</span>)                                      <span class="sc">|&gt;</span></span>
-<span id="cb146-7"><a href="data-envelopment-analysis.html#cb146-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_variable</span>(vtheta, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>)                 <span class="sc">|&gt;</span></span>
-<span id="cb146-8"><a href="data-envelopment-analysis.html#cb146-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_objective</span>(vtheta, <span class="st">&quot;min&quot;</span>)                              <span class="sc">|&gt;</span></span>
-<span id="cb146-9"><a href="data-envelopment-analysis.html#cb146-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_constraint</span>(<span class="fu">sum_expr</span>(vlambda[j] <span class="sc">*</span> xdata[j,i], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND) </span>
-<span id="cb146-10"><a href="data-envelopment-analysis.html#cb146-10" aria-hidden="true" tabindex="-1"></a>                   <span class="sc">&lt;=</span> vtheta <span class="sc">*</span> xdata[k,i], <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>NX, </span>
-<span id="cb146-11"><a href="data-envelopment-analysis.html#cb146-11" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.show_progress_bar=</span><span class="cn">FALSE</span> )                 <span class="sc">|&gt;</span></span>
-<span id="cb146-12"><a href="data-envelopment-analysis.html#cb146-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_constraint</span>(<span class="fu">sum_expr</span>(vlambda[j] <span class="sc">*</span> ydata[j,r], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND, </span>
-<span id="cb146-13"><a href="data-envelopment-analysis.html#cb146-13" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.show_progress_bar=</span><span class="cn">FALSE</span> ) </span>
-<span id="cb146-14"><a href="data-envelopment-analysis.html#cb146-14" aria-hidden="true" tabindex="-1"></a>                   <span class="sc">&gt;=</span> ydata[k,r], <span class="at">r =</span> <span class="dv">1</span><span class="sc">:</span>NY) </span>
-<span id="cb146-15"><a href="data-envelopment-analysis.html#cb146-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (RTS<span class="sc">==</span><span class="st">&quot;VRS&quot;</span>) {modUTT_BCC <span class="ot">&lt;-</span> </span>
-<span id="cb146-16"><a href="data-envelopment-analysis.html#cb146-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">add_constraint</span>(modUTT_BCC, </span>
-<span id="cb146-17"><a href="data-envelopment-analysis.html#cb146-17" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">sum_expr</span>(vlambda[j],<span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND) <span class="sc">==</span> <span class="dv">1</span>) }  </span>
-<span id="cb146-18"><a href="data-envelopment-analysis.html#cb146-18" aria-hidden="true" tabindex="-1"></a>                 <span class="co">#Returns to Scale</span></span>
-<span id="cb146-19"><a href="data-envelopment-analysis.html#cb146-19" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(modUTT_BCC, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>)) </span>
-<span id="cb146-20"><a href="data-envelopment-analysis.html#cb146-20" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb146-21"><a href="data-envelopment-analysis.html#cb146-21" aria-hidden="true" tabindex="-1"></a>    res.efficiency[k] <span class="ot">&lt;-</span> <span class="fu">get_solution</span>(res, vtheta)       </span>
-<span id="cb146-22"><a href="data-envelopment-analysis.html#cb146-22" aria-hidden="true" tabindex="-1"></a>    res.lambda[k,] <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">as.matrix</span>(<span class="fu">as.numeric</span>(</span>
-<span id="cb146-23"><a href="data-envelopment-analysis.html#cb146-23" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">get_solution</span>(res, vlambda[j])[,<span class="dv">3</span>] )))</span>
-<span id="cb146-24"><a href="data-envelopment-analysis.html#cb146-24" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb146-25"><a href="data-envelopment-analysis.html#cb146-25" aria-hidden="true" tabindex="-1"></a><span class="co">#UTT_BCC.Res&lt;-cbind(res.efficiency, res.lambda)</span></span>
-<span id="cb146-26"><a href="data-envelopment-analysis.html#cb146-26" aria-hidden="true" tabindex="-1"></a>UTT_BCC.Res<span class="ot">&lt;-</span>res.efficiency</span></code></pre></div>
+<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="data-envelopment-analysis.html#cb144-1" aria-hidden="true" tabindex="-1"></a>RTS<span class="ot">&lt;-</span><span class="st">&quot;VRS&quot;</span></span>
+<span id="cb144-2"><a href="data-envelopment-analysis.html#cb144-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>ND) {</span>
+<span id="cb144-3"><a href="data-envelopment-analysis.html#cb144-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb144-4"><a href="data-envelopment-analysis.html#cb144-4" aria-hidden="true" tabindex="-1"></a>  modUTT_BCC <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>()                                    <span class="sc">|&gt;</span></span>
+<span id="cb144-5"><a href="data-envelopment-analysis.html#cb144-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_variable</span>(vlambda[j], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND, <span class="at">type=</span><span class="st">&quot;continuous&quot;</span>, </span>
+<span id="cb144-6"><a href="data-envelopment-analysis.html#cb144-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">lb =</span> <span class="dv">0</span>)                                      <span class="sc">|&gt;</span></span>
+<span id="cb144-7"><a href="data-envelopment-analysis.html#cb144-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_variable</span>(vtheta, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>)                 <span class="sc">|&gt;</span></span>
+<span id="cb144-8"><a href="data-envelopment-analysis.html#cb144-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_objective</span>(vtheta, <span class="st">&quot;min&quot;</span>)                              <span class="sc">|&gt;</span></span>
+<span id="cb144-9"><a href="data-envelopment-analysis.html#cb144-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_constraint</span>(<span class="fu">sum_expr</span>(vlambda[j] <span class="sc">*</span> xdata[j,i], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND) </span>
+<span id="cb144-10"><a href="data-envelopment-analysis.html#cb144-10" aria-hidden="true" tabindex="-1"></a>                   <span class="sc">&lt;=</span> vtheta <span class="sc">*</span> xdata[k,i], <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>NX, </span>
+<span id="cb144-11"><a href="data-envelopment-analysis.html#cb144-11" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.show_progress_bar=</span><span class="cn">FALSE</span> )                 <span class="sc">|&gt;</span></span>
+<span id="cb144-12"><a href="data-envelopment-analysis.html#cb144-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_constraint</span>(<span class="fu">sum_expr</span>(vlambda[j] <span class="sc">*</span> ydata[j,r], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND, </span>
+<span id="cb144-13"><a href="data-envelopment-analysis.html#cb144-13" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.show_progress_bar=</span><span class="cn">FALSE</span> ) </span>
+<span id="cb144-14"><a href="data-envelopment-analysis.html#cb144-14" aria-hidden="true" tabindex="-1"></a>                   <span class="sc">&gt;=</span> ydata[k,r], <span class="at">r =</span> <span class="dv">1</span><span class="sc">:</span>NY) </span>
+<span id="cb144-15"><a href="data-envelopment-analysis.html#cb144-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (RTS<span class="sc">==</span><span class="st">&quot;VRS&quot;</span>) {modUTT_BCC <span class="ot">&lt;-</span> </span>
+<span id="cb144-16"><a href="data-envelopment-analysis.html#cb144-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">add_constraint</span>(modUTT_BCC, </span>
+<span id="cb144-17"><a href="data-envelopment-analysis.html#cb144-17" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">sum_expr</span>(vlambda[j],<span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND) <span class="sc">==</span> <span class="dv">1</span>) }  </span>
+<span id="cb144-18"><a href="data-envelopment-analysis.html#cb144-18" aria-hidden="true" tabindex="-1"></a>                 <span class="co">#Returns to Scale</span></span>
+<span id="cb144-19"><a href="data-envelopment-analysis.html#cb144-19" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(modUTT_BCC, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>)) </span>
+<span id="cb144-20"><a href="data-envelopment-analysis.html#cb144-20" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb144-21"><a href="data-envelopment-analysis.html#cb144-21" aria-hidden="true" tabindex="-1"></a>    res.efficiency[k] <span class="ot">&lt;-</span> <span class="fu">get_solution</span>(res, vtheta)       </span>
+<span id="cb144-22"><a href="data-envelopment-analysis.html#cb144-22" aria-hidden="true" tabindex="-1"></a>    res.lambda[k,] <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">as.matrix</span>(<span class="fu">as.numeric</span>(</span>
+<span id="cb144-23"><a href="data-envelopment-analysis.html#cb144-23" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">get_solution</span>(res, vlambda[j])[,<span class="dv">3</span>] )))</span>
+<span id="cb144-24"><a href="data-envelopment-analysis.html#cb144-24" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb144-25"><a href="data-envelopment-analysis.html#cb144-25" aria-hidden="true" tabindex="-1"></a><span class="co">#UTT_BCC.Res&lt;-cbind(res.efficiency, res.lambda)</span></span>
+<span id="cb144-26"><a href="data-envelopment-analysis.html#cb144-26" aria-hidden="true" tabindex="-1"></a>UTT_BCC.Res<span class="ot">&lt;-</span>res.efficiency</span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:Compare-CRS-to-VRS">TABLE 5.13: </span>Comparison of CRS vs. VRS Efficiency Scores
@@ -2869,38 +2847,37 @@ U. of Chicago UCTech
 <li>Switching from CRS to VRS will never hurt the efficiency of a DMU. From an optimization perspective, think of this as adding a constraint which will increase or leave unchanged the objective function value from a minimization linear program. </li>
 <li>Another way to view the impact of adding a returns to scale assumption is that this makes it <em>easier</em> for a DMU to find some way of being <em>best</em> or efficient. They can do this by now having the largest of any output or the smallest of input as well as many other ways.</li>
 <li>At a simple level, the CCR (CRS) efficiency score can be thought of as a combination of how efficient someone is considering their operational and size efficiency. The BCC (VRS) efficiency is how efficient they are given their current operating size.</li>
-<li>The use of <code>drop=FALSE</code> in the subsetting of UTT_CCR.Res enables retaining the original structure of the matrix, which allows the column names to remain. The default is drop=TRUE which simplifies the data object into a form that doesn’t have a column name.<br />
-</li>
+<li>The use of <code>drop=FALSE</code> in the subsetting of UTT_CCR.Res enables retaining the original structure of the matrix, which allows the column names to remain. The default is drop=TRUE which simplifies the data object into a form that doesn’t have a column name.</li>
 </ul>
 </div>
 <div id="extracting-multiplier-weights-from-sensitivity-analysis" class="section level2" number="5.8">
 <h2><span class="header-section-number">5.8</span> Extracting Multiplier Weights from Sensitivity Analysis</h2>
 <p>The following process can be used for extracting the shadow prices (row duals) from the linear program results. This extraction is based upon knowing the structure of the model that was built.  </p>
-<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="data-envelopment-analysis.html#cb147-1" aria-hidden="true" tabindex="-1"></a>res.vweight    <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rep</span>(<span class="sc">-</span><span class="fl">1.0</span>, ND<span class="sc">*</span>NX), <span class="at">nrow=</span>ND,<span class="at">ncol=</span>NX) </span>
-<span id="cb147-2"><a href="data-envelopment-analysis.html#cb147-2" aria-hidden="true" tabindex="-1"></a>res.uweight    <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rep</span>(<span class="sc">-</span><span class="fl">1.0</span>, ND<span class="sc">*</span>NY), <span class="at">nrow=</span>ND,<span class="at">ncol=</span>NY) </span>
-<span id="cb147-3"><a href="data-envelopment-analysis.html#cb147-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb147-4"><a href="data-envelopment-analysis.html#cb147-4" aria-hidden="true" tabindex="-1"></a>Vnames<span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">list</span>(<span class="fu">rep</span>(<span class="st">&quot;v&quot;</span>,NX)),paste0,<span class="dv">1</span><span class="sc">:</span>NX) <span class="co"># Input weight: v1, ...</span></span>
-<span id="cb147-5"><a href="data-envelopment-analysis.html#cb147-5" aria-hidden="true" tabindex="-1"></a>Unames<span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">list</span>(<span class="fu">rep</span>(<span class="st">&quot;u&quot;</span>,NY)),paste0,<span class="dv">1</span><span class="sc">:</span>NY) <span class="co"># Output weight: u1, ...</span></span>
-<span id="cb147-6"><a href="data-envelopment-analysis.html#cb147-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb147-7"><a href="data-envelopment-analysis.html#cb147-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dimnames</span>(res.vweight)    <span class="ot">&lt;-</span> <span class="fu">c</span>(DMUnames,Vnames)</span>
-<span id="cb147-8"><a href="data-envelopment-analysis.html#cb147-8" aria-hidden="true" tabindex="-1"></a><span class="fu">dimnames</span>(res.uweight)    <span class="ot">&lt;-</span> <span class="fu">c</span>(DMUnames,Unames)</span>
-<span id="cb147-9"><a href="data-envelopment-analysis.html#cb147-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb147-10"><a href="data-envelopment-analysis.html#cb147-10" aria-hidden="true" tabindex="-1"></a>rduals <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(<span class="fu">get_row_duals</span>(res))</span>
-<span id="cb147-11"><a href="data-envelopment-analysis.html#cb147-11" aria-hidden="true" tabindex="-1"></a>res.vweight[k,] <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span><span class="sc">*</span>rduals[<span class="dv">1</span><span class="sc">:</span>NX]</span>
-<span id="cb147-12"><a href="data-envelopment-analysis.html#cb147-12" aria-hidden="true" tabindex="-1"></a>   <span class="co"># Extract first NX row duals assuming first constraints are inputs</span></span>
-<span id="cb147-13"><a href="data-envelopment-analysis.html#cb147-13" aria-hidden="true" tabindex="-1"></a>   <span class="co"># Multiply input weights by -1 to adjust for inequality direction</span></span>
-<span id="cb147-14"><a href="data-envelopment-analysis.html#cb147-14" aria-hidden="true" tabindex="-1"></a>res.uweight[k,] <span class="ot">&lt;-</span> rduals[(NX<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>(NX<span class="sc">+</span>NY)]</span>
-<span id="cb147-15"><a href="data-envelopment-analysis.html#cb147-15" aria-hidden="true" tabindex="-1"></a>   <span class="co"># Extract next NY row duals, assuming output constraints follow inputs </span></span>
-<span id="cb147-16"><a href="data-envelopment-analysis.html#cb147-16" aria-hidden="true" tabindex="-1"></a>weights <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">c</span>(res.vweight[k,],res.uweight[k,]))</span>
-<span id="cb147-17"><a href="data-envelopment-analysis.html#cb147-17" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (weights, <span class="at">booktabs=</span>T, <span class="at">digits=</span><span class="dv">5</span>, <span class="at">escape=</span>F,</span>
-<span id="cb147-18"><a href="data-envelopment-analysis.html#cb147-18" aria-hidden="true" tabindex="-1"></a>     <span class="at">col.names=</span><span class="fu">c</span>(<span class="st">&quot;$v_{</span><span class="sc">\\</span><span class="st">text{Research Spending}}$&quot;</span>,</span>
-<span id="cb147-19"><a href="data-envelopment-analysis.html#cb147-19" aria-hidden="true" tabindex="-1"></a>                 <span class="st">&quot;$u_{</span><span class="sc">\\</span><span class="st">text{Licensing Income}}$&quot;</span>,</span>
-<span id="cb147-20"><a href="data-envelopment-analysis.html#cb147-20" aria-hidden="true" tabindex="-1"></a>                 <span class="st">&quot;$u_{</span><span class="sc">\\</span><span class="st">text{Licenses and Options}}$&quot;</span>,</span>
-<span id="cb147-21"><a href="data-envelopment-analysis.html#cb147-21" aria-hidden="true" tabindex="-1"></a>                 <span class="st">&quot;$u_{</span><span class="sc">\\</span><span class="st">text{Startups}}$&quot;</span>,</span>
-<span id="cb147-22"><a href="data-envelopment-analysis.html#cb147-22" aria-hidden="true" tabindex="-1"></a>                 <span class="st">&quot;$u_{</span><span class="sc">\\</span><span class="st">text{Patents Issued}}$&quot;</span>),</span>
-<span id="cb147-23"><a href="data-envelopment-analysis.html#cb147-23" aria-hidden="true" tabindex="-1"></a>     <span class="at">row.names=</span>F,</span>
-<span id="cb147-24"><a href="data-envelopment-analysis.html#cb147-24" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption=</span><span class="st">&quot;Input and Output Weights for Last DMU&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb147-25"><a href="data-envelopment-analysis.html#cb147-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb145-1"><a href="data-envelopment-analysis.html#cb145-1" aria-hidden="true" tabindex="-1"></a>res.vweight    <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rep</span>(<span class="sc">-</span><span class="fl">1.0</span>, ND<span class="sc">*</span>NX), <span class="at">nrow=</span>ND,<span class="at">ncol=</span>NX) </span>
+<span id="cb145-2"><a href="data-envelopment-analysis.html#cb145-2" aria-hidden="true" tabindex="-1"></a>res.uweight    <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rep</span>(<span class="sc">-</span><span class="fl">1.0</span>, ND<span class="sc">*</span>NY), <span class="at">nrow=</span>ND,<span class="at">ncol=</span>NY) </span>
+<span id="cb145-3"><a href="data-envelopment-analysis.html#cb145-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb145-4"><a href="data-envelopment-analysis.html#cb145-4" aria-hidden="true" tabindex="-1"></a>Vnames<span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">list</span>(<span class="fu">rep</span>(<span class="st">&quot;v&quot;</span>,NX)),paste0,<span class="dv">1</span><span class="sc">:</span>NX) <span class="co"># Input weight: v1, ...</span></span>
+<span id="cb145-5"><a href="data-envelopment-analysis.html#cb145-5" aria-hidden="true" tabindex="-1"></a>Unames<span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">list</span>(<span class="fu">rep</span>(<span class="st">&quot;u&quot;</span>,NY)),paste0,<span class="dv">1</span><span class="sc">:</span>NY) <span class="co"># Output weight: u1, ...</span></span>
+<span id="cb145-6"><a href="data-envelopment-analysis.html#cb145-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb145-7"><a href="data-envelopment-analysis.html#cb145-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dimnames</span>(res.vweight)    <span class="ot">&lt;-</span> <span class="fu">c</span>(DMUnames,Vnames)</span>
+<span id="cb145-8"><a href="data-envelopment-analysis.html#cb145-8" aria-hidden="true" tabindex="-1"></a><span class="fu">dimnames</span>(res.uweight)    <span class="ot">&lt;-</span> <span class="fu">c</span>(DMUnames,Unames)</span>
+<span id="cb145-9"><a href="data-envelopment-analysis.html#cb145-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb145-10"><a href="data-envelopment-analysis.html#cb145-10" aria-hidden="true" tabindex="-1"></a>rduals <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(<span class="fu">get_row_duals</span>(res))</span>
+<span id="cb145-11"><a href="data-envelopment-analysis.html#cb145-11" aria-hidden="true" tabindex="-1"></a>res.vweight[k,] <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span><span class="sc">*</span>rduals[<span class="dv">1</span><span class="sc">:</span>NX]</span>
+<span id="cb145-12"><a href="data-envelopment-analysis.html#cb145-12" aria-hidden="true" tabindex="-1"></a>   <span class="co"># Extract first NX row duals assuming first constraints are inputs</span></span>
+<span id="cb145-13"><a href="data-envelopment-analysis.html#cb145-13" aria-hidden="true" tabindex="-1"></a>   <span class="co"># Multiply input weights by -1 to adjust for inequality direction</span></span>
+<span id="cb145-14"><a href="data-envelopment-analysis.html#cb145-14" aria-hidden="true" tabindex="-1"></a>res.uweight[k,] <span class="ot">&lt;-</span> rduals[(NX<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>(NX<span class="sc">+</span>NY)]</span>
+<span id="cb145-15"><a href="data-envelopment-analysis.html#cb145-15" aria-hidden="true" tabindex="-1"></a>   <span class="co"># Extract next NY row duals, assuming output constraints follow inputs </span></span>
+<span id="cb145-16"><a href="data-envelopment-analysis.html#cb145-16" aria-hidden="true" tabindex="-1"></a>weights <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">c</span>(res.vweight[k,],res.uweight[k,]))</span>
+<span id="cb145-17"><a href="data-envelopment-analysis.html#cb145-17" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (weights, <span class="at">booktabs=</span>T, <span class="at">digits=</span><span class="dv">5</span>, <span class="at">escape=</span>F,</span>
+<span id="cb145-18"><a href="data-envelopment-analysis.html#cb145-18" aria-hidden="true" tabindex="-1"></a>     <span class="at">col.names=</span><span class="fu">c</span>(<span class="st">&quot;$v_{</span><span class="sc">\\</span><span class="st">text{Research Spending}}$&quot;</span>,</span>
+<span id="cb145-19"><a href="data-envelopment-analysis.html#cb145-19" aria-hidden="true" tabindex="-1"></a>                 <span class="st">&quot;$u_{</span><span class="sc">\\</span><span class="st">text{Licensing Income}}$&quot;</span>,</span>
+<span id="cb145-20"><a href="data-envelopment-analysis.html#cb145-20" aria-hidden="true" tabindex="-1"></a>                 <span class="st">&quot;$u_{</span><span class="sc">\\</span><span class="st">text{Licenses and Options}}$&quot;</span>,</span>
+<span id="cb145-21"><a href="data-envelopment-analysis.html#cb145-21" aria-hidden="true" tabindex="-1"></a>                 <span class="st">&quot;$u_{</span><span class="sc">\\</span><span class="st">text{Startups}}$&quot;</span>,</span>
+<span id="cb145-22"><a href="data-envelopment-analysis.html#cb145-22" aria-hidden="true" tabindex="-1"></a>                 <span class="st">&quot;$u_{</span><span class="sc">\\</span><span class="st">text{Patents Issued}}$&quot;</span>),</span>
+<span id="cb145-23"><a href="data-envelopment-analysis.html#cb145-23" aria-hidden="true" tabindex="-1"></a>     <span class="at">row.names=</span>F,</span>
+<span id="cb145-24"><a href="data-envelopment-analysis.html#cb145-24" aria-hidden="true" tabindex="-1"></a>     <span class="at">caption=</span><span class="st">&quot;Input and Output Weights for Last DMU&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb145-25"><a href="data-envelopment-analysis.html#cb145-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:Multiplier-Weights-from-Env-Model">TABLE 5.14: </span>Input and Output Weights for Last DMU
@@ -2944,75 +2921,64 @@ U. of Chicago UCTech
 </tr>
 </tbody>
 </table>
-<p>These results are for just the last unit examined. Care must be had in interpreting them<br />
-</p>
-<p>Let’s now wrap this into the full series of linear programs so as to calculate the multiplier weights for each unit.<br />
-</p>
-<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb148-1"><a href="data-envelopment-analysis.html#cb148-1" aria-hidden="true" tabindex="-1"></a>RTS<span class="ot">&lt;-</span><span class="st">&quot;CRS&quot;</span></span>
-<span id="cb148-2"><a href="data-envelopment-analysis.html#cb148-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>ND) {</span>
-<span id="cb148-3"><a href="data-envelopment-analysis.html#cb148-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb148-4"><a href="data-envelopment-analysis.html#cb148-4" aria-hidden="true" tabindex="-1"></a>  modUTT_CRS <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">|&gt;</span></span>
-<span id="cb148-5"><a href="data-envelopment-analysis.html#cb148-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_variable</span>(vlambda[j], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, </span>
-<span id="cb148-6"><a href="data-envelopment-analysis.html#cb148-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
-<span id="cb148-7"><a href="data-envelopment-analysis.html#cb148-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_variable</span>(vtheta, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb148-8"><a href="data-envelopment-analysis.html#cb148-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_objective</span>(vtheta, <span class="st">&quot;min&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb148-9"><a href="data-envelopment-analysis.html#cb148-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_constraint</span>(<span class="fu">sum_expr</span>(vlambda[j] <span class="sc">*</span> xdata[j,i], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND) </span>
-<span id="cb148-10"><a href="data-envelopment-analysis.html#cb148-10" aria-hidden="true" tabindex="-1"></a>                   <span class="sc">&lt;=</span> vtheta <span class="sc">*</span> xdata[k,i], <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>NX, </span>
-<span id="cb148-11"><a href="data-envelopment-analysis.html#cb148-11" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.show_progress_bar=</span><span class="cn">FALSE</span> ) <span class="sc">|&gt;</span></span>
-<span id="cb148-12"><a href="data-envelopment-analysis.html#cb148-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_constraint</span>(<span class="fu">sum_expr</span>(vlambda[j] <span class="sc">*</span> ydata[j,r], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND) </span>
-<span id="cb148-13"><a href="data-envelopment-analysis.html#cb148-13" aria-hidden="true" tabindex="-1"></a>                   <span class="sc">&gt;=</span> ydata[k,r], <span class="at">r =</span> <span class="dv">1</span><span class="sc">:</span>NY, </span>
-<span id="cb148-14"><a href="data-envelopment-analysis.html#cb148-14" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.show_progress_bar=</span><span class="cn">FALSE</span> ) </span>
-<span id="cb148-15"><a href="data-envelopment-analysis.html#cb148-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (RTS<span class="sc">==</span><span class="st">&quot;VRS&quot;</span>) {modUTT_CRS <span class="ot">&lt;-</span> </span>
-<span id="cb148-16"><a href="data-envelopment-analysis.html#cb148-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">add_constraint</span>(modUTT_CRS, </span>
-<span id="cb148-17"><a href="data-envelopment-analysis.html#cb148-17" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">sum_expr</span>(vlambda[j],<span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND) <span class="sc">==</span> <span class="dv">1</span>) }  </span>
-<span id="cb148-18"><a href="data-envelopment-analysis.html#cb148-18" aria-hidden="true" tabindex="-1"></a>    resUTT_CRS <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(modUTT_CRS, </span>
-<span id="cb148-19"><a href="data-envelopment-analysis.html#cb148-19" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>)) </span>
-<span id="cb148-20"><a href="data-envelopment-analysis.html#cb148-20" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb148-21"><a href="data-envelopment-analysis.html#cb148-21" aria-hidden="true" tabindex="-1"></a>    res.efficiency[k] <span class="ot">&lt;-</span>  <span class="fu">get_solution</span>(resUTT_CRS, vtheta)       </span>
-<span id="cb148-22"><a href="data-envelopment-analysis.html#cb148-22" aria-hidden="true" tabindex="-1"></a>    res.lambda[k,] <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">as.matrix</span>(<span class="fu">as.numeric</span>(</span>
-<span id="cb148-23"><a href="data-envelopment-analysis.html#cb148-23" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">get_solution</span>(resUTT_CRS, </span>
-<span id="cb148-24"><a href="data-envelopment-analysis.html#cb148-24" aria-hidden="true" tabindex="-1"></a>                                  vlambda[j])[,<span class="dv">3</span>] )))</span>
-<span id="cb148-25"><a href="data-envelopment-analysis.html#cb148-25" aria-hidden="true" tabindex="-1"></a>    rduals  <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(<span class="fu">get_row_duals</span>(resUTT_CRS))</span>
-<span id="cb148-26"><a href="data-envelopment-analysis.html#cb148-26" aria-hidden="true" tabindex="-1"></a>    res.vweight[k,] <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span><span class="sc">*</span>rduals[<span class="dv">1</span><span class="sc">:</span>NX]</span>
-<span id="cb148-27"><a href="data-envelopment-analysis.html#cb148-27" aria-hidden="true" tabindex="-1"></a>    res.uweight[k,] <span class="ot">&lt;-</span> rduals[(NX<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>(NX<span class="sc">+</span>NY)]</span>
-<span id="cb148-28"><a href="data-envelopment-analysis.html#cb148-28" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb148-29"><a href="data-envelopment-analysis.html#cb148-29" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span> (<span class="fu">cbind</span>(res.efficiency, res.vweight, </span>
-<span id="cb148-30"><a href="data-envelopment-analysis.html#cb148-30" aria-hidden="true" tabindex="-1"></a>              res.uweight), <span class="at">booktabs=</span>T, <span class="at">digits=</span><span class="dv">5</span>, </span>
-<span id="cb148-31"><a href="data-envelopment-analysis.html#cb148-31" aria-hidden="true" tabindex="-1"></a>        <span class="at">caption=</span><span class="st">&quot;Multiplier Weights from UTT Example&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb148-32"><a href="data-envelopment-analysis.html#cb148-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="fu">c</span>(<span class="st">&quot;hold_position&quot;</span>, <span class="st">&quot;scale_down&quot;</span>))</span></code></pre></div>
+<p>These results are for just the last unit examined.</p>
+<p>Let’s now wrap this into the full series of linear programs to calculate the multiplier weights for each unit.</p>
+<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb146-1"><a href="data-envelopment-analysis.html#cb146-1" aria-hidden="true" tabindex="-1"></a>RTS<span class="ot">&lt;-</span><span class="st">&quot;CRS&quot;</span></span>
+<span id="cb146-2"><a href="data-envelopment-analysis.html#cb146-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>ND) {</span>
+<span id="cb146-3"><a href="data-envelopment-analysis.html#cb146-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb146-4"><a href="data-envelopment-analysis.html#cb146-4" aria-hidden="true" tabindex="-1"></a>  modUTT_CRS <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">|&gt;</span></span>
+<span id="cb146-5"><a href="data-envelopment-analysis.html#cb146-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_variable</span>(vlambda[j], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, </span>
+<span id="cb146-6"><a href="data-envelopment-analysis.html#cb146-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb146-7"><a href="data-envelopment-analysis.html#cb146-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_variable</span>(vtheta, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb146-8"><a href="data-envelopment-analysis.html#cb146-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_objective</span>(vtheta, <span class="st">&quot;min&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb146-9"><a href="data-envelopment-analysis.html#cb146-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_constraint</span>(<span class="fu">sum_expr</span>(vlambda[j] <span class="sc">*</span> xdata[j,i], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND) </span>
+<span id="cb146-10"><a href="data-envelopment-analysis.html#cb146-10" aria-hidden="true" tabindex="-1"></a>                   <span class="sc">&lt;=</span> vtheta <span class="sc">*</span> xdata[k,i], <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>NX, </span>
+<span id="cb146-11"><a href="data-envelopment-analysis.html#cb146-11" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.show_progress_bar=</span><span class="cn">FALSE</span> ) <span class="sc">|&gt;</span></span>
+<span id="cb146-12"><a href="data-envelopment-analysis.html#cb146-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_constraint</span>(<span class="fu">sum_expr</span>(vlambda[j] <span class="sc">*</span> ydata[j,r], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND) </span>
+<span id="cb146-13"><a href="data-envelopment-analysis.html#cb146-13" aria-hidden="true" tabindex="-1"></a>                   <span class="sc">&gt;=</span> ydata[k,r], <span class="at">r =</span> <span class="dv">1</span><span class="sc">:</span>NY, </span>
+<span id="cb146-14"><a href="data-envelopment-analysis.html#cb146-14" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.show_progress_bar=</span><span class="cn">FALSE</span> ) </span>
+<span id="cb146-15"><a href="data-envelopment-analysis.html#cb146-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (RTS<span class="sc">==</span><span class="st">&quot;VRS&quot;</span>) {modUTT_CRS <span class="ot">&lt;-</span> </span>
+<span id="cb146-16"><a href="data-envelopment-analysis.html#cb146-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">add_constraint</span>(modUTT_CRS, </span>
+<span id="cb146-17"><a href="data-envelopment-analysis.html#cb146-17" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">sum_expr</span>(vlambda[j],<span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND) <span class="sc">==</span> <span class="dv">1</span>) }  </span>
+<span id="cb146-18"><a href="data-envelopment-analysis.html#cb146-18" aria-hidden="true" tabindex="-1"></a>    resUTT_CRS <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(modUTT_CRS, </span>
+<span id="cb146-19"><a href="data-envelopment-analysis.html#cb146-19" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>)) </span>
+<span id="cb146-20"><a href="data-envelopment-analysis.html#cb146-20" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb146-21"><a href="data-envelopment-analysis.html#cb146-21" aria-hidden="true" tabindex="-1"></a>    res.efficiency[k] <span class="ot">&lt;-</span>  <span class="fu">get_solution</span>(resUTT_CRS, vtheta)       </span>
+<span id="cb146-22"><a href="data-envelopment-analysis.html#cb146-22" aria-hidden="true" tabindex="-1"></a>    res.lambda[k,] <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">as.matrix</span>(<span class="fu">as.numeric</span>(</span>
+<span id="cb146-23"><a href="data-envelopment-analysis.html#cb146-23" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">get_solution</span>(resUTT_CRS, </span>
+<span id="cb146-24"><a href="data-envelopment-analysis.html#cb146-24" aria-hidden="true" tabindex="-1"></a>                                  vlambda[j])[,<span class="dv">3</span>] )))</span>
+<span id="cb146-25"><a href="data-envelopment-analysis.html#cb146-25" aria-hidden="true" tabindex="-1"></a>    rduals  <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(<span class="fu">get_row_duals</span>(resUTT_CRS))</span>
+<span id="cb146-26"><a href="data-envelopment-analysis.html#cb146-26" aria-hidden="true" tabindex="-1"></a>    res.vweight[k,] <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span><span class="sc">*</span>rduals[<span class="dv">1</span><span class="sc">:</span>NX]</span>
+<span id="cb146-27"><a href="data-envelopment-analysis.html#cb146-27" aria-hidden="true" tabindex="-1"></a>    res.uweight[k,] <span class="ot">&lt;-</span> rduals[(NX<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>(NX<span class="sc">+</span>NY)]</span>
+<span id="cb146-28"><a href="data-envelopment-analysis.html#cb146-28" aria-hidden="true" tabindex="-1"></a>    }</span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:UTT-example-w-mult-weight">TABLE 5.15: </span>Multiplier Weights from UTT Example
+<span id="tab:unnamed-chunk-24">TABLE 5.15: </span>Multiplier Weights from UTT Example
 </caption>
 <thead>
 <tr>
-<th style="text-align:left;">
+<th style="text-align:right;">
+<span class="math inline">\(\theta^{CRS}\)</span>
 </th>
 <th style="text-align:right;">
-CCR-IO
+<span class="math inline">\(v_{\text{Research Spending}}\)</span>
 </th>
 <th style="text-align:right;">
-v1
+<span class="math inline">\(u_{\text{Licensing Income}}\)</span>
 </th>
 <th style="text-align:right;">
-u1
+<span class="math inline">\(u_{\text{Licenses and Options}}\)</span>
 </th>
 <th style="text-align:right;">
-u2
+<span class="math inline">\(u_{\text{Startups}}\)</span>
 </th>
 <th style="text-align:right;">
-u3
-</th>
-<th style="text-align:right;">
-u4
+<span class="math inline">\(u_{\text{Patents Issued}}\)</span>
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left;">
-New York University
-</td>
 <td style="text-align:right;">
 1.00000
 </td>
@@ -3033,9 +2999,6 @@ New York University
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-U of California System
-</td>
 <td style="text-align:right;">
 0.46629
 </td>
@@ -3056,9 +3019,6 @@ U of California System
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-U of Wisconsin at Madison
-</td>
 <td style="text-align:right;">
 1.00000
 </td>
@@ -3079,9 +3039,6 @@ U of Wisconsin at Madison
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-Stanford
-</td>
 <td style="text-align:right;">
 0.69963
 </td>
@@ -3102,9 +3059,6 @@ Stanford
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-U of Minnesota
-</td>
 <td style="text-align:right;">
 0.82406
 </td>
@@ -3125,9 +3079,6 @@ U of Minnesota
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-U of Florida
-</td>
 <td style="text-align:right;">
 0.87876
 </td>
@@ -3148,9 +3099,6 @@ U of Florida
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-Michigan State University
-</td>
 <td style="text-align:right;">
 0.79248
 </td>
@@ -3171,9 +3119,6 @@ Michigan State University
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-Wake Forest University
-</td>
 <td style="text-align:right;">
 0.59221
 </td>
@@ -3194,9 +3139,6 @@ Wake Forest University
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-U of Colorado System
-</td>
 <td style="text-align:right;">
 0.54426
 </td>
@@ -3217,9 +3159,6 @@ U of Colorado System
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-U of Rochester
-</td>
 <td style="text-align:right;">
 0.75426
 </td>
@@ -3240,9 +3179,6 @@ U of Rochester
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-U of Massachusetts
-</td>
 <td style="text-align:right;">
 0.50535
 </td>
@@ -3263,9 +3199,6 @@ U of Massachusetts
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-MIT
-</td>
 <td style="text-align:right;">
 0.78556
 </td>
@@ -3286,9 +3219,6 @@ MIT
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-U of Washington
-</td>
 <td style="text-align:right;">
 0.44404
 </td>
@@ -3309,9 +3239,6 @@ U of Washington
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-Emory University
-</td>
 <td style="text-align:right;">
 0.43299
 </td>
@@ -3332,9 +3259,6 @@ Emory University
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-Harvard
-</td>
 <td style="text-align:right;">
 0.42079
 </td>
@@ -3355,9 +3279,6 @@ Harvard
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-U. of Utah
-</td>
 <td style="text-align:right;">
 0.59478
 </td>
@@ -3378,9 +3299,6 @@ U. of Utah
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-Florida State U.
-</td>
 <td style="text-align:right;">
 0.39885
 </td>
@@ -3401,9 +3319,6 @@ Florida State U.
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-State U. of New York Research Foundation
-</td>
 <td style="text-align:right;">
 0.41526
 </td>
@@ -3424,9 +3339,6 @@ State U. of New York Research Foundation
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-U. of Texas Southwestern Medical Center at Dallas
-</td>
 <td style="text-align:right;">
 0.53179
 </td>
@@ -3447,9 +3359,6 @@ U. of Texas Southwestern Medical Center at Dallas
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-Case Western Reserve U.
-</td>
 <td style="text-align:right;">
 0.51266
 </td>
@@ -3470,9 +3379,6 @@ Case Western Reserve U.
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-U. of Iowa Research Foundation
-</td>
 <td style="text-align:right;">
 0.61633
 </td>
@@ -3493,9 +3399,6 @@ U. of Iowa Research Foundation
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-U. of Michigan at Ann Arbor
-</td>
 <td style="text-align:right;">
 0.62934
 </td>
@@ -3516,9 +3419,6 @@ U. of Michigan at Ann Arbor
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-California Tech
-</td>
 <td style="text-align:right;">
 1.00000
 </td>
@@ -3539,9 +3439,6 @@ California Tech
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-Washington U. in St. Louis
-</td>
 <td style="text-align:right;">
 0.79982
 </td>
@@ -3562,9 +3459,6 @@ Washington U. in St. Louis
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-U. of Chicago UCTech
-</td>
 <td style="text-align:right;">
 0.37173
 </td>
@@ -3588,17 +3482,16 @@ U. of Chicago UCTech
 </table>
 <p>A few things should be noticed with respect to the multiplier weights:</p>
 <ul>
-<li><p>Multiplier weights can be quite small because in general, they are multiplied by inputs and the product is typically less than one. They may appear to round to zero but still be significant.</p></li>
-<li><p>Multiplier weights are not unique for strongly efficient DMUs. This is explored in more detail in the multiplier chapter of <em>DEA Using R</em> and in other DEA specific publications.</p></li>
-<li><p>Multiplier weights are usually unique for inefficient DMUs and should match the results obtained using either the row duals of the envelopment model or those obtained directly from the multiplier model.</p></li>
-<li><p>People new to DEA are often “offended” by units that place zero weight on certain inputs or on certain outputs as was done by nursing homes B and D. Approaches such as weight restrictions exist to deal with this directly should this be a problem but should be carefully considered.</p></li>
+<li>Multiplier weights can be quite small because in general, they are multiplied by inputs and the product is typically less than one. They may appear to round to zero but still be significant.</li>
+<li>Multiplier weights are not unique for strongly efficient DMUs. This is explored in more detail in the multiplier chapter of <em>DEA Using R</em> and in other DEA specific publications.</li>
+<li>Multiplier weights are usually unique for inefficient DMUs and should match the results obtained using either the row duals of the envelopment model or those obtained directly from the multiplier model.</li>
+<li>People new to DEA are often “offended” by units that place zero weight on certain inputs or on certain outputs as was done by nursing homes B and D. Approaches such as weight restrictions exist to deal with this directly should this be a problem but should be carefully considered.</li>
 </ul>
 </div>
 <div id="slack-maximization" class="section level2" number="5.9">
 <h2><span class="header-section-number">5.9</span> Slack Maximization</h2>
-<p>Situations can arise where units may appear to be radially efficient but can still find opportunities to improve one or more inputs or outputs. This is defined as being weakly efficient.<br />
-</p>
-<p>In order to accommodate this, we need to extend the simple radial model by adding variables to reflect nonradial slacks. We do this by converting the model’s input and output constraints from inequalities into equalities by explicitly defining slack variables. </p>
+<p>Situations can arise where units may appear to be radially efficient but can still find opportunities to improve one or more inputs or outputs. This is defined as being weakly efficient.</p>
+<p>In order to accommodate this, we need to extend the simple radial model by adding variables to reflect nonradial slacks. We do this by converting the model’s input and output constraints from inequalities into equalities by explicitly defining slack variables. </p>
 <p><span class="math display" id="eq:LPCCRIOE-Slacks">\[
 \begin{split}
  \begin{aligned}
@@ -3645,56 +3538,56 @@ U. of Chicago UCTech
 \tag{5.6}
 \]</span></p>
 <p>Implementing this is straightforward.</p>
-<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb149-1"><a href="data-envelopment-analysis.html#cb149-1" aria-hidden="true" tabindex="-1"></a>RTS<span class="ot">&lt;-</span><span class="st">&quot;CRS&quot;</span></span>
-<span id="cb149-2"><a href="data-envelopment-analysis.html#cb149-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>ND) {</span>
-<span id="cb149-3"><a href="data-envelopment-analysis.html#cb149-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb149-4"><a href="data-envelopment-analysis.html#cb149-4" aria-hidden="true" tabindex="-1"></a>  LPSlack <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>()                                     <span class="sc">|&gt;</span></span>
-<span id="cb149-5"><a href="data-envelopment-analysis.html#cb149-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_variable</span>(vlambda[j], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, </span>
-<span id="cb149-6"><a href="data-envelopment-analysis.html#cb149-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">lb =</span> <span class="dv">0</span>)                                    <span class="sc">|&gt;</span></span>
-<span id="cb149-7"><a href="data-envelopment-analysis.html#cb149-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_variable</span>(vtheta, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>)               <span class="sc">|&gt;</span></span>
-<span id="cb149-8"><a href="data-envelopment-analysis.html#cb149-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_variable</span>(xslack[i], <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>NX, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, </span>
-<span id="cb149-9"><a href="data-envelopment-analysis.html#cb149-9" aria-hidden="true" tabindex="-1"></a>                 <span class="at">lb=</span><span class="dv">0</span>)                                      <span class="sc">|&gt;</span></span>
-<span id="cb149-10"><a href="data-envelopment-analysis.html#cb149-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_variable</span>(yslack[r], <span class="at">r =</span> <span class="dv">1</span><span class="sc">:</span>NY, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, </span>
-<span id="cb149-11"><a href="data-envelopment-analysis.html#cb149-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">lb=</span><span class="dv">0</span>)                                      <span class="sc">|&gt;</span></span>
-<span id="cb149-12"><a href="data-envelopment-analysis.html#cb149-12" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb149-13"><a href="data-envelopment-analysis.html#cb149-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_objective</span>(vtheta, <span class="st">&quot;min&quot;</span>)                            <span class="sc">|&gt;</span></span>
-<span id="cb149-14"><a href="data-envelopment-analysis.html#cb149-14" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb149-15"><a href="data-envelopment-analysis.html#cb149-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_constraint</span>(<span class="fu">sum_expr</span>(vlambda[j] <span class="sc">*</span> xdata[j,i] <span class="sc">+</span> </span>
-<span id="cb149-16"><a href="data-envelopment-analysis.html#cb149-16" aria-hidden="true" tabindex="-1"></a>                              xslack[i], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND) </span>
-<span id="cb149-17"><a href="data-envelopment-analysis.html#cb149-17" aria-hidden="true" tabindex="-1"></a>                   <span class="sc">-</span> vtheta <span class="sc">*</span> xdata[k,i]<span class="sc">==</span><span class="dv">0</span>, <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>NX, </span>
-<span id="cb149-18"><a href="data-envelopment-analysis.html#cb149-18" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.show_progress_bar=</span><span class="cn">FALSE</span> )               <span class="sc">|&gt;</span></span>
-<span id="cb149-19"><a href="data-envelopment-analysis.html#cb149-19" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb149-20"><a href="data-envelopment-analysis.html#cb149-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_constraint</span>(<span class="fu">sum_expr</span>(vlambda[j] <span class="sc">*</span> ydata[j,r] <span class="sc">-</span></span>
-<span id="cb149-21"><a href="data-envelopment-analysis.html#cb149-21" aria-hidden="true" tabindex="-1"></a>                              yslack[r], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND) </span>
-<span id="cb149-22"><a href="data-envelopment-analysis.html#cb149-22" aria-hidden="true" tabindex="-1"></a>                    <span class="sc">==</span>ydata[k,r], <span class="at">r =</span> <span class="dv">1</span><span class="sc">:</span>NY, </span>
-<span id="cb149-23"><a href="data-envelopment-analysis.html#cb149-23" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.show_progress_bar=</span><span class="cn">FALSE</span> ) </span>
-<span id="cb149-24"><a href="data-envelopment-analysis.html#cb149-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (RTS<span class="sc">==</span><span class="st">&quot;VRS&quot;</span>) {LPSlack<span class="ot">&lt;-</span></span>
-<span id="cb149-25"><a href="data-envelopment-analysis.html#cb149-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">add_constraint</span>(LPSlack, <span class="fu">sum_expr</span>(vlambda[j],</span>
-<span id="cb149-26"><a href="data-envelopment-analysis.html#cb149-26" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND) <span class="sc">==</span> <span class="dv">1</span>) }  </span>
-<span id="cb149-27"><a href="data-envelopment-analysis.html#cb149-27" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Returns to Scale</span></span>
-<span id="cb149-28"><a href="data-envelopment-analysis.html#cb149-28" aria-hidden="true" tabindex="-1"></a>    result <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(LPSlack, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>)) </span>
-<span id="cb149-29"><a href="data-envelopment-analysis.html#cb149-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The following are key steps to slack maximization </span></span>
-<span id="cb149-30"><a href="data-envelopment-analysis.html#cb149-30" aria-hidden="true" tabindex="-1"></a>    phase1obj <span class="ot">&lt;-</span>  <span class="fu">get_solution</span>(result, vtheta)  </span>
-<span id="cb149-31"><a href="data-envelopment-analysis.html#cb149-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get Phase 1 objective value</span></span>
-<span id="cb149-32"><a href="data-envelopment-analysis.html#cb149-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_constraint</span>(LPSlack, vtheta<span class="sc">==</span>phase1obj)   </span>
-<span id="cb149-33"><a href="data-envelopment-analysis.html#cb149-33" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Passing result from phase 1 to phase 2</span></span>
-<span id="cb149-34"><a href="data-envelopment-analysis.html#cb149-34" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb149-35"><a href="data-envelopment-analysis.html#cb149-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_objective</span>(LPSlack, <span class="fu">sum_expr</span>(</span>
-<span id="cb149-36"><a href="data-envelopment-analysis.html#cb149-36" aria-hidden="true" tabindex="-1"></a>              xslack[i], <span class="at">i=</span><span class="dv">1</span><span class="sc">:</span>NX)<span class="sc">+</span><span class="fu">sum_expr</span>(</span>
-<span id="cb149-37"><a href="data-envelopment-analysis.html#cb149-37" aria-hidden="true" tabindex="-1"></a>                yslack[r], <span class="at">r=</span><span class="dv">1</span><span class="sc">:</span>NY), <span class="st">&quot;max&quot;</span>)</span>
-<span id="cb149-38"><a href="data-envelopment-analysis.html#cb149-38" aria-hidden="true" tabindex="-1"></a>          <span class="co"># Modify the objective function for phase 2</span></span>
-<span id="cb149-39"><a href="data-envelopment-analysis.html#cb149-39" aria-hidden="true" tabindex="-1"></a>    result <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(LPSlack, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>)) </span>
-<span id="cb149-40"><a href="data-envelopment-analysis.html#cb149-40" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb149-41"><a href="data-envelopment-analysis.html#cb149-41" aria-hidden="true" tabindex="-1"></a>    res.efficiency[k] <span class="ot">&lt;-</span>  <span class="fu">get_solution</span>(result, vtheta)       </span>
-<span id="cb149-42"><a href="data-envelopment-analysis.html#cb149-42" aria-hidden="true" tabindex="-1"></a>    res.lambda[k,] <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">as.matrix</span>(</span>
-<span id="cb149-43"><a href="data-envelopment-analysis.html#cb149-43" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">as.numeric</span>(<span class="fu">get_solution</span>(result, </span>
-<span id="cb149-44"><a href="data-envelopment-analysis.html#cb149-44" aria-hidden="true" tabindex="-1"></a>                                         vlambda[j])[,<span class="dv">3</span>] )))</span>
-<span id="cb149-45"><a href="data-envelopment-analysis.html#cb149-45" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb150-1"><a href="data-envelopment-analysis.html#cb150-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(<span class="fu">head</span>(<span class="fu">cbind</span>(res.efficiency,<span class="fu">poscol</span>(res.lambda[<span class="dv">1</span><span class="sc">:</span><span class="dv">25</span>,]))),</span>
-<span id="cb150-2"><a href="data-envelopment-analysis.html#cb150-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">booktabs=</span>T, <span class="at">escape=</span>F,</span>
-<span id="cb150-3"><a href="data-envelopment-analysis.html#cb150-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption=</span><span class="st">&quot;Selected Input-oriented Efficiency Results </span></span>
-<span id="cb150-4"><a href="data-envelopment-analysis.html#cb150-4" aria-hidden="true" tabindex="-1"></a><span class="st">    with Slack Maximization&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb150-5"><a href="data-envelopment-analysis.html#cb150-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="data-envelopment-analysis.html#cb147-1" aria-hidden="true" tabindex="-1"></a>RTS<span class="ot">&lt;-</span><span class="st">&quot;CRS&quot;</span></span>
+<span id="cb147-2"><a href="data-envelopment-analysis.html#cb147-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>ND) {</span>
+<span id="cb147-3"><a href="data-envelopment-analysis.html#cb147-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb147-4"><a href="data-envelopment-analysis.html#cb147-4" aria-hidden="true" tabindex="-1"></a>  LPSlack <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>()                                     <span class="sc">|&gt;</span></span>
+<span id="cb147-5"><a href="data-envelopment-analysis.html#cb147-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_variable</span>(vlambda[j], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, </span>
+<span id="cb147-6"><a href="data-envelopment-analysis.html#cb147-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">lb =</span> <span class="dv">0</span>)                                    <span class="sc">|&gt;</span></span>
+<span id="cb147-7"><a href="data-envelopment-analysis.html#cb147-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_variable</span>(vtheta, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>)               <span class="sc">|&gt;</span></span>
+<span id="cb147-8"><a href="data-envelopment-analysis.html#cb147-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_variable</span>(xslack[i], <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>NX, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, </span>
+<span id="cb147-9"><a href="data-envelopment-analysis.html#cb147-9" aria-hidden="true" tabindex="-1"></a>                 <span class="at">lb=</span><span class="dv">0</span>)                                      <span class="sc">|&gt;</span></span>
+<span id="cb147-10"><a href="data-envelopment-analysis.html#cb147-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_variable</span>(yslack[r], <span class="at">r =</span> <span class="dv">1</span><span class="sc">:</span>NY, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, </span>
+<span id="cb147-11"><a href="data-envelopment-analysis.html#cb147-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">lb=</span><span class="dv">0</span>)                                      <span class="sc">|&gt;</span></span>
+<span id="cb147-12"><a href="data-envelopment-analysis.html#cb147-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb147-13"><a href="data-envelopment-analysis.html#cb147-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_objective</span>(vtheta, <span class="st">&quot;min&quot;</span>)                            <span class="sc">|&gt;</span></span>
+<span id="cb147-14"><a href="data-envelopment-analysis.html#cb147-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb147-15"><a href="data-envelopment-analysis.html#cb147-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_constraint</span>(<span class="fu">sum_expr</span>(vlambda[j] <span class="sc">*</span> xdata[j,i] <span class="sc">+</span> </span>
+<span id="cb147-16"><a href="data-envelopment-analysis.html#cb147-16" aria-hidden="true" tabindex="-1"></a>                              xslack[i], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND) </span>
+<span id="cb147-17"><a href="data-envelopment-analysis.html#cb147-17" aria-hidden="true" tabindex="-1"></a>                   <span class="sc">-</span> vtheta <span class="sc">*</span> xdata[k,i]<span class="sc">==</span><span class="dv">0</span>, <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>NX, </span>
+<span id="cb147-18"><a href="data-envelopment-analysis.html#cb147-18" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.show_progress_bar=</span><span class="cn">FALSE</span> )               <span class="sc">|&gt;</span></span>
+<span id="cb147-19"><a href="data-envelopment-analysis.html#cb147-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb147-20"><a href="data-envelopment-analysis.html#cb147-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_constraint</span>(<span class="fu">sum_expr</span>(vlambda[j] <span class="sc">*</span> ydata[j,r] <span class="sc">-</span></span>
+<span id="cb147-21"><a href="data-envelopment-analysis.html#cb147-21" aria-hidden="true" tabindex="-1"></a>                              yslack[r], <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND) </span>
+<span id="cb147-22"><a href="data-envelopment-analysis.html#cb147-22" aria-hidden="true" tabindex="-1"></a>                    <span class="sc">==</span>ydata[k,r], <span class="at">r =</span> <span class="dv">1</span><span class="sc">:</span>NY, </span>
+<span id="cb147-23"><a href="data-envelopment-analysis.html#cb147-23" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.show_progress_bar=</span><span class="cn">FALSE</span> ) </span>
+<span id="cb147-24"><a href="data-envelopment-analysis.html#cb147-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (RTS<span class="sc">==</span><span class="st">&quot;VRS&quot;</span>) {LPSlack<span class="ot">&lt;-</span></span>
+<span id="cb147-25"><a href="data-envelopment-analysis.html#cb147-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">add_constraint</span>(LPSlack, <span class="fu">sum_expr</span>(vlambda[j],</span>
+<span id="cb147-26"><a href="data-envelopment-analysis.html#cb147-26" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span>ND) <span class="sc">==</span> <span class="dv">1</span>) }  </span>
+<span id="cb147-27"><a href="data-envelopment-analysis.html#cb147-27" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Returns to Scale</span></span>
+<span id="cb147-28"><a href="data-envelopment-analysis.html#cb147-28" aria-hidden="true" tabindex="-1"></a>    result <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(LPSlack, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>)) </span>
+<span id="cb147-29"><a href="data-envelopment-analysis.html#cb147-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The following are key steps to slack maximization </span></span>
+<span id="cb147-30"><a href="data-envelopment-analysis.html#cb147-30" aria-hidden="true" tabindex="-1"></a>    phase1obj <span class="ot">&lt;-</span>  <span class="fu">get_solution</span>(result, vtheta)  </span>
+<span id="cb147-31"><a href="data-envelopment-analysis.html#cb147-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get Phase 1 objective value</span></span>
+<span id="cb147-32"><a href="data-envelopment-analysis.html#cb147-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_constraint</span>(LPSlack, vtheta<span class="sc">==</span>phase1obj)   </span>
+<span id="cb147-33"><a href="data-envelopment-analysis.html#cb147-33" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Passing result from phase 1 to phase 2</span></span>
+<span id="cb147-34"><a href="data-envelopment-analysis.html#cb147-34" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb147-35"><a href="data-envelopment-analysis.html#cb147-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_objective</span>(LPSlack, <span class="fu">sum_expr</span>(</span>
+<span id="cb147-36"><a href="data-envelopment-analysis.html#cb147-36" aria-hidden="true" tabindex="-1"></a>              xslack[i], <span class="at">i=</span><span class="dv">1</span><span class="sc">:</span>NX)<span class="sc">+</span><span class="fu">sum_expr</span>(</span>
+<span id="cb147-37"><a href="data-envelopment-analysis.html#cb147-37" aria-hidden="true" tabindex="-1"></a>                yslack[r], <span class="at">r=</span><span class="dv">1</span><span class="sc">:</span>NY), <span class="st">&quot;max&quot;</span>)</span>
+<span id="cb147-38"><a href="data-envelopment-analysis.html#cb147-38" aria-hidden="true" tabindex="-1"></a>          <span class="co"># Modify the objective function for phase 2</span></span>
+<span id="cb147-39"><a href="data-envelopment-analysis.html#cb147-39" aria-hidden="true" tabindex="-1"></a>    result <span class="ot">&lt;-</span> <span class="fu">solve_model</span>(LPSlack, <span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>)) </span>
+<span id="cb147-40"><a href="data-envelopment-analysis.html#cb147-40" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb147-41"><a href="data-envelopment-analysis.html#cb147-41" aria-hidden="true" tabindex="-1"></a>    res.efficiency[k] <span class="ot">&lt;-</span>  <span class="fu">get_solution</span>(result, vtheta)       </span>
+<span id="cb147-42"><a href="data-envelopment-analysis.html#cb147-42" aria-hidden="true" tabindex="-1"></a>    res.lambda[k,] <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">as.matrix</span>(</span>
+<span id="cb147-43"><a href="data-envelopment-analysis.html#cb147-43" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">as.numeric</span>(<span class="fu">get_solution</span>(result, </span>
+<span id="cb147-44"><a href="data-envelopment-analysis.html#cb147-44" aria-hidden="true" tabindex="-1"></a>                                         vlambda[j])[,<span class="dv">3</span>] )))</span>
+<span id="cb147-45"><a href="data-envelopment-analysis.html#cb147-45" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb148-1"><a href="data-envelopment-analysis.html#cb148-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(<span class="fu">head</span>(<span class="fu">cbind</span>(res.efficiency,<span class="fu">poscol</span>(res.lambda[<span class="dv">1</span><span class="sc">:</span><span class="dv">25</span>,]))),</span>
+<span id="cb148-2"><a href="data-envelopment-analysis.html#cb148-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">booktabs=</span>T, <span class="at">escape=</span>F,</span>
+<span id="cb148-3"><a href="data-envelopment-analysis.html#cb148-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption=</span><span class="st">&quot;Selected Input-oriented Efficiency Results </span></span>
+<span id="cb148-4"><a href="data-envelopment-analysis.html#cb148-4" aria-hidden="true" tabindex="-1"></a><span class="st">    with Slack Maximization&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb148-5"><a href="data-envelopment-analysis.html#cb148-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">&quot;hold_position&quot;</span>)</span></code></pre></div>
 </div>
 <div id="dea-packages" class="section level2" number="5.10">
 <h2><span class="header-section-number">5.10</span> DEA Packages</h2>
