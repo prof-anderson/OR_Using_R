@@ -24,7 +24,7 @@
 <meta name="author" content="Timothy R. Anderson" />
 
 
-<meta name="date" content="2021-12-22" />
+<meta name="date" content="2021-12-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -495,9 +495,9 @@ FIGURE C.2: Rendering Error Caused by Blank LaTeX Line
 <h3><span class="header-section-number">C.2.5</span> Problems with PDF Creation</h3>
 <p>Knitting to PDF uses the LaTeX environment so a variety of other issues may arise. While sometimes these are spotted late in a project, the source is often at early stage of work so I am including it in the Model Building section.</p>
 <p>Typically everything must be correct for an RMarkdown to be knitted. For example, when I want to rebuild this book, I will often use the <code>Build Book</code> command in RStudio. This will go through all analyses and generate a fully up to date version of the book. Alas, sometimes I only want a specific chapter, perhaps because there is an error in another chapter that I’m wrestling with. Even a single error can cause this to not build. Knitting to PDF would be next option but the various options and settings that I’m using for this book seem to prevent the Knit to PDF from working. A third option is to use the render command directly. The following command will render the file for the second chapter of the book.</p>
-<div class="sourceCode" id="cb306"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb306-1"><a href="troubleshooting.html#cb306-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rmarkdown)</span>
-<span id="cb306-2"><a href="troubleshooting.html#cb306-2" aria-hidden="true" tabindex="-1"></a>rmarkdown<span class="sc">::</span><span class="fu">render</span>(<span class="st">&quot;02-A_First_LP.Rmd&quot;</span>, <span class="st">&quot;pdf_document&quot;</span>)</span>
-<span id="cb306-3"><a href="troubleshooting.html#cb306-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Renders as a regular PDF document</span></span></code></pre></div>
+<div class="sourceCode" id="cb304"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb304-1"><a href="troubleshooting.html#cb304-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rmarkdown)</span>
+<span id="cb304-2"><a href="troubleshooting.html#cb304-2" aria-hidden="true" tabindex="-1"></a>rmarkdown<span class="sc">::</span><span class="fu">render</span>(<span class="st">&quot;02-A_First_LP.Rmd&quot;</span>, <span class="st">&quot;pdf_document&quot;</span>)</span>
+<span id="cb304-3"><a href="troubleshooting.html#cb304-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Renders as a regular PDF document</span></span></code></pre></div>
 <p>Another possible problem is having the PDF file open from having previously created it. This will typically generate a message about being unable to write the PDF file. The solution is to simply ensure that the PDF is not open in any other program.</p>
 <p>A related issue is that there could be a temporary file for debugging purposes that needs to be deleted before it can be done. I often see this with a Markdown file (<code>.md</code>), not to be confused with the RMarkdown file (<code>.Rmd</code>).</p>
 <p>Avoid using an underscore, <code>_</code>, in the code chunk label for any code chunk that involves a <code>kable</code> or graphical figure. This can cause strange errors when knitting to PDF. While the underscore is valid for a code chunk name, its importance in LaTeX causes problems - it is best to just a dash.</p>
@@ -513,14 +513,14 @@ FIGURE C.2: Rendering Error Caused by Blank LaTeX Line
 <p>While piping is very convenient for simplifying the implementation it has a couple of major drawbacks. First, piping may be a little slower than non-piped implementations. Second and more important for debugging problems - an error message in one line will point to the entire piped object rather than the specific line. This can make it very hard to see where the problem is.</p>
 <p>As an example, running all code chunks for a case returned this error message to the right in my console. (Note that a similar message would also happen if I were knitting an RMarkdown document.) Also, in this example, I used the original piping operator, <code>%&gt;%</code> which required the <code>magrittr</code> package rather than the new piping operator <code>|&gt;</code> built into R 4.1.0 and higher. The same issue occurs regardless of the piping operator used.  </p>
 <div class="figure"><span style="display:block;" id="fig:Fig-piping-error0"></span>
-<img src="images/ERRORS_piping_error0.PNG" alt="Name conflict error between R and `ompr`" width="4in" />
+<img src="images/ERRORS_piping_error0.PNG" alt="Name conflict error between R and `ompr`" width="60%" />
 <p class="caption">
 FIGURE C.3: Name conflict error between R and <code>ompr</code>
 </p>
 </div>
 <p>One of the many advantages to a modern integrated development environment, IDE, like RStudio is that it helps in debugging. In this case, looking in the code pane, RStudio has a red vertical line indicating R’s best guess as to where the problem is. Unfortunately, we have a long vertical bar covering 11 lines, the entire piped object, as the source of the problem rather than a single line. When piping, it is treated as a single line and R can’t narrow down the problem further. I’ll leave it as a challenge for the reader to the find the error in the code to the right.</p>
 <div class="figure"><span style="display:block;" id="fig:Fig-piping-error1"></span>
-<img src="images/ERRORS_piping_error1.PNG" alt="Inability to Focus on Error Source in a Piped Model." width="4in" />
+<img src="images/ERRORS_piping_error1.PNG" alt="Inability to Focus on Error Source in a Piped Model." width="60%" />
 <p class="caption">
 FIGURE C.4: Inability to Focus on Error Source in a Piped Model.
 </p>
@@ -536,7 +536,7 @@ FIGURE C.5: Piped vs. Unpiped Model.
 <p>Unpiping a piped model is easy. The first step is to remove all of the pipe operators <code>%&gt;%</code> or <code>|&gt;</code>. Second, every <code>ompr</code> command after the model is initialized needs to be modified to name the model that is being enhanced. Lastly, every line needs to say to what the enhanced model is being assigned. The following figure is an unpiped version of the earlier code chunk that has the same error as the earlier screen capture but it is now much easier to find the error as the reader only has to look at one line of code - the line to the right of the red vertical bar. <br />
 </p>
 <div class="figure"><span style="display:block;" id="fig:Fig-piping-error2"></span>
-<img src="images/ERRORS_piping_error2.PNG" alt="Finding an Error in an Unpiped Model." width="4in" />
+<img src="images/ERRORS_piping_error2.PNG" alt="Finding an Error in an Unpiped Model." width="45%" />
 <p class="caption">
 FIGURE C.6: Finding an Error in an Unpiped Model.
 </p>
@@ -572,8 +572,7 @@ FIGURE C.7: Error from an defined variable.
 </div>
 <div id="unexpected-symbol-in-ompr" class="section level3" number="11.3.3">
 <h3><span class="header-section-number">C.3.3</span> Unexpected Symbol in <code>ompr</code></h3>
-<p>Another problem for a student occurred with in the following code chunk of an <code>ompr</code> linear programming model generated an ’Error: unexpected symbol in:` message.<br />
-</p>
+<p>Another problem for a student occurred with in the following code chunk of an <code>ompr</code> linear programming model generated an ’Error: unexpected symbol in:` message.</p>
 <div class="figure"><span style="display:block;" id="fig:Fig-unexpected-symbol"></span>
 <img src="images/ERRORS_ompr_unexpected_symbol.png" alt="Unexpected Symbol in ompr" width="100%" />
 <p class="caption">
@@ -587,37 +586,35 @@ FIGURE C.8: Unexpected Symbol in ompr
 <p>It is an important feature of <code>ompr</code> that it has access to all of the data objects that you have defined. This enables rich models to be built without specifically passing each piece of data into a function. This has a critical requirement that you should avoid using the same name for something as an <code>ompr</code> variable and an R object. This can happen when you want to have a LP variable be used for the same purpose in the rest of our R code or perhaps because the variable name is used elsewhere in your work for other purposes. Simple variable names such as <code>x</code> or <code>y</code> are particularly likely to find multiple uses and therefore conflicts. <strong>Hint:</strong> Sometimes it may be helpful to clear your environment to avoid other conflicts. This may help resolve some other inscrutable errors.</p>
 <p>This example illustrates what happens when you have an object in your general R environment with the same name as an <code>ompr</code> model variable.</p>
 <p>Here is a very simple linear program formulated and solved using <code>ompr</code>. Again, it uses the old piping operator instead of the new <code>|&gt;</code> operator.</p>
-<div class="sourceCode" id="cb307"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb307-1"><a href="troubleshooting.html#cb307-1" aria-hidden="true" tabindex="-1"></a>result1 <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb307-2"><a href="troubleshooting.html#cb307-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(A, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb307-3"><a href="troubleshooting.html#cb307-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(B, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>,<span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb307-4"><a href="troubleshooting.html#cb307-4" aria-hidden="true" tabindex="-1"></a> </span>
-<span id="cb307-5"><a href="troubleshooting.html#cb307-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_objective</span>(<span class="dv">20</span><span class="sc">*</span>A <span class="sc">+</span> <span class="dv">14</span><span class="sc">*</span>B, <span class="st">&quot;max&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb307-6"><a href="troubleshooting.html#cb307-6" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb307-7"><a href="troubleshooting.html#cb307-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">6</span><span class="sc">*</span>A <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>B <span class="sc">&lt;=</span> <span class="dv">200</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb307-8"><a href="troubleshooting.html#cb307-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">solve_model</span>(<span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb305"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb305-1"><a href="troubleshooting.html#cb305-1" aria-hidden="true" tabindex="-1"></a>result1 <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb305-2"><a href="troubleshooting.html#cb305-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(A, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb305-3"><a href="troubleshooting.html#cb305-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(B, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>,<span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb305-4"><a href="troubleshooting.html#cb305-4" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb305-5"><a href="troubleshooting.html#cb305-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_objective</span>(<span class="dv">20</span><span class="sc">*</span>A <span class="sc">+</span> <span class="dv">14</span><span class="sc">*</span>B, <span class="st">&quot;max&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb305-6"><a href="troubleshooting.html#cb305-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb305-7"><a href="troubleshooting.html#cb305-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">6</span><span class="sc">*</span>A <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>B <span class="sc">&lt;=</span> <span class="dv">200</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb305-8"><a href="troubleshooting.html#cb305-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">solve_model</span>(<span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span></code></pre></div>
 <p>Let’s verify that it solved to optimality.</p>
-<div class="sourceCode" id="cb308"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb308-1"><a href="troubleshooting.html#cb308-1" aria-hidden="true" tabindex="-1"></a>result1</span></code></pre></div>
+<div class="sourceCode" id="cb306"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb306-1"><a href="troubleshooting.html#cb306-1" aria-hidden="true" tabindex="-1"></a>result1</span></code></pre></div>
 <pre><code>## Status: optimal
 ## Objective value: 1400</code></pre>
 <p>Now, let’s redo this with an identical LP, but renaming the variables from <code>A</code> and <code>B</code> to <code>C</code> and <code>D</code>. To trigger this problem, we will define <code>C</code> to be a matrix.</p>
-<div class="sourceCode" id="cb310"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb310-1"><a href="troubleshooting.html#cb310-1" aria-hidden="true" tabindex="-1"></a>C <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>), <span class="at">ncol=</span><span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb308"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb308-1"><a href="troubleshooting.html#cb308-1" aria-hidden="true" tabindex="-1"></a>C <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>), <span class="at">ncol=</span><span class="dv">2</span>)</span></code></pre></div>
 <p>Now, we create the same LP but renaming <code>A</code> and <code>B</code> as <code>C</code> and <code>D</code>.}</p>
-<div class="sourceCode" id="cb311"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb311-1"><a href="troubleshooting.html#cb311-1" aria-hidden="true" tabindex="-1"></a>result2 <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb311-2"><a href="troubleshooting.html#cb311-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(C, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb311-3"><a href="troubleshooting.html#cb311-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(D, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>,<span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb311-4"><a href="troubleshooting.html#cb311-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_objective</span>(<span class="dv">20</span><span class="sc">*</span>C <span class="sc">+</span> <span class="dv">14</span><span class="sc">*</span>D, <span class="st">&quot;max&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb311-5"><a href="troubleshooting.html#cb311-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">6</span><span class="sc">*</span>C <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>D <span class="sc">&lt;=</span> <span class="dv">200</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb311-6"><a href="troubleshooting.html#cb311-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">solve_model</span>(<span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span></code></pre></div>
-<p>Since this LP is identical to the previous one other than changing names, it <em>should</em> work. Alas, we get an error message.<br />
-</p>
+<div class="sourceCode" id="cb309"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb309-1"><a href="troubleshooting.html#cb309-1" aria-hidden="true" tabindex="-1"></a>result2 <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb309-2"><a href="troubleshooting.html#cb309-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(C, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb309-3"><a href="troubleshooting.html#cb309-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(D, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>,<span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb309-4"><a href="troubleshooting.html#cb309-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_objective</span>(<span class="dv">20</span><span class="sc">*</span>C <span class="sc">+</span> <span class="dv">14</span><span class="sc">*</span>D, <span class="st">&quot;max&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb309-5"><a href="troubleshooting.html#cb309-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">6</span><span class="sc">*</span>C <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>D <span class="sc">&lt;=</span> <span class="dv">200</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb309-6"><a href="troubleshooting.html#cb309-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">solve_model</span>(<span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span></code></pre></div>
+<p>Since this LP is identical to the previous one other than changing names, it <em>should</em> work. Alas, we get an error message.</p>
 <div class="figure"><span style="display:block;" id="fig:Fig-ompr-var1"></span>
-<img src="images/ERRORS_ompr_name_variable_conflicts1.PNG" alt="Error Due to Name Conflict between R and `ompr`" width="4in" />
+<img src="images/ERRORS_ompr_name_variable_conflicts1.PNG" alt="Error Due to Name Conflict between R and `ompr`" width="55%" />
 <p class="caption">
 FIGURE C.9: Error Due to Name Conflict between R and <code>ompr</code>
 </p>
 </div>
-<p>Notice that the error message may not actually refer to the variables causing the problem. In our example, variable <code>C</code> is causing the problem but it refers to <code>x</code>. This is because the error is actually occurring deeper in the <code>ompr</code> code which has already transformed the actual variables into a more abstract notation.<br />
-</p>
+<p>Notice that the error message may not actually refer to the variables causing the problem. In our example, variable <code>C</code> is causing the problem but it refers to <code>x</code>. This is because the error is actually occurring deeper in the <code>ompr</code> code which has already transformed the actual variables into a more abstract notation.</p>
 <div class="figure"><span style="display:block;" id="fig:Fig-ompr-var2"></span>
 <img src="images/ERRORS_ompr_name_variable_conflicts2.PNG" alt="Error as Displayed in Console from Run All Chunks." width="100%" />
 <p class="caption">
@@ -627,24 +624,22 @@ FIGURE C.10: Error as Displayed in Console from Run All Chunks.
 <p>If you run all chunks, you may get the following error message. It doesn’t make clear which variable is generating the error but does list the <code>ompr</code> variables so that you can perhaps narrow them down.<br />
 </p>
 <p><img src="images/ERRORS_ompr_name_variable_conflicts3.PNG" width="100%" /></p>
-<p>Another way to potentially deal with this problem or others is to periodically clear or sweep your RStudio environment of past objects. This can be done by using the broom icon in the Environment tab of RStudio.<br />
-</p>
+<p>Another way to potentially deal with this problem or others is to periodically clear or sweep your RStudio environment of past objects. This can be done by using the broom icon in the Environment tab of RStudio.</p>
 <div class="figure"><span style="display:block;" id="fig:Fig-ompr-var4"></span>
 <img src="images/ERRORS_ompr_name_variable_conflicts4.PNG" alt="Sweeping Out the Environment" width="100%" />
 <p class="caption">
 FIGURE C.11: Sweeping Out the Environment
 </p>
 </div>
-<p>Since the problem is having the same name for objects inside and outside of <code>ompr</code> an an easy solution is to adopt a convention that differentiates <code>ompr</code> variables. I have adopted the convention of prefixing all <code>ompr</code> variables with a capital <code>V</code> to suggest that it is a mathematical programming variable. Readers can then easily differentiate which items in constraints or the objective function are variables (specific to <code>ompr</code>) and which are sources of data from outside of <code>ompr</code>. The resulting model is shown below. When expressing the model mathematically for readers, I can then omit the <code>V</code> prefix.<br />
-</p>
-<div class="sourceCode" id="cb312"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb312-1"><a href="troubleshooting.html#cb312-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fixing the Problem by Giving Variables Unique Names</span></span>
-<span id="cb312-2"><a href="troubleshooting.html#cb312-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb312-3"><a href="troubleshooting.html#cb312-3" aria-hidden="true" tabindex="-1"></a>result2 <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb312-4"><a href="troubleshooting.html#cb312-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(VC, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb312-5"><a href="troubleshooting.html#cb312-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(VD, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb312-6"><a href="troubleshooting.html#cb312-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_objective</span>(<span class="dv">20</span><span class="sc">*</span>VC <span class="sc">+</span> <span class="dv">14</span><span class="sc">*</span>VD, <span class="st">&quot;max&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb312-7"><a href="troubleshooting.html#cb312-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">6</span><span class="sc">*</span>VC <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>VD <span class="sc">&lt;=</span> <span class="dv">200</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb312-8"><a href="troubleshooting.html#cb312-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">solve_model</span>(<span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span></code></pre></div>
+<p>Since the problem is having the same name for objects inside and outside of <code>ompr</code> an an easy solution is to adopt a convention that differentiates <code>ompr</code> variables. I have adopted the convention of prefixing all <code>ompr</code> variables with a capital <code>V</code> to suggest that it is a mathematical programming variable. Readers can then easily differentiate which items in constraints or the objective function are variables (specific to <code>ompr</code>) and which are sources of data from outside of <code>ompr</code>. The resulting model is shown below. When expressing the model mathematically for readers, I can then omit the <code>V</code> prefix.</p>
+<div class="sourceCode" id="cb310"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb310-1"><a href="troubleshooting.html#cb310-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fixing the Problem by Giving Variables Unique Names</span></span>
+<span id="cb310-2"><a href="troubleshooting.html#cb310-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb310-3"><a href="troubleshooting.html#cb310-3" aria-hidden="true" tabindex="-1"></a>result2 <span class="ot">&lt;-</span> <span class="fu">MIPModel</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb310-4"><a href="troubleshooting.html#cb310-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(VC, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb310-5"><a href="troubleshooting.html#cb310-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_variable</span>(VD, <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>, <span class="at">lb =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb310-6"><a href="troubleshooting.html#cb310-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_objective</span>(<span class="dv">20</span><span class="sc">*</span>VC <span class="sc">+</span> <span class="dv">14</span><span class="sc">*</span>VD, <span class="st">&quot;max&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb310-7"><a href="troubleshooting.html#cb310-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_constraint</span>(<span class="dv">6</span><span class="sc">*</span>VC <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>VD <span class="sc">&lt;=</span> <span class="dv">200</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb310-8"><a href="troubleshooting.html#cb310-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">solve_model</span>(<span class="fu">with_ROI</span>(<span class="at">solver =</span> <span class="st">&quot;glpk&quot;</span>))</span></code></pre></div>
 </div>
 <div id="blindly-reusing-code" class="section level3" number="11.3.5">
 <h3><span class="header-section-number">C.3.5</span> Blindly Reusing Code</h3>

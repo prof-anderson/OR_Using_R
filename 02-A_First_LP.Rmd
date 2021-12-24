@@ -90,7 +90,7 @@ Given that the linear program has two variables, it can be represented in two di
 
 We do this by iteratively adding each constraint and trimming the feasible region. The line can be drawn by looking at the constraint from two perspectives. First as if only Ants are produced and second as if only Bats are produced. This gives specific point on the horizontal and vertical axes respectively which are simply connected.\
 
-```{r Fig-First-Constraint, echo=FALSE, out.width="3in",  fig.align='center', fig.cap="Drawing a First Constraint."}
+```{r Fig-First-Constraint, echo=FALSE, out.width="55%",  fig.align='center', fig.cap="Drawing a First Constraint."}
 library(knitr) 
 knitr::include_graphics("images/Fig02-01-First-Constraint.PNG")
 ```
@@ -99,19 +99,19 @@ The constraints are differentiated by color and the diagonal lines of the same c
 
 In each figure, we illustrate the feasible region as a grayed oval but it is the whole region.\
 
-```{r Fig-Second-Constraint, echo=FALSE,  out.width="3in",  fig.align='center',fig.cap="Adding the Assembly Constraint."}
+```{r Fig-Second-Constraint, echo=FALSE,  out.width="55%",  fig.align='center',fig.cap="Adding the Assembly Constraint."}
 knitr::include_graphics("images/Fig02-02-Second-Constraint.PNG")
 ```
 
 The assembly constraint is drawn as a red line connecting a production plan of just 300 Ants on the horizontal axis to just 150 Bats on the vertical axis.
 
-```{r Fig-Third-Constraint, echo=FALSE, out.width="3in", fig.align='center', fig.cap="Adding the Testing Constraint." }
+```{r Fig-Third-Constraint, echo=FALSE, out.width="55%", fig.align='center', fig.cap="Adding the Testing Constraint." }
 knitr::include_graphics("images/Fig02-03-Third-Constraint.PNG")
 ```
 
 Since both products require two hours of testing and there are 480 hours available, the Green Testing constraint connects producing just 240 Ants and just 240 Bats.
 
-```{r Fig-Fourth-Constraint, echo=FALSE, out.width="3in", fig.align='center', fig.cap="Adding the Sensors Constraint."}
+```{r Fig-Fourth-Constraint, echo=FALSE, out.width="55%", fig.align='center', fig.cap="Adding the Sensors Constraint."}
 knitr::include_graphics("images/Fig02-04-Fourth-Constraint.PNG")
 ```
 
@@ -119,19 +119,19 @@ We now draw our fourth and final constraint - Sensors. This constraint is done i
 
 This now results in a feasible region that satisfies all of the constraints simultaneously. Every point in this region is feasible or possible in that it does not violate any of the constraints. There is an infinite number of possible points in this feasible region.
 
-```{r Fig-Feasible-Region, echo=FALSE, fig.align='center', out.width="3in", fig.cap="Feasible Region for Drone Manufacturing."}
+```{r Fig-Feasible-Region, echo=FALSE, fig.align='center', out.width="55%", fig.cap="Feasible Region for Drone Manufacturing."}
 knitr::include_graphics("images/Fig02-05-Feasible-Region.PNG")
 ```
 
 Given that we are doing linear programming and we are trying to maximize or minimize a certain objective function, the optimal solution will be at a corner point or more formally, a vertex. In our example, we can narrow our attention from the full feasible region to just the five vertices or candidate solutions.
 
-```{r Fig-Candidate-Solutions, echo=FALSE,  fig.align='center', out.width="3in", fig.cap="Candidate Solutions."}
+```{r Fig-Candidate-Solutions, echo=FALSE,  fig.align='center', out.width="55%", fig.cap="Candidate Solutions."}
 knitr::include_graphics("images/Fig02-06-Candidate-Solutions.PNG")
 ```
 
 Lastly, we can pick from among these possible solutions by drawing parallel, equal profit lines radiating out from the origin to find the last line that still touches the feasible region. The figure to the right shows one line with a profit of $\$ 1400$. A second line is drawn that last touches the feasible region is at $\$ 1980$.
 
-```{r Fig-Iso-Profit, echo=FALSE,  fig.align='center', out.width="3in", fig.cap="Parallel Equal Profit Lines."}
+```{r Fig-Iso-Profit, echo=FALSE,  fig.align='center', out.width="55%", fig.cap="Parallel Equal Profit Lines."}
 knitr::include_graphics("images/Fig02-07-Iso-Profit.PNG")
 ```
 
@@ -139,7 +139,7 @@ Graphically, we could read the number of Ants and number of Bats to produce. Acc
 
 Rather than relying on this graphical approach for determining the coordinates of each point drawn, each point in a two dimensional space is defined by the intersection of two lines. In this case, the optimal solution (and all of the other candidate solutions too) can be defined by the intersection of two constraint lines, rewritten as exact equalities. These can be solved as a system of equations with two equations and two unknowns. The optimal solution here is defined by the intersection of the Assembly (Red) and the Testing (Green) constraints. Just solve $3A+6B=900$ and $2A+2B=480$ for $A$ and $B$.
 
-```{r Fig-Optimal-Solution, echo=FALSE,  fig.align='center', out.width="3in", fig.cap="Optimal Solution."}
+```{r Fig-Optimal-Solution, echo=FALSE,  fig.align='center', out.width="55%", fig.cap="Optimal Solution."}
 knitr::include_graphics("images/Fig02-08-Optimal-Solution.PNG")
 ```
 
