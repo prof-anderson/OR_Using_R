@@ -39,7 +39,6 @@ exr:unlabeled-div-10
 exr:unlabeled-div-11
 tab:nurse-scheduling
 exr:unlabeled-div-12
-eq:base3varmodela
 tab:Base3VarModelA
 tab:rduals-3var
 tab:IncAssemHrs

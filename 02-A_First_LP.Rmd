@@ -780,15 +780,15 @@ obtaining required results in later exercises in this book.
 
 Rose City Roasters provides premium roasted coffee beans for regional coffee shops. There are four important steps:  Arranging the beans, roasting the beans, allowing them to cool, and then giving them a chance to cool down.  This is followed by degassing and then packaging.  
 
-|                      | Light | Medium | Medium-Dark | Dark  | Available (hours)|
-|---------------------:|:-----:|:------:|:-----------:|:-----:|:------:|
-| Price   ($/lb)       | \$8   | \$10   | \$9         | \$11  |        |
-| Variable Cost ($/lb) | \$5.0 | \$5.2  | \$5.55      | \$6   |        |
-| Arrange (lbs/hr)     |  10   | 10     | 10          | 10    |  4000  |
-| Roast   (lbs/hr)     |  6    |  4     |  2          |  8    |  2000  |
-| Cool     (lbs/hr)    |  3    |  2     |  2          |  2    |  1480  |
-| Degas      (lbs/hr)  |  3    |  4     |  2          |  4    |  1200  |
-| Packaging  (lbs/hr)  |  4    |  4     |  2          |  3    |  1200  |
+|                       | Light | Medium | Medium-Dark | Dark  | Available (hours)|
+|----------------------:|:-----:|:------:|:-----------:|:-----:|:------:|
+| Price   (\$/lb)       | \$8   | \$10   | \$9         | \$11  |        |
+| Variable Cost (\$/lb) | \$5.0 | \$5.2  | \$5.55      | \$6   |        |
+| Arrange (lbs/hr)      |  10   | 10     | 10          | 10    |  4000  |
+| Roast   (lbs/hr)      |  6    |  4     |  2          |  8    |  2000  |
+| Cool     (lbs/hr)     |  3    |  2     |  2          |  2    |  1480  |
+| Degas      (lbs/hr)   |  3    |  4     |  2          |  4    |  1200  |
+| Packaging  (lbs/hr)   |  4    |  4     |  2          |  3    |  1200  |
 
 Table: Data for Rose City Roasters
 

@@ -41,9 +41,8 @@ $$
                    & 3\cdot Ants + 6\cdot Bats +2\cdot Cats \leq 900 \\
                    & 2\cdot Ants + 2\cdot Bats +1\cdot Cats \leq 480 \\
                    & 2\cdot Ants + 10\cdot Bats +2\cdot Cats \leq 1200 \\
-                   & Ants, Bats, Cats \geq 0  
+                   & Ants, Bats, Cats \geq 0  \\
   \end{aligned}
-  (\#eq:base3varmodela)
   \end{split}
 $$
 
