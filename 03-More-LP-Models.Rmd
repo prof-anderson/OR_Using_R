@@ -513,7 +513,7 @@ Constraints are typically based on supply from the source nodes and capacity at 
 
 This naturally lends itself to potential network diagrams such as the one to the right.  In this case we have three warehouses (or supply points) in Minnesota (MN), Pennsylvania (PA), and Wyoming (WY), each with a supply shown to the left.  On the right side, we have four customer or demand nodes:  Atlanta (ATL), Boston (Bos), Chicago (Chi), and Denver (Den) with their maximum demand shown to the right of the node.  We also have arcs connecting every supply node to every demand node, each labeled with a corresponding cost per unit to transport an item along that arc.  The goal is to get as much shipped as possible at the lowest possible cost.
 
-```{r Fig-Transportation, echo=FALSE, out.width="3in", fig.show='hold',fig.align='center', fig.cap="Transporation Example"}
+```{r Fig-Transportation, echo=FALSE, out.width="50%", fig.show='hold',fig.align='center', fig.cap="Transporation Example"}
 knitr::include_graphics("images/Fig03-01-Transportation.PNG")
 ```
 
@@ -632,7 +632,7 @@ kbl (Transp, booktabs=T,
 
 A generalization of the transportation model is that of transshipment \index{Transshipment model} where some nodes are intermediate nodes that are neither pure sources or destinations but can have both inflow and outflow.  We could extend our previous example with factories in Vietnam and Thailand.  Note that the facilities in the middle (Minnesota, Pennsylvania, and Wyoming) are better described as distribution centers rather than warehouses.
 
-```{r Fig-Transshipment, echo=FALSE, out.width="3in", fig.show='hold', fig.align='center', fig.cap="Transshipment Application."}
+```{r Fig-Transshipment, echo=FALSE, out.width="50%", fig.show='hold', fig.align='center', fig.cap="Transshipment Application."}
 knitr::include_graphics("images/Fig03-02-Transshipment.PNG")
 ```
 

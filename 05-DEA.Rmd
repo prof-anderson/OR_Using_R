@@ -67,7 +67,7 @@ As the manager responsible for the stores in the region, there are many question
 
 We'll start by drawing a visual representation of the input-output model. The function `DrawIOdiagram` is from the `TRA` package and allows for creating a nicely formatted input-output diagram. \index{DrawIOdiagram}\
 
-```{r DEA-IO-Plot1, out.width="3in", fig.align='center', fig.cap="A Simple DEA Model for Store Management"}
+```{r DEA-IO-Plot1, out.width="50%", fig.align='center', fig.cap="A Simple DEA Model for Store Management"}
 library (TRA) # Note, may need to install directly from github
               # remotes::install_github("prof-anderson/TRA")
 
@@ -681,7 +681,7 @@ kbl (head(cbind(xdata,ydata)), booktabs=T,
 
 Now, let's move on to the DEA input-output diagram. We use the total research spending as an input and then five separate outputs for the various dimensions of technology transfer success measured by AUTM. This can be visualized with our input-output diagram.\
 
-```{r DEA_IO_Plot_Univ, out.width="4in"}
+```{r DEA_IO_Plot_Univ, out.width="60%"}
 Figure <- DrawIOdiagram (xnames_printable, 
                          ynames_printable,
                         '"\n\nUniversity\nTechnology\nTransfer\n\n"')

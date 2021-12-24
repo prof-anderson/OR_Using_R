@@ -527,7 +527,7 @@ kbl (BandB, booktabs=T,
 
 The Branch and Bound process is often characterized as a tree. Each subproblem is a circle and represents a separate linear program with its objective function value and decision variable values. The arcs or branches connecting to a new node show the added constraint.  
 
-```{r Fig-B-and-B-Summary, echo=FALSE, fig.align='center', fig.show='hold', out.width="4in", fig.cap="Branch and Bound Tree"}
+```{r Fig-B-and-B-Summary, echo=FALSE, fig.align='center', fig.show='hold', out.width="65%", fig.cap="Branch and Bound Tree"}
 knitr::include_graphics("images/BB16.PNG")
 ```
 
