@@ -778,9 +778,9 @@ obtaining required results in later exercises in this book.
 
 ::: {.exercise name="Rose City Roasters"}
 
-Rose City Roasters provides premium roasted coffee beans for regional coffee shops. There are four important steps:  Arranging the beans, roasting the beans, allowing them to cool, and then giving them a chance to cool down.  This is followed by degassing and then packaging.  
+Rose City Roasters provides premium roasted coffee beans for regional coffee shops. There are four important steps:  Arranging the beans, roasting the beans, allowing them to cool, and then giving them a chance to cool down.  This is followed by degassing and then packaging.  Processes have varying personnel and equipment with corresponding hours of available capacity.
 
-|                       | Light | Medium | Medium-Dark | Dark  | Available (hours)|
+|                       | Light | Medium | Medium-Dark | Dark  | Available|
 |----------------------:|:-----:|:------:|:-----------:|:-----:|:------:|
 | Price   (\$/lb)       | \$8   | \$10   | \$9         | \$11  |        |
 | Variable Cost (\$/lb) | \$5.0 | \$5.2  | \$5.55      | \$6   |        |

@@ -261,7 +261,7 @@ kbl(format(cat_res_used, digits=4), booktabs=T,
 
 In this case, using the columns from Table 4.6 we can calculate the marginal value as $2\cdot 0.25+2\cdot2.25+1\cdot0+2\cdot0=5$. Since the profit per Cat (from the objective function coefficient on Cats) is also $\$ 5$, they are in balance and the difference between them is zero which is why the reduced cost for the *Cats* variable is also zero.
 
-### Reduced Price of Bats
+### Reduced Cost of Bats
 
 The situation is more interesting for Bats. The production plan does not call for producing any Bats. This means that it is sitting right at the lower bound of zero Bats. This hints that perhaps we would like to make even less than zero Bats if we could and that being *forced* to make even one Bat would be costly. A reduced cost of $\$-2.5$ means that the opportunity cost of resources used in producing a Bat is $\$2.5$ more than the profit of producing a single Bat In other words, we would expect that if we force the production of a single Bat, the over all production plan's profit will go down by $\$2.5$.
 
