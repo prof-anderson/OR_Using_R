@@ -98,4 +98,4 @@ In addition, several groups have been of tremendous help:
 Most of all, I would like to also express my appreciation for my family's patience while working on this book with many late nights: Carrie, Trent, and Paige.
 
 > Tim Anderson
-> `r tufte::quote_footer(Sys.Date())`
+> `r Sys.Date()`

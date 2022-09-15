@@ -726,7 +726,7 @@ Clearly a wide range of optimization tools can be used. Let's return to optimiza
 ### Introduction to Sudoku and Optimization
 
 > Would you like to play a game?
-> `r tufte::quote_footer('--- Joshua (Wargames-1983)')`
+>     Joshua (Wargames-1983)
 
 ```{r Sudoku_setup, echo=FALSE}
 set.seed(1234)
