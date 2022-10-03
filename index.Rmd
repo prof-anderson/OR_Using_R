@@ -28,18 +28,18 @@ Pedagogically, since the late 1990s, I had been a proponent of teaching introduc
 -   Working technology and business professionals should have an awareness of the tools and language of data analysis to deal with consultants, data scientists, and others.
 -   New software and extensions reduced the barrier to entry for people to start using data analytics tools.
 
-Philosophically, the book emphasizes creating a formulations before going into implementation.  This is important for the following reasons:
+Philosophically, the book emphasizes creating a formulations before going into implementation. This is important for the following reasons:
 
-- Reading the literature is based on the algebraic representation.
-- An algebraic representation allows for clear understanding and generalization of large applications.
-- Writing formulations is necessary to explain and convey the modeling decisions made.
-- Becoming proficient in the mathematical language used will be transferable to other analytical models.
-- Dividing the modeling stage from the implementation enables better debugging of models avoids what is sometimes referred to as spaghetti code in programming.
-- Separating the enables the reader to readily transition to another language for implementation in the future (ex. Python, Julia, AMPL, GAMS) with what will seem like little more than a dialect change.
+-   Reading the literature is based on the algebraic representation.
+-   An algebraic representation allows for clear understanding and generalization of large applications.
+-   Writing formulations is necessary to explain and convey the modeling decisions made.
+-   Becoming proficient in the mathematical language used will be transferable to other analytical models.
+-   Dividing the modeling stage from the implementation enables better debugging of models avoids what is sometimes referred to as spaghetti code in programming.
+-   Separating the enables the reader to readily transition to another language for implementation in the future (ex. Python, Julia, AMPL, GAMS) with what will seem like little more than a dialect change.
 
 ## Intended Audience {.unnumbered}
 
-This book is written for people with at least a passing familiarity with R or another programming environment but Appendix A helps jumpstart the motivated reader to jump in without a background.  Some familiarity with mathematics is used throughout the book at the level of subscripts and summations but refreshers are provided in Appendix B. It is assumed that the reader is willing to use R and get their hands dirty with experimenting.
+This book is written for people with at least a passing familiarity with R or another programming environment but Appendix A helps jumpstart the motivated reader to jump in without a background. Some familiarity with mathematics is used throughout the book at the level of subscripts and summations but refreshers are provided in Appendix B. It is assumed that the reader is willing to use R and get their hands dirty with experimenting.
 
 ## Features of this Book {.unnumbered}
 
@@ -54,7 +54,7 @@ This book is written for people with at least a passing familiarity with R or an
 
 ## Instructor Notes {.unnumbered}
 
-This book has been used multiple times for a ten week graduate course on operations research \index{Operations research} emphasizing optimization. \index{Optimization} It can be used for graduate and undergraduate courses for people without a background in optimization and varying levels of mathematical backgrounds. The focus is on applications (formulating, implementing, and interpreting rather than algorithms. The book could be used as a supplement in a more theoretical or algorithm-oriented class. 
+This book has been used multiple times for a ten week graduate course on operations research \index{Operations research} emphasizing optimization. \index{Optimization} It can be used for graduate and undergraduate courses for people without a background in optimization and varying levels of mathematical backgrounds. The focus is on applications (formulating, implementing, and interpreting rather than algorithms. The book could be used as a supplement in a more theoretical or algorithm-oriented class.
 
 ## Acknowldegements {.unnumbered}
 
@@ -97,5 +97,4 @@ In addition, several groups have been of tremendous help:
 
 Most of all, I would like to also express my appreciation for my family's patience while working on this book with many late nights: Carrie, Trent, and Paige.
 
-> Tim Anderson
-> `r Sys.Date()`
+> Tim Anderson `r Sys.Date()`

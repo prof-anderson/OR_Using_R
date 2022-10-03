@@ -140,7 +140,7 @@ $$
                   & x_1,  \; x_2  \in \{0,1,2,3,...\}
   \end{aligned}
   \end{split}
-$$ At first glance, this looks the same as our earlier drone eample but the last constraint cannot be solved directly strictly using linear programming. It is instead referred to as an integer linear program or ILP.
+$$ At first glance, this looks the same as our earlier drone example but the last constraint cannot be solved directly strictly using linear programming. It is instead referred to as an integer linear program or ILP.
 
 Again, we could try solving it with and without the imposition of the integrality constraint.
 
@@ -597,19 +597,19 @@ Therefore, they want to ensure that at most one of the two projects can be pursu
 
 Let's start with a truth table summarizing the interaction between projects (variable values) and the "Top Chip Architects" relationship.
 
-+-----------+-----------+---------------------------------------------+
-| Project A | Project B | Violates "Top Chip Architects" Relationship |
-|           |           |                                             |
-| $y_A$     | $y_B$     |                                             |
-+:=========:+:=========:+:===========================================:+
-| 0         | 0         | No                                          |
-+-----------+-----------+---------------------------------------------+
-| 0         | 1         | No                                          |
-+-----------+-----------+---------------------------------------------+
-| 1         | 0         | No                                          |
-+-----------+-----------+---------------------------------------------+
-| **1**     | **1**     | **Yes**                                     |
-+-----------+-----------+---------------------------------------------+
++------------+------------+---------------------------------------------+
+| Project A  | Project B  | Violates "Top Chip Architects" Relationship |
+|            |            |                                             |
+| $y_A$      | $y_B$      |                                             |
++:==========:+:==========:+:===========================================:+
+| 0          | 0          | No                                          |
++------------+------------+---------------------------------------------+
+| 0          | 1          | No                                          |
++------------+------------+---------------------------------------------+
+| 1          | 0          | No                                          |
++------------+------------+---------------------------------------------+
+| **1**      | **1**      | **Yes**                                     |
++------------+------------+---------------------------------------------+
 
 : Relationships between Projects A, B, and the Need for Chip Architects.
 
@@ -761,14 +761,21 @@ What we need is a way to connect, associate, or dare I say "link" each productio
 
 Let's return to the idea of the truth table - let's focus on widget 2.
 
++-------------------------+---------------------------+-------------------------------------------------------------------------------------+
 | Amount to Produce $w_2$ | Decision to Produce $y_2$ | Interpretation of situation                                                         |
-|:-----------------------:|:-------------------------:|:------------------------------------------------------------------------------------|
-|            0            |             0             | OK - choosing to do nothing                                                         |
-|            0            |             1             | OK - perhaps not a "smart" option but not impossible or unheard of                  |
-|            1            |             0             | **impossible** - can't produce even a single sellable product without doing a setup |
-|            1            |             1             | OK                                                                                  |
-|           42            |             0             | **impossible**                                                                      |
-|           42            |             1             | OK                                                                                  |
++:=======================:+:=========================:+:====================================================================================+
+| 0                       | 0                         | OK - choosing to do nothing                                                         |
++-------------------------+---------------------------+-------------------------------------------------------------------------------------+
+| 0                       | 1                         | OK - perhaps not a "smart" option but not impossible or unheard of                  |
++-------------------------+---------------------------+-------------------------------------------------------------------------------------+
+| 1                       | 0                         | **impossible** - can't produce even a single sellable product without doing a setup |
++-------------------------+---------------------------+-------------------------------------------------------------------------------------+
+| 1                       | 1                         | OK                                                                                  |
++-------------------------+---------------------------+-------------------------------------------------------------------------------------+
+| 42                      | 0                         | **impossible**                                                                      |
++-------------------------+---------------------------+-------------------------------------------------------------------------------------+
+| 42                      | 1                         | OK                                                                                  |
++-------------------------+---------------------------+-------------------------------------------------------------------------------------+
 
 : Truth Table for Widget 2 Variables
 

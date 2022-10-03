@@ -604,7 +604,7 @@ More precisely, what we want to do is instead determine if the problem is supply
 This is a simple matter of comparing the net demand vs. the net supply and making sure that the lesser is satisfied completely.
 
 |                         If... | Then Situation is: |     Source Constraints      |     Demand Constraints      |
-|------------------------------:|:------------------:|:---------------------------:|:---------------------------:|
+|------------------:|:---------------:|:----------------:|:----------------:|
 | $\sum_{i} S_i < \sum_{j} D_j$ | Supply Constrained |  $\sum_{j} x_{i,j} = S_i$   | $\sum_{i} x_{i,j} \leq D_j$ |
 | $\sum_{i} S_i > \sum_{j} D_j$ | Demand Constrained | $\sum_{j} x_{i,j} \leq S_i$ |  $\sum_{i} x_{i,j} = D_j$   |
 | $\sum_{i} S_i = \sum_{j} D_j$ |      Balanced      |  $\sum_{j} x_{i,j} = S_i$   |  $\sum_{i} x_{i,j} = D_j$   |
