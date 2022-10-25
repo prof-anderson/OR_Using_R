@@ -675,7 +675,7 @@ The actual decision variable values of the solution are more interesting though.
 Let's first prepare these results by extracting them from the solution object and then applying our names to them.\
 
 ```{r}
-Transp <- matrix(res.transp$solution,
+Transp <- matrix(res.transp$solution, byrow=TRUE,
                 nrow = NSupply,
                 dimnames =list(snames,dnames))  
 ```
