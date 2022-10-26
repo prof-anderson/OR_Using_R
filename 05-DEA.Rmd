@@ -33,9 +33,9 @@ library (TRA) # Requires installation from github
 
 ## Introduction
 
-Data envelopment analysis or DEA is a powerful tool for conducting studies of efficiency and has been used in thousands of publications since its inception in the 1970s.[^dea-1] \index{Data envelopment analysis|(} \index{DEA|see{Data envelopment analysis}}
+Data envelopment analysis or DEA is a powerful tool for conducting studies of efficiency and has been used in thousands of publications since its inception in the 1970s.[^05-dea-1] \index{Data envelopment analysis|(} \index{DEA|see{Data envelopment analysis}}
 
-[^dea-1]: This chapter is drawn from an introduction chapter in the book, *Data Envelopment Analysis Using R* by the same author. More details on DEA are available from that book. This book is also available via github at <https://github.com/prof-anderson>\[github.com/prof-anderson\]
+[^05-dea-1]: This chapter is drawn from an introduction chapter in the book, *Data Envelopment Analysis Using R* by the same author. More details on DEA are available from that book. This book is also available via github at <https://github.com/prof-anderson>$$github.com/prof-anderson$$
 
 While tools exist for conducting the evaluations, it is important to understand how the tools work. Many DEA studies have been conducted and published by authors with only a superficial understanding of the technique. This is equivalent to having a house built by carpenters that only (barely?) understand how to use a hammer. The purpose of this document is to show how DEA works, what it means, and how to use R for getting started with DEA. In order to keep things simple, this first step only looks at the input-oriented envelopment model with constant returns to scale. We introduce other models at the end of this chapter.\
 
@@ -327,13 +327,13 @@ kbl(results_B, digits=4,booktabs=T, escape=F,
 # Note: Creating LaTeX column names is covered in appendix D.
 ```
 
-The above table follows a few convenient conventions. First, the $\theta$, gets a superscript to indicate that it for the CRS or constant returns to scale model.  This is sometimes labeled as CCR after Charnes, Cooper, and Rhodes [@RhodesDataEnvelopmentAnalysis1978]. Later we will cover other models including the variable returns to scale model, sometimes labeled BCC after Banker, Charnes, and Cooper [@banker1984].
+The above table follows a few convenient conventions. First, the $\theta$, gets a superscript to indicate that it for the CRS or constant returns to scale model. This is sometimes labeled as CCR after Charnes, Cooper, and Rhodes [@RhodesDataEnvelopmentAnalysis1978]. Later we will cover other models including the variable returns to scale model, sometimes labeled BCC after Banker, Charnes, and Cooper [@banker1984].
 
-Another convention is to embed the *orientation* in the table. This an input-oriented model where the primary focus is on achieving efficiency through input reduction. Output-orientation is also very common where the primary goal is for a unit to increase output with the requirement of not using any more input. \index{Data envelopment analysis!Orientation}\ \index{Orientation|see{Data envelopment analysis!Orientation}} \index{Data envelopment analysis!Input-oriented}\  \index{Input-oriented|see{Data envelopment analysis!Input-oriented}} \index{Data envelopment analysis!Output-oriented}\  \index{Output-oriented|see{Data envelopment analysis!Output-oriented}} 
+Another convention is to embed the *orientation* in the table. This an input-oriented model where the primary focus is on achieving efficiency through input reduction. Output-orientation is also very common where the primary goal is for a unit to increase output with the requirement of not using any more input. \index{Data envelopment analysis!Orientation} \index{Orientation|see{Data envelopment analysis!Orientation}} \index{Data envelopment analysis!Input-oriented}  \index{Input-oriented|see{Data envelopment analysis!Input-oriented}} \index{Data envelopment analysis!Output-oriented}  \index{Output-oriented|see{Data envelopment analysis!Output-oriented}}
 
-The results in the table indicate that DMU *B* has an efficiency score of 50%. The target of performance is made of DMU *C* scaled down by a factor of 0.33. These results match the graphical results from earlier. This 50% efficiency score means that if B were using best practices as demonstrated by the other units, it would only need 50% of the inputs to produce the same output.  
+The results in the table indicate that DMU *B* has an efficiency score of 50%. The target of performance is made of DMU *C* scaled down by a factor of 0.33. These results match the graphical results from earlier. This 50% efficiency score means that if B were using best practices as demonstrated by the other units, it would only need 50% of the inputs to produce the same output.
 
-Another item to note is that we are using some of the flexibility of `kable` in our table.  In particular, we are able to use LaTeX in our in column headings as long as we set `escape=F`. Note from the code chunk that the actual use requires an extra slash. \index{kable!LaTeX in column names} \index{LaTeX!LaTeX in tables|see{kable!LaTeX in column names}} 
+Another item to note is that we are using some of the flexibility of `kable` in our table. In particular, we are able to use LaTeX in our in column headings as long as we set `escape=F`. Note from the code chunk that the actual use requires an extra slash. \index{kable!LaTeX in column names} \index{LaTeX!LaTeX in tables|see{kable!LaTeX in column names}}
 
 Let's now extend it to handle multiple inputs, `NX`, and outputs, `NY`. Of course this doesn't have any impact on our results just yet since we are still only using a single input and output but we now have the structure to accommodate the more general case of DEA. To provide a little variety, we'll change it to the first DMU, A, to give a little more variety.
 
@@ -489,15 +489,15 @@ dea.plot(x, y, RTS="vrs", ORIENTATION="in-out",
          fex=1, GRID=TRUE, RANGE=FALSE, param=NULL)
 ```
 
-The Constant Returns to Scale, CRS, model is often referred to in the DEA literature by CCR after Charnes, Cooper, and Rhodes [@CharnesDataEnvelopmentAnalysis1978]. The Variable Returns to Scale, VRS, model is also referred to as the BCC model after Banker, Charnes, and Cooper. In addition to the CRS and VRS models, two other common approaches are Increasing Returns to Scale (IRS) and Decreasing Returns to Scale (DRS). Technically, IRS is sometimes more precisely referred to as non-decreasing returns to scale. Similarly, DRS corresponds to non-increasing returns to scale.  A less commonly used approach is Free Disposal Hull (FDH).  In the case of FDH, DMUs are only compared against other individual units.  Since it makes use of binary variables and is less commonly used in DEA, we will not implement it in the chapter. \index{Returns to Scale|see{Data envelopment analysis!Returns to Scale}} \index{RTS|see{Data envelopment analysis!Returns to scale}} \index{CRS|see{Data envelopment analysis!Returns to scale}} \index{VRS|see{Data envelopment analysis!Returns to scale}} \index{IRS|see{Data envelopment analysis!Returns to scale}} \index{DRS|see{Data envelopment analysis!Returns to scale}} \index{NDRS|see{Data envelopment analysis!Returns to scale}} \index{NIRS|see{Data envelopment analysis!Returns to scale}} \index{FDH|see{Data envelopment analysis!Returns to scale}}\ 
+The Constant Returns to Scale, CRS, model is often referred to in the DEA literature by CCR after Charnes, Cooper, and Rhodes [@CharnesDataEnvelopmentAnalysis1978]. The Variable Returns to Scale, VRS, model is also referred to as the BCC model after Banker, Charnes, and Cooper. In addition to the CRS and VRS models, two other common approaches are Increasing Returns to Scale (IRS) and Decreasing Returns to Scale (DRS). Technically, IRS is sometimes more precisely referred to as non-decreasing returns to scale. Similarly, DRS corresponds to non-increasing returns to scale. A less commonly used approach is Free Disposal Hull (FDH). In the case of FDH, DMUs are only compared against other individual units. Since it makes use of binary variables and is less commonly used in DEA, we will not implement it in the chapter. \index{Returns to Scale|see{Data envelopment analysis!Returns to Scale}} \index{RTS|see{Data envelopment analysis!Returns to scale}} \index{CRS|see{Data envelopment analysis!Returns to scale}} \index{VRS|see{Data envelopment analysis!Returns to scale}} \index{IRS|see{Data envelopment analysis!Returns to scale}} \index{DRS|see{Data envelopment analysis!Returns to scale}} \index{NDRS|see{Data envelopment analysis!Returns to scale}} \index{NIRS|see{Data envelopment analysis!Returns to scale}} \index{FDH|see{Data envelopment analysis!Returns to scale}} 
 
-| Returns to Scale | Envelopment Constraint              |
-|------------------|-------------------------------------|
-| CRS              | No constraint needed                |
-| VRS              | $\sum_{j=1}^{N^D} \lambda_j = 1$    |
-| IRS/NDRS         | $\sum_{j=1}^{N^D} \lambda_j \geq 1$ |
-| DRS/NIRS         | $\sum_{j=1}^{N^D} \lambda_j \leq 1$ |
-| FDH              | $\sum_{j=1}^{N^D} \lambda_j = 1, \lambda_j \in \{0,1\} \; \forall \; j$    |
+| Returns to Scale | Envelopment Constraint                                                  |
+|------------------|-------------------------------------------------------------------------|
+| CRS              | No constraint needed                                                    |
+| VRS              | $\sum_{j=1}^{N^D} \lambda_j = 1$                                        |
+| IRS/NDRS         | $\sum_{j=1}^{N^D} \lambda_j \geq 1$                                     |
+| DRS/NIRS         | $\sum_{j=1}^{N^D} \lambda_j \leq 1$                                     |
+| FDH              | $\sum_{j=1}^{N^D} \lambda_j = 1, \lambda_j \in \{0,1\} \; \forall \; j$ |
 
 : Returns to Scale Envelopment Constraints
 
@@ -733,7 +733,7 @@ UTT_CCR.Res<-cbind(res.efficiency, res.lambda)
 
 Note that the results are different from those in the UTT paper because the model is different and the data is trimmed. This model is an input-oriented model with constant returns to scale. In contrast, the UTT paper uses an output-oriented variable returns to scale model with a weight restriction relationship. Recall that the data is trimmed to the first 25 universities and patents filed is dropped as less important than patents issued.
 
-Every DMU is compared to one or more of the efficient DMUs. In this case there are three efficient DMUs. These are New York University (NYU), University of Wisconsin at Madison (UW-Madison), and California Institute of Technology (Cal Tech). The `poscol` function from the `TRA` package trimmed out all of the unused columns in the matrix of lambdas. \index{poscol function} \index{TRA package} This then left us with just the efficiency scores and the three columns with values of $\lambda$ for each of these efficient universities. Given the length of the names of the names of the universities, it would still exceed text size. The `kableExtra` package has an option of `scale_down` which makes it easy to fit a table in the printable area. 
+Every DMU is compared to one or more of the efficient DMUs. In this case there are three efficient DMUs. These are New York University (NYU), University of Wisconsin at Madison (UW-Madison), and California Institute of Technology (Cal Tech). The `poscol` function from the `TRA` package trimmed out all of the unused columns in the matrix of lambdas. \index{poscol function} \index{TRA package} This then left us with just the efficiency scores and the three columns with values of $\lambda$ for each of these efficient universities. Given the length of the names of the names of the universities, it would still exceed text size. The `kableExtra` package has an option of `scale_down` which makes it easy to fit a table in the printable area.
 
 The University of California System, UC-System, receives an efficiency score of 0.4663. It has a target made up of approximately 0.107 of New York University (NYU), 1.066 of the University of Wisconsin at Madison, 1.186 of Cal Tech that produces similar output using only 47% of the input. This means that if the UC-System were operating efficiently as defined in this model, it would be able to produce the same or more outputs as it actually did using only 47% of the input (Research Funding) as it actually used. This target of performance is made up more more than two other full universities and part of a third.
 
@@ -820,7 +820,7 @@ kbl (weights, booktabs=T, digits=5, escape=F,
   kable_styling(latex_options = "hold_position")
 ```
 
-These results are for just the last unit examined.  
+These results are for just the last unit examined.
 
 Let's now wrap this into the full series of linear programs to calculate the multiplier weights for each unit.
 
@@ -869,7 +869,6 @@ kbl (cbind(res.efficiency, res.vweight,
   kable_styling(latex_options = c("hold_position", "scale_down"))
 ```
 
-
 A few things should be noticed with respect to the multiplier weights:
 
 -   Multiplier weights can be quite small because in general, they are multiplied by inputs and the product is typically less than one. They may appear to round to zero but still be significant.
@@ -881,7 +880,7 @@ A few things should be noticed with respect to the multiplier weights:
 
 Situations can arise where units may appear to be radially efficient but can still find opportunities to improve one or more inputs or outputs. This is defined as being weakly efficient.
 
-In order to accommodate this, we need to extend the simple radial model by adding variables to reflect nonradial slacks. We do this by converting the model's input and output constraints from inequalities into equalities by explicitly defining slack variables. \index{Data envelopment analysis!Slacks}  
+In order to accommodate this, we need to extend the simple radial model by adding variables to reflect nonradial slacks. We do this by converting the model's input and output constraints from inequalities into equalities by explicitly defining slack variables. \index{Data envelopment analysis!Slacks}
 
 $$
 \begin{split}
@@ -1027,9 +1026,9 @@ Furthermore, DEA is an extreme point technique. As such, it is important that th
 
 The issues of returns to scale and input vs. output-orientation should be carefully justified in terms of the particular application being examined.
 
-With respect to returns to scale, it is straightforward to examine results and consider what makes the most sense in the application.  Does it really make sense to scale up or down a unit to an extreme extent without distorting their actual operations? \index{Data envelopment analysis!Returns to scale} 
+With respect to returns to scale, it is straightforward to examine results and consider what makes the most sense in the application. Does it really make sense to scale up or down a unit to an extreme extent without distorting their actual operations? \index{Data envelopment analysis!Returns to scale}
 
-In terms of orientation, is the primary goal to increase outputs or decrease inputs?  Note that there are DEA models that allow for both simultaneously but input and output orientation remain the most commonly used orientations. \index{Data envelopment analysis!Orientation} \
+In terms of orientation, is the primary goal to increase outputs or decrease inputs? Note that there are DEA models that allow for both simultaneously but input and output orientation remain the most commonly used orientations. \index{Data envelopment analysis!Orientation}\
 
 ### Application Area Expertise
 
@@ -1037,9 +1036,9 @@ It is always critical to bring solid application expertise to any DEA study in a
 
 There is no detailed statistical test for the validity of a DEA model and results. This means that there is greater responsibility on the analyst to ensure that a meaningful model was built and appropriate model options were used.
 
-Lastly, it is always helpful to look to the literature. With over 10,000 published DEA papers since 1977, you can almost always find a paper in the same or similar application area. Look at the authors' choices of inputs and output as well as the particulars of the DEA model being used. This can serve as a starting point for building an even better paper. Having said that, just because a paper or presentation uses a particular input-output model doesn't mean that it is a good model. A recent presentation at a major international conference highlights that previous studies are not always great examples. The authors conducted a benchmarking study of hospitals. The inputs were relatively traditional such as number of nurses and hospital beds. Outputs included traditional measures such as the number of patients served but one output was unique, *number of deaths* - yes, researcher based his analysis on the implicit assumption that the route to efficiency for inefficient hospitals was to *increase the number of deaths!*  While the research stated that this was a measure of workload for the hospital, this clearly a bad modeling choice. There are DEA models that can accommodate "bad outputs" such as toxic byproducts in manufacturing or energy product. Another option would be to emphasize the lives saved.
+Lastly, it is always helpful to look to the literature. With over 10,000 published DEA papers since 1977, you can almost always find a paper in the same or similar application area. Look at the authors' choices of inputs and output as well as the particulars of the DEA model being used. This can serve as a starting point for building an even better paper. Having said that, just because a paper or presentation uses a particular input-output model doesn't mean that it is a good model. A recent presentation at a major international conference highlights that previous studies are not always great examples. The authors conducted a benchmarking study of hospitals. The inputs were relatively traditional such as number of nurses and hospital beds. Outputs included traditional measures such as the number of patients served but one output was unique, *number of deaths* - yes, researcher based his analysis on the implicit assumption that the route to efficiency for inefficient hospitals was to *increase the number of deaths!* While the research stated that this was a measure of workload for the hospital, this clearly a bad modeling choice. There are DEA models that can accommodate "bad outputs" such as toxic byproducts in manufacturing or energy product. Another option would be to emphasize the lives saved.
 
-In short, a DEA application should always bring together both application area expertise and familiarity with DEA to ensure meaningful results.  
+In short, a DEA application should always bring together both application area expertise and familiarity with DEA to ensure meaningful results.
 
 ## Further Reading
 
@@ -1054,15 +1053,15 @@ This section covers the second chapter of the book and introduces DEA and R work
 ## Exercises
 
 ::: {.exercise name="Graphically Adding DMU E"}
-Add a fifth unit, E, to the first example that produces 400 units output using 30 units of input. Graphically evaluate all five units for their efficiency scores and lambda values. Interpret the solution in terms of who is doing well, who is doing poorly, and who should be learning from whom. \
+Add a fifth unit, E, to the first example that produces 400 units output using 30 units of input. Graphically evaluate all five units for their efficiency scores and lambda values. Interpret the solution in terms of who is doing well, who is doing poorly, and who should be learning from whom.\
 :::
 
 ::: {.exercise name="Adding DMU E Using R"}
-Examine the new unit, E, using R. Interpret the solution in terms of who is doing well, who is doing poorly, and who should be learning from whom. \
+Examine the new unit, E, using R. Interpret the solution in terms of who is doing well, who is doing poorly, and who should be learning from whom.\
 :::
 
 ::: {.exercise name="Looping"}
-Wrap a for loop around the model from the previous exercise to examine every unit. Discuss results. \
+Wrap a for loop around the model from the previous exercise to examine every unit. Discuss results.\
 :::
 
 ::: {.exercise name="Bigger Data"}
@@ -1070,7 +1069,7 @@ Use a bigger data set and conduct an analysis & interpretation (more inputs, out
 :::
 
 ::: {.exercise name="Compare Results"}
-Check results against a DEA package (ex. `DEAMultiplier`, `Benchmarking`, `nonparaeff`). \
+Check results against a DEA package (ex. `DEAMultiplier`, `Benchmarking`, `nonparaeff`).\
 :::
 
 ::: {.exercise name="Slacking"}
@@ -1100,13 +1099,12 @@ Conduct a DEA study on the given sample data about cameras specifications in dif
 | Phone C |   300    |        32         |       16       |        4.5         |
 | Phone D |   275    |        32         |       8        |         4          |
 
-Table: Camera Data.
+: Camera Data.
 
 a.  Add more DMUs to above data so that there are minimum 10 in total.
 b.  Add more inputs and outputs as needed. Describe and justify the data including the inputs and outputs used as well as items explicitly not used.
 c.  Select an appropriate DEA model and conduct the analysis.
 d.  Discuss the results.
-
 :::
 
 \index{Data envelopment analysis|)}

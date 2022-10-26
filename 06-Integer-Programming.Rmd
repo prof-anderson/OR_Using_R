@@ -244,7 +244,7 @@ $$
     \text{Max  }   & 2 x_1 + 3 x_2 \\
     \text{subject to } & 3 x_1 + 9 x_2 \leq 31 \\
                        & 8 x_1 + 3 x_2 \leq 26 \\
-                       & \textcolor{red} {x_1 \leq 2.0} &text{[Bound for Subproblem I]}\\
+                       & \textcolor{red} {x_1 \leq 2.0} &\text{[Bound for Subproblem I]}\\
                        & x_1,  \; x_2 \geq 0  \\
   \end{aligned}
   \end{split}
