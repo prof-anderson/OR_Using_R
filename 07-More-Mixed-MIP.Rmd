@@ -831,7 +831,7 @@ $$
 
 We can now pull everything together into a single formulation.
 Again, remember that we could use *any* objective function since we are simply trying to find a feasible solution.
-We will just picking maximizing the number zero since `ompr` defaults to maximization as an objective function.
+For example, we could just maximize the number zero since `ompr` defaults to maximization as an objective function.
 We could also tell a solver such as `symphony` to just find a first feasible solution and terminate.\
 
 $$

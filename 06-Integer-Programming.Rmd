@@ -90,10 +90,23 @@ $$
 
 The `ompr` implementation has a similar, straightforward change. In the declaration of variables (`add_variable` function), we simply set the type to be `integer` rather than `continuous`. Since nothing else is changing in the model, we can simply re-add the variables to redefine them from being continuous to be integer.\
 
-```{r IncAssemHrs_ch6}
+```{r}
+# Rebuild model with integer variable
+# ompr prior to 1.0 allowed for just redefining the variable to change to integer
+# Model1 is built without piping to demonstrate difference with earlier piped process.
+model1 <- MIPModel()
 model1 <- add_variable(model1, Ants, type = "integer", lb = 0)
 model1 <- add_variable(model1, Bats, type = "integer", lb = 0)
 model1 <- add_variable(model1, Cats, type = "integer", lb = 0)
+
+model1 <- set_objective(model1, 7*Ants + 12*Bats + 5*Cats,"max")
+  
+model1 <- add_constraint(model1, 1*Ants + 4*Bats + 2*Cats<=800)  # machining
+model1 <- add_constraint(model1, 3*Ants + 6*Bats + 2*Cats<=901)   # assembly
+model1 <- add_constraint(model1, 2*Ants + 2*Bats + 1*Cats<=480)   # testing
+model1 <- add_constraint(model1, 2*Ants + 10*Bats + 2*Cats<=1200) # sensors
+
+result1 <-  solve_model(model1, with_ROI(solver="glpk"))
 ```
 
 Let's confirm that the implemented model is of the form desired.
@@ -145,12 +158,12 @@ $$ At first glance, this looks the same as our earlier drone example but the las
 Again, we could try solving it with and without the imposition of the integrality constraint.
 
 ```{r SolveLPRelaxation0}
-LPRmod <- MIPModel() |>
+LPRmod <- MIPModel()                             |>
   add_variable(Vx1, type = "continuous", lb = 0) |>
   add_variable(Vx2, type = "continuous", lb = 0) |>
-  set_objective(2*Vx1 + 3*Vx2, "max")         |>
-  add_constraint(3.0*Vx1 + 9.0*Vx2 <= 31)     |> # Surfactant
-  add_constraint(8.0*Vx1 + 3.0*Vx2 <= 26)        # Steel
+  set_objective(2*Vx1 + 3*Vx2, "max")            |>
+  add_constraint(3.0*Vx1 + 9.0*Vx2 <= 31)        |> # Surfactant
+  add_constraint(8.0*Vx1 + 3.0*Vx2 <= 26)         # Steel
 
 LPSolR <-  solve_model(LPRmod, with_ROI(solver = "glpk"))
 
@@ -165,8 +178,12 @@ rownames(acme_res_lp) <- "LP Solution"
 All we need to do is repeat the same process with changing the variable type to `integer` instead of `continuous`.
 
 ```{r SolveIP0}
-IPmod <- add_variable(LPRmod, Vx1, type = "integer", lb = 0) |>
-  add_variable(Vx2, type = "integer", lb = 0)
+IPmod <- MIPModel()                           |>
+  add_variable(Vx1, type = "integer", lb = 0) |>
+  add_variable(Vx2, type = "integer", lb = 0) |>
+  set_objective(2*Vx1 + 3*Vx2, "max")         |>
+  add_constraint(3.0*Vx1 + 9.0*Vx2 <= 31)     |> # Surfactant
+  add_constraint(8.0*Vx1 + 3.0*Vx2 <= 26)        # Steel
 IPSolR <-  solve_model (IPmod, with_ROI(solver = "glpk"))
 obj_val <- objective_value(IPSolR)
 ```
@@ -251,11 +268,10 @@ $$
   (\#eq:Sub1)
 $$
 
-Since this is just a bound on the decision variable, we can implement it by just modifying the LP Relaxation's model `LPRmod` that we created earlier by redefining the $x_1$ variable (`Vx1`).
+Since this is just a bound on the decision variable, we can implement it by just modifying the LP Relaxation's model `LPRmod` that we created earlier by using the `set_bounds` function on the $x_1$ variable (`Vx1`). Note that in older versions of `ompr` this could be done by also calling the `add_variable` function to redefine the variable `Vx1`.
 
 ```{r SolveLPSub1}
-LPSubI <- add_variable(LPRmod, Vx1, type = "continuous", 
-                        lb = 0, ub=2.0) 
+LPSubI <- set_bounds (LPRmod, Vx1, lb = 0, ub=2.0) 
 LPSubI <- solve_model(LPSubI, with_ROI(solver = "glpk"))
 
 obj_val <- objective_value(LPSubI)
@@ -289,8 +305,8 @@ To simplify the implementation, I can simply change the upper and lower bounds o
 
 ```{r SolveLPSubIII}
 LPSubIII <- LPRmod |>
-  add_variable(Vx1, type = "continuous", lb = 0, ub = 2) |>
-  add_variable(Vx2, type = "continuous", lb = 0, ub = 2) |>
+  set_bounds (Vx1, lb = 0, ub = 2) |>
+  set_bounds (Vx2, lb = 0, ub = 2) |>
   solve_model(with_ROI(solver = "glpk"))
 ```
 
@@ -315,10 +331,10 @@ This results in integer values for both $x_1$ and $x_2$ so it is feasible with r
 Next, let's look at Subproblem IV. This problem adds the bound of $x_2\ge3.0$ to Subproblem I. Notice that in the `MIPModel` implementation the variable for $x_1$ (`Vx1`) has an upperbound of 2, (`ub=2`) in order to implement the bounding constraint for Subproblem I and the lower bound on $x_2$ of 3 in the variable declarations. Notice from the earlier graphical examples, there is no feasible region (blue area) that has $x_2\geq3$. By visual inspection, we expect this to be an infeasible subproblem but let's confirm it.
 
 ```{r SolveLPSubIV}
-LPSubIV <- add_variable(LPRmod, Vx1, type = "continuous", 
-                        lb = 0, ub = 2) 
-LPSubIV <- add_variable(LPSubIV, Vx2, type = "continuous",lb = 3) 
-LPSubIV <-  solve_model(LPSubIV, with_ROI(solver = "glpk"))
+LPSubIV <- LPRmod                  |>
+  set_bounds (Vx1, lb = 0, ub = 2) |>
+  set_bounds (Vx2, lb = 3) |>
+  solve_model(with_ROI(solver = "glpk"))
 ```
 
 ```{r, echo=FALSE}
@@ -344,10 +360,10 @@ While $x_2$ is now integer valued, $x_1=1.333$ so it is no longer integer valued
 For Subproblem V, use a constraint of $x_1\leq 1$. We'll continue with adjusting the bounds of the variables to do the branch and bound.
 
 ```{r SolveLPSubV}
-LPSubV <- add_variable(LPRmod, Vx1, type = "continuous", 
-                        lb = 0, ub = 1) 
-LPSubV <- add_variable(LPSubV, Vx2, type = "continuous",lb = 3) 
-LPSubV <-  solve_model(LPSubV, with_ROI(solver = "glpk"))
+LPSubV <- LPRmod                   |>
+  set_bounds (Vx1, lb = 0, ub = 1) |>
+  set_bounds (Vx2, lb = 3)         |>
+  solve_model(with_ROI(solver = "glpk"))
 ```
 
 ```{r, echo=FALSE}
@@ -375,11 +391,10 @@ Unfortunately the solution to Subproblem V now has $x_2=3.111$ so we will need t
 In this case, we our retaining our previous bounds from Subproblems I and IV while adding a bound for $x_1$. The result is that our bounds on $x_1$ is $2\leq x_1\leq 2$ or in other words, $x_1=2$ while $x_2\geq3$. A careful look at the previous figure suggest there is no feasible solution in this situation but let's solve the corresponding LP to confirm this.
 
 ```{r SolveLPSubVI}
-LPSubVI <- add_variable(LPRmod, Vx1, type = "continuous", 
-                        lb = 2, ub = 2) 
-LPSubVI <- add_variable(LPSubVI, Vx2, type = "continuous",
-                        lb = 3) 
-LPSubVI <- solve_model(LPSubVI, with_ROI(solver = "glpk"))
+LPSubVI <- LPRmod                  |>
+  set_bounds (Vx1==2)              |>
+  set_bounds (Vx2, lb = 3)         |>
+  solve_model(with_ROI(solver = "glpk"))
 LPSubVI$status
 obj_val <- objective_value(LPSubVI )
 x1 <- get_solution (LPSubVI , 'Vx1')
@@ -406,11 +421,10 @@ knitr::include_graphics("images/BB12.PNG")
 ```
 
 ```{r SolveLPSubVII}
-LPSubVII <- add_variable(LPRmod, Vx1, type = "continuous", 
-                         lb = 0, ub = 1) 
-LPSubVII <- add_variable(LPSubVII, Vx2, type = "continuous", 
-                         lb=0, ub=3) 
-LPSubVII <-  solve_model(LPSubVII, with_ROI(solver = "glpk"))
+LPSubVII <- LPRmod                 |>
+  set_bounds (Vx1, lb = 0, ub = 1) |>
+  set_bounds (Vx2, lb = 0, ub = 3) |>
+  solve_model(with_ROI(solver = "glpk"))
 ```
 
 ```{r, echo=FALSE}
@@ -436,9 +450,10 @@ This solution is all integer valued and the objective function is better than ou
 Setting a lower bound of $x_2\geq 4$ makes the problem infeasible. We can see from the drawings of the feasible region that the feasible region does not extend to that height at all regardless of what $x_1$ is. We can confirm by solving Subproblem VIII though since we don't generally have the luxury of looking at the feasible region. Again, the results table highlights that care must be taken to not give credence to values returned from an infeasible solution.
 
 ```{r SolveLPSubVIII}
-LPSubVIII <- add_variable(LPRmod, Vx1, type = "continuous", lb = 1,) 
-LPSubVIII <- add_variable(LPSubVIII, Vx2, type = "continuous", lb = 4) 
-LPSubVIII <- solve_model(LPSubVIII, with_ROI(solver = "glpk"))
+LPSubVIII <- LPRmod                |>
+  set_bounds (Vx1, lb = 0, ub = 1) |>
+  set_bounds (Vx2, lb = 4 )        |>
+  solve_model(with_ROI(solver = "glpk"))
 LPSubVIII$status
 ```
 
@@ -459,9 +474,9 @@ kbl (LPSubVIII_res, booktabs=T, digits=3,
 Now, we have searched down all branches or subproblems descending from Subproblem I so we can return to Subproblem II. Let's go back and do that problem. We do that by simply adding one new bound to the LP Relaxation. That is $x_1\geq 3.0$.
 
 ```{r SolveLPSubII}
-LPSubII <- LPRmod |>
-  add_variable(Vx1, type = "continuous", lb = 3) |>
-  add_variable(Vx2, type = "continuous", lb = 0) |>
+LPSubII <- LPRmod           |>
+  set_bounds (Vx1, lb = 3)  |>
+  set_bounds (Vx2, lb = 0 ) |>
   solve_model(with_ROI(solver = "glpk"))
 cat("Status of Subproblem II:",LPSubII$status)
 rownames(LPSubII_res) <- ""
@@ -852,13 +867,15 @@ or $$w_1 \leq min \{ 500, 2000, 500, 500, 500 \} = 500$$ Therefore, we know that
 
 We can follow the same process for setting Big M values for widget 2. We start by setting $w_1=w_3 = 0$. We know that $w_2$ must be no larger than the most restrict constraint. I'll skip rewriting the constraints and jump a little ahead.\
 
-$$W_2 \leq min \{ \frac{1000}{1}, \frac{2000}{5}, \frac{1000}{1}, \frac{1500}{2}, 1000 \}=400$$
+$$w_2 \leq min \{ \frac{1000}{1}, \frac{2000}{5}, \frac{1000}{1}, \frac{1500}{2}, 1000 \}=400$$
 
 Therefore, we can safely use a Big M value for $w_2$ of $M_2=400$. \vspace{12pt}
 
 Again we can follow the same process for $w_3$ to find a small Big M value.
 
-$$w_3 \leq min \{ \frac{1000}{3}, \frac{2000}{2}, \frac{1000}{1}, \frac{1500}{1}, 750 \}=333.33$$ \vspace{12pt} Since the Big M value is setting a lower bound, in this way, we can round up from 333.33 to 334. Our updated model with "Big M":
+$$w_3 \leq min \{ \frac{1000}{3}, \frac{2000}{2}, \frac{1000}{1}, \frac{1500}{1}, 750 \}=333.33$$ \vspace{12pt}
+
+Since the Big M value is setting a lower bound, in this way, we can round up from 333.33 to 334. Our updated model with "Big M" is the following:
 
 $$
  \begin{split}
@@ -908,6 +925,9 @@ Interesting---the objective function value has gone down significantly. Let's lo
 ```{r reviewing-bigM-case-results, echo=FALSE}
 fc_base_summary_rev <- fc_base_summary
 fc_base_summary_rev [1] <- fc_base_summary_rev [1] - 3500
+fc_base_summary_rev [1,6] <- 1 # Force charge of setup for widget 2
+fc_base_summary_rev [1,7] <- 1 # Force charge of setup for widget 3
+
 fc_M_summary <- cbind(fc_bigM_res$objective_value,
                          t(as.matrix(fc_bigM_res$solution)))
 colnames(fc_M_summary)<-c("Net Profit", 
