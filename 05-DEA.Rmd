@@ -163,7 +163,7 @@ $$
                   & 75 \lambda_A + 100 \lambda_B +
                     300 \lambda_C + 400 \lambda_D 
                     \geq 100 &\text{[Output]}\\
-                  & \theta, \; \lambda_A , \; \lambda_B , \; \lambda_D , \; \lambda_D \geq 0  
+                  & \theta, \; \lambda_A , \; \lambda_B , \; \lambda_C , \; \lambda_D \geq 0  
   \end{aligned}
   \end{split}
 $$
