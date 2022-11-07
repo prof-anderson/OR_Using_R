@@ -691,7 +691,7 @@ This means dropping packages such as `ROI.plugin.nloptr` and `ROI.plugin.quadpro
 
 Also, commercial software that is not available on CRAN such as gurobi and XPress, are not included.
 
-```{r  echo=FALSE, fig.width=10, fig.height=6, fig.fullwidth=TRUE, fig.cap="Monthly Downloads of Major ROI LP Plugins"}
+```{r echo=FALSE, fig.width=10, fig.height=6, fig.fullwidth=TRUE, fig.cap="Monthly Downloads of Major ROI LP Plugins"}
 ROI_packages <- c( "ROI.plugin.glpk",   "ROI.plugin.symphony", 
                   "ROI.plugin.lpsolve", "ROI.plugin.scs", 
                   "ROI.plugin.clp",     "ROI.plugin.alabama")

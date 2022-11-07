@@ -138,7 +138,7 @@ Notice that in this case, there was a small adjustment to the production plan an
 
 Let's take a look at another example. Acme makes two products, let's refer to them as product 1 and 2. Product 1 generates a profit of \$2000 per product, requires three liters of surfactant for cleaning, and eight kilograms of high grade steel.
 
-In contrast, each unit of Product 2 produced generates a higher profit of \$3000 per product, requires eight liters of surfactant, and three kilograms of high grade steel. Acme has 31 liters of surfactant and 26 kilograms of high grade steel.
+In contrast, each unit of Product 2 produced generates a higher profit of \$3000 per product, requires nine liters of surfactant, and three kilograms of high grade steel. Acme has 31 liters of surfactant and 26 kilograms of high grade steel.
 
 Only completed products are sellable, what should be Acme's production plan?
 
@@ -479,7 +479,6 @@ LPSubII <- LPRmod           |>
   set_bounds (Vx2, lb = 0 ) |>
   solve_model(with_ROI(solver = "glpk"))
 cat("Status of Subproblem II:",LPSubII$status)
-rownames(LPSubII_res) <- ""
 ```
 
 ```{r, echo=FALSE}
@@ -487,6 +486,7 @@ obj_val <- objective_value(LPSubII )
 x1 <- get_solution (LPSubII , 'Vx1')
 x2  <- get_solution (LPSubII , 'Vx2')
 LPSubII_res  <- cbind(x1,x2,obj_val)
+rownames(LPSubII_res) <- ""
 
 kbl (LPSubII_res, booktabs=T, digits=3,
      caption="Production Plan based on LP Subproblem II") |>
@@ -505,7 +505,8 @@ Given that we no longer have any branches to explore, we can declare that we hav
 ```{r create-table-subproblem-VII, echo=FALSE}
 kbl (LPSubVII_res,
        booktabs=T, caption=
-       "Acme's Integer Optimal Production Plan based on Subproblem VII")
+       "Acme's Integer Optimal Production Plan based on Subproblem VII") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 Before this, we could only say that it was feasible solution and candidate to be optimal since no better integer feasible solution had been found.
