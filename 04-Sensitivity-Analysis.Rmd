@@ -285,7 +285,7 @@ Notice that the values based on shadow prices of the resources used by a Bat are
 Now let's test it. We will modify the formulation to set a lower bound on the number of Bats to be 1. Note that we do this in case by setting the `lb` option in the `add_variable` to be 1. Also, if we had a demand constraint for Bats, we could also be accommodated this by setting the upper bound (`ub`).
 
 ```{r Bat1Model}
-Bat1Model <- MIPModel() |>
+Bat1Model <- MIPModel()                           |>
   add_variable(Ants, type = "continuous", lb = 0) |>
   add_variable(Bats, type = "continuous", lb = 1) |>
   add_variable(Cats, type = "continuous", lb = 0) |>
