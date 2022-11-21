@@ -56,7 +56,7 @@ This book is written for people with at least a passing familiarity with R or an
 
 This book has been used multiple times for a ten week graduate course on operations research \index{Operations research} emphasizing optimization. \index{Optimization} It can be used for graduate and undergraduate courses for people without a background in optimization and varying levels of mathematical backgrounds. The focus is on applications (formulating, implementing, and interpreting rather than algorithms. The book could be used as a supplement in a more theoretical or algorithm-oriented class.
 
-## Acknowldegements {.unnumbered}
+## Acknowledgments {.unnumbered}
 
 I would like to thank many people for their contributions, collaborations, and assistance over the years. All errors are my fault though.
 
