@@ -411,7 +411,7 @@ kbl (head (Customers), booktabs=T,
 
 Presumably you have created your own formulation. If so, your model will likely differ from what follows in some ways such as naming conventions for variables or subscripts.  That is fine.  The process of trying to build a model is important.\
 
-Let's start by defining our decision variables, $x_{s,w}$ as a binary variable to indicate whether we are going to send a mailing to state _s_ in week _w_.\
+Let's start by defining our decision variables, $x_{s,w}$ as a set of binary variables to indicate whether we are going to send a mailing to state _s_ in week _w_.\
 
 Now, we need to ensure that every state is mailed to in one of the eight weeks. We simply need to add up the variable for each state's decision to mail in week 1, 2, 3, ..., up to 8.  Mathematically, this would be $\sum\limits_{w=1}^{8}   x_{s,w} = 1, \; \forall \; s$.\
 
