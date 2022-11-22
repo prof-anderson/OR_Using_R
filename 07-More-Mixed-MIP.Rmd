@@ -1085,7 +1085,7 @@ set.seed(1234); plot(makeGame(n=4))
 
 ## Production Planning over Time
 
-Let's revisit our drone manufacturing example but accounting for time.  In this case, we'll look at producing ants and bats over time while accounting for with varying weekly demand, inventory carrying costs, setup costs, marginal production costs, and  beginning inventory.  The planning horizon is four weeks.  
+Let's revisit our drone manufacturing example but accounting for time.  In this case, we'll look at producing Ants and Bats over time while accounting for varying weekly demand, inventory carrying costs, setup costs, marginal production costs, and  beginning inventory.  The planning horizon is four weeks.  
 
 Let's start by by showing the data.
 
