@@ -1245,7 +1245,6 @@ promod <- add_variable (promod, VzB[tt], tt=1:nTime,
 ```
 
 Now let's define the objective function.
-We are not selling prices
 
 ```{r}
 promod <- set_objective(promod, sum_expr(prodcostA * VxA[tt] + 
@@ -1406,8 +1405,9 @@ d. *Challenge:* Solve the revised problem.
 ::: {.exercise name="Chemical Factories"}
 Similar to the Warehouse problem in this chapter, here we have Chemical Factories for which we need to decide the locations. We need to set up 2 factories with 100 residents in the town. The town government is trying to keep the factories at maximum possible distance from the residents to avoid any decrease the impacts and risk of mishaps.
 
-A. Create an appropriate formulation.
-B. Taking the randomly generated setup costs for factories similar to warehouses, run the analysis to decide the location for these 2 chemical factories which are 
+a. Create an appropriate formulation.
+b. Taking the randomly generated setup costs for factories similar to warehouses, run the analysis to decide the location for these 2 chemical factories which are 
 at maximum possible distance from all residents.
-C. Discuss the results.
+c. Discuss the results.
+
 :::
