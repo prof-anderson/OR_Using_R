@@ -1183,7 +1183,7 @@ Our goal is to minimize the total cost.  Let's look at the total cost with respe
 $$
 \begin{split}
 \begin{aligned}
-\text{} \; & \sum\limits_{t=1}^{4}C^P_t\cdot x_{t,A} + C^S_t\cdot y_{t,A} + C^I_t\cdot z_{t,A}\\
+\text{} \; & \sum\limits_{t=1}^{4}C^P_A\cdot x_{t,A} + C^S_A\cdot y_{t,A} + C^I_A\cdot z_{t,A}\\
 \end{aligned}
 \end{split}
 $$
