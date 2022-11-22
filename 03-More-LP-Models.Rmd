@@ -360,7 +360,7 @@ $$
   \end{split}
 $$
 
-Let's rebuild our three variable implementation and review the results to see if it is violates our blending requirement.
+Let's rebuild our three variable implementation and review the results to see if it violates our blending requirement.
 
 ```{r Base3VarModel, echo=TRUE}
 model1 <- MIPModel()                              |>
@@ -410,7 +410,7 @@ Let's simplify this a little, which gives us the following:
 
 $$-0.4 \cdot Ants-0.4 \cdot Bats+0.6 \cdot Cats \leq 0$$
 
-Now we can just this to the original formulation.
+Now we can just add this to the original formulation.
 The result is the following formulation.
 
 $$
@@ -738,7 +738,7 @@ Losses might also apply in the transportation to the end customer with similar m
 
 Another common situation is to add capacity limits to each arc, perhaps both upper and lower bounds on capacity.\
 
-Real world applications applications often also require modeling a time dimension which leads us to issue production and inventory planning.
+Real world applications  often also require modeling a time dimension which leads us to issue production and inventory planning.
 
 ### Production and Inventory Planning
 
