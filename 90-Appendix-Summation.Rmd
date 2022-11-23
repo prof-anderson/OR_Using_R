@@ -156,7 +156,7 @@ A common mistake is to use an asterisk, \*, to indicate multiplication in LaTeX.
 
 $$\sum_{i=1}^5 \left(10-i\right)x_i=9*x_1+8*x_2+7*x_3+6*x_4+5*x_5$$
 
-While the \* is used for multiplication in R, it both takes more space and and is not considered formal mathematical notation. In LaTeX you should instead use `\\cdot` in place of the asterisk. In other words, $\cdot$ in place of $*$. The result is the following:
+While the \* is used for multiplication in R, it both takes more space and and is not considered formal mathematical notation. In LaTeX you should instead use `\cdot` in place of the asterisk. In other words, $\cdot$ in place of $*$. The result is the following:
 
 $$\sum_{i=1}^5 \left(10-i\right)x_i=9\cdot x_1+8\cdot x_2+7\cdot x_3+6\cdot x_4+5\cdot x_5$$
 
