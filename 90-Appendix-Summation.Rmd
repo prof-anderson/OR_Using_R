@@ -116,8 +116,8 @@ Below are some common mathematical functions that are often used.
 | $$x = y$$        | `x = y`       | Equality    |   
 | $$x < y$$        | `x < y`       | Strict less than      |
 | $$x > y$$        | `x > y`       | Strict greater than     |
-| $$x \le y$$      | `x \le y`     | Strict less than      |  
-| $$x \ge y$$      | `x \ge y`     | Strict greater than     |       
+| $$x \le y$$      | `x \le y`     | Less than or equal to    |  
+| $$x \ge y$$      | `x \ge y`     | Greater than or equal to     |       
 | $$x \ne y$$      | `x \ne y`     | Not equal     |       
 | $$x^n$$          | `x^{n}`       | Superscript or exponentiation  | 
 | $$x^{\text{Max Demand}}$$  |  `x^{\text{Max Demand}}`    | Superscript     | 
@@ -160,7 +160,7 @@ While the \* is used for multiplication in R, it both takes more space and and i
 
 $$\sum_{i=1}^5 \left(10-i\right)x_i=9\cdot x_1+8\cdot x_2+7\cdot x_3+6\cdot x_4+5\cdot x_5$$
 
-When it is clearly implied by the expression as in the above example where we are multiplying a number and a variable, the `\\cdot` is optional ($9x$ vs. $9\cdot x$).  On the other hand, it is much more important when a number is not involved ($Ax$ vs. $A\cdot x$). 
+When it is clearly implied by the expression as in the above example where we are multiplying a number and a variable, the `\cdot` is optional ($9x$ vs. $9\cdot x$).  On the other hand, it is much more important when a number is not involved ($Ax$ vs. $A\cdot x$). 
 
 ## Applications of Summation
 
@@ -179,7 +179,8 @@ rownames(M1)<-list("Design", "Materials",
                    "Distribution")
 colnames (M1) <- list("Product 1")
 kbl (M1, booktabs=T,
-       caption="Production Costs for Product 1")
+       caption="Production Costs for Product 1") |>
+  kable_styling(latex_options = "hold_position")
 ```
 
 We might wish to determine the total cost to produce the product from start to finish.  We can extract the data from our cost matrix and use summation to find the total cost.
