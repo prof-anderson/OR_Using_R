@@ -83,7 +83,7 @@ Note that LaTeX may return a lot of warnings that do not represent problems but 
 
 `LaTeX Warning: Command \textellipsis invalid in math mode on input line 1324.`
 
-The line number refer to the intermediate .tex file rather than the original .Rmd file. When LaTeX fails, it is sometimes necessary to look at both the .log and .tex files to see where the error is occurring.
+The line number refers to the intermediate .tex file rather than the original .Rmd file. When LaTeX fails, it is sometimes necessary to look at both the .log and .tex files to see where the error is occurring.
 
 ### Problems with PDF Creation
 
@@ -101,7 +101,7 @@ Another possible problem is having the PDF file open from having previously crea
 
 A related issue is that there could be a temporary file for debugging purposes that needs to be deleted before it can be done. I often see this with a Markdown file (`.md`), not to be confused with the RMarkdown file (`.Rmd`).
 
-Avoid using an underscore, `_`, in the code chunk label for any code chunk that involves a `kable` or graphical figure.  This can cause strange errors when knitting to PDF. While the underscore is valid for a code chunk name, its importance in LaTeX causes problems - it is best to just a dash.
+Avoid using an underscore, `_`, in the code chunk label for any code chunk that involves a `kable` or graphical figure.  This can cause strange errors when knitting to PDF. While the underscore is valid for a code chunk name, its importance in LaTeX causes problems - it is best to just use a dash.
 
 Some PDF errors are caused by the strict enforcement of LaTeX requirements.  If the `.tex` file is generated but the `.pdf` is incomplete or missing, you can sometimes overcome these problems by using `latexmk` to rerun the Tex engine on the PDF. This is not meant to be a cure-all and is only meant for late stage errors.  For example, this book sometimes requires running `latexmk OMUR.tex -pdf -f -interaction=nonstopmode` after building the `pdf_book` generates a LaTeX error at the bibliography stage. Of course tracking down the LaTeX error is preferred. \index{LaTeX!latexmk}
 
