@@ -105,7 +105,7 @@ Avoid using an underscore, `_`, in the code chunk label for any code chunk that 
 
 Some PDF errors are caused by the strict enforcement of LaTeX requirements.  If the `.tex` file is generated but the `.pdf` is incomplete or missing, you can sometimes overcome these problems by using `latexmk` to rerun the Tex engine on the PDF. This is not meant to be a cure-all and is only meant for late stage errors.  For example, this book sometimes requires running `latexmk OMUR.tex -pdf -f -interaction=nonstopmode` after building the `pdf_book` generates a LaTeX error at the bibliography stage. Of course tracking down the LaTeX error is preferred. \index{LaTeX!latexmk}
 
-If there is a code chunk that is causing fatal errors, you can always use the code chunk option of `eval=FALSE` in order to temporarily turn off the execution while working on other parts of the PDF and model. 
+If there is a code chunk that is causing fatal errors, you can always use the code chunk option of `eval=FALSE` in order to temporarily turn off the execution while working on other parts of the PDF and model. Another workaround is to use the code chunk option of `error=TRUE` which will allow knitting despite an error in a code chunk. Of course both of these options are just temporary patches.
 
 ## Implementation Troubleshooting
 
@@ -121,7 +121,7 @@ As an example, running all code chunks for a case returned this error message to
 knitr::include_graphics("images/ERRORS_piping_error0.png")
 ```
 
-One of the many advantages to a modern integrated development environment, IDE, like RStudio is that it helps in debugging. In this case, looking in the code pane, RStudio has a red vertical line indicating R's best guess as to where the problem is. Unfortunately, we have a long vertical bar covering 11 lines, the entire piped object, as the source of the problem rather than a single line. When piping, it is treated as a single line and R can't narrow down the problem further. I'll leave it as a challenge for the reader to the find the error in the code to the right.
+One of the many advantages to a modern integrated development environment, IDE, like RStudio is that it helps in debugging. In this case, looking in the code pane, RStudio has a red vertical line indicating R's best guess as to where the problem is. Unfortunately, we have a long vertical bar covering 11 lines, the entire piped object, as the source of the problem rather than a single line. When piping, it is treated as a single line and R can't narrow down the problem further. I'll leave it as a challenge for the reader to the find the error in the code in the next figure.
 
 ```{r Fig-piping-error1, echo=FALSE, out.width="60%", fig.cap="Inability to Focus on Error Source in a Piped Model."}
 knitr::include_graphics("images/ERRORS_piping_error1.png")
