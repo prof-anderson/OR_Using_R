@@ -1169,7 +1169,7 @@ $$z_{t,A}=z_{t-1,A} + x_{t,A} - D_{t,A}, \; \forall t>1$$
 
 For week 1, the previous inventory is fixed rather than a variable and can be framed as the following.
 
-$$z_{1,A}=B_{A} + x_{1,A} - D_{1,A}$$
+$$z_{1,A}=B^I_{A} + x_{1,A} - D_{1,A}$$
 
 Next, we need to remember to create a linking constraint for each of decisions of how much to produce with the decision to produce in a given time period. In this case, we know that in any given time period, we have an upper limit on production, $L^P$ so we will use that as our Big M value. For Ants, the constraint then follows this form for each week _t_.
 
@@ -1206,15 +1206,15 @@ $$
 \begin{aligned}
 \text{min   } \; & \sum\limits_{t=1}^{4} ( C^P_A\cdot x_{t,A} + C^S_A\cdot y_{t,A} + C^I_A\cdot z_{t,A}+\\
                  & C^P_B\cdot x_{t,B} + C^S_B\cdot y_{t,B} + C^I_B\cdot z_{t,B} ) \\
-\text{s.t.: } \; & z_{1,A}=B_{A} + x_{1,A} - D_{1,A}\\
-                 & z_{1,B}=B_{B} + x_{1,B} - D_{1,B}\\
+\text{s.t.: } \; & z_{1,A}=B^I_{A} + x_{1,A} - D_{1,A}\\
+                 & z_{1,B}=B^I_{B} + x_{1,B} - D_{1,B}\\
                  & z_{t,A}=z_{t-1,A} + x_{t,A} - D_{t,A}, \; \forall t>1\\
                  & z_{t,B}=z_{t-1,B} + x_{t,B} - D_{t,B}, \; \forall t>1\\
                  & x_{t,A} + x_{t,B} \leq L^P, \; \forall t\\
                  & z_{t,A} + z_{t,B} \leq L^I, \; \forall t\\
                  & x_{t,A} \leq L^P \cdot y_{t,A} \; \forall t\\
                  & x_{t,B} \leq L^P \cdot y_{t,B} \; \forall t\\
-                 & x_{t,A} \; x_{t,A}, \; z_{t,A} \; z_{t,B} \geq 0, \; \forall \; t \\
+                 & x_{t,A} \; x_{t,B}, \; z_{t,A} \; z_{t,B} \geq 0, \; \forall \; t \\
                  & y_{t,A}, y_{t,B} \; \in \{0,1\} \; \forall \; t\\
 \end{aligned}
 \end{split}
