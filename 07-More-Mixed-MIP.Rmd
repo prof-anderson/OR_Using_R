@@ -1284,7 +1284,7 @@ promod <- add_constraint (promod, VzB[tt-1] + VxB[tt] -
 ```
 
 Now we need to use our create our linking constraints to connect our production and decision to produce products.
-We will use the Big M method and the maximum production production value as our Big M value.
+We will use the Big M method and the maximum production value as our Big M value.
 
 ```{r, eval=TRUE}
 promod <- add_constraint (promod, VxA [tt] <= lmaxpro * VyA[tt], 
@@ -1294,7 +1294,7 @@ promod <- add_constraint (promod, VxB [tt] <= lmaxpro * VyB[tt],
                           tt = 1:nTime)
 ```
 
-Now let's put a limit our joint inventory of products.
+Now let's put a limit our on joint inventory of products.
 
 ```{r, eval=TRUE}
 promod <- add_constraint (promod, VzA[tt] + VzB[tt] <= lmaxinv, 
