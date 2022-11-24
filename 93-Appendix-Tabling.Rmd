@@ -33,8 +33,8 @@ There are more options in `kable` and `kableExtra` than we are covering here but
 
 In theory, everything done with `kableExtra` could be done through just `kable` since `kableExtra` serves as a friendly interface to `kable`. Actually doing everything directly through `kable` would be much more difficult and prone to user error so `kableExtra` is recommended. The first item to note is `kableExtra` provides a shorthand function, `kbl`, similar to knitr's native `kable`.  In fact, it is essentially a wrapper that provides several useful benefits: \index{kable!kbl}
 
-- automatic format recognition rather than requiring setting format="latex",
-- provides direction options for important `kable` options which makes the command more readable and provides autocomplete, and 
+- automatic format recognition rather than requiring setting `format="latex"`,
+- provides direct options for important `kable` options which makes the command more readable and provides autocomplete, and 
 - shortens every line by 2 letters helping fit commands within a single printed line.
 
 We will use `kbl` throughout this Appendix and book.  If you are getting an error that `kbl` function is not recognized, you will need to load the `kableExtra` package.
@@ -179,6 +179,7 @@ A few things to note:
 - Some oversized tables may benefit from using the `kbl` option of `longtable=T`.
 
 On the other hand, sometimes this is a sign that the display of this information needs to be rethought:
+
 - transposing the table to be taller rather than wider,
 - not displaying certain columns or rows with less information value,
 - using a figure of some form rather than a table, 

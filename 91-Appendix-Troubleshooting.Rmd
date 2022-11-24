@@ -271,7 +271,7 @@ This is far from a comprehensive list but these items may be helpful for general
 -   Read through the error message to try to decode where the problem is. For example, it tells you pretty clearly if there are two code chunks with the same name.
 -   Check for spelling, capitalization, or singular/plural errors in variable names. The human reader's eye tends to be more forgiving of inconsistencies than computers.
 -   Try stepping through the code by evaluating one code chunk (or even line) at a time to narrow down where an error may be occurring.
--   Use the console to examine run code and display variable values directly.
+-   Use the console to run code and display variable values directly.
 -   Do a web search for the error message, leaving out items specific to your code such as variables or code chunk names.
 -   Narrow down where to look for problems by line numbers or code chunk names.
 -   Check your parentheses carefully - it is easy to get a parenthesis misplaced.
@@ -290,7 +290,7 @@ After going through these efforts, you may still not find a solution. The R comm
 
 Try to come up with a simple, short reproducible example. The goal is to make it as quick and easy for the person to examine this. Make it as short and simple as possible, remember that depending upon where you are asking for help, they may not be familiar with linear programming or the particular packages that you are using. For example, if you have a problem building an ompr model, try removing as many constraints as possible while still getting the error. The person trying to help won't care about the other missing constraints. You can always add them back later.\
 
-Another tip for making the reproducible example easier to use simplified variable names. Again, the reader doesn't really care about your specific model but this makes it shorter and easier to read. Of course, this might cause (or fix?) name conflicts or collisions. \
+Another tip for making the reproducible example is to use simplified variable names. Again, the reader doesn't really care about your specific model but this makes it shorter and easier to read. Of course, this might cause (or fix?) name conflicts or collisions. \
 
 A detailed discussion of how to create good reproducible examples can be found online.\
 <https://reprex.tidyverse.org/articles/reprex-dos-and-donts.html>
