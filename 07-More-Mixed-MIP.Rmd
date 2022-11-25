@@ -1294,17 +1294,17 @@ promod <- add_constraint (promod, VxB [tt] <= lmaxpro * VyB[tt],
                           tt = 1:nTime)
 ```
 
-Now let's put a limit our on joint inventory of products.
+Now let's put a limit on our joint inventory of products.
 
 ```{r, eval=TRUE}
 promod <- add_constraint (promod, VzA[tt] + VzB[tt] <= lmaxinv, 
                           tt = 1:nTime)
 ```
 
-Now let's put a limit our joint production capacity of products.
+Now let's put a limit on our joint production capacity of products.
 
 ```{r, eval=TRUE}
-promod <- add_constraint (promod, VzA[tt] + VzB[tt] <= lmaxpro, 
+promod <- add_constraint (promod, VxA[tt] + VxB[tt] <= lmaxpro, 
                           tt = 1:nTime)
 ```
 
