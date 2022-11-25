@@ -476,7 +476,7 @@ res_Mail1
 
 Note that the the messages from Symphony indicate that the solution found was feasible while `ompr` interprets the status as `infeasible.`  This is a bug that we have discussed earlier.  Turning on an option for more messages from the solver such as `verbose=TRUE` for `verbose=TRUE` or `verbosity=0` for `symphony` can give confirmation that the final status is *not* infeasible.
 
-Another useful to thing to note is that solving this problem to optimality can take a long time despite having fewer binary variables than some of our earlier examples. Using `glpk` with `verbose=FALSE` means that the MIP is solved with no progress information displayed and makes it look like the solver is hung. Turning on more information (increasing the verbosity) helps explain that the Solver is working, it is just taking a while, on my computer I let it run 20 minutes without making further progress than a feasible solution it had found quickly.
+Another useful thing to note is that solving this problem to optimality can take a long time despite having fewer binary variables than some of our earlier examples. Using `glpk` with `verbose=FALSE` means that the MIP is solved with no progress information displayed and makes it look like the solver is hung. Turning on more information (increasing the verbosity) helps explain that the Solver is working, it is just taking a while, on my computer I let it run 20 minutes without making further progress than a feasible solution it had found quickly.
 
 In fact, I realized that the feasible solution found was very close to the best remaining branches so perhaps this solution was optimal but it was taking a very long time to prove that it was optimal. In any case, it is probably good enough.  Often data may only be accurate to $\pm5\%$ so spending extensive time trying to get significantly more accurate results is not very productive.  This suggests  setting stopping options such as a time limit, number of LPs, or a _good enough_ setting.  For this problem, I chose the latter option.
 
@@ -569,7 +569,7 @@ Mail2 <- add_constraint(Mail1,
                w = 2:Weeks)
 ```
 
-While it might be thought that adding constraints limits the search space of possible solutions and might speed up solution, in this case it slows down solving speed tremendously.  Despite having having less than half the binary variables of applications from Chapter 8 and the same number the earlier mail problem, this problem turns out to be most computationally demanding so far. The branch and bound process from symphony takes hours to solve.
+While it might be thought that adding constraints limits the search space of possible solutions and might speed up solution, in this case it slows down solving speed tremendously.  Despite having less than half the binary variables of applications from Chapter 8 and the same number the earlier mail problem, this problem turns out to be most computationally demanding so far. The branch and bound process from symphony takes hours to solve.
 
 ```{r break-symmetry, echo=FALSE, eval=FALSE}
 res_Mail2 <- solve_model(Mail2, 

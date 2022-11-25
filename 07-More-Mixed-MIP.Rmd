@@ -1283,7 +1283,7 @@ promod <- add_constraint (promod, VzB[tt-1] + VxB[tt] -
 
 ```
 
-Now we need to use our create our linking constraints to connect our production and decision to produce products.
+Now we need to create our linking constraint for each product to connect our production amount variable and the decision to produce that product.
 We will use the Big M method and the maximum production value as our Big M value.
 
 ```{r, eval=TRUE}

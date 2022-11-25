@@ -61,7 +61,7 @@ kbl (m, booktabs=T,
 
 ## Setting Row and Column Names in Kable
 
-Kable has a handy option for changing `col.names` in the function directly. This is helpful because often the data structure has a specific naming convention for specific reasons but are not in very human readable format. Rather than always changing the column names before displaying the table or creating a new table with just different column names, this gives you the option just changing it for display purposes without affecting the original table. \index{kable!Column and row names}
+Kable has a handy option for changing `col.names` in the function directly. This is helpful because often the data structure has a specific naming convention for specific reasons but are not in very human-readable format. Rather than always changing the column names before displaying the table or creating a new table with just different column names, this gives you the option just changing it for display purposes without affecting the original table. \index{kable!Column and row names}
 
 One tricky thing is that while column names can be changed in `kable`, row names cannot be changed in `kable`, despite the options looking equivalent `col.names=` vs. `row.names=`.  
 
