@@ -12,7 +12,7 @@ knitr::opts_chunk$set(tidy = F)
 
 ## Purpose
 
-This Appendix provides a very brief introduction to the basics of R from the perspective of use for optimization modeling. This is not meant to be comprehensive R tutorial. There is an ever expanding collection of such materials available.
+This Appendix provides a very brief introduction to the basics of R from the perspective of use for optimization modeling. This is not meant to be comprehensive R tutorial. There is an ever-expanding collection of such materials available.
 
 ## Getting Started with R
 
