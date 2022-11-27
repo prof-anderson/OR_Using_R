@@ -312,8 +312,8 @@ kbl (sum_Home4, booktabs=T,
   kable_styling(latex_options = "hold_position")
 ```
 
+Another approach is to minimize the maximum deviation.  This is often abbreviated as a *minimax*. \index{Minimax} This is essentially the same as the expression, "a chain is only as strong as its weakest link".  In Japan, there is an expression that  "the nail that sticks up, gets pounded down" and in China, "the tallest blade of grass gets cut down."  We can implement the same idea here by introducing a new variable, _Q_, that must be at least as large as the largest miss.
 
-Another approach is to minimize the maximum deviation.  This is often abbreviated as a *minimax*. \index{Minimax} This is essentially the same as the expression, "a chain is only as strong as its weakest link".  In Japan, there is an expression that the "the nail that sticks up, gets pounded down" and in China, "the tallest blade of grass gets cut down."  We can implement the same idea here by introducing a new variable, _Q_ that must be at least as large as the largest miss.
 $$
  \begin{split}
  \begin{aligned}

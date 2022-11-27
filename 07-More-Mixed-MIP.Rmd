@@ -450,7 +450,7 @@ The same concepts can also be applied to other applications.
 
 ## Solving MIPs with Different Solvers
 
-One of the big benefits of `ompr` is that it separates the process of formulating the optimization model from that of solving it and thereby let's us easily switch to other solvers.
+One of the big benefits of `ompr` is that it separates the process of formulating the optimization model from that of solving it and thereby lets us easily switch to other solvers.
 Up until this point, we have used the `glpk` solver.
 Now that we have a nontrivial optimization model, the Warehouse Location Model, let's use it.
 
