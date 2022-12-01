@@ -995,7 +995,7 @@ Over the years, there have been several R packages developed for doing DEA. Each
 
 -   `Benchmarking` by Bogetoft and Otto stands out for the comprehensive toolset and documentation in their book.
 -   `deaR` provides some interesting classic datasets along with both standard and less commonly used variations of DEA.
--   `DJL` incorporates a variety of DEA techniques and is officially an abbreviation of distance measurement based judgement and learning. Perhaps not too coincidentally, it matches the author's, Dong-Joon Lim's, initials.
+-   `DJL` incorporates a variety of DEA techniques and is officially an abbreviation of distance measurement based judgment and learning. Perhaps not too coincidentally, it matches the author's, Dong-Joon Lim's, initials.
 -   `MultiplierDEA` was developed by Aurobindh Kalathil Kumar from Portland State University and emphasizes the multiplier model of DEA.
 -   `nonparaeff` draws its name from the nonparametric nature of DEA.
 -   `rDEA` stands for Robust DEA.
