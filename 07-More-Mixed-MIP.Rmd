@@ -574,10 +574,10 @@ It can be run through a variety of platforms including C, Python, AMPL, GAMS, an
 It is also available through R but requires more work than the open solvers that have previously used.
 To use Gurobi in R, do the following:
 
-1.  Get a license to gurobi (free licenses are available for academic use)
-2.  Download and install the gurobi software
+1.  Get a license to Gurobi (free licenses are available for academic use)
+2.  Download and install the Gurobi software
 3.  Follow directions to have software access license key
-4.  Install gurobi's R package. Note that the package file is not in CRAN and will need to be installed directly from the gurobi installed files on your local computer. (For example in my windows install, it was in `C:\\gurobi900\win64\R` directory.)
+4.  Install Gurobi's R package. Note that the package file is not in CRAN and will need to be installed directly from the gurobi installed files on your local computer. (For example in my windows install, it was in `C:\\gurobi900\win64\R` directory.)
 5.  Install the `roi.plugin.gurobi` package. Note that this may need to be installed from a github account as it is not officially supported by Gurobi.
 
 A code chunk is provided without evaluation (by setting a code chunk option of `eval=FALSE`) for several reasons:
@@ -689,7 +689,7 @@ While we can't see which packages are being specifically used most often for `om
 We will focus our attention on the ROI packages that emphasize linear programming.
 This means dropping packages such as `ROI.plugin.nloptr` and `ROI.plugin.quadprog`.
 
-Also, commercial software that is not available on CRAN such as gurobi and XPress, are not included.
+Also, commercial software that is not available on CRAN such as Gurobi and XPress, are not included.
 
 ```{r echo=FALSE, fig.width=10, fig.height=6, fig.fullwidth=TRUE, fig.cap="Monthly Downloads of Major ROI LP Plugins"}
 ROI_packages <- c( "ROI.plugin.glpk",   "ROI.plugin.symphony", 
