@@ -74,9 +74,7 @@ To highlight this, let's look at how a broad range of industries affected by Cov
 
 **Transportation** Airlines often have their own optimization teams in house to continually reexamine their network of flights, planes used, and crews. In addition to the steady state, using optimization models to rapidly adjust to disruptions whether it is caused by weather, Covid-19, security, or maintenance issues.  
 
-In this book we provide tools for engaging with these kinds of applications. 
-
-Optimization provides a framework for analyzing a broad range of 
+Optimization provides a framework for analyzing a broad range of real-world applications and this book provides the means to make this analysis more broadly available. In this book we provide tools for engaging with these kinds of applications. 
 
 ## Why R?
 

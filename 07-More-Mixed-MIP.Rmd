@@ -252,7 +252,7 @@ The number of *x* (or `Vx`) variables is $m \cdot n =40 \cdot 200$ or 8000 and t
 
 ### Solving the Warehouse Location Problem
 
-Now that have prepared the model, we are now ready to work on solving the model. We will start with using `glpk` as we have done in previous examples. \
+Now that we have prepared the model, we are now ready to work on solving the model. We will start with using `glpk` as we have done in previous examples.\
 
 The solver can generate a lot of additional information. We previously kept the default of `verbose = FALSE` but let's see what we get with a more talkative or verbose option set (`verbose = TRUE`).\
 

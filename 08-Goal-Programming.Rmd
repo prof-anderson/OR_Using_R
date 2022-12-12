@@ -20,7 +20,7 @@ library (kableExtra)
 
 ## Introduction
 
-Up until this point, we assumed that there would be a single, clear objective function. Often we have more complex situations where there are multiple conflicting objectives. In our earlier production planning case, we might have additional objectives besides maximizing profit such as minimizing environmental waste or longer term strategic positioning. In the case of our capital budgeting problem, we can envision a range of additional considerations beyond simple expected net present value maximization. In the warehouse site selection problem from Chapter 7, we can envision other considerations such as political placement in certain states, being prepared for future varying growth levels in different regions, and other issues which could further influence a simple minimum cost solution. 
+Up until this point, we assumed that there would be a single, clear objective function. Often we have more complex situations where there are multiple conflicting objectives. In our earlier production planning case, we might have additional objectives besides maximizing profit, such as minimizing environmental waste or longer-term strategic positioning. In the case of our capital budgeting problem, we can envision a range of additional considerations beyond simple expected net present value maximization. In the warehouse site selection problem from Chapter 7, we can envision other considerations such as political placement in certain states, being prepared for future varying growth levels in different regions, and other issues which could further influence a simple minimum cost solution. 
 
 ## Preemptive Goal Programming
 
@@ -39,7 +39,7 @@ $$
 \end{split}
 $$
 
-Let's reframe this problem where the company's primary goal is to maximize profit but the Cat product is more prestigious than the Ant product and emphasizing it will benefit the company in long term market positioning.  The company doesn't want to hurt profit but holding everything else equal, wants to then maximize Cat production.
+Let's reframe this problem where the company's primary goal is to maximize profit. However, the Cat product is more prestigious than the Ant product and emphasizing it will benefit the company in long-term market positioning.  The company doesn't want to hurt profit but holding everything else equal, wants to then maximize Cat production.
 
 The first step is to make the primary goal more direct. The objective function is now a fourth variable, *Profit* that is a direct function of the other three variables. The following formulation would then be considered the first phase.
 
@@ -79,9 +79,9 @@ $$
 
 Let's use an example that is a pressing issue for many cities - homelessness.  Note that is often better characterized as houselesness and the term will be used interchangeably for the sake of this illustration.
 
-The City of Bartland has a problem with houselessness. Two ideas have been proposed for dealing with the houselessness problem. The first option is to build new, government subsidized tiny homes for annual cost of $\$10K$ which would serve one adult 90% of the time and a parent with a child 10% of the time. Another option is to create a rental subsidy program which costs $\$25K$ per year per unit which typically serves a single adult (15%), two adults (20%), an adult with one child (30%), an adult with two children (20%), two adults with one child (10%), and two adults with two children (5%).
+The City of Bartland has a problem with houselessness. Two ideas have been proposed for dealing with the houselessness problem. The first option is to build new, government-subsidized tiny homes for an annual cost of $\$10K$ which would serve one adult 90% of the time and a parent with a child 10% of the time. Another option is to create a rental subsidy program which costs $\$25K$ per year per unit which typically serves a single adult (15%), two adults (20%), an adult with one child (30%), an adult with two children (20%), two adults with one child (10%), and two adults with two children (5%).
 
-Bartland's official Chief Economist has estimated that this subsidy program would tend to increase housing prices in a very tight housing market by an average of 0.001%. The Bartland City Council has $\$1000K$ available to reappropriate from elsewhere in the budget and would like to find the _best_ way to use this budget to help with the houselessness problem. Both programs require staff support - in particular 10% of a full time equivalent staff member to process paperwork, conduct visits, and other service related activities. There are seven staff members available to work on these activities.
+Bartland's official Chief Economist has estimated that this subsidy program would tend to increase housing prices in a very tight housing market by an average of 0.001%. The Bartland City Council has $\$1000K$ available to reappropriate from elsewhere in the budget and would like to find the _best_ way to use this budget to help with the houselessness problem. Both programs require staff support - in particular, 10% of a full time equivalent staff member to process paperwork, conduct visits, and other service related activities. There are seven staff members available to work on these activities.
 
 Let's summarize the data for two programs. Let's focus on expected numbers of people served for each policy intervention.\
 
@@ -202,9 +202,9 @@ kbl (rbind(sum_Home1, sum_Home2), booktabs=T,
 
 So which group has the _better_ model?  The objective function value for group 1's model is higher but it is in different units (people served) versus group 2's model of children served.
 
-Both group's have admirable objectives. We can view this as a case of goal programming. By definition, we know that these are the best values that can be achieved in terms of that objective function. Let's treat these optimal values as targets to strive for and measure the amount by which fail to achieve these targets. We'll define target $T_1 =$ `r res_Home1$objective_value` and $T_2 =$ `r res_Home2$objective_value`.
+Both groups have admirable objectives. We can view this as a case of goal programming. By definition, we know that these are the best values that can be achieved in terms of that objective function. Let's treat these optimal values as targets to strive for and measure the amount by which fail to achieve these targets. We'll define target $T_1 =$ `r res_Home1$objective_value` and $T_2 =$ `r res_Home2$objective_value`.
 
-In order to do this, we need to use deviational variables. \index{Deviational variables} These are like slack variables from the standard form of linear programs. Since the deviations can only be one sided in this case, we only need to have deviations in one direction. We will define $d_1$ as the deviation in goal 1 (maximizing people served) and $d_2$ as the deviation in goal 2 (maximizing children served).
+In order to do this, we need to use deviational variables. \index{Deviational variables} These are like slack variables from the standard form of linear programs. Since the deviations can only be one-sided in this case, we only need to have deviations in one direction. We will define $d_1$ as the deviation in goal 1 (maximizing people served) and $d_2$ as the deviation in goal 2 (maximizing children served).
 
 Let's now create the modified formulation.
 
@@ -375,9 +375,9 @@ kbl (rbind(sum_Home3, sum_Home4, sum_Home5),
 
 The minimax solution finds an alternative that is still Pareto optimal. \index{Pareto optimal} 
 
-Careful readers may note that children are effectively double counted between the two objective functions when deviations are added.
+Careful readers may note that children are effectively double-counted between the two objective functions when deviations are added.
 
-This example can be expanded much further in the future with additional policy interventions, other stakeholders, and other characteristics, such as policies on drug addiction treatment, policing practices, and more.  We did not factor in the Chief Economist's impact on housing prices. We'll leave these issues to future work.
+This example can be expanded much further in the future with additional policy interventions, other stakeholders, and other characteristics, such as policies on drug addiction treatment, policing practices, and more.  We did not factor in the chief economist's expected policy impact on housing prices. We'll leave these issues to future work.
 
 ## Mass Mailings
 
@@ -610,7 +610,7 @@ The solving time using this modification to the LP changed tremendously. On an I
 
 Table: Solving Progress for Modified Mailing Model.
 
-This highlights that large or complex optimization problems may take extra effort and attention. Analysts can make judicious tradeoffs of potentially suboptimal results, solving time, and data accuracy. For our purpose, to speed up the solution time, you could do an early termination option such as setting the `gap_limit` to $15\%$ by adding `gap_limit=15`. Setting an appropriate termination parameter based on gap, number of iterations, or time can be particularly helpful while developing a model. It also underscores that the benefits of implementing and testing algebraic models with smaller sized problems before expanding to the full sized problems.  By separating the data from the model, we can easily just shrink or expand the problem without affecting the formulation or the implementation. In this case, we could shrink the problem by using fewer weeks and states by changing the upper limits (`Weeks<-10; States<-10`) used in the model, resulting in 30 binary variables instead of 400.  
+This highlights that large or complex optimization problems may take extra effort and attention. Analysts can make judicious tradeoffs of potentially suboptimal results, solving time, and data accuracy. For our purpose, to speed up the solution time, you could do an early termination option such as setting the `gap_limit` to $15\%$ by adding `gap_limit=15`. Setting an appropriate termination parameter based on gap, number of iterations, or time can be particularly helpful while developing a model. It also underscores that the benefits of implementing and testing algebraic models with smaller-sized problems before expanding to the full-sized problems. By separating the data from the model, we can easily just shrink or expand the problem without affecting the formulation or the implementation. In this case, we could shrink the problem by using fewer weeks and states by changing the upper limits (`Weeks<-10; States<-10`) used in the model, resulting in 30 binary variables instead of 400.  
 
 We could further modify the model to eliminate _Q_ since the workload in week 1 would essentially be the heaviest workload (tallest nail.) This highlights that in optimization and particularly integer programming, there are often many different ways to implement models for the same application. This underscores the importance of clearly defining the elements of the formulation.\
 
@@ -625,8 +625,8 @@ This application and model can be adjusted to fit a wide variety of other situat
 
 ::: {.exercise name="Adjustments to Houselessness Policies"}
 
-From the houselessness problem given in chapter, make changes as given below:
-First option is to build new, government subsidized tiny homes for
+From the houselessness problem given in this chapter, make changes as given below:
+First option is to build new, government-subsidized tiny homes for an
 annual cost of $15K which would serve one adult 85% of the time and
 a parent with a child 15% of the time. Another option is to create
 a rental subsidy program which costs $35K per year per unit which

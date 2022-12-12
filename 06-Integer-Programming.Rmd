@@ -570,7 +570,7 @@ Note that in our earlier example, if we had a wide enough suboptimality toleranc
 Binary variables are a special case of general integer variables. Rather than variables taking on values such as 46 and 973, acceptable values are limited to just 0 and 1. This greatly reduces the possible search space for branch and bound since you know that in any branch, you will never branch on a single variable more than once. On the other hand, with a large number of variables, the search space can still be very large. If the previous case with 1000 variables were binary, a full enumeration list would rely on a list of $2^{1000}$ or one followed by about 300 zeros) possible solutions. While better than the case of integers, it is still vastly more than the number of atoms in the universe. \index{Integer programming!Binary variables} \index{Binary variables|see{Integer programming!Binary variables}}\
 
 The important thing is is that binary variables give us a lot of rich opportunities to model complex, real world situations.\
-Examples include assigning people to projects, go-no go decisions on projects, and much more.\
+Examples include assigning people to projects, go-no-go decisions on projects, and much more.\
 
 Let's explore the impact of binary restrictions with another example. The world famous semiconductor company, Outtel has a choice of five major R&D projects:
 
@@ -631,7 +631,7 @@ Let's start with a truth table summarizing the interaction between projects (var
 
 Now we need to create a constraint that blocks the situations that violate the relationship ($y_A=y_B=1$ ) but allows the other situations to be unblocked. Recall that you want to have a linear constraint or constraints that would be added to the model. In this case, we can use $y_A+y_B\leq1$. It is a good exercise to check this relationship against the truth table.\
 
-Note that we cannot use $y_{A}\cdot y_{B}=0$ because it is a nonlinear constraint when we multiply two variables together. Sometimes trial and error is needed to verify that a constraint enforces the needed situation. In these case, it can be helpful to draw up a truth table with values for the associated variables and see whether the satisfies the requirement.\
+Note that we cannot use $y_{A}\cdot y_{B}=0$ because it is a nonlinear constraint when we multiply two variables together. Sometimes trial and error is needed to verify that a constraint enforces the needed situation. In these case, it can be helpful to draw up a truth table with values for the associated variables and see whether it satisfies the requirement.\
 
 In each of the following sections create a linear relationship that models this situation.\
 
