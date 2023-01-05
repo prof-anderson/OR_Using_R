@@ -141,12 +141,12 @@ $$
 $$
 
 ```{r HomeModel, echo=TRUE}
-Home1Model <- MIPModel() |>
- # Avoid name space conflicts by using a prefix of V
-  add_variable(VH, type = "integer", lb = 0) |>
-  add_variable(VR, type = "integer",lb = 0)  |>
-  set_objective(1.1*VH + 2.25*VR,"max")      |>
-  add_constraint(10*VH + 25*VR <= 1000)      |> 
+Home1Model <- MIPModel()                            |>
+# Avoid name space conflicts by using a prefix of V
+  add_variable(VH, type = "integer", lb = 0)        |>
+  add_variable(VR, type = "integer",lb = 0)         |>
+  set_objective(1.1*VH + 2.25*VR,"max")             |>
+  add_constraint(10*VH + 25*VR <= 1000)             |> 
   add_constraint(0.1*VH + 0.1*VR <= 7) 
 
 res_Home1 <- solve_model(Home1Model, 
@@ -226,17 +226,15 @@ $$
 T1 <- res_Home1$objective_value
 T2 <- res_Home2$objective_value
 
-Home3Model <- MIPModel() |>
- # To avoid name space conflicts, using a prefix of V
- #    for ompr variables.
-  add_variable(VH, type = "integer", lb = 0)    |>
-  add_variable(VR, type = "integer",lb = 0)     |>
-  add_variable(Vd1, type = "continuous",lb = 0) |>
-  add_variable(Vd2, type = "continuous",lb = 0) |>
-  set_objective(Vd1 + Vd2,"min")                |>
-  add_constraint(1.1*VH + 2.25*VR + Vd1 == 100) |>
-  add_constraint(0.1*VH + 0.9*VR + Vd2 == 36)   |>
-  add_constraint(10*VH + 25*VR <= 1000)         |> 
+Home3Model <- MIPModel()                          |>
+  add_variable(VH, type = "integer", lb = 0)      |>
+  add_variable(VR, type = "integer",lb = 0)       |>
+  add_variable(Vd1, type = "continuous",lb = 0)   |>
+  add_variable(Vd2, type = "continuous",lb = 0)   |>
+  set_objective(Vd1 + Vd2,"min")                  |>
+  add_constraint(1.1*VH + 2.25*VR + Vd1 == 100)   |>
+  add_constraint(0.1*VH + 0.9*VR + Vd2 == 36)     |>
+  add_constraint(10*VH + 25*VR <= 1000)           |> 
   add_constraint(0.1*VH + 0.1*VR <= 7) 
 
 res_Home3 <- solve_model(Home3Model, 
