@@ -4,7 +4,24 @@
 library(bookdown); library(rmarkdown); rmarkdown::render("08-Goal-Programming.Rmd", "pdf_book")
 ```
 
+```{r, eval=FALSE, include=FALSE}
+# This code chunk detaches all loaded packages
+lapply(names(sessionInfo()$otherPkgs), function(pkgs)
+  detach(
+    paste0('package:', pkgs),
+    character.only = T,
+    unload = T,
+    force = T
+  ))
+```
+
+```{r}
+detach()
+```
+
+
 ```{r Ch8setup, include=FALSE}
+
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = FALSE)
 knitr::opts_chunk$set(cache = FALSE)
@@ -556,7 +573,7 @@ $$
   \end{split}
 $$
 
-We could then extend our `ompr` model, `Mail1` with the additional constraints.\
+We could then extend our `ompr` model, `Mail1`, with the additional constraints.
 
 ```{r, message=FALSE}
 Mail2 <- add_constraint(Mail1, 

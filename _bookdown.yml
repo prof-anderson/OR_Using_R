@@ -6,7 +6,7 @@ output_dir: docs
 #clean: [packages.bib, Z5_R_Resources.bib, bookdown.bbl]
 #lof: True
 #lot: True
-#new_session: yes
+new_session: yes
 #biblio-style: 
 #bibliography: ["Master4Bookdowns.bib", "another.bib"]
 #link-citations: true
