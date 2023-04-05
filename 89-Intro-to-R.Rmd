@@ -79,9 +79,9 @@ b<-matrix(c(1,2,3,4,5,6,7,8), ncol=4,
 The RStudio console can save typing by pressing the up arrow key to view previous command(s) which can then be further edited.
 :::
 
-Okay, this command has a lot more going on. The term `dimnames` \index{dimnames} is a parameter that contain names for rows and columns. One thing to note is that this line fills up more space than a single line so it rolls over to multiple line. The `dimnames` parameter will get get two concatenated (combined) lists. The first list is a combined list of two text strings "Row1" and "Row2". The next line does the same for columns.\
+Okay, this command has a lot more going on. The term `dimnames` \index{dimnames} is a parameter that contain names for rows and columns. One thing to note is that this line fills up more space than a single line so it rolls over to multiple line. The `dimnames` parameter will get get two concatenated (combined) lists. The first list is a combined list of two text strings "Row1" and "Row2". The next line does the same for columns.
 
-Let's confirm that it works.\
+Let's confirm that it works.
 
 ```{r Displaying-New-Matrix}
 b
@@ -117,19 +117,19 @@ The table looks very nice in the book.  Let's explain in detail how the table is
 Let's continue experimenting with operators.
 
 ```{r}
-c<-a*b
+c <- a*b
 ```
 
 ```{r Scalar-Multiplication, echo=FALSE}
-kbl(c, booktabs=T,
-    caption= "Scalar Multiplication of Matrix b to Make Matrix c") |>
+kbl (c, booktabs=T,
+     caption= "Scalar Multiplication of Matrix b to Make Matrix c") |>
   kable_styling(latex_options = "hold_position")
 ```
 
 Now let's do a transpose operation on the original matrix. What this means that it converts rows into columns and columns into rows.
 
 ```{r}
-d<-t(b)
+d <- t(b)
 ```
 
 ```{r Transposing, echo=FALSE}
@@ -220,7 +220,7 @@ kbl (temp4, booktabs=T,
 We could combine all of matrix `b` and matrix `c` together using row binding or column binding. Table Let's view the results of binding using columns (`cbind`) and rows (`rbind`). \index{cbind function}
 
 ```{r}
-temp5<- cbind(b,c)
+temp5 <- cbind(b,c)
 ```
 
 
