@@ -1,0 +1,114 @@
+---
+title: "ETM 540/640 Final Exam-Spring 2022"
+author: "Victor E. Viking"
+date: "5/25/2022"
+output: 
+  bookdown::pdf_book:
+    number_sections: true
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r, eval=FALSE, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(bookdown); library(rmarkdown); rmarkdown::render("ETM540-S22-Final-Exam.Rmd", "pdf_book")
+```
+
+$$\pagebreak$$
+
+By returning this exam, you promise that you have not received any help
+or assistance from any person or any material other than the materials
+recommended in the syllabus. Any sources other than course material,
+general purpose google searches, class videos, or package documentation
+should be noted in your writeup. Failure to do so may result in a zero
+grade on the final exam.
+
+-   The exam is due as specified in Canvas.
+-   Be sure to turn in both the RMD and the PDF of your take home exam.
+    You may upload as many times as you wish to Canvas. Only the last
+    one one will be graded.
+-   Be sure to document the model, define the model elements, etc.
+-   Do not invest time into extra credit opportunities until you have
+    made sufficient progress in the exam.
+-   Use this RMD file as a starting point for your exam, retaining the
+    original sequence of problems and numbering of the question parts.
+    Do not rearrange questions or add/remove sections.
+-   Do not share or allow to be accessed any part of your exam or other
+    work during the period of the exam.
+-   You may use material from Dr. Anderson's RMD files freely for the
+    exam.
+
+$$\pagebreak$$
+
+# Rose City Roasters
+
+Rose City Roasters provides premium roasted coffee beans for regional
+coffee shops. There are four important steps: Arranging the beans,
+roasting the beans, and then allowing them to cool. This is followed by degassing and  packaging.  Time requirements for each pound of coffee is given below.  
+
+|                      | Light | Medium | Medium-Dark | Dark | Available (hours) |
+|---------------------:|:-----:|:------:|:-----------:|:----:|:-----------------:|
+| Price (\$/lb)         | \$8   | \$10   | \$9         | \$11 |                   | 
+| Variable Cost (\$/lb) | \$5.0 | \$5.2  |   \$5.55    | \$6  |                   |
+|Arrange (lbs/hr)      |  10   |   10   |     10      |  10  |       4000        |
+|Roast (lbs/hr)        |   6   |   4    |      2      |  8   |       2000        |
+|Cool (lbs/hr)         |   3   |   2    |      2      |  2   |       1480        |
+|De-gas (lbs/hr)       |   3   |   4    |      2      |  4   |       1200        |
+|Packaging (lbs/hr)    |   4   |   4    |      2      |  3   |       1200        |
+
+: Data for Rose City Roasters
+
+## Create an appropriate formulation to maximize profit (selling price minus variable cost).
+
+## Implement and solve the resulting model.
+
+## Discuss results.
+
+## Propose your own novel variation of the problem that would make the application more meaningful.
+
+
+$$\pagebreak$$
+
+# Bartlandia Policing
+
+You have been asked to evaluate the efficiency of Bartlandia's three police precincts.  For inputs, use the number of officers and vehicles.  For outputs, use the number of patrol units responding to service requests per year (measured in thousands) and the number of convictions obtained per year (measured in hundreds).  The data is provided in the table below.  Assume an input-oriented, constant returns to scale model.
+
+| Precinct | Officers | Vehicles | Responses | Convictions |
+|---------:|:--------:|:--------:|:---------:|:-----------:|
+|       P1 |  200     |   60     |    6      |  8          |
+|       P2 |  300     |   90     |     8     |   9.5       |
+|       P3 |  400     |   120    |     10    |   11        |
+
+
+## Write the exact LP mathematically (using LaTeX) that would be used for evaluating the efficiency of precinct 1. 
+
+## Using R and ompr, create and solve your own LP models for calculating the efficiency of the three precincts. 
+
+## Collect, summarize, and discuss your results
+
+## Would your results change if the actual count of responses and convictions had been used rather than the number in thousands and hundreds respectively?  Why or why not?
+
+## Do you think a constant returns to scale model or a variable returns to scale model would be more appropriate for this application?  Why?
+
+##  Discuss a change to the input-output model that you feel would make for a better model.   
+
+$$\pagebreak$$
+
+# Integer Programming
+
+Similar to the Warehouse problem in chapter 7, here we have Chemical
+Factories for which we need to decide the locations. We need to set up 2
+factories with 100 residents in the town. The town council is trying
+to keep the factories at maximum possible distance from the residents to
+decrease the impacts and risk of mishaps.
+
+## Create an appropriate formulation
+
+## Create an appropriate randomly generated dataset using the approach used in Ch. 7.
+
+> Assume that there are 100 customers and 20 possible locations.
+
+## Implement and solve the problem for location for these 2 chemical factories which are at maximum possible distance from all residents. 
+
+## Discuss the results

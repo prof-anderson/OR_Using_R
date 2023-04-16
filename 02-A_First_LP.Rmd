@@ -89,7 +89,7 @@ Given that the linear program has two variables, it can be represented in two di
 
 We do this by iteratively adding each constraint and trimming the feasible region. The line can be drawn by looking at the constraint from two perspectives. First as if only Ants are produced and second as if only Bats are produced. This gives specific point on the horizontal and vertical axes respectively which are simply connected.\
 
-```{r Fig-First-Constraint, echo=FALSE, out.width="55%", fig.align='center', fig.cap="Drawing a First Constraint."}
+```{r Fig-First-Constraint, eval=TRUE, echo=FALSE, out.width="55%", fig.align='center', fig.cap="Drawing a First Constraint."}
 library(knitr) 
 knitr::include_graphics("images/Fig02-01-First-Constraint.PNG")
 ```

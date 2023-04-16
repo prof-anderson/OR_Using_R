@@ -1,0 +1,187 @@
+---
+title: "ETM 540 - Practice Problems"
+author: "Viktor E. Viking"
+date: "`r Sys.Date()`"
+output: 
+  pdf_book:
+    number_sections: true
+---
+
+```{r, include=FALSE, eval=FALSE}
+# This RMD makes use of several items:
+# The above header includes a dynamic date based on when the file is rendered.
+# The output format turns off the automatic number of sections so that
+#     sections have names inline with parts of the homework.
+# This code chunk uses options for important purposes:
+#    include=FALSE to not show the code or messages
+#    eval=FALSE so that is is only run when the code chunk is run directly -
+#         not when all codes are run or the file is knitted.
+#         This option could be used when a code chunk error is preventing a
+#         a file from being rendered to PDF.
+#         Another option is to set error=TRUE to allow the file to be 
+#         knitted even when there is an error in that code chunk.
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(tidy = FALSE)
+knitr::opts_chunk$set(cache = FALSE)
+library(bookdown); library(rmarkdown); 
+rmarkdown::render("_Practice Problems.Rmd", "pdf_book")
+```
+
+The following two formulation problems are given without detailed data.  This is done to help keep people from getting fixated or distracted by the data.  Once a formulation is made, it can be implemented with _any_ specific data.
+
+
+# Ship Loading
+
+During Covid, international shipping has had a a lot of disruption. You have five food commodities available to load on a ship. Each food commodity, _i_, has the following characteristics:
+
+- $A_{i}$, Amount of commodity _i_ available in tons, 
+- $V_{i}$, Volume of commodity _i_ in cubic meters per ton, and
+- $P_{i}$, Profit per ton for commodity _i_. 
+
+The ship has four holds: Front, Left, Right, Back.  Let's denote hold by _h_ and each hold has capacity limits by weight and volume.
+
+- $W_{h}$, Capacity of hold _h_ by weight (tons) and
+- $U_{h}$, Capacity of hold _h_ by volume in cubic meters
+
+For safety  on the seas, the ship must be well balanced.
+
+- The weight of the front hold's load cannot be more than 110% of the back hold's load.
+- The weight of the back hold's load cannot be more than 120% of the front hold's load.
+- The left and right hold must be within 15% of the other's weight.
+- The two middle holds combined must be between 30% and 60% of the total weight of all loads.
+
+## Formulate an optimization model
+
+> Assume food commodities can be mixed in a hold.
+
+### Define appropriate decision variables
+
+$x_{i,h}$ is the amount of food commodity i in hold h.
+
+### Create an objective function
+
+maximize profit =  $\text{Max:} \sum_{h=1}^{4} \sum_{i=1}^{5} P_{i,j} x_{i,j} \\$
+
+
+
+### Create appropriate constraints
+
+Use no more of a commodity i than we have available.
+$\sum_{h=1}^{4} x_{i,h} \leq A_i  \forall \; i$
+
+Hold weight capacity
+$\sum_{i=1}^{5} x_{i,h} \leq W_h  \forall \; h$
+
+Hold volume capacity
+$\sum_{i=1}^{5} V_i \cdot x_{i,h} \leq U_h  \forall \; h$
+
+The weight of the front hold's load cannot be more than 110% of the back hold's load.
+$\sum_{i=1}^{5} x_{i,FRONT} \leq 1.1 \cdot \sum_{i=1}^{5} x_{i,BACK}$
+
+or better yet define front is h=1, right is h=2, back is h=3, left is h=4
+
+$\sum_{i=1}^{5} x_{i,1} \leq 1.1 \cdot \sum_{i=1}^{5} x_{i,3}$
+
+
+The weight of the back hold's load cannot be more than 120% of the front hold's load.
+$\sum_{i=1}^{5} x_{i,3} \leq 1.2 \cdot \sum_{i=1}^{5} x_{i,1}$
+
+
+
+The left and right hold must be within 15% of the other's weight.
+$\sum_{i=1}^{5} x_{i,2} \leq 1.15 \cdot \sum_{i=1}^{5} x_{i,4}$
+$\sum_{i=1}^{5} x_{i,4} \leq 1.15 \cdot \sum_{i=1}^{5} x_{i,2}$
+
+
+The two middle holds combined must be between 30% and 60% of the total weight of all loads.
+$\sum_{i=1}^{5} x_{i,2} + \cdot \sum_{i=1}^{5} x_{i,4}\geq 0.3 \cdot \sum_{h=1}^{4} \sum_{i=1}^{5}  x_{i,h}$
+$\sum_{i=1}^{5} x_{i,2} + x_{i,4}\geq 0.3 \cdot \sum_{h=1}^{4} \sum_{i=1}^{5}  x_{i,h}$
+
+$\sum_{i=1}^{5} x_{i,2} + x_{i,4}\leq 0.6 \cdot \sum_{h=1}^{4} \sum_{i=1}^{5}  x_{i,h}$
+
+
+
+## Formulate an optimization model where crops cannot be mixed in a hold.
+
+> Hint:  We wouldn't want to mix rice and wheat as separating the two could be quite time consuming.  Therefore, only one crop can be in a hold.  
+
+### Define appropriate decision variables
+
+Add to the previous model
+
+$y_{i,h} = 1$ if crop i is in hold h. 0 otherwise.
+
+### Create an objective function
+
+### Create appropriate constraints
+
+summation over i of y_ih =1 for all h
+
+x_ih <= M * y_ih for all ih
+a good big M value is A_i or W_h
+
+
+# Placement of Emergency Response Teams
+
+The City of Bartlandia wants to locate two emergency response teams to serve residents in need.  The city can be thought of as a grid of six regions with a corresponding time to travel from neighborhood _i_ to neighborhood _j_ of $T_{i,j}$.  The neighborhoods have populations of $P_j$. They would like to place the two teams so as maximize the number of people that can a team can respond to within five minutes.
+
+## Formulate an appropriate optimization model
+
+### Define the Decision Variables
+
+Let's define our variables.
+
+- $x_i$ is the decision whether to place a team in region i.  $x_i=1$ if a team is in location i.
+- $y_j$ is the decision whether region j is served by one or more teams.  Therefore, $y_j=1$ if a region j is served.
+
+
+
+### Define Any Additional Datasets Needed
+
+Let's define $R_{i,j}=1 if a team in region i can reach region j in the 5 minute requirement.
+
+### Create the Optimizaton Model
+
+$$
+ \begin{split}
+ \begin{aligned}
+    \text{Max:}  &  \sum_{j=1}^{6} P_j y_j \\
+    \text{subject to } & y_j \leq \sum_{i=1}^{6} R_{i,j}x_i  \; \forall \; j\\
+                       & x_i,y_j   \in \{0,1\}  \; \forall \; i, j
+  \end{aligned}
+  \end{split}
+$$
+## For the following data, create and implement a model.  
+
+### Load Appropriate Packages
+
+```{r, warning=FALSE, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(tidy = FALSE)
+knitr::opts_chunk$set(cache = FALSE)
+library (dplyr, quietly = TRUE)
+library (ROI, quietly = TRUE)
+library (ROI.plugin.glpk, quietly = TRUE)
+library (ompr, quietly = TRUE)
+library (ompr.roi, quietly = TRUE)
+library (knitr)
+library (kableExtra)
+```
+
+### Prepare the Data
+
+
+
+### Build the Model
+
+
+### Solve the Model
+
+
+## Present and interpret the results
+
+```{r, error=TRUE}
+dsfdsfsdfsddf
+```
+I've tried fixing it but I can't find the problem.
+

@@ -1,0 +1,78 @@
+---
+title: "ETM 540/640 Final Exam-Fall 2022"
+author: "Viktor E. Viking"
+date: "11/21/2022"
+output: 
+  pdf_document:
+    number_sections: true
+---
+
+
+```{r, eval=FALSE, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(bookdown); library(rmarkdown); rmarkdown::render("_ETM540-F22-Final-Exam.Rmd", "pdf_book")
+```
+
+By returning this exam, you promise that you have not received any help or assistance from any person or any material other than the materials recommended in the syllabus.  Any sources other than course material, general purpose google searches, class videos, or package documentation should be noted in your writeup.  Failure to do so may result in a zero grade on the final exam.
+
+* The actual exam is due as specified in Canvas.
+* Be sure to turn in both the RMD and the knitted/rendered PDF of your take home exam.  You may upload as many times as you wish to Canvas.  Only the last one one will be graded.
+* Be sure to document the model, define the model elements, etc.
+* Do not invest time into extra credit opportunities until you have made sufficient progress in the exam. 
+* Use this RMD file as a starting point for your exam, retaining the original sequence of problems and numbering of the question parts.  Do not rearrange questions or add/remove sections.
+* Do not share or allow to be accessed any part of your exam or other work during the period of the exam.
+* You may use material from Dr. Anderson's RMD files freely for the exam.  
+
+$$\pagebreak$$
+
+# Production Planning
+
+> The Portland company, Weatherman, makes a single, very specialized multipurpose tool.  Demand for the next four quarters are known to be 700, 1200, 550, and 1000 units respectively.  The production cost is $1250 per unit.  The per unit cost to hold one unit in inventory is 25% of the production cost per quarter. An inventory buffer of 25 units must be maintained at the end of every quarter (including at the end of the planning horizon) for warranty issues and other purposes.  Due to production capacity limitations, no more than 1000 units can be produced in any quarter. At the beginning of the planning, there are 30 units in inventory.  
+
+## Formulate an explicit mathematical optimization model for this problem using LaTeX in RMarkdown.
+
+dssdfsdfdssdfs
+
+## Implement and solve your optimization model using ompr.
+
+## Interpret and discuss the solution to the problem.
+
+## Modified Example Formulation
+
+> Weatherman is looking at investing in a manufacturing process that will decrease their manufacturing cost per item to $\$1100$ per unit.  Production capacity would increase to 2000 units per quarter but there is a setup cost of $\$5000$ each quarter in which units are produced.  
+
+> Create a new optimization formulation for this modified situation
+
+
+## Implement and Solve the modified model.  Discuss the results
+
+
+## Compare the results between the models in light of managerial insights
+
+
+## *Extra Credit:*  Generalized Model
+
+
+> You may do all of the above using explicit formulations and implementations but there is potential for extra credit for a generalized model doing it algebraically (formulating, implementing, and solving.)  
+
+$$\pagebreak$$
+
+# DEA
+
+> Is DEA a tool for measuring relative or absolute efficiency?  Explain and discuss your reason(s) for your answer.  (Aim for one or two paragraphs.)
+
+
+$$\pagebreak$$
+
+# Computational Complexity
+
+> Does changing a set of decision variables from continuous to general integers tend to increase, decrease, or leave unchanged the computational complexity of optimization?  Explain and discuss your reason(s) for your answer.  (Aim for one or two paragraphs.)
+
+
+$$\pagebreak$$
+
+# Sensitivity Analysis
+
+> Describe a situation or application where the results of sensitivity analysis are of greater importance than the specific optimal decision variable values.  (Aim for one or two paragraphs.)
+
+
