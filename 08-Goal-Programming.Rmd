@@ -15,7 +15,7 @@ lapply(names(sessionInfo()$otherPkgs), function(pkgs)
   ))
 ```
 
-```{r}
+```{r, eval=FALSE, include=FALSE}
 detach()
 ```
 
@@ -480,16 +480,16 @@ Mail1
 ```
 
 ```{r Solve_glpk_gap15 }
-res_Mail1 <- solve_model(Mail1, 
+res_Mail1a <- solve_model(Mail1, 
                         with_ROI(solver = "symphony",
-                   verbosity=-1, gap_limit=1.5))
+                   verbosity=-1, gap_limit=0.0))
 ```
 
 ```{r}
 res_Mail1
 ```
 
-Note that the the messages from Symphony indicate that the solution found was feasible while `ompr` interprets the status as `infeasible.`  This is a bug that we have discussed earlier.  Turning on an option for more messages from the solver such as `verbose=TRUE` for `verbose=TRUE` or `verbosity=0` for `symphony` can give confirmation that the final status is *not* infeasible.
+Note that the the messages from Symphony indicate that the solution found was feasible while `ompr` interprets the status as `error.` As discussed earlier, this means that it is not necessarily optimal due to our use of a gap limit.  Turning on an option for more messages from the solver such as `verbose=TRUE` for `verbose=TRUE` or `verbosity=0` for `symphony` can give confirmation or examining the solver message, `res_Mail1$additional_solver_output`.
 
 Another useful thing to note is that solving this problem to optimality can take a long time despite having fewer binary variables than some of our earlier examples. Using `glpk` with `verbose=FALSE` means that the MIP is solved with no progress information displayed and makes it look like the solver is hung. Turning on more information (increasing the verbosity) helps explain that the Solver is working, it is just taking a while, on my computer I let it run 20 minutes without making further progress than a feasible solution it had found quickly.
 

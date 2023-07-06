@@ -24,7 +24,7 @@ Up until this point, we have always assumed that variables could take on fractio
 
 Allowing for integer values opens up many more important areas of applications as we will see. Let's look at two numerical examples. The first shows a case where integrality makes little difference, the second where it has a major impact.
 
-Unfortunately, there is no such thing as a free lunch-adding and integrality can make problems much more computationally demanding. We will go through an example of how many optimization routines do integer optimization to demonstrate why it can be more difficult algorithmically even if looks trivially easy from the perspective of the change in the `ompr`function.
+Unfortunately, there is no such thing as a free lunch-adding an integrality can make problems much more computationally demanding. We will go through an example of how many optimization routines do integer optimization to demonstrate why it can be more difficult algorithmically even if looks trivially easy from the perspective of the change in the `ompr`function.
 
 ## Example of Minor Integrality Impact
 

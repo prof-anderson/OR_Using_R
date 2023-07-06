@@ -70,7 +70,7 @@ Therefore, $x_{3,7}=1$ means that customer *3* is assigned to warehouse *7* and 
 Now, that we have a handle on the variables, let's move on to the constraints.
 Each customer must be assigned to one and only one warehouse.
 For illustration, this means that one of the variables $x_{1,j}$ must be set to one and the others are zero.
-To enforce this constraint, we can simply add the $x$ variables for warehouse 1 for each of the warehouses.
+To enforce this constraint, we can simply add the $x$ variables for customer 1 for each of the warehouses.
 We could do this with $x_{1,1}+x_{1,2}+ \ldots + x_{1,m}$ and requiring it to be one.
 We could rewrite this using a summation as $\sum\limits_{j=1}^{m} x_{1, j} = 1$.
 That constraint is limited to just customer 1 though.
@@ -1178,7 +1178,7 @@ The linking constraint for Bats follows the same form.
 
 $$x_{t,B} \leq L^P \cdot y_{t,B} \; \forall \; t$$
 
-Our goal is to minimize the total cost.  Let's look at the total cost with respect Ants.  It is a combination production cost, setup costs, and carrying costs.
+Our goal is to minimize the total cost.  Let's look at the total cost with respect to Ants.  It is a combination production cost, setup costs, and carrying costs.
 
 $$
 \begin{split}
