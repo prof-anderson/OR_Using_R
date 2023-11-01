@@ -1,7 +1,7 @@
 # Making Good Tables
 
 ```{r, eval=FALSE, include=FALSE}
-library(bookdown); library(rmarkdown); rmarkdown::render("_kable.Rmd", "pdf_book")
+library(bookdown); library(rmarkdown); rmarkdown::render("93-Appendix-Tabling.Rmd", "pdf_book")
 ```
 
 ## Importance of Tables in Modeling

@@ -480,9 +480,9 @@ Mail1
 ```
 
 ```{r Solve_glpk_gap15 }
-res_Mail1a <- solve_model(Mail1, 
+res_Mail1 <- solve_model(Mail1, 
                         with_ROI(solver = "symphony",
-                   verbosity=-1, gap_limit=0.0))
+                   verbosity=-1, gap_limit=15))
 ```
 
 ```{r}
@@ -493,7 +493,7 @@ Note that the the messages from Symphony indicate that the solution found was fe
 
 Another useful thing to note is that solving this problem to optimality can take a long time despite having fewer binary variables than some of our earlier examples. Using `glpk` with `verbose=FALSE` means that the MIP is solved with no progress information displayed and makes it look like the solver is hung. Turning on more information (increasing the verbosity) helps explain that the Solver is working, it is just taking a while, on my computer I let it run 20 minutes without making further progress than a feasible solution it had found quickly.
 
-In fact, I realized that the feasible solution found was very close to the best remaining branches so perhaps this solution was optimal but it was taking a very long time to prove that it was optimal. In any case, it is probably good enough.  Often data may only be accurate to $\pm5\%$ so spending extensive time trying to get significantly more accurate results is not very productive.  This suggests  setting stopping options such as a time limit, number of LPs, or a _good enough_ setting.  For this problem, I chose the latter option.
+In fact, I realized that the feasible solution found was very close to the best remaining branches so perhaps this solution was optimal but it was taking a very long time to prove that it was optimal. In any case, it is probably good enough.  Often data may only be accurate to $\pm5\%$ so spending extensive time trying to get significantly more accurate results is not very productive.  This suggests  setting stopping options such as a time limit, number of LPs, or a _good enough_ setting. For this problem, I chose the latter option.
 
 We solved this with a mixed integer programming problem gap limit of $1.5\%$ meaning that while we have not _proven_ this solution to be optimal, we do know that it is impossible to find a solution more than 1.5% better. From a branch and bound algorithm perspective, this means that while we have not searched down fully or pruned every branch, we know that no branch has the potential of being more than $1.5\%$ better than the feasible solution that we have already found.
 
@@ -584,7 +584,7 @@ Mail2 <- add_constraint(Mail1,
                w = 2:Weeks)
 ```
 
-While it might be thought that adding constraints limits the search space of possible solutions and might speed up solution, in this case it slows down solving speed tremendously.  Despite having less than half the binary variables of applications from Chapter 8 and the same number as the earlier mail problem, this problem turns out to be most computationally demanding so far. The branch and bound process from symphony takes hours to solve.
+While it might be thought that adding constraints limits the search space of possible solutions and might speed up solution, in this case it slows down solving speed tremendously.  Despite having less than half the binary variables of applications from Chapter 7 and the same number as the earlier mail problem, this problem turns out to be the most computationally demanding so far. The branch and bound process from symphony takes hours to solve.
 
 ```{r break-symmetry, echo=FALSE, eval=FALSE}
 res_Mail2 <- solve_model(Mail2, 
@@ -625,7 +625,7 @@ The solving time using this modification to the LP changed tremendously. On an I
 
 Table: Solving Progress for Modified Mailing Model.
 
-This highlights that large or complex optimization problems may take extra effort and attention. Analysts can make judicious tradeoffs of potentially suboptimal results, solving time, and data accuracy. For our purpose, to speed up the solution time, you could do an early termination option such as setting the `gap_limit` to $15\%$ by adding `gap_limit=15`. Setting an appropriate termination parameter based on gap, number of iterations, or time can be particularly helpful while developing a model. It also underscores that the benefits of implementing and testing algebraic models with smaller-sized problems before expanding to the full-sized problems. By separating the data from the model, we can easily just shrink or expand the problem without affecting the formulation or the implementation. In this case, we could shrink the problem by using fewer weeks and states by changing the upper limits (`Weeks<-10; States<-10`) used in the model, resulting in 30 binary variables instead of 400.  
+This highlights that large or complex optimization problems may take extra effort and attention. Analysts can make judicious tradeoffs of potentially suboptimal results, solving time, and data accuracy. For our purpose, to speed up the solution time, you could do an early termination option such as setting the `gap_limit` to $15\%$ by adding `gap_limit=15`. Setting an appropriate termination parameter based on gap, number of iterations, or time can be particularly helpful while developing a model. It also underscores that the benefits of implementing and testing algebraic models with smaller-sized problems before expanding to the full-sized problems. By separating the data from the model, we can easily just shrink or expand the problem without affecting the formulation or the implementation. In this case, we could shrink the problem by using fewer weeks and states by changing the upper limits (`Weeks<-3; States<-10`) used in the model, resulting in 30 binary variables instead of 400.  
 
 We could further modify the model to eliminate _Q_ since the workload in week 1 would essentially be the heaviest workload (tallest nail.) This highlights that in optimization and particularly integer programming, there are often many different ways to implement models for the same application. This underscores the importance of clearly defining the elements of the formulation.\
 
