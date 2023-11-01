@@ -17,7 +17,11 @@ library (TRA)
 ```
 
 ```{r, eval=FALSE, include=FALSE}
-library(bookdown); library(rmarkdown); rmarkdown::render("06-Integer-Programming.Rmd", "pdf_book")
+library(bookdown); library(rmarkdown)
+# rmarkdown::render("06-Integer-Programming.Rmd", "pdf_document")
+# rmarkdown::render("06-Integer-Programming.Rmd", "ioslides_presentation")
+rmarkdown::render("06-Integer-Programming.Rmd", "beamer_presentation")
+
 ```
 
 Up until this point, we have always assumed that variables could take on fractional (or non-integer) values. In other words, they were continuous variables. Sometimes the values conveniently turned out to be integer-valued, in other cases, we would brush off the non-integer values of the results.

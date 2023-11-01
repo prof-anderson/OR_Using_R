@@ -36,7 +36,17 @@ bookdown::tufte_book2:
   highlight: tango
   includes:
     in_header: preamble.tex
+bookdown::beamer_presentation:
+  theme: "AnnArbor"
+  colortheme: "dolphin"
+  fonttheme: "structurebold"
+  slide_level: 4
 bookdown::render_book("index.Rmd"):
   toc: yes
   includes:
     in_header: preamble.tex
+  revealjs::revealjs_presentation:
+    fig_width: 7
+    fig_height: 6
+    fig_caption: true
+    slide_level: 3

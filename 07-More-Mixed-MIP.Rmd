@@ -33,7 +33,7 @@ suppressPackageStartupMessages(library(dplyr))
 ## Overview
 
 This chapter consists of a collection of rich MILP models that can be used for inspiration on products.
-Some of these cases are expansions of Dirk Schumacher's `ompr`vignettes.
+Some of these cases are expansions of Dirk Schumacher's `ompr` vignettes.
 These make for excellent resources demonstrating a variety of features such as creation of simulated data and visualization of results.
 I strongly recommend reading the original.
 These vignettes can be viewed from the package documentation, Dirk Schumacher's github web [site](https://dirkschumacher.github.io/ompr/articles/index.html), or downloading his github repository.
