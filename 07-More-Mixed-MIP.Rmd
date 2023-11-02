@@ -8,6 +8,7 @@ editor_options:
 
 ```{r, eval=FALSE, include=FALSE}
 library(bookdown); library(rmarkdown); rmarkdown::render("07-More-Mixed-MIP.Rmd", "pdf_book")
+library(bookdown); library(rmarkdown); rmarkdown::render("07-More-Mixed-MIP.Rmd", "pdf_document")
 ```
 
 ```{r Ch7setup, echo=FALSE, warning=FALSE}
@@ -535,12 +536,10 @@ symphonytimeff <- c("symphony first feas.",
 ```
 
 Several interesting and important things should be noted here.
-First, `ompr` status indicates that the problem is infeasible.  Just as we saw in Chapter 2's unbounded case, `ompr` interprets the status code from the solver by way of `ROI` as not being solved to optimality and concludes that the problem is not feasible. \index{ompr!Misreporting of status}
 
-This is a known issue in `ompr` and `ompr.ROI`as of version 0.8.1.
-It highlights that "infeasible" status from the `ompr` should be thought of as meaning that an optimal solution was not found for *some* reason such as being told to terminate after the first feasible solution was found, time limit reached, node limit reached, the MIP was infeasible, the MIP was unbounded, or some other issue.
+First, `ompr` status indicates an `error`.  Just as we saw in Chapter 2's unbounded case, `ompr` interprets the status code from the solver by way of `ROI` as not being solved to optimality for *some* reason such as being told to terminate after the first feasible solution was found, time limit reached, node limit reached, the MIP was infeasible, the MIP was unbounded, or some other issue.
 
-A second thing to note that in my randomly generated instance, the very first feasible solution it found, happens to have the same objective function value as the optimal solution found to optimality earlier by `glpk` and `symphony`.
+A second thing to note is that in my randomly generated instance, the very first feasible solution it found, happens to have the same objective function value as the optimal solution found to optimality earlier by `glpk` and `symphony`.
 
 This is similar to the very simple, two variable integer programming problem that we examined using a branch and bound tree in the previous chapter but stopped before searching down the rest of the tree. Symphony just doesn't have confirmation yet that this first feasible solution is truly optimal yet.
 
