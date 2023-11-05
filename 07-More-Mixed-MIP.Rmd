@@ -609,7 +609,7 @@ I've tested the following commonly used parameters with Gurobi and can confirm t
 -   `NodeLimit` limits the number of MIP nodes, only used in MIP, (usage: `NodeLimit=200`)
 -   `BestObjStop` stops when a solution is as good as value, (usage: `BestObjStop=50000.0`)
 -   `BestBdStop` stops when best bound is as good as value (usage: `BestBdStop=50000.0`)
--   `MIPGap` stops based on relative gap between best bound and current solution. Note that the default is $10^-4$ rather than 0. A value of 0.1 effectively means that a solution is accepted and solving terminated if it is known that no solution is possible that is 10% better. (usage: `MIPGap=0.1`)
+-   `MIPGap` stops based on relative gap between best bound and current solution. Note that the default is $10^{-4}$ rather than 0. A value of 0.1 effectively means that a solution is accepted and solving terminated if it is known that no solution is possible that is 10% better. (usage: `MIPGap=0.1`)
 -   `MIPGapAb` stops based on absolute gap between best bound and current solution. For example if the objective function is in dollars, a value of 1000.0 means that a solution is accepted and solving terminated if it is known that no solution is possible is more $\$1000$ better. (usage: `MIPGap=1000.0`)
 
 The gurobi solver has far more capabilities than are presented here. It provides it's own algebraic modeling language and as an integrated solution is able to avoid the issue of misinterpreting solving codes. For people with very large scale optimization problems that they are solving on a frequent basis, it may be worth investigating these other options.  The `ompr` tool and algebraic modeling language used within R will make the transition straightforward.  

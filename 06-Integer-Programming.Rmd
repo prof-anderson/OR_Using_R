@@ -20,8 +20,21 @@ library (TRA)
 library(bookdown); library(rmarkdown)
 # rmarkdown::render("06-Integer-Programming.Rmd", "pdf_document")
 # rmarkdown::render("06-Integer-Programming.Rmd", "ioslides_presentation")
-rmarkdown::render("06-Integer-Programming.Rmd", "beamer_presentation")
+# rmarkdown::render("06-Integer-Programming.Rmd", "beamer_presentation")
+```
 
+
+```{r, eval=FALSE, include=FALSE}
+# This is an attempt to create a revealjs version of the book.
+library(rmarkdown); library(bookdown); library(revealjs)
+rmarkdown::render("06-Integer-Programming.Rmd", revealjs_presentation(
+  incremental = FALSE, center = FALSE,
+  slide_level = 4, smart = FALSE,
+  self_contained = TRUE, theme = "simple", transition = "default",
+  background_transition = "default", reveal_options = NULL,
+  reveal_plugins = NULL, highlight = "default", mathjax = "default",
+  template = "default", css = NULL, includes = NULL, keep_md = FALSE,
+  lib_dir = NULL, pandoc_args = NULL, extra_dependencies = NULL))
 ```
 
 Up until this point, we have always assumed that variables could take on fractional (or non-integer) values. In other words, they were continuous variables. Sometimes the values conveniently turned out to be integer-valued, in other cases, we would brush off the non-integer values of the results.
