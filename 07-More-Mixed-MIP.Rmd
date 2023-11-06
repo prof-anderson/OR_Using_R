@@ -1140,8 +1140,8 @@ Let's start by defining our data. Instead of Ants and Bats, we'll abbreviate it 
 
 **Decision variables:**  
 
-- $x_{t,A}$ is the number of Ants to make it week _t_.
-- $x_{t,B}$ is the number of Bats to make it week _t_.
+- $x_{t,A}$ is the number of Ants to make in week _t_.
+- $x_{t,B}$ is the number of Bats to make in week _t_.
 - $y_{t,A}=1$ if a setup for Ant production is done in week _t_; 0 otherwise.
 - $y_{t,B}=1$ if a setup for Bat production is done in week _t_; 0 otherwise.
 - $z_{t,A}$ is the inventory of Ants at the end of week _t_.
