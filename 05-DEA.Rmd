@@ -708,7 +708,7 @@ for (k in 1:ND) {
                    >= ydata[k,r], r = 1:NY, 
                    .show_progress_bar=FALSE ) 
     if (RTS=="VRS") {result <- add_constraint(result, 
-                 sum_expr(vlambda[j],j = 1:ND) == 1) }  
+                 sum_expr(vlambda[j], j = 1:ND) == 1) }  
         #Returns to Scale
   res <- solve_model(modUTT_CCR, with_ROI(solver = "glpk")) 
     

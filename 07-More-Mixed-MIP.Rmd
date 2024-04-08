@@ -7,17 +7,17 @@ editor_options:
 # More Integer Programming Models
 
 ```{r, eval=FALSE, include=FALSE}
-library(bookdown); library(rmarkdown); rmarkdown::render("07-More-Mixed-MIP.Rmd", "pdf_book")
+# library(bookdown); library(rmarkdown); rmarkdown::render("07-More-Mixed-MIP.Rmd", "pdf_book")
 library(bookdown); library(rmarkdown); rmarkdown::render("07-More-Mixed-MIP.Rmd", "pdf_document")
 ```
 
-```{r Ch7setup, echo=FALSE, warning=FALSE}
+```{r Ch7setup, echo=FALSE, warning=FALSE, message=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = FALSE)
 knitr::opts_chunk$set(cache = FALSE)
 library (kableExtra)
 library (tidyr)
-library (ggplot2)
+library (ggplot2, quietly=TRUE)
 library (ggrepel)
 library (ompr)
 library (ompr.roi)
