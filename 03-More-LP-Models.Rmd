@@ -854,22 +854,21 @@ The actual algorithm for the Simplex algorithm is beyond the scope of what we wi
 Let's examine the solution to our example though.\
 
 ```{r StdModel, echo=TRUE}
-StdModel <- MIPModel() |>
+StdModel <- MIPModel()                                     |>
  # Avoid name space conflicts V prefix for ompr variables.
   
- add_variable(Vx, type = "continuous", lb = 0)  |>
- add_variable(Vy, type = "continuous", lb = 0)  |>
- add_variable(Vs1, type = "continuous", lb = 0) |>
- add_variable(Vs2, type = "continuous", lb = 0) |>
+ add_variable(Vx, type = "continuous", lb = 0)             |>
+ add_variable(Vy, type = "continuous", lb = 0)             |>
+ add_variable(Vs1, type = "continuous", lb = 0)            |>
+ add_variable(Vs2, type = "continuous", lb = 0)            |>
   
- set_objective(2*Vx + 3*Vy,"max")               |>
+ set_objective(2*Vx + 3*Vy,"max")                          |>
   
- add_constraint(10*Vx + 2*Vy + Vs1==110)        |>
- add_constraint(2*Vx + 10*Vy - Vs2==50)         |> 
+ add_constraint(10*Vx + 2*Vy + Vs1==110)                   |>
+ add_constraint(2*Vx + 10*Vy - Vs2==50)                    |> 
  add_constraint(2*Vx - 4*Vy == 0) 
 
-  resStd <- solve_model(StdModel, 
-                        with_ROI(solver = "glpk"))
+  resStd <- solve_model(StdModel, with_ROI(solver = "glpk"))
   resStd
   
 x  <- get_solution (resStd , Vx)
@@ -944,8 +943,7 @@ get.primal.solution(lps.model, orig=TRUE)
 
 While the graph may not be as elegant our earlier versions, it shows how the problem can be visualized.
 
-Earlier in the chapter, we created data structures for the generalized version of the optimization model.
-Recall that earlier in this chapter we created a `Resources` matrix of the resources used by each product - this corresponds to our $A$ matrix.
+In section 3.2 of this chapter we created data structures for the generalized version of the optimization model of a four product, five resource case. We created a `Resources` matrix of the resources used by each product - this corresponds to our $A$ matrix.
 We also created a single column matrix, `Available`, for the amount of each resource available which is our $B$ vector.
 The `Profit` single row matrix serves as our $C$ vector.
 The last item that we need to do is to specify a direction for each inequality.
@@ -976,9 +974,9 @@ dir2<- c( "<=", "<=", "<=", "<=", "<=")
 
 res2 <- Rglpk_solve_LP(obj=Profit,    # C vector
                        mat=Resources, # A matrix
-                       dir=dir2,  # Constraint Inequalities
-                       Available, # B vector
-                       max=TRUE)  # False does minimization
+                       dir=dir2,      # Constraint Inequalities
+                       Available,     # B vector
+                       max=TRUE)      # False does minimization
    # Uses default bounds on all variables:
    #   LB = 0, UB=infinity (just non-negativity)
    #   Defaults to continuous variables

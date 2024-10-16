@@ -4,8 +4,8 @@
 library(bookdown); library(rmarkdown); rmarkdown::render("02-A_First_LP.Rmd", "pdf_book")
 ```
 
-```{r ch2setup, include=FALSE}
-library(knitr)
+```{r ch2setup, include=FALSE, eval=FALSE}
+# library(knitr)
 library(kableExtra)
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = FALSE)
@@ -228,6 +228,7 @@ result0 <- solve_model(model0g, with_ROI(solver = "glpk"))
 
 We built up the model line by line incrementally taking the previous model, adding a new element, and storing it in a new model. Note that we could keep placing them into the original model if we had wished such as the following. In this case, we take the previous command's output, `model0`, add an element to it, and then store it back in the same object, `model0`. We keep doing it for each element until we are done. This is equivalent to assigning the value of *2* to *a*. We then multiply *a* by *3* and assign the result again to *a*.\
 \
+![](images/clipboard-9133593.png)
 
 ```{r base_case_no_pipes_single_model}
 model0 <- MIPModel()     # Initialize an empty model
