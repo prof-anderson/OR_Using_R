@@ -6,7 +6,6 @@ _bookdown_files/
 *.rds
 *.md
 *.log
-*.tex
 *.pdf
 05-DEA_cache
 Optimization Modeling Using R.Rmd

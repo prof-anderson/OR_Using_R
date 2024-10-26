@@ -1,5 +1,11 @@
 # Troubleshooting
 
+
+```{r, eval=FALSE, include=FALSE}
+library(bookdown); library(rmarkdown)
+rmarkdown::render("91-Appendix-Troubleshooting.Rmd", "pdf_book")
+```
+
 ```{r Ch91setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = F)

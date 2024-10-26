@@ -52,7 +52,7 @@ The implementation that we did earlier for production planning was straightforwa
 Base3VarModel <- MIPModel() |>
   add_variable(Ants, type = "continuous", lb = 0) |>
   add_variable(Bats, type = "continuous", lb = 0) |>
-  add_variable(Cats, type = "continuous", lb = 0) |>
+  add_variable(Cats, type = "continuous", lb = 0) |> 
   
   set_objective(7*Ants + 12*Bats + 5*Cats,"max")  |>
   
