@@ -52,7 +52,7 @@ kbl (m, booktabs=T,
      caption="Footnotes in Tables Using kbl",
      col.names=c("C1", "C2"), 
      row.names=F)|>
-  kable_styling(latex_options = "hold_position")|>
+  kable_styling(latex_options = "HOLD_position")|>
   footnote(general = "General comments about the table. ",
        number = c("Footnote 1; ", "Footnote 2; "),
        alphabet = c("Footnote A; ", "Footnote B; "),
@@ -90,25 +90,25 @@ row.names (m)<-BR  # Treat as default to be avoided
 
 kbl (m, booktabs=T, caption="Retain Row Names by Using `row.name=T`",
      col.names=c("C1", "C2"), row.names=T)                            |>   
-  kable_styling (latex_options = "hold_position")  
+  kable_styling (latex_options = "HOLD_position")  
 
 kbl (m, booktabs=T, caption="Drop Row Name by Using `row.name=F`",
      col.names=c("C1", "C2"), row.names=F)                            |>
-  kable_styling (latex_options = "hold_position")  
+  kable_styling (latex_options = "HOLD_position")  
 
 kbl (cbind(as.matrix(GR),m), booktabs=T,
        caption="Adding Row Names as a Leading Column",
      col.names=c("", "C1", "C2"), row.names=F)                        |>
-  kable_styling (latex_options = "hold_position")  
+  kable_styling (latex_options = "HOLD_position")  
 
 rownames(m)<-GR  
 kbl (m, booktabs=T,
        caption="Replacing row names in matrix before kable",
      col.names=c("C1", "C2"), row.names=T)                            |>
-  kable_styling (latex_options = "hold_position")  
+  kable_styling (latex_options = "HOLD_position")  
 ```
 
-The `kable_styling` command has a parameter, `latex_options` that can be passed a lot of different parameters that only apply to the output of `latex`. I often use the `"hold_position"` option to encourage LaTeX to keep the table placement near the code chunk.  If `"hold_position"` is not passed, LaTeX will float the table to what it considers a good place relative to the rest of the text that might be well away from the actual intent. \index{kable!hold\_position}  \index{kable} \index{kbl|see{kable!kbl}} 
+The `kable_styling` command has a parameter, `latex_options` that can be passed a lot of different parameters that only apply to the output of `latex`. I often use the `"HOLD_position"` option to encourage LaTeX to keep the table placement near the code chunk.  If `"HOLD_position"` is not passed, LaTeX will float the table to what it considers a good place relative to the rest of the text that might be well away from the actual intent. \index{kable!hold\_position}  \index{kable} \index{kbl|see{kable!kbl}} 
 
 
 To summarize:
@@ -126,13 +126,13 @@ kbl (cbind(as.matrix(GR),m),
      caption="Default format using kable.",
      col.names=c("", "C1", "C2"), 
      row.names=F) |>
-  kable_styling(latex_options = "hold_position")
+  kable_styling(latex_options = "HOLD_position")
 
 kbl (cbind(as.matrix(GR),m), booktabs=T,
      caption="Kable using booktabs.",
      col.names=c("", "C1", "C2"), 
      row.names=F)|>
-  kable_styling(latex_options = "hold_position")
+  kable_styling(latex_options = "HOLD_position")
 ```
 
 
@@ -151,7 +151,7 @@ kbl(cbind(as.matrix(GR),m), booktabs=T, escape=F, caption=
     "Using LaTeX in Row and Column Names",
     col.names=c("","$\\theta^{CRS}$", "$\\lambda_A$"), 
     row.names=F)|>
-  kable_styling(latex_options = "hold_position")
+  kable_styling(latex_options = "HOLD_position")
 
 ```
 
@@ -167,7 +167,7 @@ rownames (mbig) <- c("Widgets", "Gadgets")
 kbl(mbig,booktabs=T, 
     caption="Scaling Table to Fit Page")|>
   kable_styling(latex_options = 
-                  c("hold_position", "scale_down"))
+                  c("HOLD_position", "scale_down"))
 ```
 
 A few things to note:

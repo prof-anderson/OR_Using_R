@@ -88,7 +88,7 @@ This follows three steps to work for both HTML & PDF:
 2.  Export Figure as image to images directory
 3.  Display image
 
-Note that it assumes that there is a subdirectory for images - if there isn't a subdirectory for images, you can create one or edit the path.\
+Note that it assumes that there is a subdirectory images - if there isn't a subdirectory for images, you can create one or edit the path.\
 
 Furthermore, note that the text passed to the function such as `"Sales\n($/week)"` allows for a line return character such as `"\n"`
 
@@ -491,13 +491,13 @@ dea.plot(x, y, RTS="vrs", ORIENTATION="in-out",
 
 The Constant Returns to Scale, CRS, model is often referred to in the DEA literature by CCR after Charnes, Cooper, and Rhodes [@CharnesDataEnvelopmentAnalysis1978]. The Variable Returns to Scale, VRS, model is also referred to as the BCC model after Banker, Charnes, and Cooper. In addition to the CRS and VRS models, two other common approaches are Increasing Returns to Scale (IRS) and Decreasing Returns to Scale (DRS). Technically, IRS is sometimes more precisely referred to as non-decreasing returns to scale. Similarly, DRS corresponds to non-increasing returns to scale. A less commonly used approach is Free Disposal Hull (FDH). In the case of FDH, DMUs are only compared against other individual units. Since it makes use of binary variables and is less commonly used in DEA, we will not implement it in the chapter. \index{Returns to Scale|see{Data envelopment analysis!Returns to Scale}} \index{RTS|see{Data envelopment analysis!Returns to scale}} \index{CRS|see{Data envelopment analysis!Returns to scale}} \index{VRS|see{Data envelopment analysis!Returns to scale}} \index{IRS|see{Data envelopment analysis!Returns to scale}} \index{DRS|see{Data envelopment analysis!Returns to scale}} \index{NDRS|see{Data envelopment analysis!Returns to scale}} \index{NIRS|see{Data envelopment analysis!Returns to scale}} \index{FDH|see{Data envelopment analysis!Returns to scale}} 
 
-| Returns to Scale | Envelopment Constraint                                                  |
-|------------------------|-----------------------------------------------|
-| CRS              | No constraint needed                                                    |
-| VRS              | $\sum_{j=1}^{N^D} \lambda_j = 1$                                        |
-| IRS/NDRS         | $\sum_{j=1}^{N^D} \lambda_j \geq 1$                                     |
-| DRS/NIRS         | $\sum_{j=1}^{N^D} \lambda_j \leq 1$                                     |
-| FDH              | $\sum_{j=1}^{N^D} \lambda_j = 1, \lambda_j \in \{0,1\} \; \forall \; j$ |
+| Returns to Scale | Envelopment Constraint |
+|----|----|
+| CRS | No constraint needed |
+| VRS | $\sum_{j=1}^{N^D} \lambda_j = 1$ |
+| IRS/NDRS | $\sum_{j=1}^{N^D} \lambda_j \geq 1$ |
+| DRS/NIRS | $\sum_{j=1}^{N^D} \lambda_j \leq 1$ |
+| FDH | $\sum_{j=1}^{N^D} \lambda_j = 1, \lambda_j \in \{0,1\} \; \forall \; j$ |
 
 : Returns to Scale Envelopment Constraints
 

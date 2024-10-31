@@ -60,44 +60,43 @@ $x_{i,h}$ is the amount of food commodity i in hold h.
 
 ### Create an objective function
 
-maximize profit =  $\text{Max:} \sum_{h=1}^{4} \sum_{i=1}^{5} P_{i,j} x_{i,j} \\$
+maximize profit =  $\text{Max:} \sum_{h=1}^{4} \sum_{i=1}^{5} P_{i} x_{i,h} \\$
 
 
 
 ### Create appropriate constraints
 
 Use no more of a commodity i than we have available.
-$\sum_{h=1}^{4} x_{i,h} \leq A_i  \forall \; i$
+$$\sum_{h=1}^{4} x_{i,h} \leq A_i , \quad \forall \; i$$
 
 Hold weight capacity
-$\sum_{i=1}^{5} x_{i,h} \leq W_h  \forall \; h$
+$$\sum_{i=1}^{5} x_{i,h} \leq W_h , \quad  \forall \; h$$
 
 Hold volume capacity
-$\sum_{i=1}^{5} V_i \cdot x_{i,h} \leq U_h  \forall \; h$
+$$\sum_{i=1}^{5} V_i \cdot x_{i,h} \leq U_h , \quad  \forall \; h$$
 
 The weight of the front hold's load cannot be more than 110% of the back hold's load.
-$\sum_{i=1}^{5} x_{i,FRONT} \leq 1.1 \cdot \sum_{i=1}^{5} x_{i,BACK}$
+$$\sum_{i=1}^{5} x_{i,FRONT} \leq 1.1 \cdot \sum_{i=1}^{5} x_{i,BACK}$$
 
 or better yet define front is h=1, right is h=2, back is h=3, left is h=4
 
-$\sum_{i=1}^{5} x_{i,1} \leq 1.1 \cdot \sum_{i=1}^{5} x_{i,3}$
+$$\sum_{i=1}^{5} x_{i,1} \leq 1.1 \cdot \sum_{i=1}^{5} x_{i,3}$$
 
 
 The weight of the back hold's load cannot be more than 120% of the front hold's load.
-$\sum_{i=1}^{5} x_{i,3} \leq 1.2 \cdot \sum_{i=1}^{5} x_{i,1}$
-
+$$\sum_{i=1}^{5} x_{i,3} \leq 1.2 \cdot \sum_{i=1}^{5} x_{i,1}$$
 
 
 The left and right hold must be within 15% of the other's weight.
-$\sum_{i=1}^{5} x_{i,2} \leq 1.15 \cdot \sum_{i=1}^{5} x_{i,4}$
-$\sum_{i=1}^{5} x_{i,4} \leq 1.15 \cdot \sum_{i=1}^{5} x_{i,2}$
+$$\sum_{i=1}^{5} x_{i,2} \leq 1.15 \cdot \sum_{i=1}^{5} x_{i,4}$$
+$$\sum_{i=1}^{5} x_{i,4} \leq 1.15 \cdot \sum_{i=1}^{5} x_{i,2}$$
 
 
 The two middle holds combined must be between 30% and 60% of the total weight of all loads.
-$\sum_{i=1}^{5} x_{i,2} + \cdot \sum_{i=1}^{5} x_{i,4}\geq 0.3 \cdot \sum_{h=1}^{4} \sum_{i=1}^{5}  x_{i,h}$
-$\sum_{i=1}^{5} x_{i,2} + x_{i,4}\geq 0.3 \cdot \sum_{h=1}^{4} \sum_{i=1}^{5}  x_{i,h}$
+$$\sum_{i=1}^{5} x_{i,2} + \cdot \sum_{i=1}^{5} x_{i,4}\geq 0.3 \cdot \sum_{h=1}^{4} \sum_{i=1}^{5}  x_{i,h}$$
+$$\sum_{i=1}^{5} x_{i,2} + x_{i,4}\geq 0.3 \cdot \sum_{h=1}^{4} \sum_{i=1}^{5}  x_{i,h}$$
 
-$\sum_{i=1}^{5} x_{i,2} + x_{i,4}\leq 0.6 \cdot \sum_{h=1}^{4} \sum_{i=1}^{5}  x_{i,h}$
+$$\sum_{i=1}^{5} x_{i,2} + x_{i,4}\leq 0.6 \cdot \sum_{h=1}^{4} \sum_{i=1}^{5}  x_{i,h}$$
 
 
 
@@ -115,10 +114,12 @@ $y_{i,h} = 1$ if crop i is in hold h. 0 otherwise.
 
 ### Create appropriate constraints
 
-summation over i of y_ih =1 for all h
 
-x_ih <= M * y_ih for all ih
-a good big M value is A_i or W_h
+$$\sum_{i=1}^{5} y_{i,h} =1, \quad \forall  \; h$$
+
+$$x_{i,h} \leq M \cdot y_{i,h}, \quad \forall  \; i, \; h$$
+
+Think about what a _good_ value for M might be based on the other data in the problem?
 
 
 # Placement of Emergency Response Teams
@@ -131,16 +132,18 @@ The City of Bartlandia wants to locate two emergency response teams to serve res
 
 Let's define our variables.
 
-- $x_i$ is the decision whether to place a team in region i.  $x_i=1$ if a team is in location i.
+- $x_i$ is the decision whether to place a team in region i.  $x_i=1$ if a team is in location i; 0 otherwise.
 - $y_j$ is the decision whether region j is served by one or more teams.  Therefore, $y_j=1$ if a region j is served.
 
 
 
 ### Define Any Additional Datasets Needed
 
-Let's define $R_{i,j}=1 if a team in region i can reach region j in the 5 minute requirement.
+Let's define $R_{i,j}=1$ if a team in region i can reach region j in the 5 minute requirement; 0 otherwise.
 
 ### Create the Optimizaton Model
+
+Hint:  Here is a formulation but you should be able to create one and describe what they do.
 
 $$
  \begin{split}
@@ -151,37 +154,23 @@ $$
   \end{aligned}
   \end{split}
 $$
-## For the following data, create and implement a model.  
-
-### Load Appropriate Packages
-
-```{r, warning=FALSE, include=TRUE}
-knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(tidy = FALSE)
-knitr::opts_chunk$set(cache = FALSE)
-library (dplyr, quietly = TRUE)
-library (ROI, quietly = TRUE)
-library (ROI.plugin.glpk, quietly = TRUE)
-library (ompr, quietly = TRUE)
-library (ompr.roi, quietly = TRUE)
-library (knitr)
-library (kableExtra)
-```
-
-### Prepare the Data
 
 
+# State Mailing
 
-### Build the Model
+Stuffit Corp is doing a mailing to the 50 US States.  For logistics purposes and coordination through other media, a state is only done in a single week. Given that the population of each state varies, the number of items to mail to each state also varies widely.  Let's define the number of pieces to mail to state _s_ as $P_s$.  The number of weeks is _T_. They would like to complete this in as few weeks as possible.  The maximum that can be mailed in any given week is _C_.
+
+## Create an appropriate formulation.
+
+## Multiple Optima
+
+### Discuss the potential for multiple optima in this problem.
+
+### Modify the formulation to ensure that work is front loaded.  (Heavier weeks are earlier)
+
+## Balanced Workload
+
+> Instead of finishing fast, focus on distributing the work evenly across the _T_ weeks.  Modify the formulation to focus on creating a balanced workload.
 
 
-### Solve the Model
-
-
-## Present and interpret the results
-
-```{r, error=TRUE}
-dsfdsfsdfsddf
-```
-I've tried fixing it but I can't find the problem.
 
