@@ -492,7 +492,7 @@ dea.plot(x, y, RTS="vrs", ORIENTATION="in-out",
 The Constant Returns to Scale, CRS, model is often referred to in the DEA literature by CCR after Charnes, Cooper, and Rhodes [@CharnesDataEnvelopmentAnalysis1978]. The Variable Returns to Scale, VRS, model is also referred to as the BCC model after Banker, Charnes, and Cooper. In addition to the CRS and VRS models, two other common approaches are Increasing Returns to Scale (IRS) and Decreasing Returns to Scale (DRS). Technically, IRS is sometimes more precisely referred to as non-decreasing returns to scale. Similarly, DRS corresponds to non-increasing returns to scale. A less commonly used approach is Free Disposal Hull (FDH). In the case of FDH, DMUs are only compared against other individual units. Since it makes use of binary variables and is less commonly used in DEA, we will not implement it in the chapter. \index{Returns to Scale|see{Data envelopment analysis!Returns to Scale}} \index{RTS|see{Data envelopment analysis!Returns to scale}} \index{CRS|see{Data envelopment analysis!Returns to scale}} \index{VRS|see{Data envelopment analysis!Returns to scale}} \index{IRS|see{Data envelopment analysis!Returns to scale}} \index{DRS|see{Data envelopment analysis!Returns to scale}} \index{NDRS|see{Data envelopment analysis!Returns to scale}} \index{NIRS|see{Data envelopment analysis!Returns to scale}} \index{FDH|see{Data envelopment analysis!Returns to scale}} 
 
 | Returns to Scale | Envelopment Constraint |
-|----|----|
+|------------------------------------|------------------------------------|
 | CRS | No constraint needed |
 | VRS | $\sum_{j=1}^{N^D} \lambda_j = 1$ |
 | IRS/NDRS | $\sum_{j=1}^{N^D} \lambda_j \geq 1$ |
@@ -1032,7 +1032,7 @@ In terms of orientation, is the primary goal to increase outputs or decrease inp
 
 ### Application Area Expertise
 
-It is always critical to bring solid application expertise to any DEA study in all phases of model building and at the interpretation stage as well. Years ago, I did a study of university technology transfer performance and found the efficient universities included schools that might be expected such as MIT and Georgia Tech but I found the inclusion of BYU surprising. I went and talked with Julie Reed, a lawyer specializing intellectual property and technology transfer. She said that she was not at all surprised to see BYU listed as efficient-they are small but very highly respected for their technology transfer. While not a formal validation, this is an indirect form of validation.
+It is always critical to bring solid application expertise to any DEA study in all phases of model building and at the interpretation stage as well. Years ago, I did a study of university technology transfer performance and found the efficient universities included schools that might be expected such as MIT and Georgia Tech but I found the inclusion of BYU surprising. I went and talked with Julie Reed, a lawyer specializing in intellectual property and technology transfer. She said that she was not at all surprised to see BYU listed as efficient-they are small but very highly respected for their technology transfer. While not a formal validation, this is an indirect form of validation.
 
 There is no detailed statistical test for the validity of a DEA model and results. This means that there is greater responsibility on the analyst to ensure that a meaningful model was built and appropriate model options were used.
 
