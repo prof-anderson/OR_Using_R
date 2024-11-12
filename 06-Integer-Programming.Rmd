@@ -18,7 +18,7 @@ library (TRA)
 
 ```{r, eval=FALSE, include=FALSE}
 library(bookdown); library(rmarkdown)
-rmarkdown::render("06-Integer-Programming.Rmd", "pdf_document")
+rmarkdown::render("06-Integer-Programming.Rmd", "pdf_book")
 # rmarkdown::render("06-Integer-Programming.Rmd", "ioslides_presentation")
 # rmarkdown::render("06-Integer-Programming.Rmd", "beamer_presentation")
 ```
