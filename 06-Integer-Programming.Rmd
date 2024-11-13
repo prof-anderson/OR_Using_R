@@ -151,7 +151,7 @@ kbl (temp1, booktabs=T,
 
 Notice that in this case, there was a small adjustment to the production plan and a small decrease to the optimal objective function value. This is not always the case, sometimes the result can be unchanged. In other cases, it may be changed in a very large way. In still others, the problem may in fact even become infeasible.
 
-## Example of Major Integality Impact
+## Example of Major Integrality Impact
 
 Let's take a look at another example. Acme makes two products, let's refer to them as product 1 and 2. Product 1 generates a profit of \$2000 per product, requires three liters of surfactant for cleaning, and eight kilograms of high grade steel.
 
