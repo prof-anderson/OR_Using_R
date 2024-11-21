@@ -170,7 +170,9 @@ $$
                   & x_1,  \; x_2  \in \{0,1,2,3,...\}
   \end{aligned}
   \end{split}
-$$ At first glance, this looks the same as our earlier drone example but the last constraint cannot be solved directly strictly using linear programming. It is instead referred to as an integer linear program or ILP.
+$$ 
+
+At first glance, this looks the same as our earlier drone example but the last constraint cannot be solved directly strictly using linear programming. It is instead referred to as an integer linear program or ILP.
 
 Again, we could try solving it with and without the imposition of the integrality constraint.
 
