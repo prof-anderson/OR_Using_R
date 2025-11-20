@@ -611,11 +611,12 @@ kbl (cbind(eff.crs, eff.vrs, eff.drs, eff.irs),
 
 Using DEA for two-dimensional examples such as the one-input, one-output model is easy to draw and visualize but overkill and not generally very useful.
 
-Let's move on to a larger application of examining technology transfer success from university research by revisiting [@AndersonMeasuringefficiencyuniversity2007]. This paper used data from the Association of University Technology Managers, AUTM, and their 2004 survey. We will start by loading the data from the paper. The dataset can be accessed as a comma separated file (CSV) format from our github repository. Note that in RStudio, many datasets can be easily loaded using the `Import Dataset` command from under the File pulldown command. This provides a nice graphical user interface wrapper around various importing functions with a preview of the imported data along with R code that can be copied to an R script or RMarkdown document. This dataset is also available from the `TRA` package.
+Let's move on to a larger application of examining technology transfer success from university research by revisiting [@AndersonMeasuringefficiencyuniversity2007]. This paper used data from the Association of University Technology Managers, AUTM, and their 2004 survey. We will start by loading the data from the paper. The dataset can be accessed as a comma separated file (CSV) format from our github repository. Note that in RStudio, many datasets can be easily loaded using the `Import Dataset` command from under the File pulldown command. This provides a nice graphical user interface wrapper around various importing functions with a preview of the imported data along with R code that can be copied to an R script or RMarkdown document. This dataset is also available from the `TRA` package and is loaded from there instead of a CSV file.
 
 ```{r, message=FALSE}
-library(readr)
-univ_lic_2007 <- read_csv("univ_lic_2007.csv", show_col_types=FALSE)
+univ_lic_2007 <- TRA::univ_lic_2007
+# library(readr)
+# univ_lic_2007 <- read_csv("univ_lic_2007.csv", show_col_types=FALSE)
 ```
 
 Next, it is always helpful to look over the dataset. The names of the columns will be long and awkward for displaying results. Let's abbreviate the names to make it more manageable.
