@@ -542,8 +542,8 @@ trailmixmodel <- MIPModel()                             |>
  add_variable(Vx[i],i=1:NMix,type="continuous",lb=0)    |>
  set_objective(sum_expr(Cost[i]*Vx[i],i=1:NMix ),"min") |>
  add_constraint(sum_expr(MixChar[j,i]*Vx[i],i=1:NMix)  # LHS 
-                  >= CharMin[j],          # Inequality and RHS
-                  j=1:NCharacteristic)    # Repeat for each resource  
+                  >= CharMin[j],         # Inequality and RHS
+                  j=1:NCharacteristic)   # Repeat for each characteristic  
 
 results.trailmix <- solve_model(trailmixmodel, 
                                 with_ROI(solver = "glpk"))
