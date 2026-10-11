@@ -324,7 +324,7 @@ result0 <- MIPModel()                             |>
   add_constraint(3*Ants + 6*Bats<= 900)           |> # assembly
   add_constraint(2*Ants + 2*Bats<= 480)           |> # testing
   add_constraint(2*Ants + 10*Bats<= 1200)         |> # sensors
-  solve_model(with_ROI(solver = "glpk"))
+  solve_model(with_ROI(solver = "glpk"))         
   
 ```
 

@@ -360,7 +360,7 @@ $$
   \end{split}
 $$
 
-Let's rebuild our three variable implementation and review the results to see if it violates our blending requirement.
+Let's rebuild our three variable implementation and review the results to see if it violates our blending requirement. 
 
 ```{r Base3VarModel, echo=TRUE}
 model1 <- MIPModel()                              |>
@@ -603,11 +603,11 @@ We are likely to instead be wanting to ship all of the product that we can at th
 More precisely, what we want to do is instead determine if the problem is supply limited or demand limited.
 This is a simple matter of comparing the net demand vs. the net supply and making sure that the lesser is satisfied completely.
 
-|                         If... | Then Situation is: |     Source Constraints      |     Demand Constraints      |
-|------------------:|:---------------:|:----------------:|:----------------:|
-| $\sum_{i} S_i < \sum_{j} D_j$ | Supply Constrained |  $\sum_{j} x_{i,j} = S_i$   | $\sum_{i} x_{i,j} \leq D_j$ |
-| $\sum_{i} S_i > \sum_{j} D_j$ | Demand Constrained | $\sum_{j} x_{i,j} \leq S_i$ |  $\sum_{i} x_{i,j} = D_j$   |
-| $\sum_{i} S_i = \sum_{j} D_j$ |      Balanced      |  $\sum_{j} x_{i,j} = S_i$   |  $\sum_{i} x_{i,j} = D_j$   |
+| If... | Then Situation is: | Source Constraints | Demand Constraints |
+|------------------:|:----------------:|:----------------:|:----------------:|
+| $\sum_{i} S_i < \sum_{j} D_j$ | Supply Constrained | $\sum_{j} x_{i,j} = S_i$ | $\sum_{i} x_{i,j} \leq D_j$ |
+| $\sum_{i} S_i > \sum_{j} D_j$ | Demand Constrained | $\sum_{j} x_{i,j} \leq S_i$ | $\sum_{i} x_{i,j} = D_j$ |
+| $\sum_{i} S_i = \sum_{j} D_j$ | Balanced | $\sum_{j} x_{i,j} = S_i$ | $\sum_{i} x_{i,j} = D_j$ |
 
 : Demand and Supply Constrained Transportation Problems.
 
@@ -738,7 +738,7 @@ Losses might also apply in the transportation to the end customer with similar m
 
 Another common situation is to add capacity limits to each arc, perhaps both upper and lower bounds on capacity.\
 
-Real world applications  often also require modeling a time dimension which leads us to issue production and inventory planning.
+Real world applications often also require modeling a time dimension which leads us to issue production and inventory planning.
 
 ### Production and Inventory Planning
 
@@ -799,9 +799,9 @@ This model illustrates the basic dynamics of relating production, inventory, and
 Each application often requires tailoring to address specific needs.
 For example:
 
--   Some companies require safety stocks levels to be maintained which could be done by setting minimum inventory levels.
--   Sometimes all the demand cannot be met in a period - this can be modeled by separating sales from demand with a separate variable for sales in each period.
--   Allowing backlogged demand that can be met in the following period - again modeled with an additional variable.
+- Some companies require safety stocks levels to be maintained which could be done by setting minimum inventory levels.
+- Sometimes all the demand cannot be met in a period - this can be modeled by separating sales from demand with a separate variable for sales in each period.
+- Allowing backlogged demand that can be met in the following period - again modeled with an additional variable.
 
 ### Standard Form
 
@@ -943,7 +943,8 @@ get.primal.solution(lps.model, orig=TRUE)
 
 While the graph may not be as elegant our earlier versions, it shows how the problem can be visualized.
 
-In section 3.2 of this chapter we created data structures for the generalized version of the optimization model of a four product, five resource case. We created a `Resources` matrix of the resources used by each product - this corresponds to our $A$ matrix.
+In section 3.2 of this chapter we created data structures for the generalized version of the optimization model of a four product, five resource case.
+We created a `Resources` matrix of the resources used by each product - this corresponds to our $A$ matrix.
 We also created a single column matrix, `Available`, for the amount of each resource available which is our $B$ vector.
 The `Profit` single row matrix serves as our $C$ vector.
 The last item that we need to do is to specify a direction for each inequality.
