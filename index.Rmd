@@ -3,7 +3,7 @@ title: "Optimization Modeling Using R"
 author: "Timothy R. Anderson"
 date: "`r Sys.Date()`"
 documentclass: krantz
-bibliography: [book.bib, bib-my-library.bib, Master4Bookdowns.bib]
+bibliography: [Master4Bookdowns.bib]
 site: bookdown::bookdown_site
 biblio-style: apalike
 link-citations: yes
