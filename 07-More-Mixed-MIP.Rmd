@@ -7,6 +7,12 @@ editor_options:
 # More Integer Programming Models
 
 ```{r, eval=FALSE, include=FALSE}
+# Disable crayon/cli color codes in R output
+# Done to fix a recent LaTeX error in PDF generation:
+#    !Unicode character ^^[ (U+001B) not set up for use with LaTeX. 
+options(cli.num_colors = 1)
+options(crayon.enabled = FALSE)
+
 library(bookdown); library(rmarkdown); rmarkdown::render("07-More-Mixed-MIP.Rmd", "pdf_book")
 ```
 
@@ -1157,7 +1163,7 @@ We can then implement an upper limit on total inventory in the same way.
 
 $$z_{t,A} +z_{t,B} \leq L^I, \; \forall t$$
 
-A critical concept to understand is the inventory balance.  Let's demonstrated it with Ants and arbitrarily pick week 3.  We know that the ending inventory for week 3, $z_{3,A}$ is equal to the inventory from the from the previous week, $z_{2,A}$, plus amount produced in week 3, $x_{3,A}$, minus the amount sold (in our case demand), $D_{3,A}$.  
+A critical concept to understand is the inventory balance.  Let's demonstrate it with Ants and arbitrarily pick week 3.  We know that the ending inventory for week 3, $z_{3,A}$ is equal to the inventory from the from the previous week, $z_{2,A}$, plus amount produced in week 3, $x_{3,A}$, minus the amount sold (in our case demand), $D_{3,A}$.  
 
 $$z_{3,A}=z_{2,A} + x_{3,A} - D_{3,A}$$
 

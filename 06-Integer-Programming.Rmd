@@ -756,7 +756,7 @@ $$
                    & w_1 \leq 500  & \text{[Capacity Widget 1]}\\
                    & w_2 \leq 1000 & \text{[Capacity Widget 2]}\\
                    & w_3 \leq 750  & \text{[Capacity Widget 3]}\\
-                   & w_1, \; w_2, \; w_3 \geq 0   & \text{[Non-Negativity]}\\
+                   & w_1, \; w_2, \; w_3 \; \in \{0,1,2, \dots\} & \text{[Integer]}\\
                    & y_1, \; y_2, \; y_3 \; \in \{0,1\}   & \text{[Binary]}\\
   \end{aligned}
   \end{split}
@@ -928,7 +928,7 @@ $$
                    & \textcolor{red}{w_1 - 500y_1 \leq 0} & \text{[Widget 1 Linking]}\\
                    & \textcolor{red}{w_2 - 400y_2 \leq 0} & \text{[Widget 2 Linking]}\\
                    & \textcolor{red}{w_3 - 334y_3 \leq 0} & \text{[Widget 3 Linking]}\\
-                   & w_1, w_2, w_3 \geq 0 \\
+                   & w_1, \; w_2, \; w_3 \; \in \{0,1,2, \dots\} & \text{[Integer]}\\
                    & y_1, y_2, y_3 \in \{0,1\}  \\
   \end{aligned}
   \end{split}
